@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSA2", "PSA2\PSA2.csproj", "{AEE94162-308E-4738-B05F-2E927C17D118}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEE94162-308E-4738-B05F-2E927C17D118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEE94162-308E-4738-B05F-2E927C17D118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEE94162-308E-4738-B05F-2E927C17D118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEE94162-308E-4738-B05F-2E927C17D118}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49FA7BE6-008D-4300-A796-E7475BFADE91}
+	EndGlobalSection
+EndGlobal
