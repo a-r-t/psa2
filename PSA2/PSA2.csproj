@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\fighter\CommandParam.cs" />
+    <Compile Include="src\models\fighter\AnimationFlag.cs" />
+    <Compile Include="src\models\fighter\CommandParam.cs" />
     <Compile Include="src\views\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,17 +56,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\fighter\Action.cs" />
-    <Compile Include="src\fighter\ActionSection.cs" />
-    <Compile Include="src\fighter\Animation.cs" />
-    <Compile Include="src\fighter\Attribute.cs" />
-    <Compile Include="src\fighter\Article.cs" />
-    <Compile Include="src\fighter\Command.cs" />
-    <Compile Include="src\fighter\Fighter.cs" />
-    <Compile Include="src\fighter\Override.cs" />
-    <Compile Include="src\fighter\SubAction.cs" />
-    <Compile Include="src\fighter\SubActionSection.cs" />
-    <Compile Include="src\fighter\Subroutine.cs" />
+    <Compile Include="src\models\fighter\Action.cs" />
+    <Compile Include="src\models\fighter\ActionSection.cs" />
+    <Compile Include="src\models\fighter\Animation.cs" />
+    <Compile Include="src\models\fighter\Attribute.cs" />
+    <Compile Include="src\models\fighter\Article.cs" />
+    <Compile Include="src\models\fighter\Command.cs" />
+    <Compile Include="src\models\fighter\Fighter.cs" />
+    <Compile Include="src\models\fighter\Override.cs" />
+    <Compile Include="src\models\fighter\SubAction.cs" />
+    <Compile Include="src\models\fighter\SubActionSection.cs" />
+    <Compile Include="src\models\fighter\Subroutine.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.models.fighter
 {
-    class Class1
+    public class AnimationFlag
     {
+        public string AnimationFlagName { get; set; }
+        public bool IsSet { get; set; }
+
+        public AnimationFlag(string animationFlagName)
+        {
+            AnimationFlagName = animationFlagName;
+            IsSet = false;
+        }
+
     }
 }

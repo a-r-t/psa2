@@ -1,9 +1,0 @@
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\bin\Debug\PSA2.exe.config
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\bin\Debug\PSA2.exe
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\bin\Debug\PSA2.pdb
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.csprojAssemblyReference.cache
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.Properties.Resources.resources
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.csproj.GenerateResource.cache
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.csproj.CoreCompileInputs.cache
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.exe
-E:\Hobby Stuff\Super Smash Bros Brawl Hacking\PSA-Development\psa2\PSA2\PSA2\obj\Debug\PSA2.pdb
