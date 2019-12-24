@@ -1,0 +1,1114 @@
+﻿{
+    "attributes": [
+        {
+            "type": "float",
+            "location": "0x000",
+            "name": "Walk Initial Velocity",
+            "description": "The starting velocity obtained the moment the character starts walking."
+        },
+        {
+            "type": "float",
+            "location": "0x004",
+            "name": "Walk Acceleration",
+            "description": "The speed of acceleration while walking."
+        },
+        {
+            "type": "float",
+            "location": "0x008",
+            "name": "Walk Maximum Velocity",
+            "description": "The maximum velocity obtainable while walking."
+        },
+        {
+            "type": "float",
+            "location": "0x00C",
+            "name": "Stopping Velocity",
+            "description": "The speed at which the character is able to stop at."
+        },
+        {
+            "type": "float",
+            "location": "0x010",
+            "name": "Dash & StopTurn Initial Velocity",
+            "description": "The starting velocity obtained the moment the character starts a Dash."
+        },
+        {
+            "type": "float",
+            "location": "0x014",
+            "name": "StopTurn Deceleration",
+            "description": "The speed at which the character decelerates upon performing a StopTurn."
+        },
+        {
+            "type": "float",
+            "location": "0x018",
+            "name": "StopTurn Acceleration",
+            "description": "The speed at which the character accelerates after performing a StopTurn"
+        },
+        {
+            "type": "float",
+            "location": "0x01C",
+            "name": "Run Initial Velocity",
+            "description": "The starting velocity obtained the moment the Dash turns into a Run."
+        },
+        {
+            "type": "float",
+            "location": "0x020",
+            "name": "Run Acceleration?",
+            "description": "Possibly the time it takes for the character to reach full speed during a run?"
+        },
+        {
+            "type": "float",
+            "location": "0x024",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x028",
+            "name": "Dash Cancel Frame Window?",
+            "description": "Possibly the amount of frames you have to cancel your dash animation."
+        },
+        {
+            "type": "float",
+            "location": "0x02C",
+            "name": "Turn Run Velocity",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x030",
+            "name": "Jump Startup Time",
+            "description": "How many frames it takes for a jump to start."
+        },
+        {
+            "type": "float",
+            "location": "0x034",
+            "name": "Jump H Initial Velocity",
+            "description": "The starting horizontal velocity the character obtains when jumping."
+        },
+        {
+            "type": "float",
+            "location": "0x038",
+            "name": "Jump V Initial Velocity",
+            "description": "The starting vertical velocity the character obtains when jumping."
+        },
+        {
+            "type": "float",
+            "location": "0x03C",
+            "name": "Ground to Air Jump Momentum Multiplier",
+            "description": "The amount of horizontal momentum from the ground that gets added onto a jump."
+        },
+        {
+            "type": "float",
+            "location": "0x040",
+            "name": "Jump H Initial Velocity",
+            "description": "The maximum starting horazontal velocity the character is able to obtain when jumping."
+        },
+        {
+            "type": "float",
+            "location": "0x044",
+            "name": "Hop V Initial Velocity",
+            "description": "The maximum vertical velocity the character obtains when hopping."
+        },
+        {
+            "type": "float",
+            "location": "0x048",
+            "name": "Air Jump Multiplier",
+            "description": "The velocity obtained from an air jump proportional to the Jump V Initial Velocity."
+        },
+        {
+            "type": "float",
+            "location": "0x04C",
+            "name": "Some Kind of Multiplier?",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x050",
+            "name": "Footstool V Initial Velocity",
+            "description": "The starting vertical velocity the character obtains upon performing a footstool jump."
+        },
+        {
+            "type": "float",
+            "location": "0x054",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x058",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x05C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x060",
+            "name": "Jumps",
+            "description": "The number of consecutive jumps the character is able to perform."
+        },
+        {
+            "type": "float",
+            "location": "0x064",
+            "name": "Gravity",
+            "description": "The speed at which the character accelerates downward."
+        },
+        {
+            "type": "float",
+            "location": "0x068",
+            "name": "Terminal Velocity",
+            "description": "The maximum velocity obtainable due to gravity."
+        },
+        {
+            "type": "float",
+            "location": "0x06C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x070",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x074",
+            "name": "Air Mobility",
+            "description": "The speed at which the character is able to maneuver in air."
+        },
+        {
+            "type": "float",
+            "location": "0x078",
+            "name": "Air Stopping Mobility",
+            "description": "The speed at which the character is able to stop themselves in air."
+        },
+        {
+            "type": "float",
+            "location": "0x07C",
+            "name": "Maximum H Air Velocity",
+            "description": "The maximum horazontal velocity the character is able to obtain in air."
+        },
+        {
+            "type": "float",
+            "location": "0x080",
+            "name": "Fastfall Gravity?",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x084",
+            "name": "Fastfall Terminal Velocity",
+            "description": "The initial fastfalling speed of the character."
+        },
+        {
+            "type": "float",
+            "location": "0x088",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x08C",
+            "name": "Glide Frame Window",
+            "description": "The amount of time (in frames) that the character has to begin a glide after jumping. Leave at 0 for no glide."
+        },
+        {
+            "type": "float",
+            "location": "0x090",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x094",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x098",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x09C",
+            "name": "Forward Tilt 2 Flag",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0A0",
+            "name": "Forward Tilt 3 Flag",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0A4",
+            "name": "Forward Smash 2 Flag",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0A8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0AC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0B0",
+            "name": "Weight",
+            "description": "How resiliant the character is to knockback."
+        },
+        {
+            "type": "float",
+            "location": "0x0B4",
+            "name": "Size",
+            "description": "The scaling of the character from their original model size. 1 = 100%, 0.5 = 50%."
+        },
+        {
+            "type": "float",
+            "location": "0x0B8",
+            "name": "Size on Results Screen",
+            "description": "The scaling of the character on the results screen. 1 = 100%, 0.5 = 50%."
+        },
+        {
+            "type": "float",
+            "location": "0x0BC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0C0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0C4",
+            "name": "Shield Size",
+            "description": "The size of the character's shield bubble when it is at full strength."
+        },
+        {
+            "type": "float",
+            "location": "0x0C8",
+            "name": "Shield Break Bounce Velocity",
+            "description": "The Velocity at which the character bounces upwards upon having their shield broken."
+        },
+        {
+            "type": "float",
+            "location": "0x0CC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0D0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0D4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0D8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0DC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0E0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0E4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x0E8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x0EC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x0F0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0F4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x0F8",
+            "name": "Edge Jump H Velocity",
+            "description": "The starting horazontal velocity obtained from an Edge Jump."
+        },
+        {
+            "type": "float",
+            "location": "0x0FC",
+            "name": "Edge Jump V Velocity",
+            "description": "The starting vertical velocity obtained from an Edge Jump."
+        },
+        {
+            "type": "float",
+            "location": "0x100",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x104",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x108",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x10C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x110",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x114",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x118",
+            "name": "Item Throw Strength",
+            "description": "The speed at which an item is projected when thrown."
+        },
+        {
+            "type": "float",
+            "location": "0x11C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x120",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x124",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x128",
+            "name": "Projectile Weapon Use Move Speed",
+            "description": "The speed at which the character is able to move at while firing a projectile weapon."
+        },
+        {
+            "type": "float",
+            "location": "0x12C",
+            "name": "Projectile Weapon Use F Dash Speed",
+            "description": "The speed at which a character moves during a forward dash while firing a projectile weapon."
+        },
+        {
+            "type": "float",
+            "location": "0x130",
+            "name": "Projectile Weapon Use B Dash Speed",
+            "description": "The speed at which a character moves during a backward dash while firing a projectile weapon."
+        },
+        {
+            "type": "float",
+            "location": "0x134",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x138",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x13C",
+            "name": "Normal Landing Lag",
+            "description": "The length of the character's normal landing lag in frames."
+        },
+        {
+            "type": "float",
+            "location": "0x140",
+            "name": "Nair Landing Lag",
+            "description": "The length of the character's nair landing lag animation in frames."
+        },
+        {
+            "type": "float",
+            "location": "0x144",
+            "name": "Fair Landing Lag",
+            "description": "The length of the character's fair landing lag animation in frames."
+        },
+        {
+            "type": "float",
+            "location": "0x148",
+            "name": "Bair Landing Lag",
+            "description": "The length of the character's bair landing lag animation in frames."
+        },
+        {
+            "type": "float",
+            "location": "0x14C",
+            "name": "Uair Landing Lag",
+            "description": "The length of the character's uair landing lag animation in frames."
+        },
+        {
+            "type": "float",
+            "location": "0x150",
+            "name": "Dair Landing Lag",
+            "description": "The length of the character's dair landing lag animation in frames."
+        },
+        {
+            "type": "int",
+            "location": "0x154",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x158",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x15C",
+            "name": "Tag Height Value",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x160",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x164",
+            "name": "Walljump H Velocity",
+            "description": "The starting horazontal velocity obtained from a Walljump."
+        },
+        {
+            "type": "float",
+            "location": "0x168",
+            "name": "Walljump V Velocity",
+            "description": "The starting vertical velocity obtained from a Walljump."
+        },
+        {
+            "type": "float",
+            "location": "0x16C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x170",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x174",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x178",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x17C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x180",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x184",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x188",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x18C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x190",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x194",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x198",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x19C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1A0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1A4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1A8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1AC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1B0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1B4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1B8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1BC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1C0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1C4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1C8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1CC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1D0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1D4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1D8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1DC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x1E0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1E4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1E8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1EC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1F0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1F4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1F8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x1FC",
+            "name": "Camera Size Front",
+            "description": "The camera pushing effect's distance in front of the character."
+        },
+        {
+            "type": "float",
+            "location": "0x200",
+            "name": "Camera Size Back",
+            "description": "The camera pushing effect's distance behind the character."
+        },
+        {
+            "type": "float",
+            "location": "0x204",
+            "name": "Camera Size Top",
+            "description": "The camera pushing effect's distance above the character."
+        },
+        {
+            "type": "float",
+            "location": "0x208",
+            "name": "Camera Size Bottom",
+            "description": "The camera pushing effect's distance below the character."
+        },
+        {
+            "type": "float",
+            "location": "0x20C",
+            "name": "Opposite of previous?",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x210",
+            "name": "Zoom Camera Size Front",
+            "description": "The zoom boundaries on the character in the front."
+        },
+        {
+            "type": "float",
+            "location": "0x214",
+            "name": "Zoom Camera Size Back",
+            "description": "The zoom boundaries on the character in the back."
+        },
+        {
+            "type": "float",
+            "location": "0x218",
+            "name": "Zoom Camera Size Top",
+            "description": "The zoom boundaries on the character on the top."
+        },
+        {
+            "type": "float",
+            "location": "0x21C",
+            "name": "Zoom Camera Size Bottom",
+            "description": "The zoom boundaries on the character on the bottom."
+        },
+        {
+            "type": "int",
+            "location": "0x220",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x224",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x228",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x22C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x230",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x234",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x238",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x23C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x240",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x244",
+            "name": "Magnifying Glass Shrink Ratio",
+            "description": "The size of the character in the magifying glass."
+        },
+        {
+            "type": "float",
+            "location": "0x248",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x24C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x250",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x254",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x258",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x25C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x260",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x264",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x268",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x26C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x270",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x274",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x278",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x27C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x280",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x284",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x288",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x28C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x290",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x294",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x298",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x29C",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2A0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2A4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2A8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2AC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2B0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2B4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2B8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "float",
+            "location": "0x2BC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2C0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2C4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2C8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2CC",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2D0",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2D4",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2D8",
+            "name": "",
+            "description": ""
+        },
+        {
+            "type": "int",
+            "location": "0x2DC",
+            "name": "",
+            "description": ""
+        },
+		{
+		    "type": "int",
+            "location": "0x2E0",
+            "name": "",
+            "description": ""
+		}
+    ]
+}
