@@ -25,9 +25,42 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
         public void ParseFighter()
         {
-            LoadAttributes();
+            Prelim();
+            //LoadAttributes();
 
 
+        }
+
+        private void Prelim()
+        {
+            int md = PsaFile.FileHeader[25] / 4;
+            int par = PsaFile.FileHeader[26];
+            int k = PsaFile.FileHeader[27] + PsaFile.FileHeader[28];
+            int dat = 0;
+            int i = md + par + k * 2;
+            string movesetName = GetMovesetName();
+
+        }
+
+        private string GetMovesetName()
+        {
+            StringBuilder movesetName = new StringBuilder();
+            int nameEndByteIndex = 4;
+            while (true)
+            {
+                string nextStringData = Utils.ConvertWordToString(PsaFile.FileHeader[nameEndByteIndex]);
+                movesetName.Append(nextStringData);
+                if (nextStringData.Length == 4)
+                {
+                    nameEndByteIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Console.WriteLine(movesetName.ToString());
+            return movesetName.ToString();
         }
 
         private void LoadAttributes()

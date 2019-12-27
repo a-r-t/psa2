@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PSA2.src.utility
@@ -30,6 +32,19 @@ namespace PSA2.src.utility
         {
             byte[] valueBytes = BitConverter.GetBytes(value);
             return BitConverter.ToSingle(valueBytes, 0);
+        }
+
+        public static string ConvertWordToString(int word)
+        {
+            List<byte> letters = new List<byte>
+            {
+                (byte)((word >> 24) & 0xFF),
+                (byte)((word >> 16) & 0xFF),
+                (byte)((word >> 8) & 0xFF),
+                (byte)(word & 0xFF)
+            };
+            List<byte> lettersNoNulls = letters.Where(letter => letter != 0).ToList();
+            return Encoding.UTF8.GetString(lettersNoNulls.ToArray());
         }
     }
 }
