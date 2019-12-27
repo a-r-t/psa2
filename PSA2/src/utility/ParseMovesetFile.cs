@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,6 @@ namespace PSA2.utility
         public void getAttributes(int[] fileContent)
         {
             MovesetAttributes movesetAttributes = JsonConvert.DeserializeObject<MovesetAttributes>(File.ReadAllText("data/attribute_data.json"));
-            //Console.WriteLine(attributes.Attributes[0].Name);
 
             List<FighterAttribute> fighterAttributes = new List<FighterAttribute>();
 
@@ -112,3 +111,4 @@ namespace PSA2.utility
 
 
 }
+*/

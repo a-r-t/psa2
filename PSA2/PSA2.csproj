@@ -50,8 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\FileProcessor\MovesetParser\AttributesConfig.cs" />
+    <Compile Include="src\FileProcessor\PsaFileParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\PsaMovesetParser.cs" />
+    <Compile Include="src\FileProcessor\PsaFile.cs" />
     <Compile Include="src\models\fighter\AnimationFlag.cs" />
     <Compile Include="src\models\fighter\CommandParam.cs" />
+    <Compile Include="src\models\fighter\FloatAttribute.cs" />
+    <Compile Include="src\models\fighter\IntAttribute.cs" />
     <Compile Include="src\utility\MovesetFile.cs" />
     <Compile Include="src\utility\ParseMovesetFile.cs" />
     <Compile Include="src\utility\Utils.cs" />
@@ -89,6 +95,7 @@
     <EmbeddedResource Include="src\views\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include=".gitignore" />
     <None Include="data\attribute_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

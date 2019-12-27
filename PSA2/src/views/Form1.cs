@@ -1,4 +1,5 @@
-﻿using PSA2.utility;
+﻿using PSA2.src.FileProcessor;
+using PSA2.src.FileProcessor.MovesetParser;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,9 +21,8 @@ namespace PSA2.src.views
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            MovesetFile movesetFile = new MovesetFile("data/FitRidley.pac");
-            ParseMovesetFile parseMovesetFile = new ParseMovesetFile();
-            parseMovesetFile.getAttributes(movesetFile.FileContent);
+            PsaFileParser psaFileParser = new PsaFileParser("data/FitRidley.pac");
+            PsaMovesetParser psaMovesetParser = psaFileParser.ParseMovesetFile();
         }
     }
 }

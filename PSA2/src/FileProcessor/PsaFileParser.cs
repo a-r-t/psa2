@@ -1,27 +1,25 @@
-﻿/*using PSA2.src.models.fighter;
-using Utils = utility.UtilityMethods.Utility;
+﻿using PSA2.src.models.fighter;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utils = utility.UtilityMethods.Utility;
+using PSA2.src.FileProcessor.MovesetParser;
 
-namespace PSA2.utility
+namespace PSA2.src.FileProcessor
 {
-    public class MovesetFile
+    public class PsaFileParser
     {
-        public string FileName { get; set; }
-        public int[] FileHeader { get; set; }
-        public int[] FileContent { get; set; }
-        public int FileSize { get; set; }
-        public Fighter fighter { get; set; }
+        public string FilePath { get; set; }
+        public PsaFile PsaFile { get; private set; }
 
-        public MovesetFile(string fileName)
+        public PsaFileParser(string filePath)
         {
-            fighter = new Fighter(fileName);
-            FileName = fileName;
-            (FileHeader, FileContent, FileSize) = ReadFile(FileName);
+            FilePath = filePath;
+            (int[] fileHeader, int[] fileContent, int fileSize) = ReadFile(FilePath);
+            PsaFile = new PsaFile(fileHeader, fileContent, fileSize);
         }
 
         /// <summary>
@@ -29,7 +27,7 @@ namespace PSA2.utility
         /// </summary>
         /// <param name="FileName">the moveset file to parse</param>
         /// <returns>Tuple: file header (int array 32), file content (int array 148449), file size (int)</returns>        
-        (int[], int[], int) ReadFile(string fileName)
+        private (int[], int[], int) ReadFile(string fileName)
         {
             try
             {
@@ -52,8 +50,8 @@ namespace PSA2.utility
                     }
                     else
                     {
-                        int[] fileHeader = getFileHeader(fileStream, fileId);
-                        (int[] fileContent, int fileSize) = getFileContent(fileStream);
+                        int[] fileHeader = GetFileHeader(fileStream, fileId);
+                        (int[] fileContent, int fileSize) = GetFileContent(fileStream);
                         fileStream.Close();
                         return (fileHeader, fileContent, fileSize);
                     }
@@ -77,7 +75,7 @@ namespace PSA2.utility
         /// <param name="fileStream">the file stream object</param>
         /// <param name="fileId">first word in moveset file converted to base 10 int</param>
         /// <returns>file header (array of size 32) </returns>
-        int[] getFileHeader(FileStream fileStream, int fileId)
+        private int[] GetFileHeader(FileStream fileStream, int fileId)
         {
             int[] header = new int[32];
             header[0] = fileId;
@@ -99,7 +97,7 @@ namespace PSA2.utility
         /// </summary>
         /// <param name="fileStream">the file stream object</param>
         /// <returns>tuple: file content (array of size 148449), file size in kb (basically number of indexes used by the moveset file in the file content array)</returns>
-        (int[], int) getFileContent(FileStream fileStream)
+        private (int[], int) GetFileContent(FileStream fileStream)
         {
             int[] fileContent = new int[148449];
             int currentIndex = 0;
@@ -119,7 +117,10 @@ namespace PSA2.utility
             int fileSize = currentIndex * 4;
             return (fileContent, fileSize);
         }
+
+        public PsaMovesetParser ParseMovesetFile()
+        {
+            return new PsaMovesetParser(PsaFile);
+        }
     }
 }
-
-*/

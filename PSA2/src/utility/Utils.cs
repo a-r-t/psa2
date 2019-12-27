@@ -1,21 +1,24 @@
 using System;
+using System.Text;
 
 namespace utility.UtilityMethods
 {
     public static class Utility
     {
-        public static void printIntArray(int[] array)
+        public static string intArrayToString(int[] array)
         {
-            Console.Write("\n[");
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("[");
             for (int i = 0; i < array.Length; i++)
             {
-                Console.Write(array[i]);
+                stringBuilder.Append(array[i]);
                 if (i + 1 != array.Length)
                 {
-                    Console.Write(", ");
+                    stringBuilder.Append(", ");
                 }
             }
-            Console.Write("]\n");
+            stringBuilder.Append("]");
+            return stringBuilder.ToString();
         }
 
         public static int convertWordToBase10Int(int byte1, int byte2, int byte3, int byte4)
