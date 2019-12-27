@@ -34,17 +34,37 @@ namespace PSA2.src.utility
             return BitConverter.ToSingle(valueBytes, 0);
         }
 
-        public static string ConvertWordToString(int word)
+        public static string ConvertWordToString(int word, int startByte=0)
         {
-            List<byte> letters = new List<byte>
+            List<byte> letters = new List<byte>();
+
+            if (startByte == 0)
             {
-                (byte)((word >> 24) & 0xFF),
-                (byte)((word >> 16) & 0xFF),
-                (byte)((word >> 8) & 0xFF),
-                (byte)(word & 0xFF)
-            };
-            List<byte> lettersNoNulls = letters.Where(letter => letter != 0).ToList();
-            return Encoding.UTF8.GetString(lettersNoNulls.ToArray());
+                letters.Add((byte)((word >> 24) & 0xFF));
+            }
+            if (startByte <= 1)
+            {
+                letters.Add((byte)((word >> 16) & 0xFF));
+            }
+            if (startByte <= 2)
+            {
+                letters.Add((byte)((word >> 8) & 0xFF));
+            }
+            if (startByte <= 3)
+            {
+                letters.Add((byte)(word & 0xFF));
+            }
+
+
+            for (int i = 0; i < letters.Count; i++)
+            {
+                if (letters[i] == 0)
+                {
+                    letters.RemoveRange(i, letters.Count - i);
+                    break;
+                }
+            }
+            return Encoding.UTF8.GetString(letters.ToArray());
         }
     }
 }

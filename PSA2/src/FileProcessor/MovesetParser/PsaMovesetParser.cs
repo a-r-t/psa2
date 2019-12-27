@@ -33,13 +33,23 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
         private void Prelim()
         {
+
             int md = PsaFile.FileHeader[25] / 4;
+            //Console.WriteLine(md);
             int par = PsaFile.FileHeader[26];
+            //Console.WriteLine(par);
             int k = PsaFile.FileHeader[27] + PsaFile.FileHeader[28];
             int dat = 0;
             int i = md + par + k * 2;
             string movesetName = GetMovesetName();
+            int m = md + par - 2;
+            //Console.WriteLine(m);
+            int h = 0;
+            /*Console.WriteLine(PsaFile.FileHeader[27]);
+            Console.WriteLine(PsaFile.FileHeader[28]);
 
+            Console.WriteLine(k);*/
+            (List<string> dataTableElements, List<string> externalSubRoutines) = GetDataTable();
         }
 
         private string GetMovesetName()
@@ -63,6 +73,71 @@ namespace PSA2.src.FileProcessor.MovesetParser
             return movesetName.ToString();
         }
 
+        private (List<string>, List<string>) GetDataTable()
+        {
+            int numberOfBytesInDataSection = PsaFile.DataSectionSize / 4;
+            int dataTableStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries - 2;
+            int totalNumberOfDataElements = PsaFile.NumberOfDataTableElements + PsaFile.NumberOfExternalSubRoutines;
+            int dataElementNameEntriesStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries + totalNumberOfDataElements * 2;
+            List<string> dataTable = new List<string>();
+            List<string> externalSubRoutines = new List<string>();
+            int dat = 0;
+            for (int i = 0; i < totalNumberOfDataElements; i++)
+            {
+                StringBuilder dataElementName = new StringBuilder();
+                int currentDataTableEntryIndex = i + 1;
+                int nextDataTableEntryLocation = dataTableStartLocation + (currentDataTableEntryIndex * 2);
+                int nextDataElementNameLocation = PsaFile.FileContent[nextDataTableEntryLocation + 1];
+                if (nextDataElementNameLocation >= 0)
+                {
+                    while (true)
+                    {
+                        int startByte = nextDataElementNameLocation % 4;
+                        string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + nextDataElementNameLocation / 4], startByte: startByte);
+                        if (nextStringData.Length != 0)
+                        {
+                            dataElementName.Append(nextStringData);
+                            nextDataElementNameLocation += nextStringData.Length;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (dat == 0)
+                    {
+                        if (dataElementName.ToString() == "data")
+                        {
+                            dat = PsaFile.FileContent[dataTableStartLocation] / 4;
+                        }
+                    }
+                    if (i < PsaFile.NumberOfDataTableElements)
+                    {
+                        dataTable.Add(dataElementName.ToString());
+                    }
+                    else
+                    {
+                        externalSubRoutines.Add(dataElementName.ToString());
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            foreach (string dt in dataTable)
+            {
+                Console.WriteLine(dt);
+            }
+
+            foreach (string es in externalSubRoutines)
+            {
+                //Console.WriteLine(es);
+            }
+            return (dataTable, externalSubRoutines);
+        }
+
         private void LoadAttributes()
         {
             const int TOTAL_NUMBER_OF_ATTRIBUTES = 185;
@@ -80,10 +155,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 {
                     attributes.Add(
                         new FloatAttribute(
-                            attributeData.Name, 
+                            attributeData.Name,
                             attributeData.Description,
-                            attributeData.Location, 
-                            Utils.ConvertBytesToFloat(PsaFile.FileContent[i]), 
+                            attributeData.Location,
+                            Utils.ConvertBytesToFloat(PsaFile.FileContent[i]),
                             Utils.ConvertBytesToFloat(PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES])));
                 }
             }

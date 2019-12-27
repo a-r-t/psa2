@@ -13,6 +13,47 @@ namespace PSA2.src.FileProcessor
         public int[] FileContent { get; private set; }
         public int FileSize { get; private set; }
 
+        public int DataSectionSize
+        {
+            get
+            {
+                return FileHeader[25];
+            }
+        }
+
+        /// <summary>
+        /// Each Offset Entry is 4 bytes
+        /// </summary>
+        public int NumberOfOffsetEntries
+        {
+            get
+            {
+                return FileHeader[26];
+            }
+        }
+
+        /// <summary>
+        /// Each External Data Table entry is 8 bytes
+        /// </summary>
+        public int NumberOfDataTableElements
+        {
+            get
+            {
+                return FileHeader[27];
+            }
+        }
+
+        /// <summary>
+        /// Each External Sub Routine entry is 8 bytes
+        /// </summary>
+        public int NumberOfExternalSubRoutines
+        {
+            get
+            {
+                return FileHeader[28];
+            }
+        }
+
         public PsaFile(int[] fileHeader, int[] fileContent, int fileSize)
         {
             FileHeader = fileHeader;
