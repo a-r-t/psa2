@@ -58,8 +58,6 @@
     <Compile Include="src\models\fighter\CommandParam.cs" />
     <Compile Include="src\models\fighter\FloatAttribute.cs" />
     <Compile Include="src\models\fighter\IntAttribute.cs" />
-    <Compile Include="src\utility\MovesetFile.cs" />
-    <Compile Include="src\utility\ParseMovesetFile.cs" />
     <Compile Include="src\utility\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
