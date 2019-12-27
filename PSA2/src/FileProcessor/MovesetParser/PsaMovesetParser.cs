@@ -33,8 +33,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
         private void Prelim()
         {
-            string movesetName = GetMovesetName();
+            //string movesetName = GetMovesetName();
             (int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
+            (int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
+
         }
 
         private string GetMovesetName()
@@ -121,6 +123,16 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 //Console.WriteLine(es);
             }
             return (dataSectionLocation, dataTable, externalSubRoutines);
+        }
+
+        private (int, int) GetNumberOfSpecialActionsAndSubactions(int dataSectionLocation)
+        {
+            int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
+            int numberOfSubactions = (PsaFile.FileContent[dataSectionLocation + 13] - PsaFile.FileContent[dataSectionLocation + 12]) / 4;
+            Console.WriteLine(numberOfSubactions);
+            Console.WriteLine(numberOfSpecialActions);
+            return (numberOfSpecialActions, numberOfSubactions);
+        
         }
 
         private void LoadAttributes()
