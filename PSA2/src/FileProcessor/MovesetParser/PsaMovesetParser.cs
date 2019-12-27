@@ -33,23 +33,8 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
         private void Prelim()
         {
-
-            int md = PsaFile.FileHeader[25] / 4;
-            //Console.WriteLine(md);
-            int par = PsaFile.FileHeader[26];
-            //Console.WriteLine(par);
-            int k = PsaFile.FileHeader[27] + PsaFile.FileHeader[28];
-            int dat = 0;
-            int i = md + par + k * 2;
             string movesetName = GetMovesetName();
-            int m = md + par - 2;
-            //Console.WriteLine(m);
-            int h = 0;
-            /*Console.WriteLine(PsaFile.FileHeader[27]);
-            Console.WriteLine(PsaFile.FileHeader[28]);
-
-            Console.WriteLine(k);*/
-            (List<string> dataTableElements, List<string> externalSubRoutines) = GetDataTable();
+            (int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
         }
 
         private string GetMovesetName()
@@ -73,7 +58,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             return movesetName.ToString();
         }
 
-        private (List<string>, List<string>) GetDataTable()
+        private (int, List<string>, List<string>) GetDataTableAndExternalSubRoutineEntryNames()
         {
             int numberOfBytesInDataSection = PsaFile.DataSectionSize / 4;
             int dataTableStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries - 2;
@@ -81,7 +66,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             int dataElementNameEntriesStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries + totalNumberOfDataElements * 2;
             List<string> dataTable = new List<string>();
             List<string> externalSubRoutines = new List<string>();
-            int dat = 0;
+            int dataSectionLocation = 0;
             for (int i = 0; i < totalNumberOfDataElements; i++)
             {
                 StringBuilder dataElementName = new StringBuilder();
@@ -104,13 +89,12 @@ namespace PSA2.src.FileProcessor.MovesetParser
                             break;
                         }
                     }
-                    if (dat == 0)
+                    
+                    if (dataSectionLocation == 0 && dataElementName.ToString() == "data")
                     {
-                        if (dataElementName.ToString() == "data")
-                        {
-                            dat = PsaFile.FileContent[dataTableStartLocation] / 4;
-                        }
+                        dataSectionLocation = PsaFile.FileContent[nextDataTableEntryLocation] / 4;
                     }
+                    
                     if (i < PsaFile.NumberOfDataTableElements)
                     {
                         dataTable.Add(dataElementName.ToString());
@@ -126,16 +110,17 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 }
             }
 
+            Console.WriteLine(dataSectionLocation);
             foreach (string dt in dataTable)
             {
-                Console.WriteLine(dt);
+                //Console.WriteLine(dt);
             }
 
             foreach (string es in externalSubRoutines)
             {
                 //Console.WriteLine(es);
             }
-            return (dataTable, externalSubRoutines);
+            return (dataSectionLocation, dataTable, externalSubRoutines);
         }
 
         private void LoadAttributes()
