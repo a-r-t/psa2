@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utils = utility.UtilityMethods.Utility;
 using PSA2.src.FileProcessor.MovesetParser;
+using PSA2.src.utility;
 
 namespace PSA2.src.FileProcessor
 {

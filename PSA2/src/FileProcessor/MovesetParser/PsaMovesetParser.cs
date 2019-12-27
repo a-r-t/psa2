@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static PSA2.src.FileProcessor.MovesetParser.AttributeConfig;
+using PSA2.src.utility;
 
 namespace PSA2.src.FileProcessor.MovesetParser
 {
@@ -38,7 +38,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
             for (int i = 0; i < TOTAL_NUMBER_OF_ATTRIBUTES; i++)
             {
-                AttributeData attributeData = attributesConfig.Attributes[i];
+                AttributeConfig.AttributeData attributeData = attributesConfig.Attributes[i];
                 if (attributesConfig.Attributes[i].Type == "int")
                 {
                     attributes.Add(new IntAttribute(attributeData.Name, attributeData.Description, attributeData.Location, PsaFile.FileContent[i], PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES]));
@@ -50,14 +50,18 @@ namespace PSA2.src.FileProcessor.MovesetParser
                             attributeData.Name, 
                             attributeData.Description,
                             attributeData.Location, 
-                            convertBytesToFloat(PsaFile.FileContent[i]), 
-                            convertBytesToFloat(PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES])));
+                            Utils.ConvertBytesToFloat(PsaFile.FileContent[i]), 
+                            Utils.ConvertBytesToFloat(PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES])));
                 }
             }
 
             Fighter.Attributes = attributes;
+            PrintFighterAttributes();
+        }
 
-/*            foreach (Attribute attribute in Fighter.Attributes)
+        public void PrintFighterAttributes()
+        {
+            foreach (Attribute attribute in Fighter.Attributes)
             {
                 if (attribute is IntAttribute)
                 {
@@ -69,13 +73,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
                     FloatAttribute floatAttribute = (FloatAttribute)attribute;
                     Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", floatAttribute.Name, floatAttribute.Value, floatAttribute.SseValue));
                 }
-            }*/
-        }
-
-        public float convertBytesToFloat(int value)
-        {
-            byte[] valueBytes = BitConverter.GetBytes(value);
-            return BitConverter.ToSingle(valueBytes, 0);
+            }
         }
 
     }

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PSA2.src.utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utils = utility.UtilityMethods.Utility;
 
 namespace PSA2.src.FileProcessor
 {
