@@ -15,6 +15,7 @@ namespace PSA2.src.models.fighter
         public List<Override> Overrides { get;  set; }
         public List<Attribute> Attributes { get;  set; }
         public List<Article> Articles { get;  set; }
+        public ModelVisibility ModelVisibility { get; set; }
 
         public Fighter()
         {
@@ -25,6 +26,7 @@ namespace PSA2.src.models.fighter
             Overrides = new List<Override>();
             Attributes = new List<Attribute>();
             Articles = new List<Article>();
+            ModelVisibility = new ModelVisibility();
         }
     }
 }

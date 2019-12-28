@@ -73,5 +73,10 @@ namespace PSA2.src.utility
         {
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
         }
+
+        public static string ConvertIntToOffset(int offset)
+        {
+            return String.Format("0x{0}", offset.ToString("X"));
+        }
     }
 }

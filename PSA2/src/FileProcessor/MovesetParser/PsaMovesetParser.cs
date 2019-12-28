@@ -35,8 +35,12 @@ namespace PSA2.src.FileProcessor.MovesetParser
         {
             //string movesetName = GetMovesetName();
             (int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
-            (int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
-            LoadCharacterSpecificParameters();
+            //(int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
+            //LoadCharacterSpecificParameters();
+            //Dictionary<string, string> dataOffsets = GetDataOffsets(dataSectionLocation);
+
+            LoadModelVisibilityData(dataSectionLocation);
+
         }
 
         private string GetMovesetName()
@@ -112,7 +116,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 }
             }
 
-            Console.WriteLine(dataSectionLocation);
+            //Console.WriteLine(dataSectionLocation);
             foreach (string dt in dataTable)
             {
                 //Console.WriteLine(dt);
@@ -135,17 +139,58 @@ namespace PSA2.src.FileProcessor.MovesetParser
         
         }
 
+        private Dictionary<string, string> GetDataOffsets(int dataSectionLocation)
+        {
+            List<string> offsetNames = new List<string>
+            {
+                "SubActionFlags",
+                "ModelVisibility",
+                "Attributes",
+                "SSEAttributes",
+                "MiscSection",
+                "CommonActionFlags",
+                "SpecialActionFlags",
+                "ExtraActionFlags",
+                "ActionInterrupts",
+                "EntrySpecials",
+                "ExitSpecials",
+                "ActionPre",
+                "SubActionMain",
+                "SubActionGFX",
+                "SubActionSFX",
+                "SubActionOther",
+                "BoneFloats1",
+                "BoneFloats2",
+                "BoneReferences",
+                "HandBones",
+                "EntryActionOverride",
+                "ExitActionOverride",
+                "ExtraActionInterrupts",
+                "BoneFloats3",
+                "Unknown24",
+                "StaticArticles",
+                "EntryArticles",
+                "DataFlags0",
+                "DataFlags1",
+                "DataFlags2",
+                "DataFlags3"
+            };
+            Dictionary<string, string> dataOffsets = new Dictionary<string, string>();
+            for (int i = 0; i < offsetNames.Count; i++)
+            {
+                dataOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[dataSectionLocation + i]));
+            }
+            foreach (KeyValuePair<string, string> pair in dataOffsets)
+            {
+                Console.WriteLine(String.Format("{0}:{1}", pair.Key, pair.Value));
+            }
+            return dataOffsets;
+        }
+
         private void LoadCharacterSpecificParameters()
         {
             CharacterSpecificParametersConfig characterSpecificParametersConfig = Utils.LoadJson<CharacterSpecificParametersConfig>("data/char_specific/FitLucario.json");
             //Console.WriteLine(characterSpecificParametersConfig.Articles[0].ArticleParameters[0].Name);
-
-
-
-
-
-
-
         }
 
 
@@ -184,6 +229,106 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
             Fighter.Attributes = attributes;
             PrintFighterAttributes();
+        }
+
+        private void LoadModelVisibilityData(int dataSectionLocation)
+        {
+            // idk what this if statement is for -- maybe this assures that there is model visibility data?
+            if (PsaFile.FileContent[dataSectionLocation + 1] >= 8096 && PsaFile.FileContent[dataSectionLocation + 1] < PsaFile.DataSectionSize)
+            {
+
+                int modelVisiblityStartLocation = PsaFile.FileContent[dataSectionLocation + 1] / 4;
+
+                // idk what this if statement is for
+                if (PsaFile.FileContent[modelVisiblityStartLocation] >= 8096 && PsaFile.FileContent[modelVisiblityStartLocation] < PsaFile.DataSectionSize)
+                {
+                    int modelVisibilitySectionStartLocation = PsaFile.FileContent[modelVisiblityStartLocation] / 4;
+                    int numberOfBoneSwitches = PsaFile.FileContent[modelVisiblityStartLocation + 1];
+
+                    // if g is between 01 and FF?? -- actually might be how many bone switches there are in a section...
+                    if (numberOfBoneSwitches > 0 && numberOfBoneSwitches < 256)
+                    {
+                        // these are the two model visibility sections
+                        // hidden is for the model, visible is for shadow -- these names will be changed in the future to better represent what they are
+                        List<string> modelVisibilitySectionNames = new List<string>
+                        {
+                            "Hidden",
+                            "Visible"
+                        };
+
+                        // gets both model changers for "hidden" and "visible" sections
+                        for (int i = 0; i < modelVisibilitySectionNames.Count; i++)
+                        {
+                            // this checks if a hidden section exists?
+                            if (PsaFile.FileContent[modelVisibilitySectionStartLocation + i] >= 8096 && PsaFile.FileContent[modelVisibilitySectionStartLocation + i] < PsaFile.DataSectionSize)
+                            {
+                                ModelVisibility.Section modelVisibilitySection = new ModelVisibility.Section();
+                                Fighter.ModelVisibility.Sections.Add(modelVisibilitySection);
+                                modelVisibilitySection.Name = modelVisibilitySectionNames[i];
+
+                                int boneSwitchStartLocation = PsaFile.FileContent[modelVisibilitySectionStartLocation + i] / 4;
+                                for (int j = 0; j < numberOfBoneSwitches; j++)
+                                {
+                                    ModelVisibility.BoneSwitch boneSwitch = new ModelVisibility.BoneSwitch();
+                                    modelVisibilitySection.BoneSwitches.Add(boneSwitch);
+                                    int numberOfBoneGroups = PsaFile.FileContent[boneSwitchStartLocation + j * 2 + 1];
+
+                                    // if there's bone groups for bone switch maybe?
+                                    if (numberOfBoneGroups > 0 && numberOfBoneGroups < 256 && PsaFile.FileContent[boneSwitchStartLocation + j * 2] >= 8096 && PsaFile.FileContent[boneSwitchStartLocation + j * 2] < PsaFile.DataSectionSize)
+                                    {
+                                        int boneGroupStartLocation = PsaFile.FileContent[boneSwitchStartLocation + j * 2] / 4;
+
+                                        // looping through the bone groups
+                                        for (int k = 0; k < numberOfBoneGroups; k++)
+                                        {
+                                            ModelVisibility.BoneGroup boneGroup = new ModelVisibility.BoneGroup();
+                                            boneSwitch.BoneGroups.Add(boneGroup);
+
+                                            int numberOfBones = PsaFile.FileContent[boneGroupStartLocation + k * 2 + 1];
+                                            // this checks if bone group has any bone data? holy f
+                                            if (PsaFile.FileContent[boneGroupStartLocation + k * 2] >= 8096 && PsaFile.FileContent[boneGroupStartLocation + k * 2] < PsaFile.DataSectionSize &&
+                                                numberOfBones > 0 && numberOfBones < 256)
+                                            {
+                                                // bones exist
+                                                //Console.WriteLine("Number of bones: " + numberOfBones);
+                                                boneGroup.numberOfBones = numberOfBones;
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // gets data sections (specify which bone group in a bone switch to start on -- optional, otherwise I believe a bone switch defaults to starting on bone group 0)
+                        int numberOfDataSections = PsaFile.FileContent[modelVisiblityStartLocation + 3];
+                        if (PsaFile.FileContent[modelVisiblityStartLocation + 2] >= 8096 && PsaFile.FileContent[modelVisiblityStartLocation + 2] < PsaFile.DataSectionSize &&
+                            numberOfDataSections > 0 && numberOfDataSections < 256)
+                        {
+                            for (int i = 0; i < numberOfDataSections; i++)
+                            {
+                                Fighter.ModelVisibility.SectionsData.Add(new ModelVisibility.SectionData());
+                            }
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("ModelVisibility Sections");
+            foreach (ModelVisibility.Section section in Fighter.ModelVisibility.Sections)
+            {
+                Console.WriteLine(String.Format("Section Name: {0}", section.Name));
+                Console.WriteLine(String.Format("Number of bone switches: {0}", section.BoneSwitches.Count));
+                foreach (ModelVisibility.BoneSwitch boneSwitch in section.BoneSwitches)
+                {
+                    Console.WriteLine(String.Format("Number of bone groups: {0}", boneSwitch.BoneGroups.Count));
+                    foreach (ModelVisibility.BoneGroup boneGroup in boneSwitch.BoneGroups)
+                    {
+                        Console.WriteLine(String.Format("Bone count: {0}", boneGroup.numberOfBones));
+                    }
+                }
+            }
+            Console.WriteLine("Number of data sections: {0}", Fighter.ModelVisibility.SectionsData.Count);
         }
 
         public void PrintFighterAttributes()

@@ -22,6 +22,8 @@ namespace PSA2.src.views
         private void Form1_Load(object sender, EventArgs e)
         {
             PsaFileParser psaFileParser = new PsaFileParser("data/FitRidley.pac");
+            // PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitRidley-DataSection.pac");
+
             PsaMovesetParser psaMovesetParser = psaFileParser.ParseMovesetFile();
         }
     }
