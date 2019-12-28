@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +9,7 @@ namespace PSA2.src.utility
 {
     public static class Utils
     {
-        public static string intArrayToString(int[] array)
+        public static string IntArrayToString(int[] array)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("[");
@@ -23,7 +25,7 @@ namespace PSA2.src.utility
             return stringBuilder.ToString();
         }
 
-        public static int convertWordToBase10Int(int byte1, int byte2, int byte3, int byte4)
+        public static int ConvertWordToBase10Int(int byte1, int byte2, int byte3, int byte4)
         {
             return byte4 + (byte3 << 8) + (byte2 << 16) + (byte1 << 24);
         }
@@ -65,6 +67,11 @@ namespace PSA2.src.utility
                 }
             }
             return Encoding.UTF8.GetString(letters.ToArray());
+        }
+
+        public static T LoadJson<T>(string filePath)
+        {
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
         }
     }
 }

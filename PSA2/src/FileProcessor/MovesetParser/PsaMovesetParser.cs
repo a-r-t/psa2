@@ -36,7 +36,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //string movesetName = GetMovesetName();
             (int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
             (int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
-
+            LoadCharacterSpecificParameters();
         }
 
         private string GetMovesetName()
@@ -135,10 +135,26 @@ namespace PSA2.src.FileProcessor.MovesetParser
         
         }
 
+        private void LoadCharacterSpecificParameters()
+        {
+            CharacterSpecificParametersConfig characterSpecificParametersConfig = Utils.LoadJson<CharacterSpecificParametersConfig>("data/char_specific/FitLucario.json");
+            //Console.WriteLine(characterSpecificParametersConfig.Articles[0].ArticleParameters[0].Name);
+
+
+
+
+
+
+
+        }
+
+
+
+
         private void LoadAttributes()
         {
             const int TOTAL_NUMBER_OF_ATTRIBUTES = 185;
-            AttributeConfig attributesConfig = JsonConvert.DeserializeObject<AttributeConfig>(File.ReadAllText("data/attribute_data.json"));
+            AttributeConfig attributesConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
             List<Attribute> attributes = new List<Attribute>();
 
             for (int i = 0; i < TOTAL_NUMBER_OF_ATTRIBUTES; i++)
@@ -146,7 +162,13 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 AttributeConfig.AttributeData attributeData = attributesConfig.Attributes[i];
                 if (attributesConfig.Attributes[i].Type == "int")
                 {
-                    attributes.Add(new IntAttribute(attributeData.Name, attributeData.Description, attributeData.Location, PsaFile.FileContent[i], PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES]));
+                    attributes.Add(
+                        new IntAttribute(
+                            attributeData.Name, 
+                            attributeData.Description, 
+                            attributeData.Location, 
+                            PsaFile.FileContent[i], 
+                            PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES]));
                 }
                 else
                 {

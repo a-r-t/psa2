@@ -65,9 +65,9 @@ namespace PSA2.src.FileProcessor
         {
             return new StringBuilder()
                 .Append("File Header:")
-                .AppendLine(Utils.intArrayToString(FileHeader))
+                .AppendLine(Utils.IntArrayToString(FileHeader))
                 .Append("File Content:")
-                .AppendLine(Utils.intArrayToString(FileContent))
+                .AppendLine(Utils.IntArrayToString(FileContent))
                 .Append("File Size:")
                 .AppendLine(FileSize.ToString())
                 .ToString();
