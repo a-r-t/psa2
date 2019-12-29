@@ -58,6 +58,7 @@
     <Compile Include="src\models\fighter\AnimationFlag.cs" />
     <Compile Include="src\models\fighter\Bone.cs" />
     <Compile Include="src\models\fighter\CommandParam.cs" />
+    <Compile Include="src\models\fighter\DataEntry.cs" />
     <Compile Include="src\models\fighter\FloatAttribute.cs" />
     <Compile Include="src\models\fighter\IntAttribute.cs" />
     <Compile Include="src\models\fighter\ModelVisibility.cs" />

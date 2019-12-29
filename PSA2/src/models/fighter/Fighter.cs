@@ -16,6 +16,8 @@ namespace PSA2.src.models.fighter
         public List<Attribute> Attributes { get;  set; }
         public List<Article> Articles { get;  set; }
         public ModelVisibility ModelVisibility { get; set; }
+        public List<DataEntry> DataTableEntries { get; set; }
+        public List<DataEntry> ExternalDataEntries { get; set; }
 
         public Fighter()
         {
@@ -27,6 +29,8 @@ namespace PSA2.src.models.fighter
             Attributes = new List<Attribute>();
             Articles = new List<Article>();
             ModelVisibility = new ModelVisibility();
+            DataTableEntries = new List<DataEntry>();
+            ExternalDataEntries = new List<DataEntry>();
         }
     }
 }

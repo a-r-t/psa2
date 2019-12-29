@@ -13,6 +13,10 @@ namespace PSA2.src.FileProcessor
         public int[] FileContent { get; private set; }
         public int FileSize { get; private set; }
 
+        /// <summary>
+        /// Size of data section (bits)
+        /// To get bytes, just divide this result by 4
+        /// </summary>
         public int DataSectionSize
         {
             get
@@ -22,6 +26,7 @@ namespace PSA2.src.FileProcessor
         }
 
         /// <summary>
+        /// Number of offset entries in Offsets Section
         /// Each Offset Entry is 4 bytes
         /// </summary>
         public int NumberOfOffsetEntries
@@ -33,9 +38,10 @@ namespace PSA2.src.FileProcessor
         }
 
         /// <summary>
-        /// Each External Data Table entry is 8 bytes
+        /// Number of data table entries in Data Table Section 
+        /// Each Data Table entry is 8 bytes
         /// </summary>
-        public int NumberOfDataTableElements
+        public int NumberOfDataTableEntries
         {
             get
             {
@@ -44,6 +50,7 @@ namespace PSA2.src.FileProcessor
         }
 
         /// <summary>
+        /// Number of external sub routine entries in External Data Section
         /// Each External Sub Routine entry is 8 bytes
         /// </summary>
         public int NumberOfExternalSubRoutines
@@ -53,6 +60,57 @@ namespace PSA2.src.FileProcessor
                 return FileHeader[28];
             }
         }
+
+        /*
+         * Section Locations
+         * http://opensa.dantarion.com/wiki/Moveset_File_Format_(Brawl)
+         */
+        /// <summary>
+        /// Location where Data Section starts in File Content
+        /// </summary>
+        public int DataSectionStartLocation
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Location where Offsets Section starts in File Content
+        /// </summary>
+        public int OffsetsSectionStartLocation
+        {
+            get
+            {
+                return DataSectionStartLocation + DataSectionSize / 4;
+            }
+        }
+
+        /// <summary>
+        /// Location where Data Table Section starts in File Content
+        /// </summary>
+        public int DataTableSectionStartLocation
+        {
+            get
+            {
+                return OffsetsSectionStartLocation + NumberOfOffsetEntries;
+            }
+        }
+
+        /// <summary>
+        /// Location where External Data Section starts in File Content
+        /// </summary>
+        public int ExternalDataSectionStartLocation
+        {
+            get
+            {
+                return DataTableSectionStartLocation + NumberOfDataTableEntries * 2;
+            }
+        }
+        /*
+         * End Section Locations
+         */
 
         public PsaFile(int[] fileHeader, int[] fileContent, int fileSize)
         {

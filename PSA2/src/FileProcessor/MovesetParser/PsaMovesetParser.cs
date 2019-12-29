@@ -34,13 +34,35 @@ namespace PSA2.src.FileProcessor.MovesetParser
         private void Prelim()
         {
             //string movesetName = GetMovesetName();
-            (int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
+            //(int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
             //(int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
             //LoadCharacterSpecificParameters();
             //Dictionary<string, string> dataOffsets = GetDataOffsets(dataSectionLocation);
 
-            LoadModelVisibilityData(dataSectionLocation);
+            //LoadModelVisibilityData(dataSectionLocation);
+            //GetSections();
+            LoadDataTableEntries();
+            LoadExternalDataEntries();
+        }
 
+        private void LoadMovesetBase()
+        {
+            StringBuilder movesetName = new StringBuilder();
+            int nameEndByteIndex = 4;
+            while (true)
+            {
+                string nextStringData = Utils.ConvertWordToString(PsaFile.FileHeader[nameEndByteIndex]);
+                movesetName.Append(nextStringData);
+                if (nextStringData.Length == 4)
+                {
+                    nameEndByteIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Fighter.FileBase = movesetName.ToString();
         }
 
         private string GetMovesetName()
@@ -64,11 +86,110 @@ namespace PSA2.src.FileProcessor.MovesetParser
             return movesetName.ToString();
         }
 
+        private void LoadDataTableEntries()
+        {
+            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
+            for (int i = 0; i < PsaFile.NumberOfDataTableEntries; i++)
+            {
+                int dataOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + (i * 2)] / 4;
+                int nameStringOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + 1 + (i * 2)];
+                int startBit = nameStringOffset;
+                StringBuilder dataEntryName = new StringBuilder();
+                while (true)
+                {
+                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+
+                    if (nextStringData.Length != 0)
+                    {
+                        dataEntryName.Append(nextStringData);
+                        startBit += nextStringData.Length;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                Fighter.DataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
+            }
+
+            foreach (DataEntry dte in Fighter.DataTableEntries)
+            {
+                Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
+            }
+        }
+
+        private void LoadExternalDataEntries()
+        {
+            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
+            for (int i = 0; i < PsaFile.NumberOfExternalSubRoutines; i++)
+            {
+                int dataOffset = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + (i * 2)] / 4;
+                int nameStringOffset = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + 1 + (i * 2)];
+                int startBit = nameStringOffset;
+                StringBuilder dataEntryName = new StringBuilder();
+                while (true)
+                {
+                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+
+                    if (nextStringData.Length != 0)
+                    {
+                        dataEntryName.Append(nextStringData);
+                        startBit += nextStringData.Length;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                Fighter.ExternalDataEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
+            }
+
+            foreach (DataEntry dte in Fighter.ExternalDataEntries)
+            {
+                Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
+            }
+        }
+
+        private int GetSections()
+        {
+            List<DataEntry> dataTableEntries = new List<DataEntry>();
+
+            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
+            int totalNumberOfDataEntries = PsaFile.NumberOfDataTableEntries + PsaFile.NumberOfExternalSubRoutines;
+            for (int i = 0; i < totalNumberOfDataEntries; i++)
+            {
+                int dataOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + (i * 2)] / 4;
+                int nameStringOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + 1 + (i * 2)];
+                int startBit = nameStringOffset;
+                StringBuilder dataEntryName = new StringBuilder();
+                while (true)
+                {
+                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+
+                    if (nextStringData.Length != 0)
+                    {
+                        dataEntryName.Append(nextStringData);
+                        startBit += nextStringData.Length;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                dataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
+            }
+            foreach (DataEntry dte in dataTableEntries)
+            {
+                Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
+            }
+            return 0;
+        }
+
         private (int, List<string>, List<string>) GetDataTableAndExternalSubRoutineEntryNames()
         {
             int numberOfBytesInDataSection = PsaFile.DataSectionSize / 4;
             int dataTableStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries - 2;
-            int totalNumberOfDataElements = PsaFile.NumberOfDataTableElements + PsaFile.NumberOfExternalSubRoutines;
+            int totalNumberOfDataElements = PsaFile.NumberOfDataTableEntries + PsaFile.NumberOfExternalSubRoutines;
             int dataElementNameEntriesStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries + totalNumberOfDataElements * 2;
             List<string> dataTable = new List<string>();
             List<string> externalSubRoutines = new List<string>();
@@ -79,6 +200,8 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 int currentDataTableEntryIndex = i + 1;
                 int nextDataTableEntryLocation = dataTableStartLocation + (currentDataTableEntryIndex * 2);
                 int nextDataElementNameLocation = PsaFile.FileContent[nextDataTableEntryLocation + 1];
+                Console.WriteLine(nextDataElementNameLocation);
+                Console.WriteLine(nextDataElementNameLocation / 4);
                 if (nextDataElementNameLocation >= 0)
                 {
                     while (true)
@@ -100,8 +223,8 @@ namespace PSA2.src.FileProcessor.MovesetParser
                     {
                         dataSectionLocation = PsaFile.FileContent[nextDataTableEntryLocation] / 4;
                     }
-                    
-                    if (i < PsaFile.NumberOfDataTableElements)
+
+                    if (i < PsaFile.NumberOfDataTableEntries)
                     {
                         dataTable.Add(dataElementName.ToString());
                     }
