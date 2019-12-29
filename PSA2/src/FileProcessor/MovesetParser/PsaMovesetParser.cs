@@ -25,34 +25,28 @@ namespace PSA2.src.FileProcessor.MovesetParser
 
         public void ParseFighter()
         {
-            Prelim();
-            //LoadAttributes();
-
-
-        }
-
-        private void Prelim()
-        {
-            //string movesetName = GetMovesetName();
-            //(int dataSectionLocation, List<string> dataTableEntryNames, List<string> externalSubRoutineEntryNames) = GetDataTableAndExternalSubRoutineEntryNames();
-            //(int numberOfSpecialActions, int numberOfSubActions) = GetNumberOfSpecialActionsAndSubactions(dataSectionLocation);
+            string movesetBase = GetMovesetBase();
+            List<Attribute> attributes = GetAttributes();
+            List<DataEntry> dataTableEntries = GetDataTableEntries();
+            int dataSectionOffset = dataTableEntries.Find(dte => dte.Name == "data").Offset;
+            Console.WriteLine(String.Format("Data Section Offset: {0}", dataSectionOffset));
+            List<DataEntry> externalDataEntries = GetExternalDataEntries();
+            int numberOfSpecialActions = GetNumberOfSpecialActions(dataSectionOffset);
+            int numberOfSubActions = GetNumberOfSubActions(dataSectionOffset);
             //LoadCharacterSpecificParameters();
-            //Dictionary<string, string> dataOffsets = GetDataOffsets(dataSectionLocation);
-
-            //LoadModelVisibilityData(dataSectionLocation);
-            //GetSections();
-            LoadDataTableEntries();
-            LoadExternalDataEntries();
+            Dictionary<string, string> dataOffsets = GetDataOffsets(dataSectionOffset);
+            ModelVisibility modelVisibility = GetModelVisibilityData(dataSectionOffset);
         }
 
-        private void LoadMovesetBase()
+
+        private string GetMovesetBase()
         {
-            StringBuilder movesetName = new StringBuilder();
+            StringBuilder movesetBase = new StringBuilder();
             int nameEndByteIndex = 4;
             while (true)
             {
                 string nextStringData = Utils.ConvertWordToString(PsaFile.FileHeader[nameEndByteIndex]);
-                movesetName.Append(nextStringData);
+                movesetBase.Append(nextStringData);
                 if (nextStringData.Length == 4)
                 {
                     nameEndByteIndex++;
@@ -62,32 +56,13 @@ namespace PSA2.src.FileProcessor.MovesetParser
                     break;
                 }
             }
-            Fighter.FileBase = movesetName.ToString();
+            Console.WriteLine(movesetBase.ToString());
+            return movesetBase.ToString();
         }
 
-        private string GetMovesetName()
+        private List<DataEntry> GetDataTableEntries()
         {
-            StringBuilder movesetName = new StringBuilder();
-            int nameEndByteIndex = 4;
-            while (true)
-            {
-                string nextStringData = Utils.ConvertWordToString(PsaFile.FileHeader[nameEndByteIndex]);
-                movesetName.Append(nextStringData);
-                if (nextStringData.Length == 4)
-                {
-                    nameEndByteIndex++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            Console.WriteLine(movesetName.ToString());
-            return movesetName.ToString();
-        }
-
-        private void LoadDataTableEntries()
-        {
+            List<DataEntry> dataTableEntries = new List<DataEntry>();
             int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfDataTableEntries; i++)
             {
@@ -109,17 +84,20 @@ namespace PSA2.src.FileProcessor.MovesetParser
                         break;
                     }
                 }
-                Fighter.DataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
+                dataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
             }
 
-            foreach (DataEntry dte in Fighter.DataTableEntries)
+            foreach (DataEntry dte in dataTableEntries)
             {
                 Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
             }
+
+            return dataTableEntries;
         }
 
-        private void LoadExternalDataEntries()
+        private List<DataEntry> GetExternalDataEntries()
         {
+            List<DataEntry> externalDataEntries = new List<DataEntry>();
             int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfExternalSubRoutines; i++)
             {
@@ -141,128 +119,29 @@ namespace PSA2.src.FileProcessor.MovesetParser
                         break;
                     }
                 }
-                Fighter.ExternalDataEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
+                externalDataEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
             }
 
-            foreach (DataEntry dte in Fighter.ExternalDataEntries)
+            foreach (DataEntry dte in externalDataEntries)
             {
                 Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
             }
+            return externalDataEntries;
         }
 
-        private int GetSections()
+        private int GetNumberOfSpecialActions(int dataSectionOffset)
         {
-            List<DataEntry> dataTableEntries = new List<DataEntry>();
-
-            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
-            int totalNumberOfDataEntries = PsaFile.NumberOfDataTableEntries + PsaFile.NumberOfExternalSubRoutines;
-            for (int i = 0; i < totalNumberOfDataEntries; i++)
-            {
-                int dataOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + (i * 2)] / 4;
-                int nameStringOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + 1 + (i * 2)];
-                int startBit = nameStringOffset;
-                StringBuilder dataEntryName = new StringBuilder();
-                while (true)
-                {
-                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
-
-                    if (nextStringData.Length != 0)
-                    {
-                        dataEntryName.Append(nextStringData);
-                        startBit += nextStringData.Length;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                dataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
-            }
-            foreach (DataEntry dte in dataTableEntries)
-            {
-                Console.WriteLine(String.Format("Name: {0}, Offset: {1}", dte.Name, dte.Offset));
-            }
-            return 0;
+            Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[dataSectionOffset + 10] - PsaFile.FileContent[dataSectionOffset + 9]) / 4));
+            return (PsaFile.FileContent[dataSectionOffset + 10] - PsaFile.FileContent[dataSectionOffset + 9]) / 4;
         }
 
-        private (int, List<string>, List<string>) GetDataTableAndExternalSubRoutineEntryNames()
+        private int GetNumberOfSubActions(int dataSectionOffset)
         {
-            int numberOfBytesInDataSection = PsaFile.DataSectionSize / 4;
-            int dataTableStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries - 2;
-            int totalNumberOfDataElements = PsaFile.NumberOfDataTableEntries + PsaFile.NumberOfExternalSubRoutines;
-            int dataElementNameEntriesStartLocation = numberOfBytesInDataSection + PsaFile.NumberOfOffsetEntries + totalNumberOfDataElements * 2;
-            List<string> dataTable = new List<string>();
-            List<string> externalSubRoutines = new List<string>();
-            int dataSectionLocation = 0;
-            for (int i = 0; i < totalNumberOfDataElements; i++)
-            {
-                StringBuilder dataElementName = new StringBuilder();
-                int currentDataTableEntryIndex = i + 1;
-                int nextDataTableEntryLocation = dataTableStartLocation + (currentDataTableEntryIndex * 2);
-                int nextDataElementNameLocation = PsaFile.FileContent[nextDataTableEntryLocation + 1];
-                Console.WriteLine(nextDataElementNameLocation);
-                Console.WriteLine(nextDataElementNameLocation / 4);
-                if (nextDataElementNameLocation >= 0)
-                {
-                    while (true)
-                    {
-                        int startByte = nextDataElementNameLocation % 4;
-                        string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + nextDataElementNameLocation / 4], startByte: startByte);
-                        if (nextStringData.Length != 0)
-                        {
-                            dataElementName.Append(nextStringData);
-                            nextDataElementNameLocation += nextStringData.Length;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    
-                    if (dataSectionLocation == 0 && dataElementName.ToString() == "data")
-                    {
-                        dataSectionLocation = PsaFile.FileContent[nextDataTableEntryLocation] / 4;
-                    }
-
-                    if (i < PsaFile.NumberOfDataTableEntries)
-                    {
-                        dataTable.Add(dataElementName.ToString());
-                    }
-                    else
-                    {
-                        externalSubRoutines.Add(dataElementName.ToString());
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            //Console.WriteLine(dataSectionLocation);
-            foreach (string dt in dataTable)
-            {
-                //Console.WriteLine(dt);
-            }
-
-            foreach (string es in externalSubRoutines)
-            {
-                //Console.WriteLine(es);
-            }
-            return (dataSectionLocation, dataTable, externalSubRoutines);
+            Console.WriteLine(String.Format("Number of Sub Actions: {0}", (PsaFile.FileContent[dataSectionOffset + 13] - PsaFile.FileContent[dataSectionOffset + 12]) / 4));
+            return (PsaFile.FileContent[dataSectionOffset + 13] - PsaFile.FileContent[dataSectionOffset + 12]) / 4;
         }
 
-        private (int, int) GetNumberOfSpecialActionsAndSubactions(int dataSectionLocation)
-        {
-            int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
-            int numberOfSubactions = (PsaFile.FileContent[dataSectionLocation + 13] - PsaFile.FileContent[dataSectionLocation + 12]) / 4;
-            Console.WriteLine(numberOfSubactions);
-            Console.WriteLine(numberOfSpecialActions);
-            return (numberOfSpecialActions, numberOfSubactions);
-        
-        }
-
-        private Dictionary<string, string> GetDataOffsets(int dataSectionLocation)
+        private Dictionary<string, string> GetDataOffsets(int dataSectionOffset)
         {
             List<string> offsetNames = new List<string>
             {
@@ -301,7 +180,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             Dictionary<string, string> dataOffsets = new Dictionary<string, string>();
             for (int i = 0; i < offsetNames.Count; i++)
             {
-                dataOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[dataSectionLocation + i]));
+                dataOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[dataSectionOffset + i]));
             }
             foreach (KeyValuePair<string, string> pair in dataOffsets)
             {
@@ -316,10 +195,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //Console.WriteLine(characterSpecificParametersConfig.Articles[0].ArticleParameters[0].Name);
         }
 
-
-
-
-        private void LoadAttributes()
+        private List<Attribute> GetAttributes()
         {
             const int TOTAL_NUMBER_OF_ATTRIBUTES = 185;
             AttributeConfig attributesConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
@@ -350,17 +226,31 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 }
             }
 
-            Fighter.Attributes = attributes;
-            PrintFighterAttributes();
+            foreach (Attribute attribute in attributes)
+            {
+                if (attribute is IntAttribute)
+                {
+                    IntAttribute intAttribute = (IntAttribute)attribute;
+                    Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", intAttribute.Name, intAttribute.Value, intAttribute.SseValue));
+                }
+                else
+                {
+                    FloatAttribute floatAttribute = (FloatAttribute)attribute;
+                    Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", floatAttribute.Name, floatAttribute.Value, floatAttribute.SseValue));
+                }
+            }
+
+            return attributes;
         }
 
-        private void LoadModelVisibilityData(int dataSectionLocation)
+        private ModelVisibility GetModelVisibilityData(int dataSectionOffset)
         {
+            ModelVisibility modelVisibility = new ModelVisibility();
             // idk what this if statement is for -- maybe this assures that there is model visibility data?
-            if (PsaFile.FileContent[dataSectionLocation + 1] >= 8096 && PsaFile.FileContent[dataSectionLocation + 1] < PsaFile.DataSectionSize)
+            if (PsaFile.FileContent[dataSectionOffset + 1] >= 8096 && PsaFile.FileContent[dataSectionOffset + 1] < PsaFile.DataSectionSize)
             {
 
-                int modelVisiblityStartLocation = PsaFile.FileContent[dataSectionLocation + 1] / 4;
+                int modelVisiblityStartLocation = PsaFile.FileContent[dataSectionOffset + 1] / 4;
 
                 // idk what this if statement is for
                 if (PsaFile.FileContent[modelVisiblityStartLocation] >= 8096 && PsaFile.FileContent[modelVisiblityStartLocation] < PsaFile.DataSectionSize)
@@ -386,7 +276,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
                             if (PsaFile.FileContent[modelVisibilitySectionStartLocation + i] >= 8096 && PsaFile.FileContent[modelVisibilitySectionStartLocation + i] < PsaFile.DataSectionSize)
                             {
                                 ModelVisibility.Section modelVisibilitySection = new ModelVisibility.Section();
-                                Fighter.ModelVisibility.Sections.Add(modelVisibilitySection);
+                                modelVisibility.Sections.Add(modelVisibilitySection);
                                 modelVisibilitySection.Name = modelVisibilitySectionNames[i];
 
                                 int boneSwitchStartLocation = PsaFile.FileContent[modelVisibilitySectionStartLocation + i] / 4;
@@ -430,7 +320,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
                         {
                             for (int i = 0; i < numberOfDataSections; i++)
                             {
-                                Fighter.ModelVisibility.SectionsData.Add(new ModelVisibility.SectionData());
+                                modelVisibility.SectionsData.Add(new ModelVisibility.SectionData());
                             }
                         }
                     }
@@ -438,7 +328,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             }
 
             Console.WriteLine("ModelVisibility Sections");
-            foreach (ModelVisibility.Section section in Fighter.ModelVisibility.Sections)
+            foreach (ModelVisibility.Section section in modelVisibility.Sections)
             {
                 Console.WriteLine(String.Format("Section Name: {0}", section.Name));
                 Console.WriteLine(String.Format("Number of bone switches: {0}", section.BoneSwitches.Count));
@@ -451,25 +341,8 @@ namespace PSA2.src.FileProcessor.MovesetParser
                     }
                 }
             }
-            Console.WriteLine("Number of data sections: {0}", Fighter.ModelVisibility.SectionsData.Count);
+            Console.WriteLine("Number of data sections: {0}", modelVisibility.SectionsData.Count);
+            return modelVisibility;
         }
-
-        public void PrintFighterAttributes()
-        {
-            foreach (Attribute attribute in Fighter.Attributes)
-            {
-                if (attribute is IntAttribute)
-                {
-                    IntAttribute intAttribute = (IntAttribute)attribute;
-                    Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", intAttribute.Name, intAttribute.Value, intAttribute.SseValue));
-                }
-                else
-                {
-                    FloatAttribute floatAttribute = (FloatAttribute)attribute;
-                    Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", floatAttribute.Name, floatAttribute.Value, floatAttribute.SseValue));
-                }
-            }
-        }
-
     }
 }
