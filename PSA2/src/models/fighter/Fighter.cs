@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSA2.src.models.fighter.Misc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace PSA2.src.models.fighter
         public ModelVisibility ModelVisibility { get; set; }
         public List<DataEntry> DataTableEntries { get; set; }
         public List<DataEntry> ExternalDataEntries { get; set; }
+        public MiscSection MiscSection { get; set; }
 
         public Fighter()
         {
@@ -31,6 +33,7 @@ namespace PSA2.src.models.fighter
             ModelVisibility = new ModelVisibility();
             DataTableEntries = new List<DataEntry>();
             ExternalDataEntries = new List<DataEntry>();
+            MiscSection = new MiscSection();
         }
     }
 }

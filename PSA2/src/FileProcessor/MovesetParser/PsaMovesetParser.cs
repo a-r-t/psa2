@@ -36,6 +36,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //LoadCharacterSpecificParameters();
             Dictionary<string, string> dataOffsets = GetDataOffsets(dataSectionOffset);
             ModelVisibility modelVisibility = GetModelVisibilityData(dataSectionOffset);
+            LoadMiscSection();
         }
 
 
@@ -141,54 +142,6 @@ namespace PSA2.src.FileProcessor.MovesetParser
             return (PsaFile.FileContent[dataSectionOffset + 13] - PsaFile.FileContent[dataSectionOffset + 12]) / 4;
         }
 
-        private Dictionary<string, string> GetDataOffsets(int dataSectionOffset)
-        {
-            List<string> offsetNames = new List<string>
-            {
-                "SubActionFlags",
-                "ModelVisibility",
-                "Attributes",
-                "SSEAttributes",
-                "MiscSection",
-                "CommonActionFlags",
-                "SpecialActionFlags",
-                "ExtraActionFlags",
-                "ActionInterrupts",
-                "EntrySpecials",
-                "ExitSpecials",
-                "ActionPre",
-                "SubActionMain",
-                "SubActionGFX",
-                "SubActionSFX",
-                "SubActionOther",
-                "BoneFloats1",
-                "BoneFloats2",
-                "BoneReferences",
-                "HandBones",
-                "EntryActionOverride",
-                "ExitActionOverride",
-                "ExtraActionInterrupts",
-                "BoneFloats3",
-                "Unknown24",
-                "StaticArticles",
-                "EntryArticles",
-                "DataFlags0",
-                "DataFlags1",
-                "DataFlags2",
-                "DataFlags3"
-            };
-            Dictionary<string, string> dataOffsets = new Dictionary<string, string>();
-            for (int i = 0; i < offsetNames.Count; i++)
-            {
-                dataOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[dataSectionOffset + i]));
-            }
-            foreach (KeyValuePair<string, string> pair in dataOffsets)
-            {
-                Console.WriteLine(String.Format("{0}:{1}", pair.Key, pair.Value));
-            }
-            return dataOffsets;
-        }
-
         private void LoadCharacterSpecificParameters()
         {
             CharacterSpecificParametersConfig characterSpecificParametersConfig = Utils.LoadJson<CharacterSpecificParametersConfig>("data/char_specific/FitLucario.json");
@@ -208,10 +161,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 {
                     attributes.Add(
                         new IntAttribute(
-                            attributeData.Name, 
-                            attributeData.Description, 
-                            attributeData.Location, 
-                            PsaFile.FileContent[i], 
+                            attributeData.Name,
+                            attributeData.Description,
+                            attributeData.Location,
+                            PsaFile.FileContent[i],
                             PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES]));
                 }
                 else
@@ -303,7 +256,6 @@ namespace PSA2.src.FileProcessor.MovesetParser
                                                 numberOfBones > 0 && numberOfBones < 256)
                                             {
                                                 // bones exist
-                                                //Console.WriteLine("Number of bones: " + numberOfBones);
                                                 boneGroup.numberOfBones = numberOfBones;
                                             }
 
@@ -343,6 +295,68 @@ namespace PSA2.src.FileProcessor.MovesetParser
             }
             Console.WriteLine("Number of data sections: {0}", modelVisibility.SectionsData.Count);
             return modelVisibility;
+        }
+
+        private Dictionary<string, string> GetDataOffsets(int dataSectionOffset)
+        {
+            List<string> offsetNames = new List<string>
+            {
+                "SubActionFlags",
+                "ModelVisibility",
+                "Attributes",
+                "SSEAttributes",
+                "MiscSection",
+                "CommonActionFlags",
+                "SpecialActionFlags",
+                "ExtraActionFlags",
+                "ActionInterrupts",
+                "EntrySpecials",
+                "ExitSpecials",
+                "ActionPre",
+                "SubActionMain",
+                "SubActionGFX",
+                "SubActionSFX",
+                "SubActionOther",
+                "BoneFloats1",
+                "BoneFloats2",
+                "BoneReferences",
+                "HandBones",
+                "EntryActionOverride",
+                "ExitActionOverride",
+                "ExtraActionInterrupts",
+                "BoneFloats3",
+                "Unknown24",
+                "StaticArticles",
+                "EntryArticles",
+                "DataFlags0",
+                "DataFlags1",
+                "DataFlags2",
+                "DataFlags3"
+            };
+            Dictionary<string, string> dataOffsets = new Dictionary<string, string>();
+            for (int i = 0; i < offsetNames.Count; i++)
+            {
+                dataOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[dataSectionOffset + i]));
+            }
+            foreach (KeyValuePair<string, string> pair in dataOffsets)
+            {
+                Console.WriteLine(String.Format("{0}:{1}", pair.Key, pair.Value));
+            }
+            return dataOffsets;
+        }
+
+        private void LoadMiscSection(int dataSectionOffset)
+        {
+            // idk what this is for -- check if there's a misc section at all maybe?
+            if (PsaFile.FileContent[dataSectionOffset + 4] >= 8096 && PsaFile.FileContent[dataSectionOffset + 4] < PsaFile.DataSectionSize)
+            {
+                int miscSectionLocation = PsaFile.FileContent[dataSectionOffset + 4] / 4;
+                // checks if there is a misc section 1
+                if (PsaFile.FileContent[miscSectionLocation] >= 8096 && PsaFile.FileContent[miscSectionLocation] < PsaFile.DataSectionSize)
+                {
+
+                }
+            }
         }
     }
 }
