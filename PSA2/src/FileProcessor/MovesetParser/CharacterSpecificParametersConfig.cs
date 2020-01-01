@@ -26,7 +26,9 @@ namespace PSA2.src.FileProcessor.MovesetParser
         {
             public string Location { get; set; }
             public string ArticleIndex { get; set; }
-            public string Unknown1 { get; set; }
+            public int NumberOfActions { get; set; }
+            public int NumberOfSubActions { get; set; }
+            public string Name { get; set; }
             public List<ArticleParameter> ArticleParameters { get; set; }
         }
 

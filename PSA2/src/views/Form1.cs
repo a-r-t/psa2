@@ -23,6 +23,7 @@ namespace PSA2.src.views
         {
             PsaFileParser psaFileParser = new PsaFileParser("data/FitRidley.pac");
             // PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitRidley-DataSection.pac");
+            //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitRidleyOversized.pac");
 
             PsaMovesetParser psaMovesetParser = psaFileParser.ParseMovesetFile();
         }

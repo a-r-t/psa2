@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.models.fighter.Misc
 {
-    public class BoneReferences
+    public class Tether
     {
         public int Offset { get; set; }
-        public int BonesCount { get; set; }
-        public List<int> Bones { get; set; }
-
-        public BoneReferences()
-        {
-            Bones = new List<int>();
-        }
+        public int HangFrameCount { get; set; }
+        public int Unknown { get; set; }
     }
 }

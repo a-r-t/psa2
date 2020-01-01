@@ -41,6 +41,7 @@ namespace PSA2.src.models.fighter.Misc
         public Crawl Crawl { get; set; }
         public MultiJump MultiJump { get; set; }
         public Glide Glide { get; set; }
+        public Tether Tether { get; set; }
         public CollisionData CollisionData { get; set; }
 
     }

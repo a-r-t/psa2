@@ -429,7 +429,9 @@
     {
       "location": "0A0",
       "articleIndex": "0",
-      "unknown1": "3-A",
+	  "numberOfActions": 3,
+	  "numberOfSubActions": 10,
+	  "name": "Aura Sphere",
       "articleParameters": [
         {
           "location": "034",
@@ -534,7 +536,9 @@
     {
       "location": "0A4",
       "articleIndex": "1",
-      "unknown1": "1-1",
+	  "numberOfActions": 1,
+	  "numberOfSubActions": 1,
+	  "name": "Force Palm",
       "articleParameters": []
     }
   ]

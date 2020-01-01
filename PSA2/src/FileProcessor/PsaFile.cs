@@ -14,6 +14,18 @@ namespace PSA2.src.FileProcessor
         public int FileSize { get; private set; }
 
         /// <summary>
+        /// Gets total size of Moveset File (bits)
+        /// To get bytes, just divide this result by 4
+        /// </summary>
+        public int MovesetFileSize
+        {
+            get
+            {
+                return FileHeader[24];
+            }
+        }
+
+        /// <summary>
         /// Size of data section (bits)
         /// To get bytes, just divide this result by 4
         /// </summary>

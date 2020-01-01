@@ -15,6 +15,8 @@ namespace PSA2.src.models.fighter.Misc
         public int DataCount { get; set; }
         public int DataOffset { get; set; }
         public int Pad { get; set; }
+
+        public int EntriesCount { get; set; }
         public List<ItemBonesEntry> Entries { get; set; }
 
         public ItemBones()

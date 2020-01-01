@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.models.fighter.Misc
 {
-    public class BoneReferences
+    public class EntryArticleSubAction
     {
         public int Offset { get; set; }
-        public int BonesCount { get; set; }
-        public List<int> Bones { get; set; }
-
-        public BoneReferences()
-        {
-            Bones = new List<int>();
-        }
+        public string SubAction0 { get; set; }
+        public string SubAction1 { get; set; }
     }
 }

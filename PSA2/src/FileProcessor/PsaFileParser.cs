@@ -36,6 +36,7 @@ namespace PSA2.src.FileProcessor
                 // measured in bytes (divide by 10 to get kb)
                 int minFileSize = 50000;
                 int maxFileSize = 593920;
+                //int maxFileSize = 7000000;
                 if (fileStream.Length >= minFileSize && fileStream.Length <= maxFileSize)
                 {
                     int fileId = Utils.ConvertWordToBase10Int(
@@ -64,7 +65,8 @@ namespace PSA2.src.FileProcessor
             catch (Exception e)
             {
                 Console.WriteLine(String.Format("Unable to parse PAC file: %s", e.Message));
-                throw e;
+                Console.WriteLine(e.StackTrace);
+                throw;
             }
         }
 

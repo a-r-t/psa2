@@ -11,6 +11,7 @@ namespace PSA2.src.models.fighter
         public string EntryOffset { get; set; }
         public string DataOffset { get; set; }
         public List<Section> Sections { get; set; }
+        public int SectionsDataCount { get; set; }
         public List<SectionData> SectionsData { get; set; }
 
         public ModelVisibility()
