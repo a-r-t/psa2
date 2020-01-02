@@ -8,12 +8,12 @@ namespace PSA2.src.models.fighter
 {
     public class DataEntry
     {
-        public int Offset { get; set; }
+        public int Location { get; set; }
         public string Name { get; set; }
 
-        public DataEntry(int offset, string name)
+        public DataEntry(int location, string name)
         {
-            Offset = offset;
+            Location = location;
             Name = name;
         }
     }

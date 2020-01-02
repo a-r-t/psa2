@@ -52,6 +52,14 @@
   <ItemGroup>
     <Compile Include="src\FileProcessor\MovesetParser\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\CharacterSpecificParametersConfig.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\AttributesParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\DataTableParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ExternalDataParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\ArticleDataParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\MiscSectionParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\ModelVisibilityParser.cs" />
     <Compile Include="src\FileProcessor\PsaFileParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\PsaMovesetParser.cs" />
     <Compile Include="src\FileProcessor\PsaFile.cs" />
@@ -59,8 +67,6 @@
     <Compile Include="src\models\fighter\Bone.cs" />
     <Compile Include="src\models\fighter\CommandParam.cs" />
     <Compile Include="src\models\fighter\DataEntry.cs" />
-    <Compile Include="src\models\fighter\FloatAttribute.cs" />
-    <Compile Include="src\models\fighter\IntAttribute.cs" />
     <Compile Include="src\models\fighter\Misc\ActionFlag.cs" />
     <Compile Include="src\models\fighter\Misc\ActionInterruptEntry.cs" />
     <Compile Include="src\models\fighter\Misc\ActionInterrupts.cs" />

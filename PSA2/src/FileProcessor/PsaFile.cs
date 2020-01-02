@@ -25,6 +25,14 @@ namespace PSA2.src.FileProcessor
             }
         }
 
+        public int GetTotalFileSize
+        {
+            get
+            {
+                return FileSize + (FileHeader.Length * 4);
+            }
+        }
+
         /// <summary>
         /// Size of data section (bits)
         /// To get bytes, just divide this result by 4
@@ -129,6 +137,11 @@ namespace PSA2.src.FileProcessor
             FileHeader = fileHeader;
             FileContent = fileContent;
             FileSize = fileSize;
+        }
+
+        public bool IsValidDataSectionLocation(int location)
+        {
+            return FileContent[location] >= 8096 && FileContent[location] < DataSectionSize;
         }
 
         public override string ToString()
