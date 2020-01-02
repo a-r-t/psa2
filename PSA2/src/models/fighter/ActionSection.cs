@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PSA2.src.FileProcessor.MovesetParser.PsaCommandsConfig;
 
 namespace PSA2.src.models.fighter
 {

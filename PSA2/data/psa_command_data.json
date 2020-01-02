@@ -1,5 +1,5 @@
 ﻿{
-	"psaCommandData": [
+	"psaCommands": [
 		{
 			"commandName": "Synchronous Timer",
 			"description": "Pause the current flow of events until the set time is reached. Synchronous timers count down when they are reached in the code.",
@@ -14,18 +14,12 @@
 					"canUseVariable": false,
 					"defaultValue": "1"
 				}
-			],
-			"commandNameAliases": [
-				"STimer"
 			]
 		},
 		{
 			"commandName": "No Event",
 			"description": "Nop -- doesn't do anything",
-			"instruction": "00020000",
-			"commandNameAliases": [
-				"Nop"
-			]
+			"instruction": "00020000"
 		},
 		{
 			"commandName": "Asynchronous Timer",
@@ -41,9 +35,6 @@
 					"canUseVariable": false,
 					"defaultValue": "1"
 				}
-			],
-			"commandNameAliases": [
-				"ATimer"
 			]
 		},
 		{
@@ -60,23 +51,17 @@
 					"canUseVariable": false,
 					"defaultValue": "1"
 				}
-			],
-			"commandNameAliases": [
-				"Loop"
 			]
 		},
 		{
 			"commandName": "End Loop",
 			"description": "End of loop block.",
-			"instruction": "00050000",
-			"commandNameAliases": [
-				"pool"
-			]
+			"instruction": "00050000"
 		},
 		{
 			"commandName": "Loop Break",
 			"description": "Breaks out of the current loop.",
-			"instruction": "00060000",
+			"instruction": "00060000"
 		},
 		{
 			"commandName": "Subroutine",
@@ -96,7 +81,7 @@
 		{
 			"commandName": "Return",
 			"description": "Return from a subroutine.",
-			"instruction": "00080000",
+			"instruction": "00080000"
 		},
 		{
 			"commandName": "Goto",
@@ -437,10 +422,7 @@
 		{
 			"commandName": "End If",
 			"description": "End an If block.",
-			"instruction": "000F0000",
-			"commandNameAliases": [
-				"fi"
-			]
+			"instruction": "000F0000"
 		},
 		{
 			"commandName": "Switch",
@@ -492,10 +474,7 @@
 		{
 			"commandName": "End Switch",
 			"description": "End a Switch block.",
-			"instruction": "00130000",
-			"commandNameAliases": [
-				"esac"
-			]
+			"instruction": "00130000"
 		},
 		{
 			"commandName": "Break",
@@ -1030,9 +1009,6 @@
 					],
 					"canUseVariable": true
 				}
-			],
-			"commandNameAliases": [
-				"subaction"
 			]
 		},
 		{
@@ -1058,5 +1034,6 @@
 				}
 			]
 		},
+
 	]
 }
