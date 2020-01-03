@@ -67,21 +67,21 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsHelpe
 
                 if (paramType == (int)ParamType.VARIABLE)
                 {
-                    Console.WriteLine(ConvertParamValueToVariable(paramValue));
+                    Console.WriteLine($"Variable: {ConvertParamValueToVariable(paramValue)}");
                 }
                 else if (paramType == (int)ParamType.SCALAR)
                 {
-                    Console.WriteLine(ConvertParamValueToScalar(paramValue));
+                    Console.WriteLine($"Scalar: {ConvertParamValueToScalar(paramValue)}");
                     // Console.WriteLine($"{paramValue / 60000m}");
                     // Console.WriteLine($"{(decimal)paramValue / 60000m:0.0####}");    --- this was what it originally was in PSA-C
                 }
                 else if (paramType == (int)ParamType.VALUE || paramType == (int)ParamType.UNKNOWN1)
                 {
-                    Console.WriteLine(paramValue.ToString("X"));
+                    Console.WriteLine($"Value: {paramValue.ToString("X")}");
                 }
                 else if (paramType == (int)ParamType.BOOLEAN)
                 {
-                    Console.WriteLine(paramValue == 0 ? "true" : "false");
+                    Console.WriteLine($"Boolean: {(paramValue == 0 ? "true" : "false")}");
                     /*
                         Original Code:
 
@@ -101,7 +101,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsHelpe
                 }
                 else if (paramType == (int)ParamType.REQUIREMENT)
                 {
-
+                    Console.WriteLine(ConvertParamValueToRequirement(paramValue));
                 }
 
                 parameters.Add((Type: PsaFile.FileContent[commandParamsLocation + i], Value: PsaFile.FileContent[commandParamsLocation + i + 1]));
@@ -123,12 +123,20 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsHelpe
             Console.WriteLine(paramValue >> 24);
             Console.WriteLine((paramValue >> 28) & 0xF);
             Console.WriteLine((paramValue >> 24) & 0xF);*/
-                    return new PsaVariable(memoryType, datatype, id);
+            return new PsaVariable(memoryType, datatype, id);
         }
 
         public decimal ConvertParamValueToScalar(int paramValue)
         {
             return decimal.Divide(paramValue, 60000);
+        }
+
+        public PsaRequirement ConvertParamValueToRequirement(int paramValue)
+        {
+            int inverseFlag = (paramValue >> 16) & 0xFFFF;
+            int requirementId = paramValue & 0xFFFF;
+
+            return new PsaRequirement(requirementId, inverseFlag); 
         }
 
         public enum ParamType
