@@ -1,4 +1,5 @@
-﻿using PSA2.src.utility;
+﻿using PSA2.src.FileProcessor.MovesetParser.Configs;
+using PSA2.src.utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
             for (int i = 0; i < TOTAL_NUMBER_OF_ATTRIBUTES; i++)
             {
-                AttributeConfig.AttributeData attributeData = attributesConfig.Attributes[i];
+                AttributeData attributeData = attributesConfig.Attributes[i];
                 attributes.Add(
                     new Attribute(
                         attributeData.Name, 
@@ -46,7 +47,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             if (attributeIndex > 0 && attributeIndex < TOTAL_NUMBER_OF_ATTRIBUTES - 1)
             {
                 AttributeConfig attributesConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
-                AttributeConfig.AttributeData attributeData = attributesConfig.Attributes[attributeIndex];
+                AttributeData attributeData = attributesConfig.Attributes[attributeIndex];
                 return new Attribute(
                     attributeData.Name,
                     attributeData.Description,

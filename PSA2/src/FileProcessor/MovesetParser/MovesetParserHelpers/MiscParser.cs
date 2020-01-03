@@ -1,4 +1,5 @@
-﻿using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHelpers;
+﻿using PSA2.src.FileProcessor.MovesetParser.Configs;
+using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHelpers;
 using PSA2.src.models.fighter.Misc;
 using PSA2.src.utility;
 using System;

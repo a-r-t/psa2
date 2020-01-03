@@ -1,4 +1,5 @@
-﻿using PSA2.src.models.fighter;
+﻿using PSA2.src.FileProcessor.MovesetParser.Configs;
+using PSA2.src.models.fighter;
 using PSA2.src.models.fighter.Misc;
 using System;
 using System.Collections.Generic;
@@ -95,7 +96,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             // article extra datas
             // might be able to redo this using my file parsing method
             Console.WriteLine("Article Extra Datas Section");
-            foreach (CharacterSpecificParametersConfig.Article article in CharacterSpecificParametersConfig.Articles)
+            foreach (Configs.Article article in CharacterSpecificParametersConfig.Articles)
             {
                 Console.WriteLine(String.Format("Article {0} extra datas", article.Name));
 
@@ -114,7 +115,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             return articleExtraDatas;
         }
 
-        private ArticleExtraDataEntry GetArticleExtraDataEntryType1(CharacterSpecificParametersConfig.Article article, int articleDataLocation)
+        private ArticleExtraDataEntry GetArticleExtraDataEntryType1(Configs.Article article, int articleDataLocation)
         {
             ArticleExtraDataEntry articleExtraDataEntry = new ArticleExtraDataEntry();
             Console.WriteLine(String.Format("Article {0} has {1} action flags", article.Name, article.NumberOfActions));
