@@ -1,4 +1,5 @@
 ﻿using PSA2.src.FileProcessor.MovesetParser.Configs;
+using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsHelpers;
 using PSA2.src.utility;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public Dictionary<string, PsaCommand> PsaCommands { get; private set; }
+        public Dictionary<string, PsaCommandConfig> PsaCommands { get; private set; }
+        public PsaCommandParser PsaCommandParser { get; private set; }
 
         public ActionsParser(PsaFile psaFile, int dataSectionLocation)
         {
@@ -20,6 +22,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             DataSectionLocation = dataSectionLocation;
             PsaCommandsConfig PsaCommandsConfig = Utils.LoadJson<PsaCommandsConfig>("data/psa_command_data.json");
             PsaCommands = PsaCommandsConfig.PsaCommands.ToDictionary(command => command.Instruction, command => command);
+            PsaCommandParser = new PsaCommandParser(PsaFile);
         }
 
         public int GetNumberOfSpecialActions()
@@ -45,61 +48,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return actionCodeBlockLocation;
         }
 
-        public PsaInstruction GetPsaInstruction(int instructionLocation) // instructionLocation = j
+
+        public List<PsaCommand> GetPsaInstructionsForAction(int actionId, int codeBlockId)
         {
-            Console.WriteLine("Get PSA Instruction");
-            int instruction = 0;
-            List<(int Type, int Value)> paramValues = new List<(int Type, int Value)>();
-
-            if (PsaFile.FileContent[instructionLocation] == -86052851)
-            {
-                // FADEF00D
-            }
-            else if (PsaFile.FileContent[instructionLocation + 1] < 0 || PsaFile.FileContent[instruction] >= PsaFile.DataSectionSize)
-            {
-                // Error Data x8 something something
-            }
-
-            int rawPsaInstruction = PsaFile.FileContent[instructionLocation];
-            Console.WriteLine(rawPsaInstruction);
-            Console.WriteLine(rawPsaInstruction.ToString("X8"));
-
-            // this ain't even needed, whyyyy
-            int firstHalfPsaInstruction = ((rawPsaInstruction >> 16) & 0xFFFF); // this gets you the first half of it? so like if a command is 120B0100, it'll give back 120B
-
-            PsaCommand psaCommand;
-            if (!PsaCommands.ContainsKey(rawPsaInstruction.ToString("X8"))) {
-                // psa command not found...
-                //Console.WriteLine("NOT FOUND");
-            }
-            else
-            {
-                //Console.WriteLine("FOUND!");
-                psaCommand = PsaCommands[rawPsaInstruction.ToString("X8")];
-            }
-            instruction = rawPsaInstruction;
-
-            // gets number of params in instruction based on 3rd byte in word for instruction's location
-            // e.g. 120B0100's 3rd byte is 01, which means it only has 1 param
-            int numberOfParams = ((rawPsaInstruction >> 8) & 0xFF);
-
-            // guessing
-            int commandParamsLocation = PsaFile.FileContent[instructionLocation + 1] / 4;
-            for (int i = 0; i < numberOfParams * 2; i+=2)
-            {
-                Console.WriteLine(String.Format("Param Type: {0}", PsaFile.FileContent[commandParamsLocation + i]));
-                Console.WriteLine(String.Format("Param Value: {0}", PsaFile.FileContent[commandParamsLocation + i + 1]));
-                paramValues.Add((Type: PsaFile.FileContent[commandParamsLocation + i], Value: PsaFile.FileContent[commandParamsLocation + i + 1]));
-            }
-
-            Console.WriteLine(String.Format("Instruction: {0}", instruction));
-            paramValues.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
-            return new PsaInstruction(instruction, paramValues);
-        }
-
-        public List<PsaInstruction> GetPsaInstructionsForAction(int actionId, int codeBlockId)
-        {
-            List <PsaInstruction> psaInstructions = new List<PsaInstruction>();
+            List <PsaCommand> psaInstructions = new List<PsaCommand>();
 
             // actionId = h
             // codeBlockLocation = n
@@ -111,7 +63,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 while (PsaFile.FileContent[nextActionCodeBlockInstructionLocation] != 0 && 
                     nextActionCodeBlockInstructionLocation < PsaFile.DataSectionSize)
                 {
-                    psaInstructions.Add(GetPsaInstruction(nextActionCodeBlockInstructionLocation));
+                    psaInstructions.Add(PsaCommandParser.GetPsaInstruction(nextActionCodeBlockInstructionLocation));
                     nextActionCodeBlockInstructionLocation += 2;
                 }
             }
@@ -120,9 +72,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return psaInstructions;
         }
 
-        public List<PsaInstruction> GetPsaInstructionsForSubAction(int subActionId)
+        public List<PsaCommand> GetPsaInstructionsForSubAction(int subActionId)
         {
-            List<PsaInstruction> psaInstructions = new List<PsaInstruction>();
+            List<PsaCommand> psaInstructions = new List<PsaCommand>();
 
 
 

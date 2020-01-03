@@ -8,22 +8,22 @@ namespace PSA2.src.FileProcessor.MovesetParser.Configs
 {
     public class PsaCommandsConfig
     {
-        public List<PsaCommand> PsaCommands { get; set; }
+        public List<PsaCommandConfig> PsaCommands { get; set; }
 
         public PsaCommandsConfig()
         {
-            PsaCommands = new List<PsaCommand>();
+            PsaCommands = new List<PsaCommandConfig>();
         }
     }
 
-    public class PsaCommand
+    public class PsaCommandConfig
     {
         public string CommandName { get; set; }
         public string Description { get; set; }
         public string Instruction { get; set; }
-        public List<PsaCommandParam> CommandParams { get; set; }
+        public List<PsaCommandParamConfig> CommandParams { get; set; }
 
-        public PsaCommand(string commandName, string description, string instruction, List<PsaCommandParam> commandParams = null)
+        public PsaCommandConfig(string commandName, string description, string instruction, List<PsaCommandParamConfig> commandParams = null)
         {
             CommandName = commandName;
             Description = description;
@@ -32,7 +32,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.Configs
         }
     }
 
-    public class PsaCommandParam
+    public class PsaCommandParamConfig
     {
         public string ParamName { get; set; }
         public string Description { get; set; }
@@ -40,7 +40,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.Configs
         public bool CanUseVariable { get; set; }
         public string DefaultValue { get; set; }
 
-        public PsaCommandParam(string paramName, string description, List<string> dataTypes, bool canUseVariable, string defaultValue = null)
+        public PsaCommandParamConfig(string paramName, string description, List<string> dataTypes, bool canUseVariable, string defaultValue = null)
         {
             ParamName = paramName;
             Description = description;

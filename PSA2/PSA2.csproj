@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="src\FileProcessor\MovesetParser\Configs\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\Configs\CharacterSpecificParametersConfig.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsHelpers\PsaVariable.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\AttributesParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\DataTableParser.cs" />
@@ -61,7 +62,8 @@
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\MiscSectionParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\ModelVisibilityParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\Configs\PsaCommandsConfig.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\PsaInstruction.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsHelpers\PsaCommand.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsHelpers\PsaCommandParser.cs" />
     <Compile Include="src\FileProcessor\PsaFileParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\PsaMovesetParser.cs" />
     <Compile Include="src\FileProcessor\PsaFile.cs" />

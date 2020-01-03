@@ -11,12 +11,12 @@ namespace PSA2.src.models.fighter
     public class SubActionSection
     {
         public string SectionName { get; private set; }
-        public List<PsaCommand> Commands { get; private set; }
+        public List<PsaCommandConfig> Commands { get; private set; }
 
         public SubActionSection(string sectionName)
         {
             SectionName = sectionName;
-            Commands = new List<PsaCommand>();
+            Commands = new List<PsaCommandConfig>();
         }
     }
 }
