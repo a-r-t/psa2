@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using PSA2.src.utility;
 using PSA2.src.models.fighter.Misc;
 using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers;
-using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsHelpers;
+using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParserHelpers;
 
 namespace PSA2.src.FileProcessor.MovesetParser
 {
@@ -35,7 +35,12 @@ namespace PSA2.src.FileProcessor.MovesetParser
             string movesetBaseName = GetMovesetBaseName();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
             //bool isMovesetParsable = IsMovesetParsable();
-            List<PsaCommand> psaInstruction = ActionsParser.GetPsaInstructionsForAction(0, 0);
+            //List<PsaCommand> psaCommands = ActionsParser.GetPsaInstructionsForAction(0, 0);
+            //List<PsaCommand> psaCommands = ActionsParser.GetPsaInstructionsForSubAction(73, 1);
+            //string animationName = ActionsParser.GetSubActionAnimationName(73);
+            AnimationFlags animationFlags = ActionsParser.GetSubActionAnimationFlags(11);
+            Console.WriteLine(animationFlags);
+
         }
 
         public bool IsMovesetParsable()
