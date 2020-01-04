@@ -35,12 +35,15 @@ namespace PSA2.src.FileProcessor.MovesetParser
             string movesetBaseName = GetMovesetBaseName();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
             //bool isMovesetParsable = IsMovesetParsable();
-            //List<PsaCommand> psaCommands = ActionsParser.GetPsaInstructionsForAction(0, 0);
-            //List<PsaCommand> psaCommands = ActionsParser.GetPsaInstructionsForSubAction(73, 1);
+            //List<PsaCommand> actionPsaCommands = ActionsParser.GetPsaCommandsForAction(0, 0);
+            //List<PsaCommand> subActionPsaCommands = ActionsParser.GetPsaCommandsForSubAction(73, 1);
             //string animationName = ActionsParser.GetSubActionAnimationName(73);
-            AnimationFlags animationFlags = ActionsParser.GetSubActionAnimationFlags(11);
-            Console.WriteLine(animationFlags);
+            //AnimationFlags animationFlags = ActionsParser.GetSubActionAnimationFlags(11);
+            //List<PsaCommand> subRoutineCode = ActionsParser.GetPsaCommandsForSubRoutine(53288);
+            //List<int> subRoutines = ActionsParser.GetAllSubRoutines();
 
+            List<int> actionOverrideIdsEntries = ActionsParser.GetAllActionOverrides(0);
+            List<PsaCommand> actionOverideCommands = ActionsParser.GetPsaCommandsForActionOverride(0, 0);
         }
 
         public bool IsMovesetParsable()

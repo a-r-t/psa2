@@ -17,7 +17,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
 
         public PsaCommand GetPsaInstruction(int instructionLocation) // instructionLocation = j
         {
-            if (PsaFile.FileContent[instructionLocation] == -86052851 || PsaFile.FileContent[instructionLocation + 1] < 0 || PsaFile.FileContent[instructionLocation] >= PsaFile.DataSectionSize)
+            Console.WriteLine("Get PSA Command");
+            if (PsaFile.FileContent[instructionLocation] == -86052851 || PsaFile.FileContent[instructionLocation + 1] < 0 || PsaFile.FileContent[instructionLocation + 1] >= PsaFile.DataSectionSize)
             {
                 // FADEF00D
                 // Error Data x8 something something
@@ -30,6 +31,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
 
                 int rawPsaInstruction = PsaFile.FileContent[instructionLocation];
                 instruction = rawPsaInstruction;
+                Console.WriteLine($"Instruction: {instruction.ToString("X8")}");
 
                 // gets number of params in instruction based on 3rd byte in word for instruction's location
                 // e.g. 120B0100's 3rd byte is 01, which means it only has 1 param
@@ -73,8 +75,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
                     parameters.Add(new PsaCommandParameter(PsaFile.FileContent[commandParamsLocation + i], PsaFile.FileContent[commandParamsLocation + i + 1]));
                 }
 
-                Console.WriteLine(String.Format("Instruction: {0}", instruction));
-                parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
+                //Console.WriteLine(String.Format("Instruction: {0}", instruction));
+                //parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
                 return new PsaCommand(instruction, parameters);
             }
         }
