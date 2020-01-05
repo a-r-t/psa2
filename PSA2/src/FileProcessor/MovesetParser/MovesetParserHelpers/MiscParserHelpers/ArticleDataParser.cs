@@ -133,13 +133,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                         // if hidden section exists
                         if (PsaFile.FileContent[modelVisiblityHiddenSectionLocation] >= 8096 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation] < PsaFile.DataSectionSize)
                         {
-                            ModelVisibility.Section section = new ModelVisibility.Section();
+                            ModelVisibilitySection section = new ModelVisibilitySection();
                             modelVisibility.Sections.Add(section);
                             section.Name = "Hidden";
                             int sectionBoneSwitchLocation = PsaFile.FileContent[modelVisiblityHiddenSectionLocation] / 4;
                             for (int i = 0; i < numberOfBoneSwitches; i++)
                             {
-                                ModelVisibility.BoneSwitch boneSwitch = new ModelVisibility.BoneSwitch();
+                                BoneSwitch boneSwitch = new BoneSwitch();
                                 section.BoneSwitches.Add(boneSwitch);
                                 int boneGroupLocation = PsaFile.FileContent[sectionBoneSwitchLocation + i * 2];
                                 if (boneGroupLocation >= 8096 && boneGroupLocation < PsaFile.DataSectionSize)
@@ -150,7 +150,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                                         int boneGroupBonesLocation = boneGroupLocation / 4;
                                         for (int j = 0; j < numberOfBoneGroups; j++)
                                         {
-                                            ModelVisibility.BoneGroup boneGroup = new ModelVisibility.BoneGroup();
+                                            BoneGroup boneGroup = new BoneGroup();
                                             boneSwitch.BoneGroups.Add(boneGroup);
                                             if (PsaFile.FileContent[boneGroupBonesLocation + j * 2] >= 8096 && PsaFile.FileContent[boneGroupBonesLocation + j * 2] < PsaFile.DataSectionSize)
                                             {
@@ -181,13 +181,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                         // if visible section exists
                         if (notsure != 4 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation + 1] >= 8096 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation + 1] < PsaFile.DataSectionSize)
                         {
-                            ModelVisibility.Section section = new ModelVisibility.Section();
+                            ModelVisibilitySection section = new ModelVisibilitySection();
                             modelVisibility.Sections.Add(section);
                             section.Name = "Hidden";
                             int sectionBoneSwitchLocation = PsaFile.FileContent[modelVisiblityHiddenSectionLocation] / 4;
                             for (int i = 0; i < numberOfBoneSwitches; i++)
                             {
-                                ModelVisibility.BoneSwitch boneSwitch = new ModelVisibility.BoneSwitch();
+                                BoneSwitch boneSwitch = new BoneSwitch();
                                 section.BoneSwitches.Add(boneSwitch);
                                 int boneGroupLocation = PsaFile.FileContent[sectionBoneSwitchLocation + i * 2];
                                 if (boneGroupLocation >= 8096 && boneGroupLocation < PsaFile.DataSectionSize)
@@ -198,7 +198,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                                         int boneGroupBonesLocation = boneGroupLocation / 4;
                                         for (int j = 0; j < numberOfBoneGroups; j++)
                                         {
-                                            ModelVisibility.BoneGroup boneGroup = new ModelVisibility.BoneGroup();
+                                            BoneGroup boneGroup = new BoneGroup();
                                             boneSwitch.BoneGroups.Add(boneGroup);
                                             if (PsaFile.FileContent[boneGroupBonesLocation + j * 2] >= 8096 && PsaFile.FileContent[boneGroupBonesLocation + j * 2] < PsaFile.DataSectionSize)
                                             {
@@ -279,13 +279,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                         // if hidden section exists
                         if (PsaFile.FileContent[modelVisiblityHiddenSectionLocation] >= 8096 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation] < PsaFile.DataSectionSize)
                         {
-                            ModelVisibility.Section section = new ModelVisibility.Section();
+                            ModelVisibilitySection section = new ModelVisibilitySection();
                             modelVisibility.Sections.Add(section);
                             section.Name = "Hidden";
                             int sectionBoneSwitchLocation = PsaFile.FileContent[modelVisiblityHiddenSectionLocation] / 4;
                             for (int i = 0; i < numberOfBoneSwitches; i++)
                             {
-                                ModelVisibility.BoneSwitch boneSwitch = new ModelVisibility.BoneSwitch();
+                                BoneSwitch boneSwitch = new BoneSwitch();
                                 section.BoneSwitches.Add(boneSwitch);
                                 int boneGroupLocation = PsaFile.FileContent[sectionBoneSwitchLocation + i * 2];
                                 if (boneGroupLocation >= 8096 && boneGroupLocation < PsaFile.DataSectionSize)
@@ -296,7 +296,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                                         int boneGroupBonesLocation = boneGroupLocation / 4;
                                         for (int j = 0; j < numberOfBoneGroups; j++)
                                         {
-                                            ModelVisibility.BoneGroup boneGroup = new ModelVisibility.BoneGroup();
+                                            BoneGroup boneGroup = new BoneGroup();
                                             boneSwitch.BoneGroups.Add(boneGroup);
                                             if (PsaFile.FileContent[boneGroupBonesLocation + j * 2] >= 8096 && PsaFile.FileContent[boneGroupBonesLocation + j * 2] < PsaFile.DataSectionSize)
                                             {
@@ -327,13 +327,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                         // if visible section exists
                         if (notsure != 4 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation + 1] >= 8096 && PsaFile.FileContent[modelVisiblityHiddenSectionLocation + 1] < PsaFile.DataSectionSize)
                         {
-                            ModelVisibility.Section section = new ModelVisibility.Section();
+                            ModelVisibilitySection section = new ModelVisibilitySection();
                             modelVisibility.Sections.Add(section);
                             section.Name = "Hidden";
                             int sectionBoneSwitchLocation = PsaFile.FileContent[modelVisiblityHiddenSectionLocation] / 4;
                             for (int i = 0; i < numberOfBoneSwitches; i++)
                             {
-                                ModelVisibility.BoneSwitch boneSwitch = new ModelVisibility.BoneSwitch();
+                                BoneSwitch boneSwitch = new BoneSwitch();
                                 section.BoneSwitches.Add(boneSwitch);
                                 int boneGroupLocation = PsaFile.FileContent[sectionBoneSwitchLocation + i * 2];
                                 if (boneGroupLocation >= 8096 && boneGroupLocation < PsaFile.DataSectionSize)
@@ -344,7 +344,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                                         int boneGroupBonesLocation = boneGroupLocation / 4;
                                         for (int j = 0; j < numberOfBoneGroups; j++)
                                         {
-                                            ModelVisibility.BoneGroup boneGroup = new ModelVisibility.BoneGroup();
+                                            BoneGroup boneGroup = new BoneGroup();
                                             boneSwitch.BoneGroups.Add(boneGroup);
                                             if (PsaFile.FileContent[boneGroupBonesLocation + j * 2] >= 8096 && PsaFile.FileContent[boneGroupBonesLocation + j * 2] < PsaFile.DataSectionSize)
                                             {

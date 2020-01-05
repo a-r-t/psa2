@@ -10,11 +10,11 @@ namespace PSA2.src.models.fighter.Misc
     {
         public int Offset { get; set; }
         public int ActionFlagsCount { get; set; }
-        public List<ActionFlag> ActionFlags { get; set; }
+        public List<int> ActionFlags { get; set; }
 
         public DataFlags()
         {
-            ActionFlags = new List<ActionFlag>();
+            ActionFlags = new List<int>();
         }
     }
 }

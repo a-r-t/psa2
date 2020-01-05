@@ -256,11 +256,22 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return unknown24;
         }
 
+        // this does NOT look right at all but it's what PSA-C has...
+        public int GetDataFlagsLocation()
+        {
+            return DataSectionLocation * 4 + 108;
+        }
+
         public DataFlags GetDataFlags()
         {
             DataFlags dataFlags = new DataFlags();
-            // Data Flags auto exists
-            Console.WriteLine("Data Flags exists");
+            dataFlags.Offset = GetDataFlagsLocation();
+            for (int i = 0; i < 4; i++)
+            {
+                dataFlags.ActionFlags.Add(PsaFile.FileContent[DataSectionLocation + 27 + i]);
+            }
+            Console.WriteLine(dataFlags.Offset.ToString("X"));
+            dataFlags.ActionFlags.ForEach(x => Console.WriteLine(x.ToString("X8")));
             return dataFlags;
         }
 
