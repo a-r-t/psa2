@@ -380,6 +380,10 @@
     {
       "location": "X08",
       "parameterIndex": "27-00x",
+	  "parameterLocationPath": [
+	  	  "27",
+		  "00"
+	  ],
       "name": "HitDataList8",
       "values": [
         {

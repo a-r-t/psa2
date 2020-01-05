@@ -46,6 +46,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.Configs
     {
         public string Location { get; set; }
         public string ParameterIndex { get; set; }
+        public List<string> ParameterLocationPath { get; set; }
         public string Name { get; set; }
         public List<Value> Values { get; set; }
     }

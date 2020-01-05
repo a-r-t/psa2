@@ -26,12 +26,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
             }
             else
             {
-                int instruction = 0;
                 List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
 
                 int rawPsaInstruction = PsaFile.FileContent[instructionLocation];
-                instruction = rawPsaInstruction;
-                Console.WriteLine($"Instruction: {instruction.ToString("X8")}");
+                Console.WriteLine($"Instruction: {rawPsaInstruction.ToString("X8")}");
 
                 // gets number of params in instruction based on 3rd byte in word for instruction's location
                 // e.g. 120B0100's 3rd byte is 01, which means it only has 1 param
@@ -77,7 +75,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
 
                 //Console.WriteLine(String.Format("Instruction: {0}", instruction));
                 //parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
-                return new PsaCommand(instruction, parameters);
+                return new PsaCommand(rawPsaInstruction, parameters);
             }
         }
 
