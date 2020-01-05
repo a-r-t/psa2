@@ -30,5 +30,10 @@ namespace PSA2.src.models.fighter.Misc
             Unknown6 = unknown6;
             Unknown7 = unknown7;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Unknown0)}={Unknown0.ToString("X")}, {nameof(Unknown1)}={Unknown1.ToString("X")}, {nameof(Unknown2)}={Unknown2.ToString("X")}, {nameof(Unknown3)}={Unknown3.ToString("X")}, {nameof(Unknown4)}={Unknown4.ToString("X")}, {nameof(Unknown5)}={Unknown5.ToString("X")}, {nameof(Unknown6)}={Unknown6.ToString("X")}, {nameof(Unknown7)}={Unknown7.ToString("X")}}}";
+        }
     }
 }

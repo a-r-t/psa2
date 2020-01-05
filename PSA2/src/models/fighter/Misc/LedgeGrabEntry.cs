@@ -22,5 +22,10 @@ namespace PSA2.src.models.fighter.Misc
             Width = width;
             Height = height;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(X)}={X.ToString("X")}, {nameof(Y)}={Y.ToString("X")}, {nameof(Width)}={Width.ToString("X")}, {nameof(Height)}={Height.ToString("X")}}}";
+        }
     }
 }

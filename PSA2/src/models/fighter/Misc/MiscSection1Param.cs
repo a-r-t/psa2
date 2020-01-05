@@ -16,5 +16,10 @@ namespace PSA2.src.models.fighter.Misc
             Name = name;
             Value = value;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Name)}={Name}, {nameof(Value)}={Value.ToString("X")}}}";
+        }
     }
 }

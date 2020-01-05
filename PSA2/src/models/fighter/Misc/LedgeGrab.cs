@@ -16,5 +16,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             Entries = new List<LedgeGrabEntry>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(LedgeGrabeEntriesCount)}={LedgeGrabeEntriesCount.ToString()}, {nameof(Entries)}={string.Join(",", Entries.Select(x => x.ToString()).ToList())}}}}}";
+        }
     }
 }

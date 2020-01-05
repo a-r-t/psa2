@@ -44,5 +44,9 @@ namespace PSA2.src.models.fighter.Misc
         public Tether Tether { get; set; }
         public CollisionData CollisionData { get; set; }
 
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(MiscSection1Offset)}={MiscSection1Offset.ToString("X")}, {nameof(FinalSmashAuraOffset)}={FinalSmashAuraOffset.ToString("X")}, {nameof(FinalSmashAuraCount)}={FinalSmashAuraCount.ToString("X")}, {nameof(HurtBoxOffset)}={HurtBoxOffset.ToString("X")}, {nameof(HurtBoxCount)}={HurtBoxCount.ToString("X")}, {nameof(LedgeGrabOffset)}={LedgeGrabOffset.ToString("X")}, {nameof(LedgeGrabCount)}={LedgeGrabCount.ToString("X")}, {nameof(MiscSection2Offset)}={MiscSection2Offset.ToString("X")}, {nameof(MiscSection2Count)}={MiscSection2Count.ToString("X")}, {nameof(BoneReferencesOffset)}={BoneReferencesOffset.ToString("X")}, {nameof(ItemBonesOffset)}={ItemBonesOffset.ToString("X")}, {nameof(SoundDataOffset)}={SoundDataOffset.ToString("X")}, {nameof(MiscSection5Offset)}={MiscSection5Offset.ToString("X")}, {nameof(MultiJumpOffset)}={MultiJumpOffset.ToString("X")}, {nameof(GlideOffset)}={GlideOffset.ToString("X")}, {nameof(CrawlOffset)}={CrawlOffset.ToString("X")}, {nameof(CollisionDataOffset)}={CollisionDataOffset.ToString("X")}, {nameof(TetherOffset)}={TetherOffset.ToString("X")}, {nameof(MiscSection12Offset)}={MiscSection12Offset.ToString("X")}, {nameof(MiscSection1)}={MiscSection1}, {nameof(FinalSmashAura)}={FinalSmashAura}, {nameof(HurtBoxes)}={HurtBoxes}, {nameof(LedgeGrab)}={LedgeGrab}, {nameof(MiscSection2)}={MiscSection2}, {nameof(BoneReferences)}={BoneReferences}, {nameof(ItemBones)}={ItemBones}, {nameof(SoundLists)}={SoundLists}, {nameof(MiscSection5)}={MiscSection5}, {nameof(Crawl)}={Crawl}, {nameof(MultiJump)}={MultiJump}, {nameof(Glide)}={Glide}, {nameof(Tether)}={Tether}, {nameof(CollisionData)}={CollisionData}}}";
+        }
     }
 }

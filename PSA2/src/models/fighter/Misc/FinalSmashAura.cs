@@ -16,5 +16,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             Entries = new List<FinalSmashAuraEntry>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(FinalSmashAuraEntryCount)}={FinalSmashAuraEntryCount.ToString()}, {nameof(Entries)}={string.Join(",", Entries.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

@@ -15,5 +15,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             Params = new List<MiscSection1Param>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Params)}={string.Join(",", Params.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public int MiscSectionLocation { get; private set; }
+        public int MiscSectionLocation { get; private set; } // k
 
         public MiscSectionParser(PsaFile psaFile, int dataSectionLocation, int miscSectionLocation)
         {
@@ -20,75 +20,145 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             MiscSectionLocation = miscSectionLocation;
         }
 
+        public MiscSection GetMiscSection()
+        {
+            MiscSection miscSection = new MiscSection();
+            if (PsaFile.FileContent[DataSectionLocation + 4] >= 8096 && PsaFile.FileContent[DataSectionLocation + 4] < PsaFile.DataSectionSize)
+            {
+                miscSection.Offset = PsaFile.FileContent[DataSectionLocation + 4];
+                miscSection.MiscSection1Offset = PsaFile.FileContent[MiscSectionLocation];
+                miscSection.FinalSmashAuraOffset = PsaFile.FileContent[MiscSectionLocation + 1];
+                miscSection.FinalSmashAuraCount = PsaFile.FileContent[MiscSectionLocation + 2];
+                miscSection.HurtBoxOffset = PsaFile.FileContent[MiscSectionLocation + 3];
+                miscSection.HurtBoxCount = PsaFile.FileContent[MiscSectionLocation + 4];
+                miscSection.LedgeGrabOffset = PsaFile.FileContent[MiscSectionLocation + 5];
+                miscSection.LedgeGrabCount = PsaFile.FileContent[MiscSectionLocation + 6];
+                miscSection.MiscSection2Offset = PsaFile.FileContent[MiscSectionLocation + 7];
+                miscSection.MiscSection2Count = PsaFile.FileContent[MiscSectionLocation + 8];
+                miscSection.BoneReferencesOffset = PsaFile.FileContent[MiscSectionLocation + 9];
+                miscSection.ItemBonesOffset = PsaFile.FileContent[MiscSectionLocation + 10];
+                miscSection.SoundDataOffset = PsaFile.FileContent[MiscSectionLocation + 11];
+                miscSection.MiscSection5Offset = PsaFile.FileContent[MiscSectionLocation + 12];
+                miscSection.MultiJumpOffset = PsaFile.FileContent[MiscSectionLocation + 13];
+                miscSection.GlideOffset = PsaFile.FileContent[MiscSectionLocation + 14];
+                miscSection.CrawlOffset = PsaFile.FileContent[MiscSectionLocation + 15];
+                miscSection.CollisionDataOffset = PsaFile.FileContent[MiscSectionLocation + 16];
+                miscSection.TetherOffset = PsaFile.FileContent[MiscSectionLocation + 17];
+                miscSection.MiscSection12Offset = PsaFile.FileContent[MiscSectionLocation + 18];
+            }
+            Console.WriteLine(miscSection);
+            return miscSection;
+        }
+
         public MiscSection1 GetMiscSection1()
         {
             MiscSection1 miscSection1 = new MiscSection1();
 
-            // checks if there is a misc section 1
             if (PsaFile.FileContent[MiscSectionLocation] >= 8096 && PsaFile.FileContent[MiscSectionLocation] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Misc Section 1 exists");
+                miscSection1.Offset = PsaFile.FileContent[MiscSectionLocation];
+                int miscSection1Location = PsaFile.FileContent[MiscSectionLocation] / 4;
+                for (int i = 0; i < 7; i++)
+                {
+                    miscSection1.Params.Add(new MiscSection1Param($"Data{i + 1}", PsaFile.FileContent[miscSection1Location + i]));
+                }
+                miscSection1.Params.Add(new MiscSection1Param("Misc Section1 Offset", PsaFile.FileContent[MiscSectionLocation]));
             }
-            else
-            {
-                Console.WriteLine("Misc Section 1 does NOT exist");
-            }
-
+            Console.WriteLine(miscSection1);
             return miscSection1;
         }
 
         public FinalSmashAura GetFinalSmashAura()
         {
             FinalSmashAura finalSmashAura = new FinalSmashAura();
-            // counts final smash aura entries
             if (PsaFile.FileContent[MiscSectionLocation + 1] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 1] < PsaFile.DataSectionSize)
             {
+                finalSmashAura.Offset = PsaFile.FileContent[MiscSectionLocation + 1];
                 int numberOfFinalSmashAuraEntries = PsaFile.FileContent[MiscSectionLocation + 2];
+
                 if (numberOfFinalSmashAuraEntries > 0 && numberOfFinalSmashAuraEntries < 256)
                 {
-                    // Idk where this is used...
-                    // int n = PsaFile.FileContent[miscSectionLocation + 1] / 4;
-
                     finalSmashAura.FinalSmashAuraEntryCount = numberOfFinalSmashAuraEntries;
+                    for (int i = 0; i < numberOfFinalSmashAuraEntries; i++)
+                    {
+                        int finalSmashAuraEntryLocation = PsaFile.FileContent[MiscSectionLocation + 1] + i * 20;
+                        int finalSmashAuraEntryValuesLocation = finalSmashAuraEntryLocation / 4;
+                        int bone = PsaFile.FileContent[finalSmashAuraEntryValuesLocation];
+                        int x = PsaFile.FileContent[finalSmashAuraEntryValuesLocation + 1];
+                        int y = PsaFile.FileContent[finalSmashAuraEntryValuesLocation + 2];
+                        int width = PsaFile.FileContent[finalSmashAuraEntryValuesLocation + 3];
+                        int height = PsaFile.FileContent[finalSmashAuraEntryValuesLocation + 4];
+                        finalSmashAura.Entries.Add(new FinalSmashAuraEntry(finalSmashAuraEntryLocation, bone, x, y, width, height));
+                    }
                 }
             }
-            Console.WriteLine(String.Format("Number Of Final Smash Aura Entries: {0}", finalSmashAura.FinalSmashAuraEntryCount));
+            Console.WriteLine(finalSmashAura);
             return finalSmashAura;
         }
 
         public HurtBoxes GetHurtBoxes()
         {
             HurtBoxes hurtBoxes = new HurtBoxes();
-            // counts hurtboxes entries
             if (PsaFile.FileContent[MiscSectionLocation + 3] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 3] < PsaFile.DataSectionSize)
             {
+
+                hurtBoxes.Offset = PsaFile.FileContent[MiscSectionLocation + 3];
                 int numberOfHurtBoxEntries = PsaFile.FileContent[MiscSectionLocation + 4];
+
                 if (numberOfHurtBoxEntries > 0 && numberOfHurtBoxEntries < 256)
                 {
-
-                    // Idk where this is used...
-                    //int n = PsaFile.FileContent[miscSectionLocation + 3] / 4 + 7;
-
                     hurtBoxes.HurtBoxEntryCount = numberOfHurtBoxEntries;
+                    for (int i = 0; i < numberOfHurtBoxEntries; i++)
+                    {
+                        int hurtBoxesEntryLocation = PsaFile.FileContent[MiscSectionLocation + 3] + i * 32;
+                        int hurtBoxesEntryValuesLocation = hurtBoxesEntryLocation / 4;
+
+                        int xOffset = PsaFile.FileContent[hurtBoxesEntryValuesLocation];
+                        int yOffset = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 1];
+                        int zOffset = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 2];
+                        int xStretch = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 3];
+                        int yStretch = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 4];
+                        int zStretch = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 5];
+                        int radius = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 6];
+                        int data = PsaFile.FileContent[hurtBoxesEntryValuesLocation + 7];
+                        int bone = (data >> 23) & 0x1FF;
+                        int enabled = (data >> 16) & 1;
+                        int zone = (data >> 19) & 3;
+                        int region = (data >> 21) & 3;
+                        hurtBoxes.Entries.Add(new HurtBoxEntry(hurtBoxesEntryLocation, xOffset, yOffset, zOffset, xStretch, yStretch, zStretch, radius, data, bone, enabled, zone, region));
+                    }
                 }
+
             }
-            Console.WriteLine(String.Format("Number Of Hurt Box Entries: {0}", hurtBoxes.HurtBoxEntryCount));
+            Console.WriteLine(hurtBoxes);
             return hurtBoxes;
         }
 
         public LedgeGrab GetLedgeGrab()
         {
             LedgeGrab ledgeGrab = new LedgeGrab();
-            // counts ledge grab
             if (PsaFile.FileContent[MiscSectionLocation + 5] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 5] < PsaFile.DataSectionSize)
             {
+                ledgeGrab.Offset = PsaFile.FileContent[MiscSectionLocation + 5];
                 int numberOfLedgeGrabEntries = PsaFile.FileContent[MiscSectionLocation + 6];
+
                 if (numberOfLedgeGrabEntries > 0 && numberOfLedgeGrabEntries < 256)
                 {
                     ledgeGrab.LedgeGrabeEntriesCount = numberOfLedgeGrabEntries;
+                    for (int i = 0; i < numberOfLedgeGrabEntries; i++)
+                    {
+                        int ledgeGrabEntryLocation = PsaFile.FileContent[MiscSectionLocation + 5] + i * 16;
+                        int ledgeGrabEntryValuesLocation = ledgeGrabEntryLocation / 4;
+
+                        int x = PsaFile.FileContent[ledgeGrabEntryValuesLocation];
+                        int y = PsaFile.FileContent[ledgeGrabEntryValuesLocation + 1];
+                        int width = PsaFile.FileContent[ledgeGrabEntryValuesLocation + 2];
+                        int height = PsaFile.FileContent[ledgeGrabEntryValuesLocation + 3];
+                        ledgeGrab.Entries.Add(new LedgeGrabEntry(ledgeGrabEntryLocation, x, y, width, height));
+                    }
                 }
             }
-            Console.WriteLine(String.Format("Number Of Ledge Grab Entries: {0}", ledgeGrab.LedgeGrabeEntriesCount));
+            Console.WriteLine(ledgeGrab);
             return ledgeGrab;
         }
 
@@ -98,13 +168,30 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             // counts misc section 2 entries
             if (PsaFile.FileContent[MiscSectionLocation + 7] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 7] < PsaFile.DataSectionSize)
             {
+                miscSection2.Offset = PsaFile.FileContent[MiscSectionLocation + 7];
                 int numberOfMiscSection2Entries = PsaFile.FileContent[MiscSectionLocation + 8];
+
                 if (numberOfMiscSection2Entries > 0 && numberOfMiscSection2Entries < 256)
                 {
                     miscSection2.EntriesCount = numberOfMiscSection2Entries;
+                    for (int i = 0; i < numberOfMiscSection2Entries; i++)
+                    {
+                        int miscSection2EntryLocation = PsaFile.FileContent[MiscSectionLocation + 7] + i * 32;
+                        int miscSection2EntryValuesLocation = miscSection2EntryLocation / 4;
+
+                        int unknown0 = PsaFile.FileContent[miscSection2EntryValuesLocation];
+                        int unknown1 = PsaFile.FileContent[miscSection2EntryValuesLocation + 1];
+                        int unknown2 = PsaFile.FileContent[miscSection2EntryValuesLocation + 2];
+                        int unknown3 = PsaFile.FileContent[miscSection2EntryValuesLocation + 3];
+                        int unknown4 = PsaFile.FileContent[miscSection2EntryValuesLocation + 4];
+                        int unknown5 = PsaFile.FileContent[miscSection2EntryValuesLocation + 5];
+                        int unknown6 = PsaFile.FileContent[miscSection2EntryValuesLocation + 6];
+                        int unknown7 = PsaFile.FileContent[miscSection2EntryValuesLocation + 7];
+                        miscSection2.Entries.Add(new MiscSection2Entry(miscSection2EntryLocation, unknown0, unknown1, unknown2, unknown3, unknown4, unknown5, unknown6, unknown7));
+                    }
                 }
             }
-            Console.WriteLine(String.Format("Number Of Misc Section 2 Entries: {0}", miscSection2.EntriesCount));
+            Console.WriteLine(miscSection2);
             return miscSection2;
         }
 
