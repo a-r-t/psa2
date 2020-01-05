@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParserHelpers
+namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParserHelpers
 {
     public class PsaCommandParser
     {
@@ -15,10 +15,27 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
             PsaFile = psaFile;
         }
 
-        public PsaCommand GetPsaInstruction(int instructionLocation) // instructionLocation = j
+        public List<PsaCommand> GetPsaCommands(int psaCodeLocation)
+        {
+            List<PsaCommand> psaCommands = new List<PsaCommand>();
+            int commandsStartLocation = psaCodeLocation / 4; // j
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // and greater than "stf" whatever that means"
+            {
+                int nextCommandLocation = commandsStartLocation;
+                while (PsaFile.FileContent[nextCommandLocation] != 0 &&
+                    nextCommandLocation < PsaFile.DataSectionSize)
+                {
+                    psaCommands.Add(GetPsaCommand(nextCommandLocation));
+                    nextCommandLocation += 2;
+                }
+            }
+            return psaCommands;
+        }
+
+        public PsaCommand GetPsaCommand(int commandLocation) // instructionLocation = j
         {
             Console.WriteLine("Get PSA Command");
-            if (PsaFile.FileContent[instructionLocation] == -86052851 || PsaFile.FileContent[instructionLocation + 1] < 0 || PsaFile.FileContent[instructionLocation + 1] >= PsaFile.DataSectionSize)
+            if (PsaFile.FileContent[commandLocation] == -86052851 || PsaFile.FileContent[commandLocation + 1] < 0 || PsaFile.FileContent[commandLocation + 1] >= PsaFile.DataSectionSize)
             {
                 // FADEF00D
                 // Error Data x8 something something
@@ -28,7 +45,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
             {
                 List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
 
-                int rawPsaInstruction = PsaFile.FileContent[instructionLocation];
+                int rawPsaInstruction = PsaFile.FileContent[commandLocation];
                 Console.WriteLine($"Instruction: {rawPsaInstruction.ToString("X8")}");
 
                 // gets number of params in instruction based on 3rd byte in word for instruction's location
@@ -36,7 +53,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
                 int numberOfParams = ((rawPsaInstruction >> 8) & 0xFF);
 
                 // guessing
-                int commandParamsLocation = PsaFile.FileContent[instructionLocation + 1] / 4;
+                int commandParamsLocation = PsaFile.FileContent[commandLocation + 1] / 4;
                 for (int i = 0; i < numberOfParams * 2; i += 2)
                 {
                     int paramType = PsaFile.FileContent[commandParamsLocation + i];
@@ -77,6 +94,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParse
                 //parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
                 return new PsaCommand(rawPsaInstruction, parameters);
             }
+            
         }
 
         public PsaVariable ConvertParamValueToVariable(int paramValue)

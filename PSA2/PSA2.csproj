@@ -52,10 +52,13 @@
   <ItemGroup>
     <Compile Include="src\FileProcessor\MovesetParser\Configs\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\Configs\CharacterSpecificParametersConfig.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\AnimationFlags.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\PsaCommandParameter.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\PsaRequirement.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\PsaVariable.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionOverridesParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ArticlesParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CharacterParamsParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\AnimationFlags.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandParameter.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaRequirement.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaVariable.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\AttributesParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\DataTableParser.cs" />
@@ -65,8 +68,10 @@
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\MiscSectionParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\MiscParserHelpers\ModelVisibilityParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\Configs\PsaCommandsConfig.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\PsaCommand.cs" />
-    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParserHelpers\PsaCommandParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommand.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\SubActionsParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\SubRoutinesParser.cs" />
     <Compile Include="src\FileProcessor\PsaFileParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\PsaMovesetParser.cs" />
     <Compile Include="src\FileProcessor\PsaFile.cs" />

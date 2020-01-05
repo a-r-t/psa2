@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using PSA2.src.utility;
 using PSA2.src.models.fighter.Misc;
 using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers;
-using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParserHelpers;
+using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParserHelpers;
 
 namespace PSA2.src.FileProcessor.MovesetParser
 {
@@ -21,6 +21,11 @@ namespace PSA2.src.FileProcessor.MovesetParser
         public DataTableParser DataTableParser { get; private set; }
         public ExternalDataParser ExternalDataParser { get; private set; }
         public ActionsParser ActionsParser { get; private set; }
+        public SubActionsParser SubActionsParser { get; private set; }
+        public SubRoutinesParser SubRoutinesParser { get; private set; }
+        public ActionOverridesParser ActionOverridesParser { get; private set; }
+        public ArticlesParser ArticlesParser { get; private set; }
+        public CharacterParamsParser CharacterParamsParser { get; private set; }
         public MiscParser MiscParser { get; private set; }
 
         public PsaMovesetParser(PsaFile psaFile)
@@ -32,28 +37,33 @@ namespace PSA2.src.FileProcessor.MovesetParser
             int dataSectionLocation = DataTableParser.GetDataTableEntryByName("data").Location;
             string movesetBaseName = GetMovesetBaseName();
             ActionsParser = new ActionsParser(PsaFile, dataSectionLocation, movesetBaseName);
+            SubActionsParser = new SubActionsParser(PsaFile, dataSectionLocation);
+            SubRoutinesParser = new SubRoutinesParser(PsaFile, dataSectionLocation, ActionsParser, SubActionsParser);
+            ActionOverridesParser = new ActionOverridesParser(PsaFile, dataSectionLocation, ActionsParser);
+            ArticlesParser = new ArticlesParser(PsaFile, dataSectionLocation, movesetBaseName);
+            CharacterParamsParser = new CharacterParamsParser(PsaFile, dataSectionLocation, movesetBaseName);
             int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
-            //bool isMovesetParsable = IsMovesetParsable();
-            //List<PsaCommand> actionPsaCommands = ActionsParser.GetPsaCommandsForAction(0, 0);
-            //List<PsaCommand> subActionPsaCommands = ActionsParser.GetPsaCommandsForSubAction(73, 1);
-            //string animationName = ActionsParser.GetSubActionAnimationName(73);
-            //AnimationFlags animationFlags = ActionsParser.GetSubActionAnimationFlags(11);
-            //List<PsaCommand> subRoutineCode = ActionsParser.GetPsaCommandsForSubRoutine(53288);
-            //List<int> subRoutines = ActionsParser.GetAllSubRoutines();
-            //List<int> actionOverrideIdsEntries = ActionsParser.GetAllActionOverrides(0);
-            //List<PsaCommand> actionOverideCommands = ActionsParser.GetPsaCommandsForActionOverride(0, 0);
-            //int numberOfArticleActions = ActionsParser.GetNumberOfArticleActions(0);
-            //int numberOfArticleSubActions = ActionsParser.GetNumberOfArticleActions(0);
-            //List<int> codeBlockIdsForArticleSubActions = ActionsParser.GetCodeBlockIdsForArticleSubActions(0);
-            //Dictionary<string, string> articleOffsets = ActionsParser.GetArticleOffsets(0);
-            //List<int> articleParameterValues = ActionsParser.GetArticleParameterValues(0, 0);
-            //List<int> characterParameterValues = ActionsParser.GetCharacterParameterValues(1);
-            //List<int> characterExtraParameterValues = ActionsParser.GetCharacterExtraParameterValues(0);
-            //List<PsaCommand> articleActionCommands = ActionsParser.GetPsaCommandsForArticleAction(0, 2);
-            //List<PsaCommand> articleSubActionCommands = ActionsParser.GetPsaCommandsForArticleSubAction(0, 1, 0);
-            //string animationName = ActionsParser.GetArticleSubActionAnimationName(0, 3);
-            //AnimationFlags animationFlags = ActionsParser.GetArticleSubActionAnimationFlags(0, 0);
+            bool isMovesetParsable = IsMovesetParsable();
+            List<PsaCommand> actionPsaCommands = ActionsParser.GetPsaCommandsForAction(0, 0);
+            List<PsaCommand> subActionPsaCommands = SubActionsParser.GetPsaCommandsForSubAction(73, 1);
+            string animationName = SubActionsParser.GetSubActionAnimationName(73);
+            AnimationFlags animationFlags = SubActionsParser.GetSubActionAnimationFlags(11);
+            List<PsaCommand> subRoutineCode = SubRoutinesParser.GetPsaCommandsForSubRoutine(53288);
+            List<int> subRoutines = SubRoutinesParser.GetAllSubRoutines();
+            List<int> actionOverrideIdsEntries = ActionOverridesParser.GetAllActionOverrides(0);
+            List<PsaCommand> actionOverideCommands = ActionOverridesParser.GetPsaCommandsForActionOverride(0, 0);
+            int numberOfArticleActions = ArticlesParser.GetNumberOfArticleActions(0);
+            int numberOfArticleSubActions = ArticlesParser.GetNumberOfArticleActions(0);
+            List<int> codeBlockIdsForArticleSubActions = ArticlesParser.GetCodeBlockIdsForArticleSubActions(0);
+            Dictionary<string, string> articleOffsets = ArticlesParser.GetArticleOffsets(0);
+            List<int> articleParameterValues = ArticlesParser.GetArticleParameterValues(0, 0);
+            List<int> characterParameterValues = CharacterParamsParser.GetCharacterParameterValues(1);
+            List<int> characterExtraParameterValues = CharacterParamsParser.GetCharacterExtraParameterValues(0);
+            List<PsaCommand> articleActionCommands = ArticlesParser.GetPsaCommandsForArticleAction(0, 2);
+            List<PsaCommand> articleSubActionCommands = ArticlesParser.GetPsaCommandsForArticleSubAction(0, 1, 0);
+            string articleAnimationName = ArticlesParser.GetArticleSubActionAnimationName(0, 3);
+            AnimationFlags articleAnimationFlags = ArticlesParser.GetArticleSubActionAnimationFlags(0, 0);
         }
 
         public bool IsMovesetParsable()

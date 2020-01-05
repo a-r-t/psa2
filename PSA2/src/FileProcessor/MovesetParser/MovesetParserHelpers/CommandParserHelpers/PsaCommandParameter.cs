@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.ActionsParserHelpers
+namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParserHelpers
 {
     public class PsaCommandParameter
     {
