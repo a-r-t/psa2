@@ -168,6 +168,9 @@
     <None Include="data\attribute_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="data\char_specific\FitSnake.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\char_specific\FitLucario.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -326,10 +326,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                         {
                             boneReferences.Bones.Add(PsaFile.FileContent[boneReferencesLocation + i]);
                         }
-
                     }
                 }
-               
             }
             Console.WriteLine(boneReferences);
             return boneReferences;
@@ -338,61 +336,81 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public HandBones GetHandBones()
         {
             HandBones handBones = new HandBones();
-            // gets hand bones count
             if (PsaFile.FileContent[DataSectionLocation + 19] >= 8096 && PsaFile.FileContent[DataSectionLocation + 19] < PsaFile.DataSectionSize)
             {
-                int handBonesLocation = PsaFile.FileContent[DataSectionLocation + 19] / 4 + 4; // why the plus 4?
-                if (PsaFile.FileContent[handBonesLocation + 1] >= 8096 && PsaFile.FileContent[handBonesLocation + 1] < PsaFile.DataSectionSize)
+                handBones.Offset = PsaFile.FileContent[DataSectionLocation + 19];
+                int handBonesLocation = PsaFile.FileContent[DataSectionLocation + 19] / 4; // k
+                handBones.HandNBoneIndex0 = PsaFile.FileContent[handBonesLocation];
+                handBones.HandNBoneIndex1 = PsaFile.FileContent[handBonesLocation + 1];
+                handBones.HandNBoneIndex2 = PsaFile.FileContent[handBonesLocation + 2];
+                handBones.HandNBoneIndex3 = PsaFile.FileContent[handBonesLocation + 3];
+                handBones.DataCount = PsaFile.FileContent[handBonesLocation + 4];
+                handBones.DataOffset = PsaFile.FileContent[handBonesLocation + 5];
+
+                if (PsaFile.FileContent[handBonesLocation + 5] >= 8096 && PsaFile.FileContent[handBonesLocation + 5] < PsaFile.DataSectionSize)
                 {
-                    int numberOfHandBones = PsaFile.FileContent[handBonesLocation];
-                    if (numberOfHandBones > 0 && numberOfHandBones < 256)
+                    int numberOfHandBones = PsaFile.FileContent[handBonesLocation + 4];
+                    if (numberOfHandBones > 0 && numberOfHandBones < 80) // I guess there can only be 80 handbones? ok...
                     {
-                        handBones.DataCount = numberOfHandBones;
+                        handBones.BonesListDataOffset = PsaFile.FileContent[handBonesLocation + 5];
+                        int handBonesValuesLocation = PsaFile.FileContent[handBonesLocation + 5] / 4; // j
+                        for (int i = 0; i < numberOfHandBones; i++)
+                        {
+                            handBones.Bones.Add(PsaFile.FileContent[handBonesValuesLocation + i]);
+                        }
                     }
                 }
             }
-            Console.WriteLine(String.Format("Hand Bones count: {0}", handBones.DataCount));
+            Console.WriteLine(handBones);
             return handBones;
         }
 
         public ExtraActionInterrupts GetExtraActionInterrupts()
         {
             ExtraActionInterrupts extraActionInterrupts = new ExtraActionInterrupts();
-            // apparently extra action interrupts is added automatically?
-            Console.WriteLine("Extra Action Interrupts exists...by default?");
+            if (PsaFile.FileContent[DataSectionLocation + 22] >= 8096 && PsaFile.FileContent[DataSectionLocation + 22] < PsaFile.DataSectionSize)
+            {
+                extraActionInterrupts.Offset = PsaFile.FileContent[DataSectionLocation + 22];
+                int extraActionInterruptsLocation = PsaFile.FileContent[DataSectionLocation + 22] / 4;
+                extraActionInterrupts.Unknown0 = PsaFile.FileContent[extraActionInterruptsLocation];
+                extraActionInterrupts.Unknown1 = PsaFile.FileContent[extraActionInterruptsLocation + 1];
+                extraActionInterrupts.DataOffset = PsaFile.FileContent[extraActionInterruptsLocation + 2];
+            }
+            Console.WriteLine(extraActionInterrupts);
             return extraActionInterrupts;
         }
 
         public Unknown24 GetUnknown24()
         {
             Unknown24 unknown24 = new Unknown24();
-            // gets unknown24 count
             if (PsaFile.FileContent[DataSectionLocation + 24] >= 8096 && PsaFile.FileContent[DataSectionLocation + 24] < PsaFile.DataSectionSize)
             {
+                unknown24.Offset = PsaFile.FileContent[DataSectionLocation + 24];
                 int unknown24Location = PsaFile.FileContent[DataSectionLocation + 24] / 4;
+                unknown24.DataOffset = PsaFile.FileContent[unknown24Location];
+                unknown24.DataCount = PsaFile.FileContent[unknown24Location + 1];
                 if (PsaFile.FileContent[unknown24Location] >= 8096 && PsaFile.FileContent[unknown24Location] < PsaFile.DataSectionSize)
                 {
+                    int unknown24EntriesValuesLocation = PsaFile.FileContent[unknown24Location] / 4;
                     int numberOfUnknown24Entries = PsaFile.FileContent[unknown24Location + 1];
+                    unknown24.BonesListOffset = PsaFile.FileContent[unknown24Location];
                     if (numberOfUnknown24Entries > 0 && numberOfUnknown24Entries < 256)
                     {
-                        unknown24.DataCount = numberOfUnknown24Entries;
+                        for (int i = 0; i < numberOfUnknown24Entries; i++)
+                        {
+                            unknown24.Bones.Add(PsaFile.FileContent[unknown24EntriesValuesLocation + i]);
+                        }
                     }
                 }
             }
-            Console.WriteLine(String.Format("Unknown24 count: {0}", unknown24.DataCount));
+            Console.WriteLine(unknown24);
             return unknown24;
-        }
-
-        // this does NOT look right at all but it's what PSA-C has...
-        public int GetDataFlagsLocation()
-        {
-            return DataSectionLocation * 4 + 108;
         }
 
         public DataFlags GetDataFlags()
         {
             DataFlags dataFlags = new DataFlags();
-            dataFlags.Offset = GetDataFlagsLocation();
+            dataFlags.Offset = DataSectionLocation * 4 + 108;
             for (int i = 0; i < 4; i++)
             {
                 dataFlags.ActionFlags.Add(PsaFile.FileContent[DataSectionLocation + 27 + i]);

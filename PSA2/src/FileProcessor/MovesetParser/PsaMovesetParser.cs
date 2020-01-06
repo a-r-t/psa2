@@ -77,14 +77,14 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //BoneFloats1 boneFloats1 = MiscParser.GetBoneFloats1();
             //BoneFloats2 boneFloats2 = MiscParser.GetBoneFloats2();
             //BoneFloats3 boneFloats3 = MiscParser.GetBoneFloats3();
-            BoneReferences boneReferences = MiscParser.GetBoneReferences();
+            //BoneReferences boneReferences = MiscParser.GetBoneReferences();
             //HandBones handBones = MiscParser.GetHandBones();
             //ExtraActionInterrupts extraActionInterrupts = MiscParser.GetExtraActionInterrupts();
             //Unknown24 unknown24 = MiscParser.GetUnknown24();
             //StaticArticles staticArticles = MiscParser.ArticleDataParser.GetStaticArticles();
             //EntryArticle entryArticle = MiscParser.ArticleDataParser.GetEntryArticle();
             //ArticleExtraDatas articleExtraDatas = MiscParser.ArticleDataParser.GetArticleExtraDatas();
-            //DataFlags dataFlags = MiscParser.GetDataFlags();
+            DataFlags dataFlags = MiscParser.GetDataFlags();
 
             //List<PsaCommand> actionPsaCommands = ActionsParser.GetPsaCommandsForAction(0, 0);
             //List<PsaCommand> subActionPsaCommands = SubActionsParser.GetPsaCommandsForSubAction(73, 1);
