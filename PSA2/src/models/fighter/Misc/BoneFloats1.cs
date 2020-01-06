@@ -16,5 +16,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             BoneFloatEntries = new List<BoneFloatEntry>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(EntriesCount)}={EntriesCount.ToString()}, {nameof(BoneFloatEntries)}={string.Join(",", BoneFloatEntries.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

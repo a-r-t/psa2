@@ -69,7 +69,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //Crawl crawl = MiscParser.MiscSectionParser.GetCrawl();
             //CollisionData collisionData = MiscParser.MiscSectionParser.GetCollisionData();
             //Tether tether = MiscParser.MiscSectionParser.GetTether();
-            MiscSection12 miscSection12 = MiscParser.MiscSectionParser.GetMiscSection12();
+            //MiscSection12 miscSection12 = MiscParser.MiscSectionParser.GetMiscSection12();
             //CommonActionFlags commonActionFlags = MiscParser.GetCommonActionFlags();
             //SpecialActionFlags specialActionFlags = MiscParser.GetSpecialActionFlags();
             //ExtraActionFlags extraActionFlags = MiscParser.GetExtraActionFlags();
@@ -77,7 +77,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //BoneFloats1 boneFloats1 = MiscParser.GetBoneFloats1();
             //BoneFloats2 boneFloats2 = MiscParser.GetBoneFloats2();
             //BoneFloats3 boneFloats3 = MiscParser.GetBoneFloats3();
-            //BoneReferences boneReferences = MiscParser.GetBoneReferences();
+            BoneReferences boneReferences = MiscParser.GetBoneReferences();
             //HandBones handBones = MiscParser.GetHandBones();
             //ExtraActionInterrupts extraActionInterrupts = MiscParser.GetExtraActionInterrupts();
             //Unknown24 unknown24 = MiscParser.GetUnknown24();

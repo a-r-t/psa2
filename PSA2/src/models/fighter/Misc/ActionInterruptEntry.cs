@@ -8,7 +8,11 @@ namespace PSA2.src.models.fighter.Misc
 {
     public class ActionInterruptEntry
     {
-        public int Offset { get; set; }
-        public string Action { get; set; }
+        public int Value { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Value)}={Value.ToString("X")}}}";
+        }
     }
 }

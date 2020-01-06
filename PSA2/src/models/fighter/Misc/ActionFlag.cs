@@ -16,5 +16,10 @@ namespace PSA2.src.models.fighter.Misc
             Offset = offset;
             Flags = flags;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Flags)}={string.Join(",", Flags.Select(x => x.ToString("X")).ToList())}}}";
+        }
     }
 }

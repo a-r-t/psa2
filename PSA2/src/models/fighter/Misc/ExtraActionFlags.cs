@@ -11,5 +11,15 @@ namespace PSA2.src.models.fighter.Misc
         public int Offset { get; set; }
         public int ActionFlagsCount { get; set; }
         public List<ActionFlag> ActionFlags { get; set; }
+
+        public ExtraActionFlags()
+        {
+            ActionFlags = new List<ActionFlag>();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(ActionFlagsCount)}={ActionFlagsCount.ToString("X")}, {nameof(ActionFlags)}={string.Join(",", ActionFlags.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

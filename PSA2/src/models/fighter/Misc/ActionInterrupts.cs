@@ -18,5 +18,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             ActionInterruptEntries = new List<ActionInterruptEntry>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString()}, {nameof(ActionInterruptsOffset)}={ActionInterruptsOffset.ToString()}, {nameof(DataOffset)}={DataOffset.ToString()}, {nameof(DataCount)}={DataCount.ToString()}, {nameof(ActionInterruptEntries)}={string.Join(",", ActionInterruptEntries.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

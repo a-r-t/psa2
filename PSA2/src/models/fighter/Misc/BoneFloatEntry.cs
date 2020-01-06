@@ -18,5 +18,10 @@ namespace PSA2.src.models.fighter.Misc
             Bone = bone;
             Data = data;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Bone)}={Bone.ToString("X")}, {nameof(Data)}={string.Join(",", Data.Select(x => x.ToString("X")).ToList())}}}";
+        }
     }
 }
