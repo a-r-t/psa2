@@ -22,5 +22,10 @@ namespace PSA2.src.models.fighter.Misc
             Pad0 = pad0;
             Pad1 = pad1;
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Unknown0)}={Unknown0.ToString("X")}, {nameof(Unknown1)}={Unknown1.ToString("X")}, {nameof(Pad0)}={Pad0.ToString("X")}, {nameof(Pad1)}={Pad1.ToString("X")}}}";
+        }
     }
 }

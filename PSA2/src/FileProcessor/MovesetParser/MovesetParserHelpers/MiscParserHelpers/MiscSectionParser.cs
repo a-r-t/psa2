@@ -58,7 +58,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             {
                 miscSection1.Offset = PsaFile.FileContent[MiscSectionLocation];
                 int miscSection1Location = PsaFile.FileContent[MiscSectionLocation] / 4;
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 7; i++) // currently hardcoded to 7, there was code in PSAC for getting a count of them but all chars seem to have 7 and the code was ridiculous
                 {
                     miscSection1.Params.Add(new MiscSection1Param($"Data{i + 1}", PsaFile.FileContent[miscSection1Location + i]));
                 }
@@ -198,63 +198,96 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
         public BoneReferences GetBoneReferences()
         {
             BoneReferences boneReferences = new BoneReferences();
-            // checks if bone references section exists (inside misc section) but does not count them
             if (PsaFile.FileContent[MiscSectionLocation + 9] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 9] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Bone References Section (In Misc Section) exists");
+                int boneReferencesLocation = PsaFile.FileContent[MiscSectionLocation + 9];
+                boneReferences.Offset = boneReferencesLocation;
+                int boneReferencesValuesLocation = PsaFile.FileContent[MiscSectionLocation + 9] / 4;
+                for (int i = 0; i < 10; i++)
+                {
+                    boneReferences.Bones.Add(PsaFile.FileContent[boneReferencesValuesLocation + i]);
+                }
             }
-            else
-            {
-                Console.WriteLine("Bone References Section (In Misc Section) does NOT exist");
-            }
+            Console.WriteLine(boneReferences);
             return boneReferences;
         }
 
         public ItemBones GetItemBones()
         {
             ItemBones itemBones = new ItemBones();
-            // counts item bones entries
             if (PsaFile.FileContent[MiscSectionLocation + 10] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 10] < PsaFile.DataSectionSize)
             {
-                int itemBonesEntriesLocation = PsaFile.FileContent[MiscSectionLocation + 10] / 4;
-                if (PsaFile.FileContent[itemBonesEntriesLocation + 4] >= 8096 && PsaFile.FileContent[itemBonesEntriesLocation + 4] < PsaFile.DataSectionSize)
+                itemBones.Offset = PsaFile.FileContent[MiscSectionLocation + 10];
+                int itemBonesLocation = PsaFile.FileContent[MiscSectionLocation + 10] / 4;
+                itemBones.HaveNBoneIndex0 = PsaFile.FileContent[itemBonesLocation];
+                itemBones.HaveNBoneIndex1 = PsaFile.FileContent[itemBonesLocation + 1];
+                itemBones.ThrowNBoneIndex = PsaFile.FileContent[itemBonesLocation + 2];
+                itemBones.DataCount = PsaFile.FileContent[itemBonesLocation + 3];
+                itemBones.DataOffset = PsaFile.FileContent[itemBonesLocation + 4];
+                itemBones.Pad = PsaFile.FileContent[itemBonesLocation + 5];
+
+                if (PsaFile.FileContent[itemBonesLocation + 4] >= 8096 && PsaFile.FileContent[itemBonesLocation + 4] < PsaFile.DataSectionSize)
                 {
-                    int numberOfItemBonesEntries = PsaFile.FileContent[itemBonesEntriesLocation + 3];
+                    int numberOfItemBonesEntries = PsaFile.FileContent[itemBonesLocation + 3];
+                    itemBones.EntriesCount = numberOfItemBonesEntries;
                     if (numberOfItemBonesEntries > 0 && numberOfItemBonesEntries < 256)
                     {
-                        itemBones.EntriesCount = numberOfItemBonesEntries;
+                        for (int i = 0; i < numberOfItemBonesEntries; i++)
+                        {
+                            int itemBonesEntriesLocation = PsaFile.FileContent[itemBonesLocation + 4] + i * 16;
+                            int itemBonesEntriesValuesLocation = itemBonesEntriesLocation / 4;
+                            int unknown0 = PsaFile.FileContent[itemBonesEntriesValuesLocation];
+                            int unknown1 = PsaFile.FileContent[itemBonesEntriesValuesLocation + 1];
+                            int pad0 = PsaFile.FileContent[itemBonesEntriesValuesLocation + 2];
+                            int pad1 = PsaFile.FileContent[itemBonesEntriesValuesLocation + 3];
+                            itemBones.Entries.Add(new ItemBonesEntry(itemBonesEntriesLocation, unknown0, unknown1, pad0, pad1));
+                        }
                     }
                 }
             }
-            Console.WriteLine(String.Format("Number Of Item Bone Entries: {0}", itemBones.EntriesCount));
+            Console.WriteLine(itemBones);
             return itemBones;
         }
 
         public SoundLists GetSoundLists()
         {
             SoundLists soundLists = new SoundLists();
-            // counts sound data section
             if (PsaFile.FileContent[MiscSectionLocation + 11] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 11] < PsaFile.DataSectionSize)
             {
+                soundLists.Offset = PsaFile.FileContent[MiscSectionLocation + 11];
                 int soundListsLocation = PsaFile.FileContent[MiscSectionLocation + 11] / 4;
+                soundLists.SoundListOffset = PsaFile.FileContent[soundListsLocation];
+                soundLists.SoundListCount = PsaFile.FileContent[soundListsLocation + 1];
                 if (PsaFile.FileContent[soundListsLocation] >= 8096 && PsaFile.FileContent[soundListsLocation] < PsaFile.DataSectionSize)
                 {
-                    int soundListEntriesLocation = PsaFile.FileContent[soundListsLocation] / 4;
-                    int numberOfSoundListEntries = PsaFile.FileContent[soundListsLocation + 1];
-                    if (numberOfSoundListEntries > 0 && numberOfSoundListEntries < 256)
+                    int numberOfSoundListData = PsaFile.FileContent[soundListsLocation + 1];
+                    if (numberOfSoundListData > 0 && numberOfSoundListData < 256)
                     {
-                        for (int i = 0; i < numberOfSoundListEntries; i++)
+                        for (int i = 0; i < numberOfSoundListData; i++)
                         {
-                            // how many sound datas there are
-                            if (PsaFile.FileContent[soundListEntriesLocation + i * 2] >= 8096 && PsaFile.FileContent[soundListEntriesLocation + i * 2] < PsaFile.DataSectionSize)
+                            int soundListDataEntryLocation = PsaFile.FileContent[soundListsLocation] + i * 8;
+                            int soundListDataEntrySfxLocation = PsaFile.FileContent[soundListsLocation] / 4 + i * 2;
+
+                            int soundListOffset = PsaFile.FileContent[soundListDataEntrySfxLocation];
+                            int soundListCount = PsaFile.FileContent[soundListDataEntrySfxLocation + 1];
+                            SoundDataEntry soundDataEntry = new SoundDataEntry(soundListDataEntryLocation, soundListOffset, soundListCount);
+                            soundLists.Entries.Add(soundDataEntry);
+
+                            int soundListDataEntrySfxValuesLocation = PsaFile.FileContent[soundListDataEntrySfxLocation] / 4;
+                            int numberOfSoundListDataEntrySfxValues = PsaFile.FileContent[soundListDataEntrySfxLocation + 1];
+                            if (numberOfSoundListDataEntrySfxValues > 0 && numberOfSoundListDataEntrySfxValues < 128)
                             {
-                                soundLists.SoundListCount++;
+                                for (int j = 0; j < numberOfSoundListDataEntrySfxValues; j++)
+                                {
+                                    soundDataEntry.SfxIds.Add(PsaFile.FileContent[soundListDataEntrySfxValuesLocation + j]);
+                                }
                             }
+
                         }
-                        Console.WriteLine(String.Format("Number of Sound List Entries: {0}", soundLists.SoundListCount));
                     }
                 }
             }
+            Console.WriteLine(soundLists);
             return soundLists;
         }
 
@@ -264,54 +297,87 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             // checks if there is a Misc Section 5
             if (PsaFile.FileContent[MiscSectionLocation + 12] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 12] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Misc Section 5 exists");
+                int miscSection5EntriesLocation = PsaFile.FileContent[MiscSectionLocation + 11] / 4;
+
+                int numberOfMiscSection5Entries;
+                // not a clue what's going on here
+                if ((PsaFile.FileContent[MiscSectionLocation + 11] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 11] < PsaFile.DataSectionSize)
+                    && PsaFile.FileContent[MiscSectionLocation + 12] + 16 != PsaFile.FileContent[miscSection5EntriesLocation])
+                {
+                    numberOfMiscSection5Entries = 6;
+                }
+                else
+                {
+                    numberOfMiscSection5Entries = 4;
+                }
+
+                int miscSection5Location = PsaFile.FileContent[MiscSectionLocation + 12];
+                miscSection5.Offset = miscSection5Location;
+                int miscSection5EntriesValuesLocation = miscSection5Location / 4;
+                for (int i = 0; i < numberOfMiscSection5Entries; i++)
+                {
+                    miscSection5.Entries.Add(PsaFile.FileContent[miscSection5EntriesValuesLocation + i]);
+                }
             }
-            else
-            {
-                Console.WriteLine("Misc Section 5 does NOT exist");
-            }
+            Console.WriteLine(miscSection5);
             return miscSection5;
         }
 
         public MultiJump GetMultiJump()
         {
             MultiJump multiJump = new MultiJump();
-            // checks if multi jump section exists, checks if there is a hops section and multi jump unknown section
             if (PsaFile.FileContent[MiscSectionLocation + 13] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 13] < PsaFile.DataSectionSize)
             {
                 Console.WriteLine("Mutli Jump Section exists");
+                multiJump.Offset = PsaFile.FileContent[MiscSectionLocation + 13];
                 int multiJumpLocation = PsaFile.FileContent[MiscSectionLocation + 13] / 4;
+                multiJump.Unknown0 = PsaFile.FileContent[multiJumpLocation];
+                multiJump.Unknown1 = PsaFile.FileContent[multiJumpLocation + 1];
+                multiJump.Unknown2 = PsaFile.FileContent[multiJumpLocation + 2];
+                multiJump.HorizontalBoost = PsaFile.FileContent[multiJumpLocation + 3];
+                multiJump.HopsOffset = PsaFile.FileContent[multiJumpLocation + 4];
+                multiJump.UnknownDatasOffset = PsaFile.FileContent[multiJumpLocation + 5];
+                multiJump.TurnFrames = PsaFile.FileContent[multiJumpLocation + 6];
+
                 if (PsaFile.FileContent[multiJumpLocation + 4] >= 8096 && PsaFile.FileContent[multiJumpLocation + 4] < PsaFile.DataSectionSize)
                 {
-                    Console.WriteLine("Hops section exists");
+                    multiJump.Hops.Offset = PsaFile.FileContent[multiJumpLocation + 4];
+                    int hopsLocation = PsaFile.FileContent[multiJumpLocation + 4] / 4;
+
+                    int numberOfHopsValues = (PsaFile.FileContent[MiscSectionLocation + 13] - PsaFile.FileContent[multiJumpLocation + 4]) / 4;
+                    for (int i = 0; i < numberOfHopsValues; i++)
+                    {
+                        multiJump.Hops.HopVelocities.Add(PsaFile.FileContent[hopsLocation + i]);
+                    }
                 }
 
                 if (PsaFile.FileContent[multiJumpLocation + 5] >= 8096 && PsaFile.FileContent[multiJumpLocation + 5] < PsaFile.DataSectionSize)
                 {
-                    Console.WriteLine("Muli Jump Unknown section exists");
+                    multiJump.MultiJumpUnknown.Offset = PsaFile.FileContent[multiJumpLocation + 5];
+                    int multiJumpUnknownLocation = PsaFile.FileContent[multiJumpLocation + 5] / 4;
+                    for (int i = 0; i < 12; i++)
+                    {
+                        multiJump.MultiJumpUnknown.Unknowns.Add(PsaFile.FileContent[multiJumpUnknownLocation + i]);
+                    }
                 }
             }
-            else
-            {
-                Console.WriteLine("Mutli Jump Section does NOT exist");
-            }
-
+            Console.WriteLine(multiJump);
             return multiJump;
         }
 
         public Glide GetGlide()
         {
             Glide glide = new Glide();
-            // checks if glide section exists
             if (PsaFile.FileContent[MiscSectionLocation + 14] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 14] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Glide section exists");
+                glide.Offset = PsaFile.FileContent[MiscSectionLocation + 14];
+                int glideLocation = PsaFile.FileContent[MiscSectionLocation + 14] / 4;
+                for (int i = 0; i < 21; i++)
+                {
+                    glide.Datas.Add(PsaFile.FileContent[glideLocation + i]);
+                }
             }
-            else
-            {
-                Console.WriteLine("Glide section does NOT exist");
-            }
-
+            Console.WriteLine(glide);
             return glide;
         }
 
@@ -321,78 +387,116 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             // checks if crawl section exists
             if (PsaFile.FileContent[MiscSectionLocation + 15] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 15] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Crawl section exists");
+                crawl.Offset = PsaFile.FileContent[MiscSectionLocation + 15];
+                int crawlLocation = PsaFile.FileContent[MiscSectionLocation + 15] / 4;
+                crawl.Forward = PsaFile.FileContent[crawlLocation];
+                crawl.Backward = PsaFile.FileContent[crawlLocation + 1];
             }
-            else
-            {
-                Console.WriteLine("Crawl section does NOT exist");
-            }
+            Console.WriteLine(crawl);
             return crawl;
         }
 
         public CollisionData GetCollisionData()
         {
             CollisionData collisionData = new CollisionData();
-            // checks if there is collision data
             if (PsaFile.FileContent[MiscSectionLocation + 16] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 16] < PsaFile.DataSectionSize)
             {
-                int collisionDataLocation = PsaFile.FileContent[MiscSectionLocation + 16] / 4;
+                collisionData.Offset = PsaFile.FileContent[MiscSectionLocation + 16];
+                int collisionDataLocation = PsaFile.FileContent[MiscSectionLocation + 16] / 4; // k
+                collisionData.CollisionDataOffset = PsaFile.FileContent[MiscSectionLocation + 16];
+                collisionData.EntryOffset = PsaFile.FileContent[collisionDataLocation];
+                collisionData.Count = PsaFile.FileContent[collisionDataLocation + 1];
                 if (PsaFile.FileContent[collisionDataLocation] >= 8096 && PsaFile.FileContent[collisionDataLocation] < PsaFile.DataSectionSize)
                 {
-                    int collisionEntryLocation = PsaFile.FileContent[collisionDataLocation] / 4;
-                    if (PsaFile.FileContent[collisionEntryLocation] >= 8096 && PsaFile.FileContent[collisionEntryLocation] < PsaFile.DataSectionSize)
+
+                    int collisionDataEntryLocation = PsaFile.FileContent[collisionDataLocation] / 4; // n
+                    collisionData.DataOffset = PsaFile.FileContent[collisionDataEntryLocation];
+                    if (PsaFile.FileContent[collisionDataEntryLocation] >= 8096 && PsaFile.FileContent[collisionDataEntryLocation] < PsaFile.DataSectionSize)
                     {
-                        int collisionBoneDataLocation = PsaFile.FileContent[collisionEntryLocation] / 4;
-                        if (PsaFile.FileContent[collisionBoneDataLocation + 1] >= 8096 && PsaFile.FileContent[collisionBoneDataLocation + 1] < PsaFile.DataSectionSize)
+                        int collisionDataEntryBoneDataLocation = PsaFile.FileContent[collisionDataEntryLocation] / 4; // j
+                        collisionData.CollisionDataEntry.Offset = PsaFile.FileContent[collisionDataEntryLocation];
+                        collisionData.CollisionDataEntry.Type = PsaFile.FileContent[collisionDataEntryBoneDataLocation];
+
+                        // so if there is extra data for bone data offset and count, then the unknowns get pushed down a few indexes (which is why the 1, 3 goes to 3, 6)
+                        int unknownsStartIndex;
+                        int unknownsEndIndex;
+                        if (PsaFile.FileContent[collisionDataEntryLocation] + 16 == PsaFile.FileContent[collisionDataLocation])
                         {
-                            // guessing but I think this is right
-                            int collisionBoneDataCount = PsaFile.FileContent[collisionBoneDataLocation + 2];
-                            if (collisionBoneDataCount > 0 && collisionBoneDataCount < 256)
+                            unknownsStartIndex = 1;
+                            unknownsEndIndex = 3;
+                        }
+                        else
+                        {
+                            collisionData.CollisionDataEntry.BoneDataOffset = PsaFile.FileContent[collisionDataEntryBoneDataLocation + 1];
+                            collisionData.CollisionDataEntry.Count = PsaFile.FileContent[collisionDataEntryBoneDataLocation + 2];
+                            unknownsStartIndex = 3;
+                            unknownsEndIndex = 6;
+                        }
+                        for (int i = unknownsStartIndex; i < unknownsEndIndex; i++)
+                        {
+                            collisionData.CollisionDataEntry.Unknowns.Add(PsaFile.FileContent[collisionDataEntryBoneDataLocation + i]);
+                        }
+
+                        if (PsaFile.FileContent[collisionDataEntryBoneDataLocation + 1] >= 8096 && PsaFile.FileContent[collisionDataEntryBoneDataLocation + 1] < PsaFile.DataSectionSize)
+                        {
+                            collisionData.CollisionDataEntry.BonesListOffset = PsaFile.FileContent[collisionDataEntryBoneDataLocation + 1];
+                            int collisionDataEntryBoneDataValuesLocation = PsaFile.FileContent[collisionDataEntryBoneDataLocation + 1] / 4;
+                            int collisionDataBoneDataCount = PsaFile.FileContent[collisionDataEntryBoneDataLocation + 2];
+                            if (collisionDataBoneDataCount > 0 && collisionDataBoneDataCount < 256) // psac has this at 128 in one place and 256 in another...256 should be correct though
                             {
-                                collisionData.Count = collisionBoneDataCount;
+                                for (int i = 0; i < collisionDataBoneDataCount; i++)
+                                {
+                                    collisionData.CollisionDataEntry.Bones.Add(PsaFile.FileContent[collisionDataEntryBoneDataValuesLocation + i]);
+                                }
                             }
 
                         }
                     }
                 }
             }
-            Console.WriteLine(String.Format("Collision Data bone count: {0}", collisionData.Count));
+            Console.WriteLine(collisionData);
             return collisionData;
         }
 
         public Tether GetTether()
         {
             Tether tether = new Tether();
-            // checks if tether exists
             if (PsaFile.FileContent[MiscSectionLocation + 17] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 17] < PsaFile.DataSectionSize)
             {
-                Console.WriteLine("Tether section exists");
+                tether.Offset = PsaFile.FileContent[MiscSectionLocation + 17];
+                int tetherLocation = PsaFile.FileContent[MiscSectionLocation + 17] / 4;
+                tether.HangFrameCount = PsaFile.FileContent[tetherLocation];
+                tether.Unknown = PsaFile.FileContent[tetherLocation + 1];
             }
-            else
-            {
-                Console.WriteLine("Tether section does NOT exist");
-            }
+            Console.WriteLine(tether);
             return tether;
         }
 
         public MiscSection12 GetMiscSection12()
         {
             MiscSection12 miscSection12 = new MiscSection12();
-            // gets count of entries in Misc Section 12
             if (PsaFile.FileContent[MiscSectionLocation + 18] >= 8096 && PsaFile.FileContent[MiscSectionLocation + 18] < PsaFile.DataSectionSize)
             {
+                miscSection12.Offset = PsaFile.FileContent[MiscSectionLocation + 18];
                 int miscSection12Location = PsaFile.FileContent[MiscSectionLocation + 18] / 4;
+                miscSection12.DataOffset = PsaFile.FileContent[miscSection12Location];
+                miscSection12.DataCount = PsaFile.FileContent[miscSection12Location + 1];
 
                 if (PsaFile.FileContent[miscSection12Location] >= 8096 && PsaFile.FileContent[miscSection12Location] < PsaFile.DataSectionSize)
                 {
                     int numberOfMiscSection12Entries = PsaFile.FileContent[miscSection12Location + 1];
-                    if (numberOfMiscSection12Entries > 0 && numberOfMiscSection12Entries < 256)
+                    if (numberOfMiscSection12Entries > 0 && numberOfMiscSection12Entries < 256) // psa-c has this at 100...but 256 should be fine?
                     {
-                        miscSection12.DataCount = numberOfMiscSection12Entries;
+                        miscSection12.ItemsListOffset = PsaFile.FileContent[miscSection12Location]; // seems not correct, come back to this
+                        int miscSection12EntriesValuesLocation = PsaFile.FileContent[miscSection12Location] / 4;
+                        for (int i = 0; i < numberOfMiscSection12Entries; i++)
+                        {
+                            miscSection12.Items.Add(PsaFile.FileContent[miscSection12EntriesValuesLocation + i]);
+                        }
                     }
                 }
             }
-            Console.WriteLine(String.Format("Misc Section 12 entries count: {0}", miscSection12.DataCount));
+            Console.WriteLine(miscSection12);
             return miscSection12;
         }
     }

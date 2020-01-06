@@ -122,12 +122,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                             {
                                 int numberOfBones = PsaFile.FileContent[bonesStartLocation + 1];
                                 boneGroup.BoneList.Offset = PsaFile.FileContent[bonesStartLocation];
-                                int something = PsaFile.FileContent[bonesStartLocation] / 4;
+                                int boneValuesLocation = PsaFile.FileContent[bonesStartLocation] / 4;
                                 if (numberOfBones > 0 && numberOfBones < 256)
                                 {
                                     for (int boneIndex = 0; boneIndex < numberOfBones; boneIndex++)
                                     {
-                                        int bone = PsaFile.FileContent[something + boneIndex];
+                                        int bone = PsaFile.FileContent[boneValuesLocation + boneIndex];
                                         boneGroup.BoneList.Bones.Add(bone);
                                     }
                                 }

@@ -13,11 +13,16 @@ namespace PSA2.src.models.fighter.Misc
         public int EntryOffset { get; set; }
         public int Count { get; set; }
         public int DataOffset { get; set; }
-        public List<CollisionDataEntry> Entries { get; set; }
+        public CollisionDataEntry CollisionDataEntry { get; set; }
 
         public CollisionData()
         {
-            Entries = new List<CollisionDataEntry>();
+            CollisionDataEntry = new CollisionDataEntry();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(CollisionDataOffset)}={CollisionDataOffset.ToString("X")}, {nameof(EntryOffset)}={EntryOffset.ToString("X")}, {nameof(Count)}={Count.ToString("X")}, {nameof(DataOffset)}={DataOffset.ToString("X")}, {nameof(CollisionDataEntry)}={CollisionDataEntry}}}";
         }
     }
 }

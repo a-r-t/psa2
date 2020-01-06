@@ -11,5 +11,10 @@ namespace PSA2.src.models.fighter.Misc
         public int Offset { get; set; }
         public int HangFrameCount { get; set; }
         public int Unknown { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString()}, {nameof(HangFrameCount)}={HangFrameCount.ToString()}, {nameof(Unknown)}={Unknown.ToString()}}}";
+        }
     }
 }

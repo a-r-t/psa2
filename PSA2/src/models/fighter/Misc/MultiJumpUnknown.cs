@@ -15,5 +15,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             Unknowns = new List<int>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Unknowns)}={string.Join(",", Unknowns.Select(x => x.ToString("X")).ToList())}}}";
+        }
     }
 }

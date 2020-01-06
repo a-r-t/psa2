@@ -11,5 +11,10 @@ namespace PSA2.src.models.fighter.Misc
         public int Offset { get; set; }
         public int Forward { get; set; }
         public int Backward { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString()}, {nameof(Forward)}={Forward.ToString()}, {nameof(Backward)}={Backward.ToString()}}}";
+        }
     }
 }

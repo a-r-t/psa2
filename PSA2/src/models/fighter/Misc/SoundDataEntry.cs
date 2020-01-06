@@ -13,11 +13,17 @@ namespace PSA2.src.models.fighter.Misc
         public int SoundListCount { get; set; }
         public List<int> SfxIds { get; set; }
 
-        public SoundDataEntry(int offset, int soundListOffset)
+        public SoundDataEntry(int offset, int soundListOffset, int soundListCount)
         {
             Offset = offset;
             SoundListOffset = soundListOffset;
+            SoundListCount = soundListCount;
             SfxIds = new List<int>();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(SoundListOffset)}={SoundListOffset.ToString("X")}, {nameof(SoundListCount)}={SoundListCount.ToString("X")}, {nameof(SfxIds)}={string.Join(",", SfxIds.Select(x => x.ToString("X")).ToList())}}}";
         }
     }
 }

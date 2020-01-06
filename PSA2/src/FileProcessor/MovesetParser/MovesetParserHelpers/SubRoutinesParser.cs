@@ -107,7 +107,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                             else if (command.Instruction.ToString("X8") == "0D000200" && command.Parameters[0].Value < PsaFile.DataSectionSize)
                             {
                                 subRoutines.Add(command.Parameters[1].Value);
-                                subRoutinesList.Add(command.Parameters[i].Value);
+                                subRoutinesList.Add(command.Parameters[1].Value);
                             }
                         }
                     }

@@ -18,5 +18,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             Items = new List<int>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(DataOffset)}={DataOffset.ToString("X")}, {nameof(DataCount)}={DataCount.ToString("X")}, {nameof(ItemsListOffset)}={ItemsListOffset.ToString("X")}, {nameof(Items)}={string.Join(",", Items.Select(x => x.ToString("X")).ToList())}}}";
+        }
     }
 }

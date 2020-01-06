@@ -12,23 +12,19 @@ namespace PSA2.src.models.fighter.Misc
         public int Type { get; set; }
         public int BoneDataOffset { get; set; }
         public int Count { get; set; }
-        public int Unknown3 { get; set; }
-        public int Unknown4 { get; set; }
-        public int Unknown5 { get; set; }
+        public List<int> Unknowns { get; set; }
         public int BonesListOffset { get; set; }
         public List<int> Bones { get; set; }
 
-        public CollisionDataEntry(int offset, int type, int boneDataOffset, int count, int unknown3, int unknown4, int unknown5, int bonesListOffset, List<int> bones)
+        public CollisionDataEntry()
         {
-            Offset = offset;
-            Type = type;
-            BoneDataOffset = boneDataOffset;
-            Count = count;
-            Unknown3 = unknown3;
-            Unknown4 = unknown4;
-            Unknown5 = unknown5;
-            BonesListOffset = bonesListOffset;
+            Unknowns = new List<int>();
             Bones = new List<int>();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(Type)}={Type.ToString("X")}, {nameof(BoneDataOffset)}={BoneDataOffset.ToString("X")}, {nameof(Count)}={Count.ToString("X")}, {nameof(Unknowns)}={string.Join(",", Unknowns.Select(x => x.ToString("X")).ToList())}, {nameof(BonesListOffset)}={BonesListOffset.ToString("X")}, {nameof(Bones)}={string.Join(",", Bones.Select(x => x.ToString("X")).ToList())}}}";
         }
     }
 }
