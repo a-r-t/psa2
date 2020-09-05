@@ -17,6 +17,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             Value = value;
         }
 
-
+        public override string ToString()
+        {
+            return $"{{{nameof(Type)}={Type.ToString()}, {nameof(Value)}={Value.ToString("X")}}}";
+        }
     }
 }

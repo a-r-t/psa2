@@ -1,0 +1,549 @@
+{
+  "dataSize": "0xA8",
+  "parameters": [
+    {
+      "location": "07C",
+      "parameterIndex": "00",
+      "numberOfParameters": "8",
+      "name": "ExtraParams0",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "int",
+          "description": "Amount of charge states?"
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "Ground backwards horizontal momentum from releasing Aura Sphere"
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "Aerial backwards horizontal momentum from releasing Aura Sphere"
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x10",
+          "type": "int",
+          "description": "Loop iterations to fully charge Aura Sphere"
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "Aura Sphere Power"
+        },
+        {
+          "location": "0x18",
+          "type": "float",
+          "description": "Max Aura Sphere size?"
+        },
+        {
+          "location": "0x1C",
+          "type": "float",
+          "description": "Aura Sphere Start Size"
+        }
+      ]
+    },
+    {
+      "location": "080",
+      "parameterIndex": "01",
+      "numberOfParameters": "4",
+      "name": "ExtraParams1",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "No Description Available."
+        }
+      ]
+    },
+    {
+      "location": "084",
+      "parameterIndex": "02",
+      "numberOfParameters": "8",
+      "name": "Aura physics (plus unknown?)",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "Aura floor multiplier"
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "Aura ceiling multiplier"
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "Aura floor percentage"
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "Aura baseline percentage"
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "Aura ceiling percentage"
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "Flat aura damage bonus"
+        },
+        {
+          "location": "0x18",
+          "type": "float",
+          "description": "Aura maximum multiplier"
+        },
+        {
+          "location": "0x1C",
+          "type": "float",
+          "description": "Aura minimum multiplier"
+        }
+      ]
+    },
+    {
+      "location": "088",
+      "parameterIndex": "03",
+      "numberOfParameters": "6",
+      "name": "Force Palm",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "Grounded X offset"
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "Grounded Y offset"
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "Aerial X offset"
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "Aerial Y offset"
+        }
+      ]
+    },
+    {
+      "location": "08C",
+      "parameterIndex": "04",
+      "numberOfParameters": "10",
+      "name": "Extreme Speed",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": " ?? (read on startup)"
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "Air friction on aerial startup"
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "Gravity on aerial startup"
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": " ?? (read on travel)"
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "Default angle"
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "Speed"
+        },
+        {
+          "location": "0x18",
+          "type": "float",
+          "description": "Turning"
+        },
+        {
+          "location": "0x1C",
+          "type": "float",
+          "description": " ?? (something with angle required to bounce off wall?)"
+        },
+        {
+          "location": "0x20",
+          "type": "int",
+          "description": "Frame duration of travel"
+        },
+        {
+          "location": "0x24",
+          "type": "float",
+          "description": "Travel -> Ending velocity multiplier"
+        },
+        {
+          "location": "0x28",
+          "type": "float",
+          "description": "Ending air friction (?)"
+        },
+        {
+          "location": "0x2C",
+          "type": "float",
+          "description": "(NOT READ)"
+        },
+        {
+          "location": "0x30",
+          "type": "float",
+          "description": " ?? (read on end)"
+        },
+        {
+          "location": "0x34",
+          "type": "int",
+          "description": " ?? (read on end)"
+        },
+        {
+          "location": "0x38",
+          "type": "float",
+          "description": "horizontal momentum on angled travel landing"
+        },
+        {
+          "location": "0x3C",
+          "type": "int",
+          "description": "No Description Available."
+        }
+      ]
+    },
+    {
+      "location": "090",
+      "parameterIndex": "05",
+      "numberOfParameters": "8",
+      "name": "Double Team",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "Momentum preservation"
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": " ?? (read on startup)"
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0xC",
+          "type": "int",
+          "description": "Frames duration for dodge before hitbox action occurs"
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "How far away from start attack occurs (in units)"
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x18",
+          "type": "int",
+          "description": "Attack kick duration"
+        },
+        {
+          "location": "0x1C",
+          "type": "int",
+          "description": "No Description Available."
+        }
+      ]
+    },
+    {
+      "location": "094",
+      "parameterIndex": "06",
+      "numberOfParameters": "4",
+      "name": "Aura Storm",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "rising speed"
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "max turning angle"
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "turning speed"
+        },
+        {
+          "location": "0xC",
+          "type": "int",
+          "description": "No Description Available."
+        }
+      ]
+    },
+    {
+      "location": "098",
+      "parameterIndex": "07",
+      "numberOfParameters": "8",
+      "name": "ExtraParams7",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x18",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x1C",
+          "type": "int",
+          "description": "No Description Available."
+        }
+      ]
+    }
+  ],
+  "extraParameters": [
+    {
+      "location": "X08",
+      "parameterIndex": "27-00x",
+	  "parameterLocationPath": [
+	  	  "27",
+		  "00"
+	  ],
+      "name": "HitDataList8",
+      "values": [
+        {
+          "location": "0x0",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x4",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x8",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0xC",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x10",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x14",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "0x18",
+          "type": "float",
+          "description": "No Description Available."
+        },
+        {
+          "location": "Flags",
+          "type": "float",
+          "description": "0x1C No Description Available."
+        }
+      ]
+    }
+  ],
+  "articles": [
+    {
+      "location": "0A0",
+      "articleIndex": "0",
+	  "numberOfActions": 3,
+	  "numberOfSubActions": 10,
+	  "name": "Aura Sphere",
+      "articleParameters": [
+        {
+          "location": "034",
+          "parameterIndex": "00-0",
+          "numberOfParameters": "12",
+          "name": "Aura Sphere Attribute",
+          "values": [
+            {
+              "location": "0x0",
+              "type": "int",
+              "description": "Aura sphere lifetime"
+            },
+            {
+              "location": "0x4",
+              "type": "int",
+              "description": "Firing angle (radians)"
+            },
+            {
+              "location": "0x8",
+              "type": "float",
+              "description": "Uncharged speed"
+            },
+            {
+              "location": "0xC",
+              "type": "float",
+              "description": "Fully charged speed (also added on to slightly charged)"
+            },
+            {
+              "location": "0x10",
+              "type": "int",
+              "description": "Frames between wiggling"
+            },
+            {
+              "location": "0x14",
+              "type": "float",
+              "description": "Movement added to a random direction each wiggle"
+            },
+            {
+              "location": "0x18",
+              "type": "float",
+              "description": "Uncharged Aura Sphere Wiggle intensity"
+            },
+            {
+              "location": "0x1C",
+              "type": "int",
+              "description": "Charged Aura Sphere Wiggle intensity"
+            },
+            {
+              "location": "0x20",
+              "type": "float",
+              "description": "Aura Sphere base growth size (smaller = bigger)"
+            },
+            {
+              "location": "0x24",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x28",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x2C",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x30",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x34",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x38",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x3C",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x40",
+              "type": "float",
+              "description": "Aura Sphere size table (bigger = bigger, will automatically scale to base size after being charged a bit)"
+            },
+            {
+              "location": "0x44",
+              "type": "float",
+              "description": "Unknown. Probably has something to do with aura sphere damage/stock growth"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location": "0A4",
+      "articleIndex": "1",
+	  "numberOfActions": 1,
+	  "numberOfSubActions": 1,
+	  "name": "Force Palm",
+      "articleParameters": []
+    }
+  ]
+}

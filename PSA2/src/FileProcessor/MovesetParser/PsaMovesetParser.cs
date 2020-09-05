@@ -44,7 +44,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
             CharacterParamsParser = new CharacterParamsParser(PsaFile, dataSectionLocation, movesetBaseName);
             int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
-            bool isMovesetParsable = IsMovesetParsable();
+            //bool isMovesetParsable = IsMovesetParsable();
+            ActionsParser.AddCommandToAction(0, 0, 0);
+            PsaFile.SaveFile("result.pac");
+
         }
 
         public bool IsMovesetParsable()
@@ -84,7 +87,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //StaticArticles staticArticles = MiscParser.ArticleDataParser.GetStaticArticles();
             //EntryArticle entryArticle = MiscParser.ArticleDataParser.GetEntryArticle();
             //ArticleExtraDatas articleExtraDatas = MiscParser.ArticleDataParser.GetArticleExtraDatas();
-            DataFlags dataFlags = MiscParser.GetDataFlags();
+            //DataFlags dataFlags = MiscParser.GetDataFlags();
 
             //List<PsaCommand> actionPsaCommands = ActionsParser.GetPsaCommandsForAction(0, 0);
             //List<PsaCommand> subActionPsaCommands = SubActionsParser.GetPsaCommandsForSubAction(73, 1);
@@ -106,7 +109,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //string articleAnimationName = ArticlesParser.GetArticleSubActionAnimationName(0, 3);
             //AnimationFlags articleAnimationFlags = ArticlesParser.GetArticleSubActionAnimationFlags(0, 0);
 
-            
+
 
             return true;
         }

@@ -1,6 +1,7 @@
 ﻿using PSA2.src.FileProcessor.MovesetParser.Configs;
 using PSA2.src.models.fighter;
 using PSA2.src.models.fighter.Misc;
+using PSA2.src.utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +23,20 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             CharacterSpecificParametersConfig = characterSpecificParametersConfig;
         }
 
+        // TODO: Article Data in Misc Section
+
+        /*
+        // basicaly done besides the data3 element
         public StaticArticles GetStaticArticles()
         {
             StaticArticles staticArticles = new StaticArticles();
             // static articles count
             if (PsaFile.FileContent[DataSectionLocation + 25] >= 8096 && PsaFile.FileContent[DataSectionLocation + 25] < PsaFile.DataSectionSize)
             {
-                int staticArticleLocation = PsaFile.FileContent[DataSectionLocation + 25] / 4;
+                staticArticles.Offset = PsaFile.FileContent[DataSectionLocation + 25];
+                int staticArticleLocation = PsaFile.FileContent[DataSectionLocation + 25] / 4; // h
+                staticArticles.ArticleListOffset = PsaFile.FileContent[staticArticleLocation];
+                staticArticles.ArticleCount = PsaFile.FileContent[staticArticleLocation];
                 if (PsaFile.FileContent[staticArticleLocation] >= 8096 && PsaFile.FileContent[staticArticleLocation] < PsaFile.DataSectionSize)
                 {
                     int staticArticleDataLocation = PsaFile.FileContent[staticArticleLocation] / 4;
@@ -36,29 +44,146 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                     if (numberOfStaticArticles > 0 && numberOfStaticArticles < 21)
                     {
                         staticArticles.ArticleCount = numberOfStaticArticles;
-                        Console.WriteLine(String.Format("Static Articles count: {0}", staticArticles.ArticleCount));
                         for (int i = 0; i < numberOfStaticArticles; i++)
                         {
+                            int staticArticlesDataLocation = PsaFile.FileContent[staticArticleLocation] / 4 + i * 14; // k
+                            int articleGroupId = PsaFile.FileContent[staticArticlesDataLocation];
+                            int arcEntryGroup = PsaFile.FileContent[staticArticlesDataLocation + 1];
+                            int bone = PsaFile.FileContent[staticArticlesDataLocation + 2];
+                            int actionFlags = PsaFile.FileContent[staticArticlesDataLocation + 3];
+                            int subActionFlags = PsaFile.FileContent[staticArticlesDataLocation + 4];
+                            int actions = PsaFile.FileContent[staticArticlesDataLocation + 5];
+                            int subActionMain = PsaFile.FileContent[staticArticlesDataLocation + 6];
+                            int subActionGfx = PsaFile.FileContent[staticArticlesDataLocation + 7];
+                            int subActionSfx = PsaFile.FileContent[staticArticlesDataLocation + 8];
+                            int modelVisibility = PsaFile.FileContent[staticArticlesDataLocation + 9];
+                            int collisionData = PsaFile.FileContent[staticArticlesDataLocation + 10];
+                            int data2 = PsaFile.FileContent[staticArticlesDataLocation + 11];
+                            int data3 = PsaFile.FileContent[staticArticlesDataLocation + 12];
+                            int subActionCount = PsaFile.FileContent[staticArticlesDataLocation + 13];
+
+                            StaticArticleEntry staticArticleEntry = new StaticArticleEntry(
+                                    staticArticlesDataLocation * 4, articleGroupId, arcEntryGroup, bone, actionFlags, subActionFlags, actions, subActionMain,
+                                    subActionGfx, subActionSfx, modelVisibility, collisionData, data2, data3, subActionCount);
+                            staticArticles.StaticArticleEntries.Add(staticArticleEntry);
+
+                            int staticArticlesDataSubActionLocation = staticArticlesDataLocation + 4;
+
                             // checks if subaction data exists at all
-                            if (PsaFile.FileContent[staticArticleDataLocation + 4] >= 8096 && PsaFile.FileContent[staticArticleDataLocation + 4] < PsaFile.DataSectionSize)
+                            if (PsaFile.FileContent[staticArticlesDataSubActionLocation] >= 8096 && PsaFile.FileContent[staticArticlesDataSubActionLocation] < PsaFile.DataSectionSize)
                             {
-                                if (PsaFile.FileContent[staticArticleDataLocation + 7] >= 8096 && PsaFile.FileContent[staticArticleDataLocation + 7] < PsaFile.DataSectionSize)
+                                int numberOfSubActions = 0;
+                                if (PsaFile.FileContent[staticArticlesDataSubActionLocation + 9] > 0 && PsaFile.FileContent[staticArticlesDataSubActionLocation + 9] < 11)
                                 {
-                                    Console.WriteLine(String.Format("Static Article {0} has a SubAction GFX Section", i));
+                                    numberOfSubActions = PsaFile.FileContent[staticArticlesDataSubActionLocation + 9];
                                 }
                                 else
                                 {
-                                    Console.WriteLine(String.Format("Static Article {0} has a SubAction Section", i));
+                                    numberOfSubActions = 1;
+                                }
+                                int staticArticlesDataSubActionValuesLocation = PsaFile.FileContent[staticArticlesDataSubActionLocation] / 4 + 1; // n
+                                
+                                
+                                 // NOTE: The subaction and subaction gfx code blocks are the same exact thing and can be combined
+                                
+                                
+                                // IF SUBACTION GFX SECTION
+                                if (PsaFile.FileContent[staticArticlesDataSubActionLocation + 3] >= 8096 && PsaFile.FileContent[staticArticlesDataSubActionLocation + 3] < PsaFile.DataSectionSize)
+                                {
+                                    Console.WriteLine(String.Format("Static Article {0} has a SubAction GFX Section", i)); // Wario
+
+                                    for (int j = 0; j < numberOfSubActions; j++)
+                                    {
+                                        string subActionName = "";
+                                        if (PsaFile.FileContent[staticArticlesDataSubActionValuesLocation] == 0)
+                                        {
+                                            subActionName = "<null>";
+                                        }
+                                        else
+                                        {
+                                            int subActionNameLocation = PsaFile.FileContent[staticArticlesDataSubActionValuesLocation + (j * 2)] / 4;
+                                            if (subActionNameLocation < PsaFile.DataSectionSize) // and >= stf whatever that means
+                                            {
+                                                StringBuilder animationName = new StringBuilder();
+                                                int nameEndByteIndex = 0;
+                                                while (true) // originally i < 47 -- 48 char limit?
+                                                {
+                                                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[subActionNameLocation + nameEndByteIndex]);
+                                                    animationName.Append(nextStringData);
+                                                    if (nextStringData.Length == 4)
+                                                    {
+                                                        nameEndByteIndex++;
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+                                                subActionName = animationName.ToString();
+                                                Console.WriteLine(subActionName);
+                                            }
+                                        }
+                                        staticArticleEntry.SubActionNames.Add(subActionName);
+
+                                    }
+                                }
+                                // IF SUBACTION SECTION
+                                else
+                                {
+                                    Console.WriteLine(String.Format("Static Article {0} has a SubAction Section", i)); // MetaKnight
+
+                                    for (int j = 0; j < numberOfSubActions; j++)
+                                    {
+                                        string subActionName = "";
+                                        if (PsaFile.FileContent[staticArticlesDataSubActionValuesLocation] == 0)
+                                        {
+                                            subActionName = "<null>";
+                                        }
+                                        else
+                                        {
+                                            int subActionNameLocation = PsaFile.FileContent[staticArticlesDataSubActionValuesLocation + (j * 2)] / 4;
+                                            if (subActionNameLocation < PsaFile.DataSectionSize) // and >= stf whatever that means
+                                            {
+                                                StringBuilder animationName = new StringBuilder();
+                                                int nameEndByteIndex = 0;
+                                                while (true) // originally i < 47 -- 48 char limit?
+                                                {
+                                                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[subActionNameLocation + nameEndByteIndex]);
+                                                    animationName.Append(nextStringData);
+                                                    if (nextStringData.Length == 4)
+                                                    {
+                                                        nameEndByteIndex++;
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+                                                subActionName = animationName.ToString();
+                                                Console.WriteLine(subActionName);
+                                            }
+                                        }
+                                        staticArticleEntry.SubActionNames.Add(subActionName);
+
+                                    }
+
                                 }
                             }
-                            if (PsaFile.FileContent[staticArticleDataLocation + 12] >= 8096 && PsaFile.FileContent[staticArticleDataLocation + 12] < PsaFile.DataSectionSize)
+
+                            int staticArticlesData3Location = staticArticlesDataLocation + 12;
+                            if (PsaFile.FileContent[staticArticlesData3Location] >= 8096 && PsaFile.FileContent[staticArticlesData3Location] < PsaFile.DataSectionSize)
                             {
-                                Console.WriteLine(String.Format("Static Article {0} has a Data3 Section", i));
+                                Console.WriteLine(String.Format("Static Article {0} has a Data3 Section", i)); // kirby
+
+                                // I don't care, this code is ridiculous for all that it accomplishes -- a section that we don't even know what it does
+                                int staticArticlesData3ValuesLocation = PsaFile.FileContent[staticArticlesData3Location] / 4;
+
                             }
                         }
                     }
                 }
             }
+            Console.WriteLine(staticArticles);
             return staticArticles;
         }
 
@@ -69,7 +194,23 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             if (PsaFile.FileContent[DataSectionLocation + 26] >= 8096 && PsaFile.FileContent[DataSectionLocation + 26] < PsaFile.DataSectionSize)
             {
                 Console.WriteLine("Entry Article Exists");
+                entryArticle.Offset = PsaFile.FileContent[DataSectionLocation + 26];
                 int entryArticleLocation = PsaFile.FileContent[DataSectionLocation + 26] / 4;
+                entryArticle.ArticleGroupId = PsaFile.FileContent[entryArticleLocation];
+                entryArticle.ArcEntryGroup = PsaFile.FileContent[entryArticleLocation + 1];
+                entryArticle.Bone = PsaFile.FileContent[entryArticleLocation + 2];
+                entryArticle.ActionFlags = PsaFile.FileContent[entryArticleLocation + 3];
+                entryArticle.SubActionFlags = PsaFile.FileContent[entryArticleLocation + 4];
+                entryArticle.Actions = PsaFile.FileContent[entryArticleLocation + 5];
+                entryArticle.SubActionMain = PsaFile.FileContent[entryArticleLocation + 6];
+                entryArticle.SubActionGfx = PsaFile.FileContent[entryArticleLocation + 7];
+                entryArticle.SubActionSfx = PsaFile.FileContent[entryArticleLocation + 8];
+                entryArticle.ModelVisibility = PsaFile.FileContent[entryArticleLocation + 9];
+                entryArticle.CollisionData = PsaFile.FileContent[entryArticleLocation + 10];
+                entryArticle.Data2 = PsaFile.FileContent[entryArticleLocation + 11];
+                entryArticle.Data3 = PsaFile.FileContent[entryArticleLocation + 12];
+                entryArticle.SubActionCount = PsaFile.FileContent[entryArticleLocation + 13];
+
                 if (PsaFile.FileContent[entryArticleLocation + 4] >= 8096 && PsaFile.FileContent[entryArticleLocation + 4] < PsaFile.DataSectionSize)
                 {
                     // checks if entry article has subaction
@@ -81,6 +222,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
                     {
                         Console.WriteLine("Entry Article has a SubAction Section");
                     }
+
+
                 }
                 if (PsaFile.FileContent[entryArticleLocation + 12] >= 8096 && PsaFile.FileContent[entryArticleLocation + 12] < PsaFile.DataSectionSize)
                 {
@@ -378,5 +521,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.MiscParserHe
             articleExtraDataEntry.ModelVisibility = modelVisibility;
             return articleExtraDataEntry;
         }
+        */
     }
 }

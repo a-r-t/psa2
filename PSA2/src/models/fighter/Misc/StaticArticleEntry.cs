@@ -23,6 +23,7 @@ namespace PSA2.src.models.fighter.Misc
         public int Data2 { get; set; }
         public int Data3 { get; set; }
         public int SubActionCount { get; set; }
+        public List<string> SubActionNames { get; set; }
 
         public StaticArticleEntry(int offset, int articleGroupId, int arcEntryGroup, int bone, int actionFlags, 
             int subActionFlags, int actions, int subActionMain, int subActionGfx, int subActionSfx, int modelVisibility, 
@@ -43,6 +44,12 @@ namespace PSA2.src.models.fighter.Misc
             Data2 = data2;
             Data3 = data3;
             SubActionCount = subActionCount;
+            SubActionNames = new List<string>();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(ArticleGroupId)}={ArticleGroupId.ToString("X")}, {nameof(ArcEntryGroup)}={ArcEntryGroup.ToString("X")}, {nameof(Bone)}={Bone.ToString("X")}, {nameof(ActionFlags)}={ActionFlags.ToString("X")}, {nameof(SubActionFlags)}={SubActionFlags.ToString("X")}, {nameof(Actions)}={Actions.ToString("X")}, {nameof(SubActionMain)}={SubActionMain.ToString("X")}, {nameof(SubActionGfx)}={SubActionGfx.ToString("X")}, {nameof(SubActionSfx)}={SubActionSfx.ToString("X")}, {nameof(ModelVisibility)}={ModelVisibility.ToString("X")}, {nameof(CollisionData)}={CollisionData.ToString("X")}, {nameof(Data2)}={Data2.ToString("X")}, {nameof(Data3)}={Data3.ToString("X")}, {nameof(SubActionCount)}={SubActionCount.ToString("X")}}}";
         }
     }
 }

@@ -13,20 +13,21 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         const int TOTAL_NUMBER_OF_ATTRIBUTES = 185;
+        public AttributeConfig AttributeConfig { get; private set; }
 
         public AttributesParser(PsaFile psaFile)
         {
             PsaFile = psaFile;
+            AttributeConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
         }
 
         public List<Attribute> GetAttributes()
         {
-            AttributeConfig attributesConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
             List<Attribute> attributes = new List<Attribute>();
 
             for (int i = 0; i < TOTAL_NUMBER_OF_ATTRIBUTES; i++)
             {
-                AttributeData attributeData = attributesConfig.Attributes[i];
+                AttributeData attributeData = AttributeConfig.Attributes[i];
                 attributes.Add(
                     new Attribute(
                         attributeData.Name, 
@@ -44,7 +45,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public Attribute GetAttributeByIndex(int attributeIndex)
         {
-            if (attributeIndex > 0 && attributeIndex < TOTAL_NUMBER_OF_ATTRIBUTES - 1)
+            if (attributeIndex >= 0 && attributeIndex < TOTAL_NUMBER_OF_ATTRIBUTES - 1)
             {
                 AttributeConfig attributesConfig = Utils.LoadJson<AttributeConfig>("data/attribute_data.json");
                 AttributeData attributeData = attributesConfig.Attributes[attributeIndex];
@@ -59,11 +60,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             }
             else
             {
-                throw new IndexOutOfRangeException(String.Format("Attribute Index {0} does not exist -- must be between 0 and {1}", attributeIndex, TOTAL_NUMBER_OF_ATTRIBUTES));
+                throw new IndexOutOfRangeException($"Attribute Index {attributeIndex} does not exist -- must be between 0 and {TOTAL_NUMBER_OF_ATTRIBUTES - 1}");
             }
         }
-
-
 
         public void PrintAttributes()
         {
@@ -78,6 +77,19 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 {
                     Console.WriteLine(String.Format("Name: {0}, Value: {1}, SSE Value: {2}", attribute.Name, Utils.ConvertBytesToFloat(attribute.Value), Utils.ConvertBytesToFloat(attribute.SseValue)));
                 }
+            }
+        }
+
+        public void SetAttribute(int attributeIndex, int value, bool sse = false)
+        {
+            if (attributeIndex < TOTAL_NUMBER_OF_ATTRIBUTES)
+            {
+                int formatValue = AttributeConfig.Attributes[attributeIndex].Type == "float" ? Utils.ConvertIntToIeeFloatingPoint(value) : value;
+                PsaFile.FileContent[attributeIndex + (sse ? 185 : 0)] = formatValue;
+            }
+            else
+            {
+                throw new IndexOutOfRangeException($"Invalid attribute index -- must be between 0 and {TOTAL_NUMBER_OF_ATTRIBUTES - 1}");
             }
         }
     }
