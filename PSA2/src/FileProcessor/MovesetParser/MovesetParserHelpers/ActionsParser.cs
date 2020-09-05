@@ -252,13 +252,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                             PsaFile.FileContent[commandStartLocation + i] = -86052851; // -86052851 is FFFF FFFF FADE F00D
                             PsaFile.FileContent[stoppingPoint + i + 1] = PsaFile.FileContent[commandStartLocation + i + 1];
                             PsaFile.FileContent[commandStartLocation + i + 1] = -86052851; // -86052851 is FFFF FFFF FADE F00D
+                            relocatingOffset += 2;
                         }
 
                         PsaFile.FileContent[stoppingPoint + relocatingOffset] = 131072; // 131072 is nop
                         PsaFile.FileContent[commandStartLocation + relocatingOffset] = -86052851; // -86052851 is FFFF FFFF FADE F00D
                         // relocatingOffset++;
                         PsaFile.FileContent[stoppingPoint + relocatingOffset + 1] = 0;
-                        PsaFile.FileContent[commandStartLocation + relocatingOffset] = -86052851; // -86052851 is FFFF FFFF FADE F00D
+                        PsaFile.FileContent[commandStartLocation + relocatingOffset + 1] = -86052851; // -86052851 is FFFF FFFF FADE F00D
 
                         PsaFile.FileContent[stoppingPoint + relocatingOffset + 2] = 0;
                         PsaFile.FileContent[stoppingPoint + relocatingOffset + 3] = 0;
