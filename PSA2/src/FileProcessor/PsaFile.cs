@@ -15,9 +15,9 @@ namespace PSA2.src.FileProcessor
         public int[] FileContent { get; set; }
         public int FileSize { get; set; }
         public int ExtraSpace { get; private set; } // efdts
-        public int[] PointerInterlockTracker { get; private set; }
-        public int CompressedSize { get; set; }
-        public int[] CompressionTracker { get; private set; } = new int[2000];
+        public int[] PointerInterlockTracker { get; private set; } // asc
+        public int CompressedSize { get; set; } // rnexsize
+        public int[] CompressionTracker { get; private set; } = new int[2000]; // rnext
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -219,6 +219,11 @@ namespace PSA2.src.FileProcessor
 
         public void SaveFile(string path)
         {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+            catch (Exception e) { }
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             for (int i = 0; i < 32; i++)
             {

@@ -28,7 +28,7 @@ namespace PSA2.src.views
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitSnake.pac");
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitMetaKnight.pac");
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitWario.pac");
-            PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/collision on the fly/FitMario.pac");
+            PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Brawl File Partition/Clean Fighters/mario/FitMario.pac");
 
             PsaMovesetParser psaMovesetParser = psaFileParser.ParseMovesetFile();
         }
