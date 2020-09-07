@@ -44,8 +44,8 @@ namespace PSA2.src.FileProcessor
         }
 
         /// <summary>
-        /// Size of data section (bits)
-        /// To get bytes, just divide this result by 4
+        /// Size of data section (doubleword)
+        /// To get bytes, just divide this result by 4 (doubleword = 4 bytes = 32 bits)
         /// </summary>
         public int DataSectionSize
         {
@@ -58,6 +58,23 @@ namespace PSA2.src.FileProcessor
                 FileHeader[25] = value;
             }
         }
+
+        /// <summary>
+        /// Size of data section in bytes
+        /// </summary>
+        public int DataSectionSizeBytes
+        {
+            get
+            {
+                return FileHeader[25] / 4;
+            }
+            set
+            {
+                FileHeader[25] = value * 4;
+            }
+        }
+
+
 
         /// <summary>
         /// Number of offset entries in Offsets Section

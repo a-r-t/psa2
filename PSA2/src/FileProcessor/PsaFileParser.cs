@@ -39,7 +39,7 @@ namespace PSA2.src.FileProcessor
                 //int maxFileSize = 7000000;
                 if (fileStream.Length >= minFileSize && fileStream.Length <= maxFileSize)
                 {
-                    int fileId = Utils.ConvertWordToBase10Int(
+                    int fileId = Utils.ConvertDoubleWordToBase10Int(
                         fileStream.ReadByte(),
                         fileStream.ReadByte(),
                         fileStream.ReadByte(),
@@ -83,7 +83,7 @@ namespace PSA2.src.FileProcessor
             header[0] = fileId;
             for (int i = 1; i < 32; i++)
             {
-                header[i] = Utils.ConvertWordToBase10Int(
+                header[i] = Utils.ConvertDoubleWordToBase10Int(
                     fileStream.ReadByte(),
                     fileStream.ReadByte(),
                     fileStream.ReadByte(),
@@ -111,7 +111,7 @@ namespace PSA2.src.FileProcessor
                 int byte4 = fileStream.ReadByte();
                 if (byte2 != -1 && byte3 != -1 && byte4 != -1)
                 {
-                    fileContent[currentIndex] = Utils.ConvertWordToBase10Int(byte1, byte2, byte3, byte4);
+                    fileContent[currentIndex] = Utils.ConvertDoubleWordToBase10Int(byte1, byte2, byte3, byte4);
                     currentIndex++;
                 }
             }

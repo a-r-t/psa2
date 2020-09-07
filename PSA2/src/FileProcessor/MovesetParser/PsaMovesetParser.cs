@@ -122,7 +122,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             int nameEndByteIndex = 4;
             while (true)
             {
-                string nextStringData = Utils.ConvertWordToString(PsaFile.FileHeader[nameEndByteIndex]);
+                string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileHeader[nameEndByteIndex]);
                 movesetBaseName.Append(nextStringData);
                 if (nextStringData.Length == 4)
                 {

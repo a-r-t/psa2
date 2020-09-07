@@ -25,7 +25,7 @@ namespace PSA2.src.utility
             return stringBuilder.ToString();
         }
 
-        public static int ConvertWordToBase10Int(int byte1, int byte2, int byte3, int byte4)
+        public static int ConvertDoubleWordToBase10Int(int byte1, int byte2, int byte3, int byte4)
         {
             return byte4 + (byte3 << 8) + (byte2 << 16) + (byte1 << 24);
         }
@@ -49,7 +49,7 @@ namespace PSA2.src.utility
             }
         }
 
-        public static string ConvertWordToString(int word, int startByte=0)
+        public static string ConvertDoubleWordToString(int word, int startByte=0)
         {
             List<byte> letters = new List<byte>();
 

@@ -62,7 +62,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                     int nameEndByteIndex = 0;
                     while (true) // originally i < 47 -- 48 char limit?
                     {
-                        string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[animationNameLocation + nameEndByteIndex]);
+                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[animationNameLocation + nameEndByteIndex]);
                         animationName.Append(nextStringData);
                         if (nextStringData.Length == 4)
                         {

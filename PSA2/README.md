@@ -7,4 +7,4 @@ Moveset parsing code gathered from:
 - BrawlCrate's BrawlBox68b code: https://github.com/soopercool101/BrawlCrate
 
 Thanks to:
-- Dantarion's moveset file format page: http://opensa.dantarion.com/wiki/Moveset_File_Format_(Brawl\)
+- Dantarion's moveset file format page: http://opensa.dantarion.com/wiki/Moveset_File_Format_(Brawl%29

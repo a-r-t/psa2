@@ -16,7 +16,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
-        public const int NOP = 131072; // 131072 is the nop command in psa
+        public const int NOP = 131072; // 131072 is the nop command in psa (20000)
         public const int FADEF00D = -86052851; // -86052851 is FFFF FFFF FADE F00D
         public const int FADE0D8A = -86110838; // -86110838 is FFFF FFFF FADE 0D8A
         public const int ENTRY_CODE_BLOCK = 0;
@@ -119,13 +119,11 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public void CreateActionCodeBlock(int actionId, int codeBlockId, int openAreaStartLocation)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
             // I'm pretty sure this section finds the next available location to put a psa command, but not sure...
             int stoppingPoint = openAreaStartLocation;
             int bitStoppingPoint = 0;
 
-            while (stoppingPoint < dataSectionSizeBytes && bitStoppingPoint != stoppingPoint + 4)
+            while (stoppingPoint < PsaFile.DataSectionSizeBytes && bitStoppingPoint != stoppingPoint + 4)
             {
                 if (PsaFile.FileContent[stoppingPoint] == FADEF00D)
                 {
@@ -144,7 +142,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             }
 
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
-            if (stoppingPoint >= dataSectionSizeBytes)
+            if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
                 IncreaseDataSectionSizeForActionWithNoExistingCommands();
             }
@@ -164,8 +162,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public void AddCommandToExistingActionCodeBlock(int actionId, int codeBlockId, int actionCodeBlockLocation)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
             int commandStartLocation = actionCodeBlockLocation / 4;
 
             int numberOfCommandsAlreadyInAction = GetNumberOfPsaCommandsInActionCodeBlock(actionId, codeBlockId); // g
@@ -179,7 +175,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             // if data section size needs to be resized, first check if it doesn't by seeing if there's any free space at the end (FADE0D8As) and if so that's free real estate to add a new command to
             // I think this is relpacing FADE0D8As with FADEF00DS if possible, and if this happens it means there is enough space to add the new command without needing to relocate the action
             bool isFreeSpaceAvailable = false;
-            if (commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 5 > dataSectionSizeBytes)
+            if (commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 5 > PsaFile.DataSectionSizeBytes)
             {
                 isFreeSpaceAvailable = CheckForDataSectionTrailingFreeSpace(commandStartLocation, numberOfCommandsAlreadyInAction);
             }
@@ -212,11 +208,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         /// <param name="codeBlockId">id of code block (0 is Entry, 1 is Exit)</param>
         /// <param name="numberOfCommandsAlreadyInAction">number of commands already in action</param>
         /// <param name="commandStartLocation">location where action's commands start</param>
-        /// <param name="openAreaStartLocation">start location where new data can be added to based on avaliable free space</param>
         /// <returns>new offset location for commands in action (relocated offset)</returns>
         public int RelocateAction(int actionId, int codeBlockId, int numberOfCommandsAlreadyInAction, int commandStartLocation)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
             int openAreaStartLocation = GetOpenAreaStartLocation();
 
             // I don't think "commandOffset" is the right name for this...
@@ -224,7 +218,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             int stoppingPoint = openAreaStartLocation;
             int bitStoppingPoint = 0;
 
-            while (stoppingPoint < dataSectionSizeBytes && bitStoppingPoint != stoppingPoint + commandOffset)
+            while (stoppingPoint < PsaFile.DataSectionSizeBytes && bitStoppingPoint != stoppingPoint + commandOffset)
             {
                 if (PsaFile.FileContent[stoppingPoint] == FADEF00D)
                 {
@@ -244,7 +238,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
             // stopping point is modified here if necessary
-            if (stoppingPoint >= dataSectionSizeBytes)
+            if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
                 stoppingPoint = IncreaseDataSectionSizeForActionWithExistingCommand(commandOffset);
             }
@@ -302,13 +296,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public void ApplyOffsetInterlockLogic(int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int newOffsetLocation)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
             int openAreaStartLocation = GetOpenAreaStartLocation();
 
             // this is the "EvOffsetInterlock" stuff, not entirely sure what this does, maybe updates existing command offsets so they don't break (like gotos)?
             // actionCodeBlockEndLocation is probably not the right name for this variable...
             int actionCodeBlockEndLocation = actionCodeBlockLocation + numberOfCommandsAlreadyInAction * 8;
-            for (int i = openAreaStartLocation; i < dataSectionSizeBytes; i++)
+            for (int i = openAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 if (PsaFile.FileContent[i] >= actionCodeBlockLocation && PsaFile.FileContent[i] <= actionCodeBlockEndLocation)
                 {
@@ -338,17 +331,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public int IncreaseDataSectionSizeForActionWithNoExistingCommands()
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
-            int stoppingPoint = dataSectionSizeBytes;
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
+            int stoppingPoint = PsaFile.DataSectionSizeBytes;
+            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
             {
-                PsaFile.FileContent[dataSectionSizeBytes + 2] = PsaFile.FileContent[dataSectionSizeBytes - 2];
-                PsaFile.FileContent[dataSectionSizeBytes + 3] = PsaFile.FileContent[dataSectionSizeBytes - 1];
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 3] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                 stoppingPoint -= 2;
             }
-            dataSectionSizeBytes += 4;
-            PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
+            PsaFile.DataSectionSizeBytes += 4;
 
             return stoppingPoint;
         }
@@ -356,17 +346,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
         public int IncreaseDataSectionSizeForActionWithExistingCommand(int commandOffset)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
-            int stoppingPoint = dataSectionSizeBytes;
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
+            int stoppingPoint = PsaFile.DataSectionSizeBytes;
+            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
             {
                 stoppingPoint -= 2;
-                PsaFile.FileContent[dataSectionSizeBytes + commandOffset - 2] = FADE0D8A;
-                PsaFile.FileContent[dataSectionSizeBytes + commandOffset - 1] = PsaFile.FileContent[dataSectionSizeBytes - 1];
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandOffset - 2] = FADE0D8A;
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandOffset - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
             }
-            dataSectionSizeBytes += commandOffset;
-            PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
+            PsaFile.DataSectionSizeBytes += commandOffset;
 
             return stoppingPoint;
         }
@@ -377,24 +364,20 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         /// </summary>
         public bool CheckForDataSectionTrailingFreeSpace(int commandStartLocation, int numberOfCommandsAlreadyInAction)
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
+            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
             {
-                PsaFile.FileContent[dataSectionSizeBytes] = PsaFile.FileContent[dataSectionSizeBytes - 2];
-                PsaFile.FileContent[dataSectionSizeBytes + 1] = PsaFile.FileContent[dataSectionSizeBytes - 1];
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                 PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D; 
                 PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D;
-                dataSectionSizeBytes += 2;
-                PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
+                PsaFile.DataSectionSizeBytes += 2;
                 return true;
             }
-            else if (commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3 > dataSectionSizeBytes)
+            else if (commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3 > PsaFile.DataSectionSizeBytes)
             {
                 PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D;
                 PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D;
-                dataSectionSizeBytes += 2;
-                PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
+                PsaFile.DataSectionSizeBytes += 2;
                 return true;
             }
 
@@ -406,26 +389,24 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         /// </summary>
         public void ApplyFileUpdatesToAccountForActionChanges()
         {
-            int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-
             // Fixam (in PSA-C) method here -- I think this is what updates the global headers like filesize and stuff
             // TODO: Fixam logic has to be added for adding new command to action that had no previous commands as well
             // I don't really understand this part yet
             // bad variable name...
             // last data section value is where FADE 0D8A is found?
-            int lastDataSectionValidValue = PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A 
-                ? dataSectionSizeBytes - 3 
-                : dataSectionSizeBytes - 1;
+            int lastDataSectionValidValue = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A 
+                ? PsaFile.DataSectionSizeBytes - 3 
+                : PsaFile.DataSectionSizeBytes - 1;
 
             // decrease last data section value while no fade foods are found ??
-            while (lastDataSectionValidValue >= dataSectionSizeBytes && PsaFile.FileContent[lastDataSectionValidValue] == FADEF00D)
+            while (lastDataSectionValidValue >= PsaFile.DataSectionSizeBytes && PsaFile.FileContent[lastDataSectionValidValue] == FADEF00D)
             {
                 lastDataSectionValidValue--;
             }
 
             // not a clue what this does, maybe moves all the FADE F00DS over if there's free space?
             int newDataSectionSize = lastDataSectionValidValue;
-            while (newDataSectionSize < dataSectionSizeBytes)
+            while (newDataSectionSize < PsaFile.DataSectionSizeBytes)
             {
                 if (PsaFile.FileContent[lastDataSectionValidValue] != FADEF00D)
                 {
@@ -445,7 +426,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 PsaFile.FileContent[newDataSectionSize] = PsaFile.OffsetInterlockTracker[i];
                 newDataSectionSize++;
             }
-
 
             int movesetFileSizeLeftoverSpace = PsaFile.MovesetFileSize % 4;
             if (movesetFileSizeLeftoverSpace == 0)
