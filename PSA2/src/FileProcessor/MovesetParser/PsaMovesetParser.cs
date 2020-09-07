@@ -45,7 +45,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
             int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
             //bool isMovesetParsable = IsMovesetParsable();
-
+            //ActionsParser.AddCommandToAction(0, 0);
+            //ActionsParser.AddCommandToAction(0, 0);
+            //ActionsParser.AddCommandToAction(0, 1);
+            //PsaFile.SaveFile("results.pac");
             
         }
 

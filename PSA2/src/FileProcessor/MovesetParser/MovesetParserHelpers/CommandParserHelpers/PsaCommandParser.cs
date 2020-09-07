@@ -15,11 +15,28 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             PsaFile = psaFile;
         }
 
+        public int GetNumberOfPsaCommands(int psaCodeLocation)
+        {
+            int commandsStartLocation = psaCodeLocation / 4; // j
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
+            {
+                int nextCommandLocation = commandsStartLocation;
+                int commandCount = 0;
+                while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
+                {
+                    commandCount++;
+                    nextCommandLocation += 2;
+                }
+                return commandCount;
+            }
+            return 0;
+        }
+
         public List<PsaCommand> GetPsaCommands(int psaCodeLocation)
         {
             List<PsaCommand> psaCommands = new List<PsaCommand>();
             int commandsStartLocation = psaCodeLocation / 4; // j
-            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // and greater than "stf" whatever that means"
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
             {
                 int nextCommandLocation = commandsStartLocation;
                 while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)

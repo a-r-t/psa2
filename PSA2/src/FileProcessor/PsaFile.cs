@@ -15,7 +15,7 @@ namespace PSA2.src.FileProcessor
         public int[] FileContent { get; set; }
         public int FileSize { get; set; }
         public int ExtraSpace { get; private set; } // efdts
-        public int[] PointerInterlockTracker { get; private set; } // asc
+        public int[] OffsetInterlockTracker { get; private set; } // asc
         public int CompressedSize { get; set; } // rnexsize
         public int[] CompressionTracker { get; private set; } = new int[2000]; // rnext
 
@@ -185,14 +185,14 @@ namespace PSA2.src.FileProcessor
             // which is variable "asc" in PSAC
             // not entirely sure how this all works but this is used to automatically update pointers when new commands are added
             // like updating a "goto" offset to still point to the same thing after a new command is added
-            PointerInterlockTracker = new int[37000];
+            OffsetInterlockTracker = new int[37000];
             for (int i = 0; i < NumberOfOffsetEntries; i++)
             {
-                PointerInterlockTracker[i] = FileContent[(DataSectionSize / 4) + i];
+                OffsetInterlockTracker[i] = FileContent[(DataSectionSize / 4) + i];
             }
-            for (int i = NumberOfOffsetEntries; i < PointerInterlockTracker.Length; i++)
+            for (int i = NumberOfOffsetEntries; i < OffsetInterlockTracker.Length; i++)
             {
-                PointerInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
+                OffsetInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
             }
 
             // the rnexsize and rnext stuff I'm PRETTY sure has to do with compression, but I'm not positive
