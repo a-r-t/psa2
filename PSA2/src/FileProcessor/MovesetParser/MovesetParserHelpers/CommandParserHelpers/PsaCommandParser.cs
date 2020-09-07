@@ -9,21 +9,37 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     public class PsaCommandParser
     {
         public PsaFile PsaFile { get; private set; }
-        
+
         public PsaCommandParser(PsaFile psaFile)
         {
             PsaFile = psaFile;
+        }
+
+        public int GetNumberOfPsaCommands(int psaCodeLocation)
+        {
+            int commandsStartLocation = psaCodeLocation / 4; // j
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
+            {
+                int nextCommandLocation = commandsStartLocation;
+                int commandCount = 0;
+                while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
+                {
+                    commandCount++;
+                    nextCommandLocation += 2;
+                }
+                return commandCount;
+            }
+            return 0;
         }
 
         public List<PsaCommand> GetPsaCommands(int psaCodeLocation)
         {
             List<PsaCommand> psaCommands = new List<PsaCommand>();
             int commandsStartLocation = psaCodeLocation / 4; // j
-            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // and greater than "stf" whatever that means"
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
             {
                 int nextCommandLocation = commandsStartLocation;
-                while (PsaFile.FileContent[nextCommandLocation] != 0 &&
-                    nextCommandLocation < PsaFile.DataSectionSize)
+                while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
                 {
                     psaCommands.Add(GetPsaCommand(nextCommandLocation));
                     nextCommandLocation += 2;
@@ -34,7 +50,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
         public PsaCommand GetPsaCommand(int commandLocation) // instructionLocation = j
         {
-            Console.WriteLine("Get PSA Command");
+            //Console.WriteLine("Get PSA Command");
             if (PsaFile.FileContent[commandLocation] == -86052851 || PsaFile.FileContent[commandLocation + 1] < 0 || PsaFile.FileContent[commandLocation + 1] >= PsaFile.DataSectionSize)
             {
                 // FADEF00D
@@ -46,7 +62,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                 List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
 
                 int rawPsaInstruction = PsaFile.FileContent[commandLocation];
-                Console.WriteLine($"Instruction: {rawPsaInstruction.ToString("X8")}");
+                //Console.WriteLine($"Instruction: {rawPsaInstruction.ToString("X8")}");
 
                 // gets number of params in instruction based on 3rd byte in word for instruction's location
                 // e.g. 120B0100's 3rd byte is 01, which means it only has 1 param
@@ -58,33 +74,33 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                 {
                     int paramType = PsaFile.FileContent[commandParamsLocation + i];
                     int paramValue = PsaFile.FileContent[commandParamsLocation + i + 1];
-                    Console.WriteLine(String.Format("Param Type: {0}", paramType));
-                    Console.WriteLine(String.Format("Param Value: {0}", paramValue));
+                    //Console.WriteLine(String.Format("Param Type: {0}", paramType));
+                    //Console.WriteLine(String.Format("Param Value: {0}", paramValue));
 
                     if (paramType == (int)ParamType.VARIABLE)
                     {
-                        Console.WriteLine($"Variable: {ConvertParamValueToVariable(paramValue)}");
+                        //Console.WriteLine($"Variable: {ConvertParamValueToVariable(paramValue)}");
                     }
                     else if (paramType == (int)ParamType.SCALAR)
                     {
-                        Console.WriteLine($"Scalar: {ConvertParamValueToScalar(paramValue)}");
+                        //Console.WriteLine($"Scalar: {ConvertParamValueToScalar(paramValue)}");
                         // $"{(decimal)paramValue / 60000m:0.0####}";    --- this was what it originally was in PSA-C
                     }
                     else if (paramType == (int)ParamType.VALUE || paramType == (int)ParamType.UNKNOWN1)
                     {
-                        Console.WriteLine($"Value: {paramValue.ToString("X")}");
+                        //Console.WriteLine($"Value: {paramValue.ToString("X")}");
                     }
                     else if (paramType == (int)ParamType.BOOLEAN)
                     {
-                        Console.WriteLine($"Boolean: {(paramValue == 1 ? "true" : "false")}");
+                        //Console.WriteLine($"Boolean: {(paramValue == 1 ? "true" : "false")}");
                     }
                     else if (paramType == (int)ParamType.REQUIREMENT)
                     {
-                        Console.WriteLine(ConvertParamValueToRequirement(paramValue));
+                        //Console.WriteLine(ConvertParamValueToRequirement(paramValue));
                     }
                     else if (paramType == (int)ParamType.POINTER)
                     {
-                        Console.WriteLine($"Pointer: {paramValue.ToString("X")}");
+                        //Console.WriteLine($"Pointer: {paramValue.ToString("X")}");
                     }
 
                     parameters.Add(new PsaCommandParameter(PsaFile.FileContent[commandParamsLocation + i], PsaFile.FileContent[commandParamsLocation + i + 1]));
@@ -92,9 +108,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
                 //Console.WriteLine(String.Format("Instruction: {0}", instruction));
                 //parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
-                return new PsaCommand(rawPsaInstruction, parameters);
+                return new PsaCommand(rawPsaInstruction, commandParamsLocation, parameters);
             }
-            
+
         }
 
         public PsaVariable ConvertParamValueToVariable(int paramValue)
@@ -115,7 +131,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             int inverseFlag = (paramValue >> 16) & 0xFFFF;
             int requirementId = paramValue & 0xFFFF;
 
-            return new PsaRequirement(requirementId, inverseFlag); 
+            return new PsaRequirement(requirementId, inverseFlag);
         }
 
         public enum ParamType

@@ -17,5 +17,10 @@ namespace PSA2.src.models.fighter.Misc
         {
             StaticArticleEntries = new List<StaticArticleEntry>();
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Offset)}={Offset.ToString("X")}, {nameof(ArticleListOffset)}={ArticleListOffset.ToString("X")}, {nameof(ArticleCount)}={ArticleCount.ToString()}, {nameof(StaticArticleEntries)}={string.Join(",", StaticArticleEntries.Select(x => x.ToString()).ToList())}}}";
+        }
     }
 }

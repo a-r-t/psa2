@@ -29,7 +29,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {
@@ -58,7 +58,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {

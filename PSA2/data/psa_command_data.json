@@ -1,1039 +1,1039 @@
 ﻿{
-	"psaCommands": [
-		{
-			"commandName": "Synchronous Timer",
-			"description": "Pause the current flow of events until the set time is reached. Synchronous timers count down when they are reached in the code.",
-			"instruction": "00010100",
-			"commandParams": [
-				{
-					"paramName": "Frames",
-					"description": "The number of frames to wait.",
-					"dataTypes": [
-						"Scalar"
-					],
-					"canUseVariable": false,
-					"defaultValue": "1"
-				}
-			]
-		},
-		{
-			"commandName": "No Event",
-			"description": "Nop -- doesn't do anything",
-			"instruction": "00020000"
-		},
-		{
-			"commandName": "Asynchronous Timer",
-			"description": "Pause the current flow of events until the set time is reached. Asynchronous Timers start counting from the beginning of the animation.",
-			"instruction": "00020100",
-			"commandParams": [
-				{
-					"paramName": "Frames",
-					"description": "The number of frames to wait.",
-					"dataTypes": [
-						"Scalar"
-					],
-					"canUseVariable": false,
-					"defaultValue": "1"
-				}
-			]
-		},
-		{
-			"commandName": "Set Loop",
-			"description": "Create a loop for X iterations.",
-			"instruction": "00040100",
-			"commandParams": [
-				{
-					"paramName": "Iterations",
-					"description": "The number of times to loop.\nSet to FFFFFFFF for infinite loop.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "1"
-				}
-			]
-		},
-		{
-			"commandName": "End Loop",
-			"description": "End of loop block.",
-			"instruction": "00050000"
-		},
-		{
-			"commandName": "Loop Break",
-			"description": "Breaks out of the current loop.",
-			"instruction": "00060000"
-		},
-		{
-			"commandName": "Subroutine",
-			"description": "Enter the event routine specified and return after ending.",
-			"instruction": "00070100",
-			"commandParams": [
-				{
-					"paramName": "Offset",
-					"description": "The offset inside the file to jump to.",
-					"dataTypes": [
-						"Pointer"
-					],					
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Return",
-			"description": "Return from a subroutine.",
-			"instruction": "00080000"
-		},
-		{
-			"commandName": "Goto",
-			"description": "Go to the event location specified and execute (does not return afterwards)",
-			"instruction": "00090100",
-			"commandParams": [
-				{
-					"paramName": "Offset",
-					"description": "The offset inside the file to jump to.",
-					"dataTypes": [
-						"Pointer"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "If: Requirement",
-			"description": "Start an If block until an Else or an End If is reached. Use this If to check for a requirement.",
-			"instruction": "000A0100",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "If: Requirement Value",
-			"description": "Start an If block until an Else or an End If is reached. Use this If to check for a requirement with a specified value.",
-			"instruction": "000A0200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "If: Comparison",
-			"description": "Start an If block until an Else or an End If is reached. Use this If to compare two values.",
-			"instruction": "000A0400",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],					
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "And: Requirement",
-			"description": "Insert an And statement to an If statement. Use this And to check for a requirement.",
-			"instruction": "000B0100",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "And: Requirement Value",
-			"description": "Insert an And statement to an If statement. Use this And to check for a requirement with a specified value.",
-			"instruction": "000B0200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "And: Comparison",
-			"description": "Insert an And statement to an If statement. Use this And to compare two values.",
-			"instruction": "000B0400",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Or: Requirement",
-			"description": "Insert an Or statement to an If statement. Use this Or to check for a requirement.",
-			"instruction": "000C0100",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Or: Requirement Value",
-			"description": "Insert an Or statement to an If statement. Use this Or to check for a requirement with a specified value.",
-			"instruction": "000C0200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Or: Comparison",
-			"description": "Insert an Or statement to an If statement. Use this Or to compare two values.",
-			"instruction": "000C0400",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],	
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Else If: Requirement",
-			"description": "Insert an Else If block to go with an If series. Use this Else If to check for a requirement.",
-			"instruction": "000D0100",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Else If: Requirement Value",
-			"description": "Insert an Else If block to go with an If series. Use this Else If to check for a requirement with a specified value.",
-			"instruction": "000D0200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Else If: Comparison",
-			"description": "Insert an Else If block to go with an If series. Use this Else if to compare values.",
-			"instruction": "000D0400",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Else",
-			"description": "Insert an Else block to go with an If series.",
-			"instruction": "000E0000",
-		},
-		{
-			"commandName": "End If",
-			"description": "End an If block.",
-			"instruction": "000F0000"
-		},
-		{
-			"commandName": "Switch",
-			"description": "Begin a multiple case Switch block.",
-			"instruction": "00100200",
-			"commandParams": [
-				{
-					"paramName": "Status Id?",
-					"description": "Unknown -- Appears to often (if not always) bet set to 0x2710 (IC-Basic[10000]).\nJust leave the default.",
-					"dataTypes": [
-						"Value",
-						"Variable"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2710"
-				},
-				{
-					"paramName": "Variable",
-					"description": "The variable that will be compared against the case values.\nCan also be a requirement such as \"Roll A Die\"",
-					"dataTypes": [
-						"Variable",
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "RA-Basic[0]"
-				}
-			]
-		},
-		{
-			"commandName": "Case",
-			"description": "Handler for if the variable in the Switch block equals the specified value.",
-			"instruction": "00110100",
-			"commandParams": [
-				{
-					"paramName": "Value",
-					"description": "The value to compare the Switch block's variable against.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Default Case",
-			"description": "The case chosen if none of the others are executed in a switch block.\nThink of it like a Switch block's \"Else\" equivalent.",
-			"instruction": "00120000",
-		},
-		{
-			"commandName": "End Switch",
-			"description": "End a Switch block.",
-			"instruction": "00130000"
-		},
-		{
-			"commandName": "Break",
-			"description": "Appears within Case statements; exits the switch event completely. All code located in the same case block after this event will not be executed.",
-			"instruction": "00180000",
-		},
-		{
-			"commandName": "Loop Rest",
-			"description": "Stops a loop from iterating again until the \"Set Loop Resume Requirement\" evaluates to true.",
-			"instruction": "01010000",
-		},
-		{
-			"commandName": "Change Action Status: Requirement",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement being met.",
-			"instruction": "02000300",
-			"commandParams": [
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Action",
-					"description": "The ID of the action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Change Action Status: Requirement Value",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement with a specified value being met.",
-			"instruction": "02000400",
-			"commandParams": [
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Action",
-					"description": "The ID of the action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Change Action Status: Comparison",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement with a specified value being met.",
-			"instruction": "02000600",
-			"commandParams": [
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Action",
-					"description": "The ID of the action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],					
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Change Action: Requirement",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement being met.",
-			"instruction": "02010200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Change Action: Requirement Value",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement with a specified value being met.",
-			"instruction": "02010300",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Change Action: Comparison",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a comparison.",
-			"instruction": "02010500",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],					
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Additional Change Action Requirement: Requirement",
-			"description": "Add an additional requirement to the preceeding Change Action statement. This Additional Action Requirement is based on a requirement being met.",
-			"instruction": "02040100",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Additional Change Action Requirement: Requirement Value",
-			"description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement with a specified value being met.",
-			"instruction": "02040200",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Additional Change Action Requirement: Comparison",
-			"description": "Add an additional requirement to the preceeding Change Action statement. This Additional Action Requirement is based on a comparison.",
-			"instruction": "02040400",
-			"commandParams": [
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],					
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Set Status ID Interrupt: Requirement",
-			"description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a requirement being met. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
-			"instruction": "02050300",
-			"commandParams": [
-				{
-					"paramName": "Interrupt Id",
-					"description": "The interrupt to hook to.\n1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID to influence.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Set Status ID Interrupt: Requirement Value",
-			"description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a requirement with a specified value being met. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
-			"instruction": "02050400",
-			"commandParams": [
-				{
-					"paramName": "Interrupt Id",
-					"description": "The interrupt to hook to.\n1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID to influence.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],					
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Value",
-					"description": "The value applied to the requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Set Status ID Interrupt: Comparison",
-			"description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a comparison. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
-			"instruction": "02050600",
-			"commandParams": [
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Action",
-					"description": "The ID of the action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Requirement",
-					"description": "The form of requirement used in evaluation of the event.",
-					"dataTypes": [
-						"Requirement"
-					],
-					"canUseVariable": false,
-					"defaultValue": "Compare"
-				},
-				{
-					"paramName": "Value1",
-					"description": "The first value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Comparison Method",
-					"description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false,
-					"defaultValue": "2"
-				},
-				{
-					"paramName": "Value2",
-					"description": "The second value in the comparison requirement.",
-					"dataTypes": [
-						"Any"
-					],					
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Enable Action Status ID",
-			"description": "Enables the Action associated with the given Status ID.",
-			"instruction": "02060100",
-			"commandParams": [
-				{
-					"paramName": "Status ID",
-					"description": "The Status ID to enable.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Disable Action Status ID",
-			"description": "Disables the Action associated with the given Status ID.",
-			"instruction": "02080100",
-			"commandParams": [
-				{
-					"paramName": "Status ID",
-					"description": "The Status ID to disable.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Invert Action Status ID",
-			"description": "Appears to invert (or possibly only disable) a specific Status ID's enabled/disabled status. For example, if a character can crawl, this is used to disable the ability to dash when crouched, even though naturally crouching allows dashing through 020A (Allow Specific Interrupt).",
-			"instruction": "02090200",
-			"commandParams": [
-				{
-					"paramName": "Interrupt Id",
-					"description": "An Interrupt ID as used by 020A0100 (Allow Specific Interrupt).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				},
-				{
-					"paramName": "Status Id",
-					"description": "The four-digit status ID to influence.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Allow Specific Interrupt",
-			"description": "Allows interruption only by specific commands. See parameters for list of possible interrupts.",
-			"instruction": "020A0100",
-			"commandParams": [
-				{
-					"paramName": "Command Type",
-					"description": "List of types of commands: 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Prevent Specific Interrupt",
-			"description": "Closes the specific interruption window. Must be set to the same thing as the allow specific interrupt that you wish to cancel.",
-			"instruction": "020B0100",
-			"commandParams": [
-				{
-					"paramName": "Command Type",
-					"description": "List of types of commands: 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Clear Prevent Interrupt",
-			"description": "Possibly unregisters a previously created interrupt.",
-			"instruction": "020C0100",
-			"commandParams": [
-				{
-					"paramName": "Interrupt ID",
-					"description": "Possibly the Interrupt ID to unregister. 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
-		{
-			"commandName": "Change Sub Action",
-			"description": "Change the current sub action.",
-			"instruction": "04000100",
-			"commandParams": [
-				{
-					"paramName": "Sub Action",
-					"description": "The ID of the sub action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": true
-				}
-			]
-		},
-		{
-			"commandName": "Change Sub Action: Pass Frame",
-			"description": "Change the current sub action. Can specify whether or not to pass the current frame or start the animation over.",
-			"instruction": "04000200",
-			"commandParams": [
-				{
-					"paramName": "Sub Action",
-					"description": "The ID of the sub action that the character will execute.",
-					"dataTypes": [
-						"Value"
-					],
-					"canUseVariable": true
-				},
-				{
-					"paramName": "Pass Frame",
-					"description": "Weather to pass the current frame of the current animation onto the new animation.",
-					"dataTypes": [
-						"Boolean"
-					],
-					"canUseVariable": false
-				}
-			]
-		},
+  "psaCommands": [
+    {
+      "commandName": "Synchronous Timer",
+      "description": "Pause the current flow of events until the set time is reached. Synchronous timers count down when they are reached in the code.",
+      "instruction": "00010100",
+      "commandParams": [
+        {
+          "paramName": "Frames",
+          "description": "The number of frames to wait.",
+          "dataTypes": [
+            "Scalar"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "1"
+        }
+      ]
+    },
+    {
+      "commandName": "No Event",
+      "description": "Nop -- doesn't do anything",
+      "instruction": "00020000"
+    },
+    {
+      "commandName": "Asynchronous Timer",
+      "description": "Pause the current flow of events until the set time is reached. Asynchronous Timers start counting from the beginning of the animation.",
+      "instruction": "00020100",
+      "commandParams": [
+        {
+          "paramName": "Frames",
+          "description": "The number of frames to wait.",
+          "dataTypes": [
+            "Scalar"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "1"
+        }
+      ]
+    },
+    {
+      "commandName": "Set Loop",
+      "description": "Create a loop for X iterations.",
+      "instruction": "00040100",
+      "commandParams": [
+        {
+          "paramName": "Iterations",
+          "description": "The number of times to loop.\nSet to FFFFFFFF for infinite loop.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "1"
+        }
+      ]
+    },
+    {
+      "commandName": "End Loop",
+      "description": "End of loop block.",
+      "instruction": "00050000"
+    },
+    {
+      "commandName": "Loop Break",
+      "description": "Breaks out of the current loop.",
+      "instruction": "00060000"
+    },
+    {
+      "commandName": "Subroutine",
+      "description": "Enter the event routine specified and return after ending.",
+      "instruction": "00070100",
+      "commandParams": [
+        {
+          "paramName": "Offset",
+          "description": "The offset inside the file to jump to.",
+          "dataTypes": [
+            "Pointer"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Return",
+      "description": "Return from a subroutine.",
+      "instruction": "00080000"
+    },
+    {
+      "commandName": "Goto",
+      "description": "Go to the event location specified and execute (does not return afterwards)",
+      "instruction": "00090100",
+      "commandParams": [
+        {
+          "paramName": "Offset",
+          "description": "The offset inside the file to jump to.",
+          "dataTypes": [
+            "Pointer"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "If: Requirement",
+      "description": "Start an If block until an Else or an End If is reached. Use this If to check for a requirement.",
+      "instruction": "000A0100",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "If: Requirement Value",
+      "description": "Start an If block until an Else or an End If is reached. Use this If to check for a requirement with a specified value.",
+      "instruction": "000A0200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "If: Comparison",
+      "description": "Start an If block until an Else or an End If is reached. Use this If to compare two values.",
+      "instruction": "000A0400",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "And: Requirement",
+      "description": "Insert an And statement to an If statement. Use this And to check for a requirement.",
+      "instruction": "000B0100",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "And: Requirement Value",
+      "description": "Insert an And statement to an If statement. Use this And to check for a requirement with a specified value.",
+      "instruction": "000B0200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "And: Comparison",
+      "description": "Insert an And statement to an If statement. Use this And to compare two values.",
+      "instruction": "000B0400",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Or: Requirement",
+      "description": "Insert an Or statement to an If statement. Use this Or to check for a requirement.",
+      "instruction": "000C0100",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Or: Requirement Value",
+      "description": "Insert an Or statement to an If statement. Use this Or to check for a requirement with a specified value.",
+      "instruction": "000C0200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Or: Comparison",
+      "description": "Insert an Or statement to an If statement. Use this Or to compare two values.",
+      "instruction": "000C0400",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Else If: Requirement",
+      "description": "Insert an Else If block to go with an If series. Use this Else If to check for a requirement.",
+      "instruction": "000D0100",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Else If: Requirement Value",
+      "description": "Insert an Else If block to go with an If series. Use this Else If to check for a requirement with a specified value.",
+      "instruction": "000D0200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Else If: Comparison",
+      "description": "Insert an Else If block to go with an If series. Use this Else if to compare values.",
+      "instruction": "000D0400",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Else",
+      "description": "Insert an Else block to go with an If series.",
+      "instruction": "000E0000"
+    },
+    {
+      "commandName": "End If",
+      "description": "End an If block.",
+      "instruction": "000F0000"
+    },
+    {
+      "commandName": "Switch",
+      "description": "Begin a multiple case Switch block.",
+      "instruction": "00100200",
+      "commandParams": [
+        {
+          "paramName": "Status Id?",
+          "description": "Unknown -- Appears to often (if not always) bet set to 0x2710 (IC-Basic[10000]).\nJust leave the default.",
+          "dataTypes": [
+            "Value",
+            "Variable"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2710"
+        },
+        {
+          "paramName": "Variable",
+          "description": "The variable that will be compared against the case values.\nCan also be a requirement such as \"Roll A Die\"",
+          "dataTypes": [
+            "Variable",
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "RA-Basic[0]"
+        }
+      ]
+    },
+    {
+      "commandName": "Case",
+      "description": "Handler for if the variable in the Switch block equals the specified value.",
+      "instruction": "00110100",
+      "commandParams": [
+        {
+          "paramName": "Value",
+          "description": "The value to compare the Switch block's variable against.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Default Case",
+      "description": "The case chosen if none of the others are executed in a switch block.\nThink of it like a Switch block's \"Else\" equivalent.",
+      "instruction": "00120000"
+    },
+    {
+      "commandName": "End Switch",
+      "description": "End a Switch block.",
+      "instruction": "00130000"
+    },
+    {
+      "commandName": "Break",
+      "description": "Appears within Case statements; exits the switch event completely. All code located in the same case block after this event will not be executed.",
+      "instruction": "00180000"
+    },
+    {
+      "commandName": "Loop Rest",
+      "description": "Stops a loop from iterating again until the \"Set Loop Resume Requirement\" evaluates to true.",
+      "instruction": "01010000"
+    },
+    {
+      "commandName": "Change Action Status: Requirement",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement being met.",
+      "instruction": "02000300",
+      "commandParams": [
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Action",
+          "description": "The ID of the action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Change Action Status: Requirement Value",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement with a specified value being met.",
+      "instruction": "02000400",
+      "commandParams": [
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Action",
+          "description": "The ID of the action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Change Action Status: Comparison",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action Status is based on a requirement with a specified value being met.",
+      "instruction": "02000600",
+      "commandParams": [
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Action",
+          "description": "The ID of the action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Change Action: Requirement",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement being met.",
+      "instruction": "02010200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Change Action: Requirement Value",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement with a specified value being met.",
+      "instruction": "02010300",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Change Action: Comparison",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a comparison.",
+      "instruction": "02010500",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Additional Change Action Requirement: Requirement",
+      "description": "Add an additional requirement to the preceeding Change Action statement. This Additional Action Requirement is based on a requirement being met.",
+      "instruction": "02040100",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Additional Change Action Requirement: Requirement Value",
+      "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement with a specified value being met.",
+      "instruction": "02040200",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Additional Change Action Requirement: Comparison",
+      "description": "Add an additional requirement to the preceeding Change Action statement. This Additional Action Requirement is based on a comparison.",
+      "instruction": "02040400",
+      "commandParams": [
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Set Status ID Interrupt: Requirement",
+      "description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a requirement being met. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
+      "instruction": "02050300",
+      "commandParams": [
+        {
+          "paramName": "Interrupt Id",
+          "description": "The interrupt to hook to.\n1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID to influence.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Set Status ID Interrupt: Requirement Value",
+      "description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a requirement with a specified value being met. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
+      "instruction": "02050400",
+      "commandParams": [
+        {
+          "paramName": "Interrupt Id",
+          "description": "The interrupt to hook to.\n1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID to influence.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Value",
+          "description": "The value applied to the requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Set Status ID Interrupt: Comparison",
+      "description": "Links a Status ID with an interrupt, which will only allow the interrupt to execute (or prevent) the Status ID. This Set Status ID Interrupt is based on a comparison. (Warning: Persists globally and can cause memory leaks. Recommended for the on-load routine.)",
+      "instruction": "02050600",
+      "commandParams": [
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID of the change action event. Can later be disabled via 02080100 (Disable Action Status ID).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Action",
+          "description": "The ID of the action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Requirement",
+          "description": "The form of requirement used in evaluation of the event.",
+          "dataTypes": [
+            "Requirement"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "Compare"
+        },
+        {
+          "paramName": "Value1",
+          "description": "The first value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Comparison Method",
+          "description": "The method used to compare the two values.\nFrom 0 to 5: <, <=, ==, !=, >=, >",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false,
+          "defaultValue": "2"
+        },
+        {
+          "paramName": "Value2",
+          "description": "The second value in the comparison requirement.",
+          "dataTypes": [
+            "Any"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Enable Action Status ID",
+      "description": "Enables the Action associated with the given Status ID.",
+      "instruction": "02060100",
+      "commandParams": [
+        {
+          "paramName": "Status ID",
+          "description": "The Status ID to enable.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Disable Action Status ID",
+      "description": "Disables the Action associated with the given Status ID.",
+      "instruction": "02080100",
+      "commandParams": [
+        {
+          "paramName": "Status ID",
+          "description": "The Status ID to disable.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Invert Action Status ID",
+      "description": "Appears to invert (or possibly only disable) a specific Status ID's enabled/disabled status. For example, if a character can crawl, this is used to disable the ability to dash when crouched, even though naturally crouching allows dashing through 020A (Allow Specific Interrupt).",
+      "instruction": "02090200",
+      "commandParams": [
+        {
+          "paramName": "Interrupt Id",
+          "description": "An Interrupt ID as used by 020A0100 (Allow Specific Interrupt).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        },
+        {
+          "paramName": "Status Id",
+          "description": "The four-digit status ID to influence.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Allow Specific Interrupt",
+      "description": "Allows interruption only by specific commands. See parameters for list of possible interrupts.",
+      "instruction": "020A0100",
+      "commandParams": [
+        {
+          "paramName": "Command Type",
+          "description": "List of types of commands: 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Prevent Specific Interrupt",
+      "description": "Closes the specific interruption window. Must be set to the same thing as the allow specific interrupt that you wish to cancel.",
+      "instruction": "020B0100",
+      "commandParams": [
+        {
+          "paramName": "Command Type",
+          "description": "List of types of commands: 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Clear Prevent Interrupt",
+      "description": "Possibly unregisters a previously created interrupt.",
+      "instruction": "020C0100",
+      "commandParams": [
+        {
+          "paramName": "Interrupt ID",
+          "description": "Possibly the Interrupt ID to unregister. 1-Ground Special, 2-Ground Item, 3-Grab, 4-Ground Attack, 5-Ground Dodge, 6-Shield, 7-Ground Jump, 8-Ground (other), 9-Landing, A-Ledge Grab, B-Air Special, C-Air Item Throw, D-Air Grab, E-Air Dodge, F-Air Attack, 10-Footstool, 11-Wall Jump, 12-Air Jump, 13-Fall Through Plat(only works in squat).",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
+    {
+      "commandName": "Change Sub Action",
+      "description": "Change the current sub action.",
+      "instruction": "04000100",
+      "commandParams": [
+        {
+          "paramName": "Sub Action",
+          "description": "The ID of the sub action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": true
+        }
+      ]
+    },
+    {
+      "commandName": "Change Sub Action: Pass Frame",
+      "description": "Change the current sub action. Can specify whether or not to pass the current frame or start the animation over.",
+      "instruction": "04000200",
+      "commandParams": [
+        {
+          "paramName": "Sub Action",
+          "description": "The ID of the sub action that the character will execute.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": true
+        },
+        {
+          "paramName": "Pass Frame",
+          "description": "Whether to pass the current frame of the current animation onto the new animation.",
+          "dataTypes": [
+            "Boolean"
+          ],
+          "canUseVariable": false
+        }
+      ]
+    },
 
-	]
+  ]
 }

@@ -40,7 +40,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             {
                 for (int j = 0; j < 2; j++)
                 {
-                    List<PsaCommand> commands = ActionsParser.GetPsaCommandsForAction(i, j);
+                    List<PsaCommand> commands = ActionsParser.GetPsaCommandsForActionCodeBlock(i, j);
                     foreach (PsaCommand command in commands)
                     {
                         if (command != null)
