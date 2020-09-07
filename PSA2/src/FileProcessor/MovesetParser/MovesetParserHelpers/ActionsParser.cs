@@ -40,6 +40,15 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return 274 + GetNumberOfSpecialActions();
         }
 
+        /// <summary>
+        /// Gets starting location in data section where new actions can be placed
+        /// </summary>
+        /// <returns>location in data section -- "stf" in psa-c</returns>
+        public int GetOpenAreaStartLocation() // stf
+        {
+            return 2014 + GetNumberOfSpecialActions() * 2;
+        }
+
         // this is the offset where action code starts (displayed in PSAC)
         public int GetActionCodeBlockCommandsLocation(int actionId, int codeBlockId)
         {
@@ -84,7 +93,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public void AddCommandToAction(int actionId, int codeBlockId)
         {
             int actionCodeBlockLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId); // h
-            int openAreaStartLocation = 2014 + GetNumberOfSpecialActions() * 2; // stf
+            int openAreaStartLocation = GetOpenAreaStartLocation();
 
             if (actionCodeBlockLocation == 0 || (actionCodeBlockLocation >= openAreaStartLocation * 4 && actionCodeBlockLocation < PsaFile.DataSectionSize))
             {
@@ -97,10 +106,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 // if there are already existing commands for action
                 else
                 {
-                    AddCommandToExistingActionCodeBlock(actionId, codeBlockId, actionCodeBlockLocation, openAreaStartLocation);
+                    AddCommandToExistingActionCodeBlock(actionId, codeBlockId, actionCodeBlockLocation);
                 }
 
                 ApplyFileUpdatesToAccountForActionChanges();
+            }
+            else
+            {
+                throw new DataMisalignedException("Action code block location is not valid");
             }
         }
 
@@ -149,7 +162,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             int newOffsetLocation = stoppingPoint * 4;
         }
 
-        public void AddCommandToExistingActionCodeBlock(int actionId, int codeBlockId, int actionCodeBlockLocation, int openAreaStartLocation)
+        public void AddCommandToExistingActionCodeBlock(int actionId, int codeBlockId, int actionCodeBlockLocation)
         {
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
 
@@ -185,8 +198,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             // this part actually adds the new nop command
             else
             {
-                int newOffsetLocation = RelocateAction(actionId, codeBlockId, actionCodeBlockLocation, numberOfCommandsAlreadyInAction, commandStartLocation, openAreaStartLocation);
-                ApplyOffsetInterlockLogic(actionCodeBlockLocation, numberOfCommandsAlreadyInAction, openAreaStartLocation, newOffsetLocation);
+                int newOffsetLocation = RelocateAction(actionId, codeBlockId, numberOfCommandsAlreadyInAction, commandStartLocation);
+                ApplyOffsetInterlockLogic(actionCodeBlockLocation, numberOfCommandsAlreadyInAction, newOffsetLocation);
             }
         }
 
@@ -197,15 +210,15 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         /// </summary>
         /// <param name="actionId">id of action (0 = 112)</param>
         /// <param name="codeBlockId">id of code block (0 is Entry, 1 is Exit)</param>
-        /// <param name="actionCodeBlockLocation">current location of action</param>
         /// <param name="numberOfCommandsAlreadyInAction">number of commands already in action</param>
         /// <param name="commandStartLocation">location where action's commands start</param>
         /// <param name="openAreaStartLocation">start location where new data can be added to based on avaliable free space</param>
         /// <returns>new offset location for commands in action (relocated offset)</returns>
-        public int RelocateAction(int actionId, int codeBlockId, int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int commandStartLocation, int openAreaStartLocation)
+        public int RelocateAction(int actionId, int codeBlockId, int numberOfCommandsAlreadyInAction, int commandStartLocation)
         {
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
-            
+            int openAreaStartLocation = GetOpenAreaStartLocation();
+
             // I don't think "commandOffset" is the right name for this...
             int commandOffset = numberOfCommandsAlreadyInAction * 2 + 4; // k
             int stoppingPoint = openAreaStartLocation;
@@ -276,7 +289,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
             PsaFile.FileContent[codeBlockLocation] = newOffsetLocation;
 
-            Console.WriteLine("END RESULT: " + newOffsetLocation.ToString("X"));
             return newOffsetLocation;
         }
 
@@ -288,9 +300,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             PsaFile.FileContent[location + 3] = 0;
         }
 
-        public void ApplyOffsetInterlockLogic(int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int openAreaStartLocation, int newOffsetLocation)
+        public void ApplyOffsetInterlockLogic(int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int newOffsetLocation)
         {
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
+            int openAreaStartLocation = GetOpenAreaStartLocation();
 
             // this is the "EvOffsetInterlock" stuff, not entirely sure what this does, maybe updates existing command offsets so they don't break (like gotos)?
             // actionCodeBlockEndLocation is probably not the right name for this variable...
@@ -328,7 +341,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
 
             int stoppingPoint = dataSectionSizeBytes;
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A) // -86110838 is FFFF FFFF FADE 0D8A
+            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
             {
                 PsaFile.FileContent[dataSectionSizeBytes + 2] = PsaFile.FileContent[dataSectionSizeBytes - 2];
                 PsaFile.FileContent[dataSectionSizeBytes + 3] = PsaFile.FileContent[dataSectionSizeBytes - 1];
@@ -346,7 +359,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
 
             int stoppingPoint = dataSectionSizeBytes;
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A) // -86110838 is FFFF FFFF FADE 0D8A
+            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
             {
                 stoppingPoint -= 2;
                 PsaFile.FileContent[dataSectionSizeBytes + commandOffset - 2] = FADE0D8A;
@@ -366,20 +379,20 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         {
             int dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
 
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A) // -86110838 is FFFF FFFF FADE 0D8A
+            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A)
             {
                 PsaFile.FileContent[dataSectionSizeBytes] = PsaFile.FileContent[dataSectionSizeBytes - 2];
                 PsaFile.FileContent[dataSectionSizeBytes + 1] = PsaFile.FileContent[dataSectionSizeBytes - 1];
-                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D; // -86052851 is FFFF FFFF FADE F00D
-                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D; // -86052851 is FFFF FFFF FADE F00D
+                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D; 
+                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D;
                 dataSectionSizeBytes += 2;
                 PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
                 return true;
             }
             else if (commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3 > dataSectionSizeBytes)
             {
-                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D; // -86052851 is FFFF FFFF FADE F00D
-                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D; // -86052851 is FFFF FFFF FADE F00D
+                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 2] = FADEF00D;
+                PsaFile.FileContent[commandStartLocation + numberOfCommandsAlreadyInAction * 2 + 3] = FADEF00D;
                 dataSectionSizeBytes += 2;
                 PsaFile.DataSectionSize = dataSectionSizeBytes * 4;
                 return true;
@@ -399,29 +412,22 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             // TODO: Fixam logic has to be added for adding new command to action that had no previous commands as well
             // I don't really understand this part yet
             // bad variable name...
-            int lastDataSectionValidValue = 0;
-
             // last data section value is where FADE 0D8A is found?
-            if (PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A) // -86110838 is FFFF FFFF FADE 0D8A
-            {
-                lastDataSectionValidValue = dataSectionSizeBytes - 3;
-            }
-            else
-            {
-                lastDataSectionValidValue = dataSectionSizeBytes - 1;
-            }
+            int lastDataSectionValidValue = PsaFile.FileContent[dataSectionSizeBytes - 2] == FADE0D8A 
+                ? dataSectionSizeBytes - 3 
+                : dataSectionSizeBytes - 1;
 
             // decrease last data section value while no fade foods are found ??
-            while (lastDataSectionValidValue >= dataSectionSizeBytes && PsaFile.FileContent[lastDataSectionValidValue] == FADEF00D) // -86052851 is FFFF FFFF FADE F00D
+            while (lastDataSectionValidValue >= dataSectionSizeBytes && PsaFile.FileContent[lastDataSectionValidValue] == FADEF00D)
             {
                 lastDataSectionValidValue--;
             }
 
             // not a clue what this does, maybe moves all the FADE F00DS over if there's free space?
-            int newDataSectionSize;
-            for (newDataSectionSize = lastDataSectionValidValue; lastDataSectionValidValue <= dataSectionSizeBytes - 1; lastDataSectionValidValue++)
+            int newDataSectionSize = lastDataSectionValidValue;
+            while (newDataSectionSize < dataSectionSizeBytes)
             {
-                if (PsaFile.FileContent[lastDataSectionValidValue] != FADEF00D) // -86052851 is FFFF FFFF FADE F00D
+                if (PsaFile.FileContent[lastDataSectionValidValue] != FADEF00D)
                 {
                     PsaFile.FileContent[newDataSectionSize] = PsaFile.FileContent[lastDataSectionValidValue];
                     newDataSectionSize++;
@@ -430,7 +436,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
             // change size of data section to match new size, which did change since a new command was added
             PsaFile.DataSectionSize = newDataSectionSize * 4;
-            dataSectionSizeBytes = PsaFile.DataSectionSize / 4;
 
             // this just threw me for a loop, WHAT is going on
             Array.Sort(PsaFile.OffsetInterlockTracker);
@@ -442,15 +447,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             }
 
 
-            int movesetTotalFileSize = (PsaFile.MovesetFileSize - 32) / 4;
             int movesetFileSizeLeftoverSpace = PsaFile.MovesetFileSize % 4;
             if (movesetFileSizeLeftoverSpace == 0)
             {
                 movesetFileSizeLeftoverSpace = 4;
-            }
-            else
-            {
-                movesetTotalFileSize++;
             }
 
             for (int i = 0; i < PsaFile.CompressedSize; i++)
@@ -460,8 +460,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             }
 
             PsaFile.MovesetFileSize = newDataSectionSize * 4 + movesetFileSizeLeftoverSpace + 28;
-            //Console.WriteLine("NEW DATA SECTOINSIZE: " + newDataSectionSize);
-            //Console.WriteLine("MOVESET FILE SIZE: " + PsaFile.MovesetFileSize);
 
             // NO CLUE what FileHeader[17] is, this is the only place in the entire PSAC that it's used
             // I'm guessing it just always needs to be the same as the MovesetFileSize at FileHeader[24]
