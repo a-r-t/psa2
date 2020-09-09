@@ -53,6 +53,9 @@
     <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\Data\FitMario.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

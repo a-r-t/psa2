@@ -108,9 +108,14 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac", "./WriteTests/Out/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac"));
         }
 
-
-
-        // I definitely want to test having to relocate an action if a command modification with more params causes action to need to relocate
-        // also a test where a command modification with more params pushes action outside of data section bounds, causing it to need to resize
+        [TestMethod]
+        public void ModifyCommandInActionWithParametersToCommandWithNoParameters()
+        {
+            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
+            psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(917504, 25788, parameters));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac", "./WriteTests/Out/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac"));
+        }
     }
 }
