@@ -763,7 +763,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                         PsaFile.FileContent[commandParamValuesLocation + i] = FADEF00D;
                         PsaFile.FileContent[commandParamValuesLocation + i + 1] = FADEF00D;
                     }
-                    int newCommandParamsSize = ((commandLocation >> 8) & 0xFF) * 2; // m
+                    int newCommandParamsSize = ((psaCommand.Instruction >> 8) & 0xFF) * 2; // m
                     if (newCommandParamsSize == 0)
                     {
                         PsaFile.FileContent[commandStartLocation] = commandLocation;

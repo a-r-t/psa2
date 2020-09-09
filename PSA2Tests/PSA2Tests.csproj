@@ -35,6 +35,9 @@
     <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommand.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

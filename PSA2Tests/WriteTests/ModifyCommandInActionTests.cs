@@ -65,5 +65,20 @@ namespace PSA2Tests.WriteTests
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac"));
         }
+
+        [TestMethod]
+        public void ModifyCommandInActionWithDifferentCommandWithLargerParameterCount()
+        {
+            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
+            {
+                new PsaCommandParameter(0, 0),
+                new PsaCommandParameter(6, 0),
+                new PsaCommandParameter(5, 0)
+            };
+            psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620736, 25788, parameters));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac"));
+        }
     }
 }
