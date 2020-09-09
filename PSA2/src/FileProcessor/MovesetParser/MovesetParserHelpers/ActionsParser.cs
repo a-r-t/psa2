@@ -565,7 +565,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
                         // end ParamsModify method
 
-                        PsaFile.FileContent[commandLocation + 1] = stoppingPoint * 4;  // ?? = i, params modify method must set i to something
+                        PsaFile.FileContent[commandLocation + 1] = stoppingPoint * 4;
                         PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandLocation * 4 + 4;
                         PsaFile.NumberOfOffsetEntries++;
                         PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
