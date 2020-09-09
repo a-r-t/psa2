@@ -41,6 +41,5 @@ namespace PSA2Tests
 
             return true;
         }
-
     }
 }

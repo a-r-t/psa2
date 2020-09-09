@@ -74,8 +74,6 @@ namespace PSA2.src.FileProcessor
             }
         }
 
-
-
         /// <summary>
         /// Number of offset entries in Offsets Section
         /// Each Offset Entry is 4 bytes
