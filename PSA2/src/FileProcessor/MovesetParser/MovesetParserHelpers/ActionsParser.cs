@@ -508,7 +508,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
                 // if there is not currently an existing command params location (e.g. you are replacing a nop command which as no params)
 
-                // if there were no command params on the previous comman
+                // if there were no command params on the previous command
                 if (commandParamsSize == 0)
                 {
                     int numberOfParams = ((commandLocation >> 8) & 0xFF) * 2; // m
@@ -861,7 +861,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                             PsaFile.FileContent[commandStartLocation + 1] = commandParamValuesLocation * 4;
                         }
                     }
-                    PsaFile.FileContent[commandStartLocation] = commandLocation;
+                    PsaFile.FileContent[commandStartLocation] = psaCommand.Instruction;
                     for (int i = 0; i < newCommandParamsSize; i += 2)
                     {
                         // if command param type is Pointer and it actually points to something

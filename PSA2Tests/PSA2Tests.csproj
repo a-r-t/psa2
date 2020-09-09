@@ -32,7 +32,13 @@
     <None Update="WriteTests\ComparisonData\FitMarioTwoCommandsAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommand.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac">
