@@ -19,7 +19,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             Instruction = instruction;
             CommandParametersLocation = commandParametersLocation;
             Parameters = parameters;
-            CommandParametersLocation = CommandParametersLocation / 4;
+            CommandParametersValuesLocation = CommandParametersLocation / 4;
         }
 
         public override string ToString()
