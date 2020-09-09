@@ -502,7 +502,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 commandParamsTracker = GetCommandInfo(commandParamsTracker, psaCommand);
                 // for this method, that whole process is replaced with the PsaCommand object parameter
 
-                Console.WriteLine(Utils.IntArrayToString(commandParamsTracker));
+                //Console.WriteLine(Utils.IntArrayToString(commandParamsTracker));
 
 
 
@@ -511,8 +511,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 // if there were no command params on the previous command
                 if (commandParamsSize == 0)
                 {
-                    int numberOfParams = ((commandLocation >> 8) & 0xFF) * 2; // m
-                    if (numberOfParams == 0)
+                    int newCommandParamsSize = ((psaCommand.Instruction >> 8) & 0xFF) * 2; // m
+                    if (newCommandParamsSize == 0)
                     {
                         PsaFile.FileContent[commandStartLocation] = psaCommand.Instruction;
                     }
@@ -528,7 +528,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                         {
                             if (PsaFile.FileContent[stoppingPoint] == FADEF00D)
                             {
-                                for (bitStoppingPoint = stoppingPoint + 1; bitStoppingPoint < stoppingPoint + numberOfParams; bitStoppingPoint++)
+                                for (bitStoppingPoint = stoppingPoint + 1; bitStoppingPoint < stoppingPoint + newCommandParamsSize; bitStoppingPoint++)
                                 {
                                     if (PsaFile.FileContent[bitStoppingPoint] != FADEF00D)
                                     {
@@ -536,12 +536,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                                         break;
                                     }
                                 }
-                                if (stoppingPoint + numberOfParams == bitStoppingPoint)
+                                if (stoppingPoint + newCommandParamsSize == bitStoppingPoint)
                                 {
                                     break;
                                 }
                             }
                         }
+
                         // if adding more command params causes data to go beyond data section limit, increase data section size
                         if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
                         {
@@ -549,12 +550,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                             if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
                             {
                                 stoppingPoint -= 2;
-                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + numberOfParams - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + numberOfParams - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                             }
-                            PsaFile.DataSectionSizeBytes += numberOfParams;
+                            PsaFile.DataSectionSizeBytes += newCommandParamsSize;
                         }
-                        for (int i = 0; i < numberOfParams; i += 2)
+                        for (int i = 0; i < newCommandParamsSize; i += 2)
                         {
                             // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
                             if (commandParamsTracker[i] == 2 && commandParamsTracker[i + 1] > 0)

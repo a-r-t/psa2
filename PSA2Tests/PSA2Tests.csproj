@@ -23,28 +23,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="WriteTests\ComparisonData\FitMarioOneCommandAdded.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\FitMarioOneCommandAddedWithNoExistingCommands.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAddedWithNoExistingCommands.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\FitMarioTwoCommandsAdded.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioTwoCommandsAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommand.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithIdenticalCommand.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="WriteTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac">
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="WriteTests\Data\FitMario.pac">

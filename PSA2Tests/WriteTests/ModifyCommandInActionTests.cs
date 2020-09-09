@@ -21,7 +21,7 @@ namespace PSA2Tests.WriteTests
             };
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommand.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithIdenticalCommand.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommand.pac"));
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommand.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommand.pac"));
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace PSA2Tests.WriteTests
             };
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac"));
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac"));
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace PSA2Tests.WriteTests
             };
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac"));
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac"));
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace PSA2Tests.WriteTests
             };
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(67109376, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac"));
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac"));
         }
 
         [TestMethod]
@@ -78,7 +78,39 @@ namespace PSA2Tests.WriteTests
             };
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620736, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Modify/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac"));
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac"));
         }
+
+        [TestMethod]
+        public void ModifyCommandInActionWithDifferentCommandWithSmallerParameterCount()
+        {
+            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
+            {
+                new PsaCommandParameter(0, 0)
+            };
+            psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(67109120, 25788, parameters));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac"));
+        }
+
+        [TestMethod]
+        public void ModifyCommandInActionWithNoParametersToCommandWithParameters()
+        {
+            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
+            {
+                new PsaCommandParameter(0, 0),
+                new PsaCommandParameter(6, 0)
+            };
+            psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 10, new PsaCommand(33620480, 25788, parameters));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac", "./WriteTests/Out/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac"));
+        }
+
+
+
+        // I definitely want to test having to relocate an action if a command modification with more params causes action to need to relocate
+        // also a test where a command modification with more params pushes action outside of data section bounds, causing it to need to resize
     }
 }

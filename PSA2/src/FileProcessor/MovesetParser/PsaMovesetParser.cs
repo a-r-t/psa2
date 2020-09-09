@@ -58,10 +58,9 @@ namespace PSA2.src.FileProcessor.MovesetParser
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),
-                new PsaCommandParameter(6, 0),
-                new PsaCommandParameter(5, 0)
+                new PsaCommandParameter(0, 0)
             };
-            //ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620736, 25788, parameters));
+            //ActionsParser.ModifyActionCommand(0, 0, 10, new PsaCommand(33620480, 25788, parameters));
 
         }
 
