@@ -528,11 +528,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
                 int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize(); // k
 
-                // show dialog (pauses event modify method execution)
-                // for this method, that whole process is replaced with the PsaCommand object parameter
-
-                // if there is not currently an existing command params location (e.g. you are replacing a nop command which as no params)
-
                 // if there were no command params on the previous command
                 if (oldCommandParamsSize == 0)
                 {
@@ -547,47 +542,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                     // if there are command params on new command, create space for this new params location
                     else
                     {
-                        // ParamsModify method
-
-                        // determine stopping point, which is where new command params will be added (finds room where number of params can all fit)
-                        int stoppingPoint = FindLocationWithAmountOfFreeSpace(newCommandParamsSize);
-
-                        // if adding command params location causes data to go beyond data section limit, increase data section size
-                        if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
-                        {
-                            stoppingPoint = PsaFile.DataSectionSizeBytes;
-                            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
-                            {
-                                stoppingPoint -= 2;
-                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
-                            }
-                            PsaFile.DataSectionSizeBytes += newCommandParamsSize;
-                        }
-
-                        int paramsIndex = 0;
-                        for (int i = 0; i < newCommandParamsSize; i += 2)
-                        {
-                            // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
-                            if (newPsaCommand.Parameters[paramsIndex].Type == 2 && newPsaCommand.Parameters[paramsIndex].Value > 0)
-                            {
-                                int valuePointerOffset = (stoppingPoint + i) * 4 + 4;
-                                PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = valuePointerOffset;
-                                PsaFile.NumberOfOffsetEntries++;
-                            }
-                            PsaFile.FileContent[stoppingPoint + i] = newPsaCommand.Parameters[paramsIndex].Type;
-                            PsaFile.FileContent[stoppingPoint + i + 1] = newPsaCommand.Parameters[paramsIndex].Value;
-                            paramsIndex++;
-                        }
-
-                        // end ParamsModify method
-
-                        PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
-                        int newCommandParamsLocation = stoppingPoint * 4;
-                        PsaFile.FileContent[commandLocation + 1] = newCommandParamsLocation;
-                        PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandLocation * 4 + 4;
-                        PsaFile.NumberOfOffsetEntries++;
-                        ApplyFileUpdatesToAccountForActionChanges();
+                        CreateNewCommandParameters(commandLocation, newPsaCommand);
                     }
                 }
 
@@ -908,6 +863,49 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 throw new ApplicationException("Cannot modify event...not sure why just can't okay");
             }
 
+        }
+
+        public void CreateNewCommandParameters(int commandLocation, PsaCommand newPsaCommand)
+        {
+            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
+
+            // determine stopping point, which is where new command params will be added (finds room where number of params can all fit)
+            int stoppingPoint = FindLocationWithAmountOfFreeSpace(newCommandParamsSize);
+
+            // if adding command params location causes data to go beyond data section limit, increase data section size
+            if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
+            {
+                stoppingPoint = PsaFile.DataSectionSizeBytes;
+                if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == FADE0D8A)
+                {
+                    stoppingPoint -= 2;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                }
+                PsaFile.DataSectionSizeBytes += newCommandParamsSize;
+            }
+
+            int paramsIndex = 0;
+            for (int i = 0; i < newCommandParamsSize; i += 2)
+            {
+                // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
+                if (newPsaCommand.Parameters[paramsIndex].Type == 2 && newPsaCommand.Parameters[paramsIndex].Value > 0)
+                {
+                    int valuePointerOffset = (stoppingPoint + i) * 4 + 4;
+                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = valuePointerOffset;
+                    PsaFile.NumberOfOffsetEntries++;
+                }
+                PsaFile.FileContent[stoppingPoint + i] = newPsaCommand.Parameters[paramsIndex].Type;
+                PsaFile.FileContent[stoppingPoint + i + 1] = newPsaCommand.Parameters[paramsIndex].Value;
+                paramsIndex++;
+            }
+
+            PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
+            int newCommandParamsLocation = stoppingPoint * 4;
+            PsaFile.FileContent[commandLocation + 1] = newCommandParamsLocation;
+            PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandLocation * 4 + 4;
+            PsaFile.NumberOfOffsetEntries++;
+            ApplyFileUpdatesToAccountForActionChanges();
         }
     }
 }
