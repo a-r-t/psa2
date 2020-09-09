@@ -22,7 +22,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
         public override string ToString()
         {
-            return $"{{{nameof(Instruction)}={Instruction.ToString("X")}, {nameof(CommandParametersLocation)}={CommandParametersLocation.ToString("X")}, {nameof(Parameters)}={string.Join(",", Parameters.Select(x => x.ToString()).ToList())}}}";
+            return $"{{{nameof(Instruction)}={Instruction.ToString("X")} ({Instruction}), {nameof(CommandParametersLocation)}={CommandParametersLocation.ToString("X")}, {nameof(Parameters)}={string.Join(",", Parameters.Select(x => x.ToString()).ToList())}}}";
         }
     }
 }

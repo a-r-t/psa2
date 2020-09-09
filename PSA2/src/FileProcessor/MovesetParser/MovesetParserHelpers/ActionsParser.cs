@@ -487,24 +487,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 int commandLocation = PsaFile.FileContent[commandStartLocation]; // g
                 int commandParamsLocation = PsaFile.FileContent[commandStartLocation + 1]; // h
 
-                //Console.WriteLine("Command param size: " + commandParamsSize);
-                //Console.WriteLine("Command Param Values Location: " + commandParamValuesLocation);
-                //Console.WriteLine("Command location: " + commandLocation);
-                //Console.WriteLine("Command params location: " + commandParamsLocation);
+ 
+                // PsaCommand oldPsaCommand = PsaCommandParser.GetPsaCommand(commandStartLocation);
 
-                int[] commandParamsTracker = new int[512]; // nonam
-                for (int i = 0; i < commandParamsSize; i++)
-                {
-                    commandParamsTracker[i] = PsaFile.FileContent[commandParamValuesLocation + i];
-                }
 
                 // show dialog (pauses event modify method execution)
-                commandParamsTracker = GetCommandInfo(commandParamsTracker, psaCommand);
                 // for this method, that whole process is replaced with the PsaCommand object parameter
-
-                //Console.WriteLine(Utils.IntArrayToString(commandParamsTracker));
-
-
 
                 // if there is not currently an existing command params location (e.g. you are replacing a nop command which as no params)
 
@@ -557,14 +545,15 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                         }
                         for (int i = 0; i < newCommandParamsSize; i += 2)
                         {
+                            int paramsIndex = i / 2;
                             // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
-                            if (commandParamsTracker[i] == 2 && commandParamsTracker[i + 1] > 0)
+                            if (psaCommand.Parameters[paramsIndex].Type == 2 && psaCommand.Parameters[paramsIndex].Value > 0)
                             {
                                 PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = (stoppingPoint + i) * 4 + 4;
                                 PsaFile.NumberOfOffsetEntries++;
                             }
-                            PsaFile.FileContent[stoppingPoint + i] = commandParamsTracker[i];
-                            PsaFile.FileContent[stoppingPoint + i + 1] = commandParamsTracker[i + 1];
+                            PsaFile.FileContent[stoppingPoint + i] = psaCommand.Parameters[paramsIndex].Type;
+                            PsaFile.FileContent[stoppingPoint + i + 1] = psaCommand.Parameters[paramsIndex].Value;
                         }
 
                         // end ParamsModify method
@@ -865,16 +854,17 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                     PsaFile.FileContent[commandStartLocation] = psaCommand.Instruction;
                     for (int i = 0; i < newCommandParamsSize; i += 2)
                     {
+                        int paramsIndex = i / 2;
                         // if command param type is Pointer and it actually points to something
-                        if (commandParamsTracker[i] == 2 && commandParamsTracker[i + 1] > 0)
+                        if (psaCommand.Parameters[paramsIndex].Type == 2 && psaCommand.Parameters[paramsIndex].Value > 0)
                         {
                             int something = (commandParamValuesLocation + i) * 4 + 4;
                             PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = something;
                             PsaFile.NumberOfOffsetEntries++;
                         }
 
-                        PsaFile.FileContent[commandParamValuesLocation + i] = commandParamsTracker[i];
-                        PsaFile.FileContent[commandParamValuesLocation + i + 1] = commandParamsTracker[i + 1];
+                        PsaFile.FileContent[commandParamValuesLocation + i] = psaCommand.Parameters[paramsIndex].Type;
+                        PsaFile.FileContent[commandParamValuesLocation + i + 1] = psaCommand.Parameters[paramsIndex].Value;
                     }
 
                     // in psac, this is only called if "fnt" is 1, which means something was changed -- will see if this will break things or not to just call every time
