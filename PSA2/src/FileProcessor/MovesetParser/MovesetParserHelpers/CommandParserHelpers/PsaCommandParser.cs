@@ -108,7 +108,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
                 //Console.WriteLine(String.Format("Instruction: {0}", instruction));
                 //parameters.ForEach(t => Console.WriteLine(String.Format("Param Type: {0}, Param Value: {1}", t.Type, t.Value)));
-                return new PsaCommand(rawPsaInstruction, commandParamsLocation, parameters);
+                return new PsaCommand(rawPsaInstruction, commandParamsLocation * 4, parameters);
             }
 
         }

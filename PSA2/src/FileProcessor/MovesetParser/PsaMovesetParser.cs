@@ -60,7 +60,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
                 new PsaCommandParameter(0, 0),
                 new PsaCommandParameter(0, 0)
             };
-            //ActionsParser.ModifyActionCommand(0, 0, 10, new PsaCommand(33620480, 25788, parameters));
+            //ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
 
         }
 
