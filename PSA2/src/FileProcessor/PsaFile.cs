@@ -248,7 +248,7 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)(FileHeader[i] & 0xFF));
             }
 
-            int fileSize = 0;
+            int fileSize;
             if (MovesetFileSize % 4 == 0)
             {
                 fileSize = MovesetFileSize / 4;

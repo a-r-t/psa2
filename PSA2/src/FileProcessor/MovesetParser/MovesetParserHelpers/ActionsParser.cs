@@ -78,10 +78,22 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return actionCodeBlockStartingLocation + actionId;
         }
 
+        public int GetActionCodeBlockCommandLocation(int actionId, int codeBlockId, int commandIndex)
+        {
+            int actionCodeBlockCommandsStartLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId);
+            return actionCodeBlockCommandsStartLocation / 4 + commandIndex * 2;
+        }
+
         public List<PsaCommand> GetPsaCommandsForActionCodeBlock(int actionId, int codeBlockId)
         {
             int actionCodeBlockLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId);
             return PsaCommandParser.GetPsaCommands(actionCodeBlockLocation);
+        }
+
+        public PsaCommand GetPsaCommandForActionCodeBlock(int actionId, int codeBlockId, int commandIndex)
+        {
+            int commandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex);
+            return PsaCommandParser.GetPsaCommand(commandLocation);
         }
 
         public int GetNumberOfPsaCommandsInActionCodeBlock(int actionId, int codeBlockId)
@@ -475,12 +487,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public void ModifyActionCommand(int actionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
             int actionCodeBlockCommandsStartLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId); // h
-            int commandLocation = actionCodeBlockCommandsStartLocation / 4 + commandIndex * 2; // j
+            int commandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
 
             if (PsaFile.FileContent[commandLocation + 1] >= 0 && PsaFile.FileContent[commandLocation + 1] < PsaFile.DataSectionSize)
             {
                 // event modify method
-                PsaCommand oldPsaCommand = PsaCommandParser.GetPsaCommand(commandLocation);
+                PsaCommand oldPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
 
                 int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize(); // k
 
@@ -493,6 +505,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
                 if (oldCommandParamsSize == 0)
                 {
                     int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
+
+                    // if there are no command params on new command, it's simply a swap out of command instructions with nothing else needed
                     if (newCommandParamsSize == 0)
                     {
                         PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
