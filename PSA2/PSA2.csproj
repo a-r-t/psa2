@@ -56,6 +56,8 @@
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ArticlesParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CharacterParamsParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\AnimationFlags.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandAdder.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandModifier.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandParameter.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaRequirement.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaVariable.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="src\models\fighter\Misc\Tether.cs" />
     <Compile Include="src\models\fighter\Misc\Unknown24.cs" />
     <Compile Include="src\models\fighter\ModelVisibility.cs" />
+    <Compile Include="src\utility\Constants.cs" />
     <Compile Include="src\utility\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
