@@ -55,12 +55,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //ActionsParser.AddCommandToAction(0, 1);
             //PsaFile.SaveFile("results.pac");
 
-            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
-            {
-                new PsaCommandParameter(0, 0),
-                new PsaCommandParameter(0, 0)
-            };
-            //ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
+            //ActionsParser.RemoveCommandFromAction(0, 0, 0);
 
         }
 

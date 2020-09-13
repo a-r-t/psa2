@@ -19,6 +19,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public PsaCommandParser PsaCommandParser { get; private set; }
         public PsaCommandAdder PsaCommandAdder { get; private set; }
         public PsaCommandModifier PsaCommandModifier { get; private set; }
+        public PsaCommandRemover PsaCommandRemover { get; private set; }
         public const int ENTRY_CODE_BLOCK = 0;
         public const int EXIT_CODE_BLOCK = 1;
 
@@ -28,7 +29,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             DataSectionLocation = dataSectionLocation;
             PsaCommandParser = new PsaCommandParser(PsaFile);
             PsaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation);
-            PsaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation);
+            PsaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation);
         }
 
         public int GetNumberOfSpecialActions()
@@ -113,9 +114,17 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public void ModifyActionCommand(int actionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int commandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
+            int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
             PsaCommand oldPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
-            PsaCommandModifier.ModifyCommand(commandLocation, oldPsaCommand, newPsaCommand);
+            PsaCommandModifier.ModifyCommand(actionCodeBlockCommandLocation, oldPsaCommand, newPsaCommand);
+        }
+
+        public void RemoveCommandFromAction(int actionId, int codeBlockId, int commandIndex)
+        {
+            int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
+            int actionCodeBlockCommandsLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId); // h
+            PsaCommand removedPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
+            PsaCommandRemover.RemoveCommand(actionCodeBlockCommandLocation, actionCodeBlockCommandsLocation, removedPsaCommand, commandIndex);
         }
 
     }

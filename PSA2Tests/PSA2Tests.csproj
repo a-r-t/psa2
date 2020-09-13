@@ -59,6 +59,15 @@
     <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithPointerParameter.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveAllCommandsInAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveCommandWithPointerInAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveOneCommandInAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\Data\FitMario.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

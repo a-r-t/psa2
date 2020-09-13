@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -459,19 +460,21 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                 }
             }
             PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
+
+            int parameterIndex = 0;
             for (int i = 0; i < newCommandParamsSize; i += 2)
             {
-                int paramsIndex = i / 2;
                 // if command param type is Pointer and it actually points to something
-                if (newPsaCommand.Parameters[paramsIndex].Type == 2 && newPsaCommand.Parameters[paramsIndex].Value > 0)
+                if (newPsaCommand.Parameters[parameterIndex].Type == 2 && newPsaCommand.Parameters[parameterIndex].Value > 0)
                 {
                     int something = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4;
                     PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = something;
                     PsaFile.NumberOfOffsetEntries++;
                 }
 
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = newPsaCommand.Parameters[paramsIndex].Type;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = newPsaCommand.Parameters[paramsIndex].Value;
+                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = newPsaCommand.Parameters[parameterIndex].Type;
+                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = newPsaCommand.Parameters[parameterIndex].Value;
+                parameterIndex++;
             }
 
             // in psac, this is only called if "fnt" is 1, which means something was changed -- will see if this will break things or not to just call every time

@@ -196,7 +196,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             {
                 // asc stuff (PointerInterlock)
                 // NO clue what this does exactly or how it works
-                if (((PsaFile.FileContent[commandStartLocation + i] >> 8) & 0xFF) != 0)
+                int numberOfParams = (PsaFile.FileContent[commandStartLocation + i] >> 8) & 0xFF;
+                if (numberOfParams != 0)
                 {
                     // psac uses rmv for this name, no idea what this variable means
                     int rmv = (commandStartLocation + i) * 4 + 4;
