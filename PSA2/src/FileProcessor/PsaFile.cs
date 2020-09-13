@@ -74,11 +74,9 @@ namespace PSA2.src.FileProcessor
             }
         }
 
-
-
         /// <summary>
         /// Number of offset entries in Offsets Section
-        /// Each Offset Entry is 4 bytes
+        /// Each Offset Entry is one doubleword (8 bytes)
         /// </summary>
         public int NumberOfOffsetEntries
         {
@@ -94,7 +92,7 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of data table entries in Data Table Section 
-        /// Each Data Table entry is 8 bytes
+        /// Each Data Table entry is one doubleword (8 bytes)
         /// </summary>
         public int NumberOfDataTableEntries
         {
@@ -198,7 +196,7 @@ namespace PSA2.src.FileProcessor
                 fileSizeBytes--;
             }
 
-            // this is for the pointer interlock tracker
+            // this is for the offset interlock tracker
             // which is variable "asc" in PSAC
             // not entirely sure how this all works but this is used to automatically update pointers when new commands are added
             // like updating a "goto" offset to still point to the same thing after a new command is added
@@ -250,7 +248,7 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)(FileHeader[i] & 0xFF));
             }
 
-            int fileSize = 0;
+            int fileSize;
             if (MovesetFileSize % 4 == 0)
             {
                 fileSize = MovesetFileSize / 4;
@@ -300,6 +298,81 @@ namespace PSA2.src.FileProcessor
                 .Append("File Size:")
                 .AppendLine(FileSize.ToString())
                 .ToString();
+        }
+
+        /// <summary>
+        /// fixam
+        /// </summary>
+        public void ApplyHeaderUpdatesToAccountForPsaCommandChanges()
+        {
+            // Fixam (in PSA-C) method here -- I think this is what updates the global headers like filesize and stuff
+            // TODO: Fixam logic has to be added for adding new command to action that had no previous commands as well
+            // I don't really understand this part yet
+            // bad variable name...
+            // last data section value is where FADE 0D8A is found?
+            int lastDataSectionValidValue = FileContent[DataSectionSizeBytes - 2] == Constants.FADE0D8A
+                ? DataSectionSizeBytes - 3
+                : DataSectionSizeBytes - 1;
+
+            // decrease last data section value while no fade foods are found ??
+            while (lastDataSectionValidValue >= DataSectionSizeBytes && FileContent[lastDataSectionValidValue] == Constants.FADEF00D)
+            {
+                lastDataSectionValidValue--;
+            }
+
+            // not a clue what this does, maybe moves all the FADE F00DS over if there's free space?
+            int newDataSectionSize = lastDataSectionValidValue;
+            while (newDataSectionSize < DataSectionSizeBytes)
+            {
+                if (FileContent[lastDataSectionValidValue] != Constants.FADEF00D)
+                {
+                    FileContent[newDataSectionSize] = FileContent[lastDataSectionValidValue];
+                    newDataSectionSize++;
+                }
+            }
+
+            // change size of data section to match new size, which did change since a new command was added
+            DataSectionSize = newDataSectionSize * 4;
+
+            // this just threw me for a loop, WHAT is going on
+            Array.Sort(OffsetInterlockTracker);
+
+            for (int i = 0; i < NumberOfOffsetEntries; i++)
+            {
+                FileContent[newDataSectionSize] = OffsetInterlockTracker[i];
+                newDataSectionSize++;
+            }
+
+            int movesetFileSizeLeftoverSpace = MovesetFileSize % 4;
+            if (movesetFileSizeLeftoverSpace == 0)
+            {
+                movesetFileSizeLeftoverSpace = 4;
+            }
+
+            for (int i = 0; i < CompressedSize; i++)
+            {
+                FileContent[newDataSectionSize] = CompressionTracker[i];
+                newDataSectionSize++;
+            }
+
+            MovesetFileSize = (newDataSectionSize * 4) + movesetFileSizeLeftoverSpace + 28;
+
+            // NO CLUE what FileHeader[17] is, this is the only place in the entire PSAC that it's used
+            // I'm guessing it just always needs to be the same as the MovesetFileSize at FileHeader[24]
+            FileHeader[17] = MovesetFileSize;
+
+            // this checks if moveset is now over 544kb, a limitation of PSAC that I will later remove
+            int newMovesetFileSizeBytes = (MovesetFileSize + 3) / 4;
+            if (newMovesetFileSizeBytes % 8 != 0)
+            {
+                newDataSectionSize = 8 - newMovesetFileSizeBytes % 8;
+                newMovesetFileSizeBytes += newDataSectionSize;
+            }
+            newMovesetFileSizeBytes += ExtraSpace - 8;
+            if (newMovesetFileSizeBytes > 139264)
+            {
+                Console.WriteLine("Current data size over 544kb");
+            }
         }
     }
 }

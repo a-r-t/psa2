@@ -44,12 +44,24 @@ namespace PSA2.src.FileProcessor.MovesetParser
             CharacterParamsParser = new CharacterParamsParser(PsaFile, dataSectionLocation, movesetBaseName);
             int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
+
+            //PsaCommand psaCommand = ActionsParser.GetPsaCommandsForActionCodeBlock(0, 0)[0];
+            //Console.WriteLine(psaCommand);
+            //Console.WriteLine(psaCommand.Instruction);
+
             //bool isMovesetParsable = IsMovesetParsable();
             //ActionsParser.AddCommandToAction(0, 0);
             //ActionsParser.AddCommandToAction(0, 0);
             //ActionsParser.AddCommandToAction(0, 1);
             //PsaFile.SaveFile("results.pac");
-            
+
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
+            {
+                new PsaCommandParameter(0, 0),
+                new PsaCommandParameter(0, 0)
+            };
+            //ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(33620480, 25788, parameters));
+
         }
 
         public bool IsMovesetParsable()
