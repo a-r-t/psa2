@@ -29,6 +29,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             DataSectionLocation = dataSectionLocation;
             PsaCommandParser = new PsaCommandParser(PsaFile);
             PsaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation);
+            PsaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation);
             PsaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation);
         }
 
@@ -124,7 +125,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
             int actionCodeBlockCommandsLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId); // h
             PsaCommand removedPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
-            PsaCommandRemover.RemoveCommand(actionCodeBlockCommandLocation, actionCodeBlockCommandsLocation, removedPsaCommand, commandIndex);
+            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            PsaCommandRemover.RemoveCommand(actionCodeBlockCommandLocation, actionCodeBlockCommandsLocation, removedPsaCommand, commandIndex, actionCodeBlockLocation);
         }
 
     }
