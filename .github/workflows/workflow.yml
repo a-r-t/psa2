@@ -9,6 +9,9 @@ jobs:
     
     runs-on: windows-latest
     
+    env:
+      TEST_PROJECT_PATH: PSA2Tests/PSA2Tests.csproj
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -18,4 +21,4 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.0
     - name: run tests
-      run: dotnet test --verbosity normal
+      run: dotnet test $env:TEST_PROJECT_PATH --verbosity normal
