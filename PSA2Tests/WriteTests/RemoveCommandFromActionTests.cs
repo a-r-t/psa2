@@ -35,5 +35,7 @@ namespace PSA2Tests.WriteTests
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioRemoveCommandWithPointerInAction.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac", "./WriteTests/Out/FitMarioRemoveCommandWithPointerInAction.pac"));
         }
+
+        // remove last command that is a pointer
     }
 }

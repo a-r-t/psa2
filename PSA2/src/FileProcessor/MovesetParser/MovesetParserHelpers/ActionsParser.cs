@@ -53,16 +53,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             return 2014 + GetNumberOfSpecialActions() * 2;
         }
 
-        // this is the offset where action code starts (displayed in PSAC)
-        public int GetActionCodeBlockCommandsLocation(int actionId, int codeBlockId)
-        {
-            int actionsCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
-
-            int actionCodeBlockCommandsLocation = PsaFile.FileContent[actionsCodeBlockLocation];
-
-            return actionCodeBlockCommandsLocation;
-        }
-
         public int GetActionCodeBlockLocation(int actionId, int codeBlockId)
         {
             int actionCodeBlockStartingLocation;
@@ -80,6 +70,16 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             }
 
             return actionCodeBlockStartingLocation + actionId;
+        }
+
+        // this is the offset where action code starts (displayed in PSAC)
+        public int GetActionCodeBlockCommandsLocation(int actionId, int codeBlockId)
+        {
+            int actionsCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+
+            int actionCodeBlockCommandsLocation = PsaFile.FileContent[actionsCodeBlockLocation];
+
+            return actionCodeBlockCommandsLocation;
         }
 
         public int GetActionCodeBlockCommandLocation(int actionId, int codeBlockId, int commandIndex)
