@@ -11,8 +11,11 @@ jobs:
         
         steps:
         - uses: actions/checkout@v2.1.0
-        - uses: actions/setup-dotnet@v1
-            with:
-                dotnet-version 3.1.x
-        - run: dotnet build --configuration Release
-        - run: dotnet test --verbosity normal
+        - name: Setup .NET Core
+            uses: actions/setup-dotnet@v1
+                with:
+                    dotnet-version 3.1.x
+        - name: First build it with dotnet
+            run: dotnet build --configuration Release
+        - name: And then test it
+            run: dotnet test --verbosity normal
