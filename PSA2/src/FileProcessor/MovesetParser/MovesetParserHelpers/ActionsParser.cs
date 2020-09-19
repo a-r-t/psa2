@@ -35,7 +35,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
 
         public int GetNumberOfSpecialActions()
         {
-            //Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4));
             return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
         }
 
