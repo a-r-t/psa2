@@ -10,6 +10,7 @@ jobs:
     runs-on: windows-latest
     
     env:
+      SOLUTION_PATH: PSA2.sln
       TEST_PROJECT_PATH: PSA2Tests/PSA2Tests.csproj
     
     steps:
@@ -19,6 +20,8 @@ jobs:
       with:
         dotnet-version: '3.1.x'
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.0
+      uses: microsoft/setup-msbuild@v1.0.1
+    - name: build projects
+      msbuild $env:SOLUTION_PATH
     - name: run tests
       run: dotnet test $env:TEST_PROJECT_PATH --verbosity normal
