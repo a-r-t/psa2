@@ -15,10 +15,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.x'
+    - name: Setup .net framework env
+      uses: vrnobody/Setup-DotNetFrameworkEnv@v1
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.1
     - name: Setup Nuget.exe
@@ -26,6 +24,11 @@ jobs:
     - name: restore nuget packages
       run: nuget restore $env:SOLUTION_PATH
     - name: build projects
-      run: msbuild $env:SOLUTION_PATH
+      run: msbuild $env:SOLUTION_PATH -p:Configuration=Release
     - name: run tests
-      run: dotnet test $env:TEST_PROJECT_PATH --verbosity normal
+      run: |
+        function Invoke-VSTest {
+          & "vstest.console.exe" $args
+          if(-not $?){ throw "fail!" }
+        }
+        Invoke-VSTest "PSA2/bin/Release/PSA2.Test.dll"
