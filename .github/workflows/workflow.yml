@@ -21,7 +21,10 @@ jobs:
         dotnet-version: '3.1.x'
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.1
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
     - name: build projects
+      run: nuget restore $env:SOLUTION_PATH
       run: msbuild $env:SOLUTION_PATH
     - name: run tests
       run: dotnet test $env:TEST_PROJECT_PATH --verbosity normal
