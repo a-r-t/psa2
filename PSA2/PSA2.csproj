@@ -59,6 +59,7 @@
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandAdder.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandModifier.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandParameter.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandRemover.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaRequirement.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaVariable.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionsParser.cs" />

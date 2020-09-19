@@ -1,0 +1,29 @@
+---
+name: Tests
+
+on: push
+
+jobs:
+  tests:
+    name: Unit Testing
+    
+    runs-on: windows-latest
+    
+    env:
+      SOLUTION_PATH: PSA2.sln
+      TEST_PROJECT_PATH: PSA2Tests/PSA2Tests.csproj
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.1
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+    - name: Setup VSTest.exe
+      uses: Malcolmnixon/Setup-VSTest@v3
+    - name: restore nuget packages
+      run: nuget restore $env:SOLUTION_PATH
+    - name: build projects
+      run: msbuild $env:SOLUTION_PATH -p:Configuration=Release
+    - name: run tests
+      run: vstest.console PSA2Tests/bin/Release/netcoreapp3.1/PSA2Tests.dll
