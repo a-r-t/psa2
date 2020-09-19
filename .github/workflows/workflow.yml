@@ -15,8 +15,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .net framework env
-      uses: vrnobody/Setup-DotNetFrameworkEnv@v1
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.1
     - name: Setup Nuget.exe
