@@ -47,17 +47,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             // aka removing this command will remove the last command that was in the action
             else
             {
-                Console.WriteLine("HI I M HERE");
                 RemoveLastCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex, codeBlockLocation);
             }
         }
 
         public void RemoveOneCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex)
         {
-            Console.WriteLine(string.Join(", ", PsaFile.OffsetInterlockTracker));
-
             // commandLocation is j, codeBlockCommandsLocation is h
-            Console.WriteLine("J: " + commandLocation + ", H: " + codeBlockCommandsLocation);
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
@@ -67,13 +63,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
             if (numberOfParams != 0)
             {
-                //Console.WriteLine(removedPsaCommand);
                 int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
                 if (removedCommandParamsValuesLocation >= openAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
                 {
-                    Console.WriteLine("J: " + commandLocation + ", I: " + commandIndex);
                     int pointerToCommandLocation = commandLocation * 4 + 4; // rmv
-                    Console.WriteLine("RMV: " + pointerToCommandLocation);
 
                     // delasc method
                     int iterator = 0;
@@ -96,7 +89,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                     }
 
                     // end delasc method
-                    Console.WriteLine(string.Join(", ", PsaFile.OffsetInterlockTracker));
 
                     // iterates through each param the command had
                     int parameterIndex = 0;
@@ -133,7 +125,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
                             // end delasc
 
-                            Console.WriteLine(string.Join(", ", PsaFile.OffsetInterlockTracker));
                             // this part is a long series of nested if statements...
                             // I can't figure out exactly what it does and can't get it to consistently trigger
                             if (iterator2 >= PsaFile.NumberOfOffsetEntries)
@@ -286,8 +277,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                     }
                 }
             }
-            //Console.WriteLine(string.Join(", ", PsaFile.FileContent));
-            // Console.WriteLine(string.Join(", ", PsaFile.OffsetInterlockTracker));
+
             while (PsaFile.FileContent[commandLocation + 2] != 0)
             {
                 if (((PsaFile.FileContent[commandLocation + 2] >> 8) & 0xFF) != 0)
@@ -311,7 +301,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             PsaFile.FileContent[commandLocation + 2] = Constants.FADEF00D;
             PsaFile.FileContent[commandLocation + 3] = Constants.FADEF00D;
 
-            //Console.WriteLine(string.Join(", ", PsaFile.FileContent));
 
             // event offset interlock logic
             // not sure what these variables mean
