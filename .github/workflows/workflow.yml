@@ -4,18 +4,18 @@ name: Tests
 on: push
 
 jobs:
-    tests:
-        name: Unit Testing
-        
-        runs-on: windows-latest
-        
-        steps:
-        - uses: actions/checkout@v2
-        - name: Setup .NET Core
-            uses: actions/setup-dotnet@v1
-            with:
-                dotnet-version: '3.1.x'
-        - name: build project
-            run: dotnet build --configuration Release
-        - name: run tests
-            run: dotnet test --verbosity normal
+  tests:
+    name: Unit Testing
+    
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: build project
+      run: dotnet build --configuration Release
+    - name: run tests
+      run: dotnet test --verbosity normal
