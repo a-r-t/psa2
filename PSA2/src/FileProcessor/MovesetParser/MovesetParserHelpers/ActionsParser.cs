@@ -20,6 +20,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public PsaCommandAdder PsaCommandAdder { get; private set; }
         public PsaCommandModifier PsaCommandModifier { get; private set; }
         public PsaCommandRemover PsaCommandRemover { get; private set; }
+        public PsaCommandMover PsaCommandMover { get; private set; }
         public const int ENTRY_CODE_BLOCK = 0;
         public const int EXIT_CODE_BLOCK = 1;
 
@@ -31,6 +32,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             PsaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation);
             PsaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation);
             PsaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation);
+            PsaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation);
         }
 
         public int GetNumberOfSpecialActions()
@@ -126,6 +128,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
             PsaCommand removedPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
             int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
             PsaCommandRemover.RemoveCommand(actionCodeBlockCommandLocation, actionCodeBlockCommandsLocation, removedPsaCommand, commandIndex, actionCodeBlockLocation);
+        }
+
+        public void MoveActionCommand(int actionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
+        {
+            int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
+            PsaCommand psaCommandToMove = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
+            PsaCommandMover.MoveCommand(psaCommandToMove, actionCodeBlockCommandLocation, moveDirection);
         }
 
     }

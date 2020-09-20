@@ -12,7 +12,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
         public int CommandParametersLocation { get; set; }
         public int CommandParametersValuesLocation { get; set; }
         public List<PsaCommandParameter> Parameters { get; set; }
-
+        public int NumberOfParams
+        {
+            get
+            {
+                return (Instruction >> 8) & 0xFF;
+            }
+        }
 
         public PsaCommand(int instruction, int commandParametersLocation, List<PsaCommandParameter> parameters)
         {
@@ -29,7 +35,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
         public int GetNumberOfParams()
         {
-            return Parameters.Count;
+            return (Instruction >> 8) & 0xFF;
         }
 
         /// <summary>
