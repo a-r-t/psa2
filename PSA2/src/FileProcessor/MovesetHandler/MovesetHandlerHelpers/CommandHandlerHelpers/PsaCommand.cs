@@ -33,11 +33,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             return $"{{{nameof(Instruction)}={Instruction.ToString("X")} ({Instruction}), {nameof(CommandParametersLocation)}={CommandParametersLocation.ToString("X")} ({CommandParametersLocation}), {nameof(CommandParametersValuesLocation)}={CommandParametersValuesLocation.ToString("X")} ({CommandParametersValuesLocation}), {nameof(Parameters)}={string.Join(",", Parameters.Select(x => x.ToString()).ToList())}}}";
         }
 
-        public int GetNumberOfParams()
-        {
-            return Instruction >> 8 & 0xFF;
-        }
-
         /// <summary>
         /// Gets how much space is required for each param
         /// each param requires two doublewords -- one for the type (e.g. value, boolean) and one for the actual value

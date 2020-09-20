@@ -44,7 +44,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
 
-            int numberOfParams = removedPsaCommand.GetNumberOfParams(); // k
+            int numberOfParams = removedPsaCommand.NumberOfParams; // k
 
             if (numberOfParams != 0)
             {
@@ -410,7 +410,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             for (int i = 0; i < numberOfCommandsAlreadyInCodeBlock; i++)
             {
-                int numberOfParams = removedPsaCommand.GetNumberOfParams(); // k
+                int numberOfParams = removedPsaCommand.NumberOfParams; // k
 
                 // crazy nested part here
                 if (numberOfParams != 0)
