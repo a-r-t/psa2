@@ -4,3 +4,4 @@ bin/
 packages/**/* 
 !packages/repositories.config
 out/
+TestResults/
