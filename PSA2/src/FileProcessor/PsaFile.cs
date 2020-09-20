@@ -374,5 +374,38 @@ namespace PSA2.src.FileProcessor
                 Console.WriteLine("Current data size over 544kb");
             }
         }
+
+        /// <summary>
+        /// Searches through data section for the desired amount of free space
+        /// </summary>
+        /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
+        /// <returns>starting location where the desired amount of free space has been found</returns>
+        public int FindLocationWithAmountOfFreeSpace(int startLocation, int amountOfFreeSpace)
+        {
+            int stoppingPoint = startLocation;
+
+            while (stoppingPoint < DataSectionSizeBytes)
+            {
+                if (FileContent[stoppingPoint] == Constants.FADEF00D)
+                {
+                    bool hasEnoughSpace = true;
+                    for (int i = 0; i < amountOfFreeSpace; i++)
+                    {
+                        if (FileContent[stoppingPoint + 1 + i] != Constants.FADEF00D)
+                        {
+                            hasEnoughSpace = false;
+                            break;
+                        }
+                    }
+                    if (hasEnoughSpace)
+                    {
+                        return stoppingPoint;
+                    }
+                }
+                stoppingPoint++;
+            }
+            return stoppingPoint;
+        }
+
     }
 }

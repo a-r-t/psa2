@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSA2.src.FileProcessor.MovesetParser;
 using PSA2.src.utility;
+using PSA2.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.FileProcessor
 {
@@ -120,9 +120,9 @@ namespace PSA2.src.FileProcessor
             return (fileContent, fileSize);
         }
 
-        public PsaMovesetParser ParseMovesetFile()
+        public PsaMovesetHandler ParseMovesetFile()
         {
-            return new PsaMovesetParser(PsaFile);
+            return new PsaMovesetHandler(PsaFile);
         }
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PSA2.src.FileProcessor.MovesetParser;
-using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParserHelpers;
+using PSA2.src.FileProcessor.MovesetHandler;
+using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 
 namespace PSA2Tests.WriteTests
 {
@@ -13,7 +13,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithIdenticalCommand()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),
@@ -27,7 +27,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithIdenticalCommandWithDifferentParameterValues()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 1),
@@ -41,7 +41,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithIdenticalCommandWithDifferentParameterTypes()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(1, 0),
@@ -55,7 +55,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithDifferentCommandWithIdenticalParameterCount()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),
@@ -69,7 +69,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithDifferentCommandWithLargerParameterCount()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),
@@ -84,7 +84,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithDifferentCommandWithSmallerParameterCount()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0)
@@ -97,7 +97,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithNoParametersToCommandWithParameters()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),
@@ -111,7 +111,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithParametersToCommandWithNoParameters()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
             psaMovesetParser.ActionsParser.ModifyActionCommand(0, 0, 0, new PsaCommand(917504, 25788, parameters));
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac");
@@ -121,7 +121,7 @@ namespace PSA2Tests.WriteTests
         [TestMethod]
         public void ModifyCommandInActionWithPointerParameter()
         {
-            PsaMovesetParser psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
             {
                 new PsaCommandParameter(0, 0),

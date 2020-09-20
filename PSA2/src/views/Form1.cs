@@ -1,5 +1,5 @@
 ﻿using PSA2.src.FileProcessor;
-using PSA2.src.FileProcessor.MovesetParser;
+using PSA2.src.FileProcessor.MovesetHandler;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,7 +30,7 @@ namespace PSA2.src.views
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitWario.pac");
             PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Brawl File Partition/Clean Fighters/mario/FitMario.pac");
 
-            PsaMovesetParser psaMovesetParser = psaFileParser.ParseMovesetFile();
+            PsaMovesetHandler psaMovesetParser = psaFileParser.ParseMovesetFile();
         }
     }
 }

@@ -10,12 +10,12 @@ namespace PSA2.src.models.fighter
     public class Fighter
     {
         public string FileBase { get; set; }
-        public List<Action> Actions { get;  set; }
-        public List<SubAction> SubActions { get;  set; }
-        public List<Subroutine> SubRoutines { get;  set; }
-        public List<Override> Overrides { get;  set; }
-        public List<Attribute> Attributes { get;  set; }
-        public List<Article> Articles { get;  set; }
+        public List<Action> Actions { get; set; }
+        public List<SubAction> SubActions { get; set; }
+        public List<Subroutine> SubRoutines { get; set; }
+        public List<Override> Overrides { get; set; }
+        public List<Attribute> Attributes { get; set; }
+        public List<Article> Articles { get; set; }
         public ModelVisibility ModelVisibility { get; set; }
         public List<DataEntry> DataTableEntries { get; set; }
         public List<DataEntry> ExternalDataEntries { get; set; }

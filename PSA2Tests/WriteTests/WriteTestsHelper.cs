@@ -1,6 +1,6 @@
 ﻿using PSA2.src.FileProcessor;
-using PSA2.src.FileProcessor.MovesetParser;
-using PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers;
+using PSA2.src.FileProcessor.MovesetHandler;
+using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,10 +10,10 @@ namespace PSA2Tests
 {
     public class WriteTestsHelper
     {
-        public static PsaMovesetParser GetPsaMovesetParser(string movesetFilePath)
+        public static PsaMovesetHandler GetPsaMovesetParser(string movesetFilePath)
         {
             PsaFileParser psaFileParser = new PsaFileParser(movesetFilePath);
-            return new PsaMovesetParser(psaFileParser.PsaFile);
+            return new PsaMovesetHandler(psaFileParser.PsaFile);
         }
 
         public static bool AreFilesIdentical(string path1, string path2)
