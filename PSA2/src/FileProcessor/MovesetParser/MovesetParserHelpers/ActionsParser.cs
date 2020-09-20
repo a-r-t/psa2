@@ -133,9 +133,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public void MoveActionCommand(int actionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
         {
             int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
-            int actionCodeBlockCommandsLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId); // h
             PsaCommand psaCommandToMove = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
-            // int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
             PsaCommandMover.MoveCommand(psaCommandToMove, actionCodeBlockCommandLocation, moveDirection);
         }
 
