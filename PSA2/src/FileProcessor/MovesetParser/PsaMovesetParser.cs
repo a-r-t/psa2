@@ -55,7 +55,7 @@ namespace PSA2.src.FileProcessor.MovesetParser
             //ActionsParser.AddCommandToAction(0, 1);
             //PsaFile.SaveFile("results.pac");
 
-            //ActionsParser.RemoveCommandFromAction(2, 0, 11);
+            //ActionsParser.MoveActionCommand(0, 0, 1, MoveDirection.UP);
 
 
 
