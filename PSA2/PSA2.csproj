@@ -55,6 +55,7 @@
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ActionOverridesParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\ArticlesParser.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CharacterParamsParser.cs" />
+    <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\PsaCommandHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\AnimationFlags.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\MoveDirection.cs" />
     <Compile Include="src\FileProcessor\MovesetParser\MovesetParserHelpers\CommandParserHelpers\PsaCommandAdder.cs" />

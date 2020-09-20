@@ -73,7 +73,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
         /********************************
          * ADDING NEW COMMAND TO ACTION *
          * ******************************/
-        public void AddCommandToAction(int codeBlockLocation, int codeBlockCommandsLocation)
+        public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
         {
             int openAreaStartLocation = GetOpenAreaStartLocation();
 
@@ -82,13 +82,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                 // no commands yet exist for action
                 if (codeBlockCommandsLocation == 0)
                 {
-                    CreateActionCodeBlock(codeBlockLocation);
+                    CreateCodeBlock(codeBlockLocation);
                 }
 
                 // if there are already existing commands for action
                 else
                 {
-                    AddCommandToExistingActionCodeBlock(codeBlockCommandsLocation);
+                    AddCommandToExistingCodeBlock(codeBlockCommandsLocation);
                 }
 
                 PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
@@ -99,7 +99,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             }
         }
 
-        public void CreateActionCodeBlock(int codeBlockLocation)
+        public void CreateCodeBlock(int codeBlockLocation)
         {
             int openAreaStartLocation = GetOpenAreaStartLocation();
 
@@ -109,7 +109,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
             if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
-                IncreaseDataSectionSizeForActionWithNoExistingCommands();
+                IncreaseDataSectionSizeForCodeBlockWithNoExistingCommands();
             }
 
             // this creates the first "nop" command to start off the new location for the action's commands
@@ -123,7 +123,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             int newOffsetLocation = stoppingPoint * 4;
         }
 
-        public void AddCommandToExistingActionCodeBlock(int codeBlockCommandsLocation)
+        public void AddCommandToExistingCodeBlock(int codeBlockCommandsLocation)
         {
             int commandStartLocation = codeBlockCommandsLocation / 4;
 
@@ -157,7 +157,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             // this part actually adds the new nop command
             else
             {
-                int newOffsetLocation = RelocateAction(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, commandStartLocation);
+                int newOffsetLocation = RelocateCodeBlock(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, commandStartLocation);
                 ApplyOffsetInterlockLogic(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, newOffsetLocation);
             }
         }
@@ -172,7 +172,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
         /// <param name="numberOfCommandsAlreadyInAction">number of commands already in action</param>
         /// <param name="commandStartLocation">location where action's commands start</param>
         /// <returns>new offset location for commands in action (relocated offset)</returns>
-        public int RelocateAction(int codeBlockCommandsLocation, int numberOfCommandsAlreadyInAction, int commandStartLocation)
+        public int RelocateCodeBlock(int codeBlockCommandsLocation, int numberOfCommandsAlreadyInAction, int commandStartLocation)
         {
             int openAreaStartLocation = GetOpenAreaStartLocation();
 
@@ -184,7 +184,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             // stopping point is modified here if necessary
             if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
-                stoppingPoint = IncreaseDataSectionSizeForActionWithExistingCommand(commandsParamsSpaceRequired);
+                stoppingPoint = IncreaseDataSectionSizeForCodeBlockWithExistingCommand(commandsParamsSpaceRequired);
             }
 
             commandsParamsSpaceRequired = numberOfCommandsAlreadyInAction * 2;
@@ -273,7 +273,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             }
         }
 
-        public int IncreaseDataSectionSizeForActionWithNoExistingCommands()
+        public int IncreaseDataSectionSizeForCodeBlockWithNoExistingCommands()
         {
             int stoppingPoint = PsaFile.DataSectionSizeBytes;
             if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
@@ -288,7 +288,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
         }
 
         // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
-        public int IncreaseDataSectionSizeForActionWithExistingCommand(int commandOffset)
+        public int IncreaseDataSectionSizeForCodeBlockWithExistingCommand(int commandOffset)
         {
             int stoppingPoint = PsaFile.DataSectionSizeBytes;
             if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)

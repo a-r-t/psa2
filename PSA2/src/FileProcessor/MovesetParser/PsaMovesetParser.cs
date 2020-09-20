@@ -36,7 +36,10 @@ namespace PSA2.src.FileProcessor.MovesetParser
             ExternalDataParser = new ExternalDataParser(PsaFile);
             int dataSectionLocation = DataTableParser.GetDataTableEntryByName("data").Location;
             string movesetBaseName = GetMovesetBaseName();
-            ActionsParser = new ActionsParser(PsaFile, dataSectionLocation, movesetBaseName);
+
+            PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation);
+
+            ActionsParser = new ActionsParser(PsaFile, dataSectionLocation, psaCommandHandler);
             SubActionsParser = new SubActionsParser(PsaFile, dataSectionLocation);
             SubRoutinesParser = new SubRoutinesParser(PsaFile, dataSectionLocation, ActionsParser, SubActionsParser);
             ActionOverridesParser = new ActionOverridesParser(PsaFile, dataSectionLocation, ActionsParser);
