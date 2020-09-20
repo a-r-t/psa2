@@ -15,13 +15,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         private PsaCommandMover psaCommandMover;
         private PsaCommandRemover psaCommandRemover;
 
-        public PsaCommandHandler(PsaFile psaFile, int dataSectionLocation)
+        public PsaCommandHandler(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation)
         {
-            this.psaCommandParser = new PsaCommandParser(psaFile);
-            this.psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation);
-            this.psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation);
-            this.psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation);
-            this.psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation);
+            this.psaCommandParser = new PsaCommandParser(psaFile, openAreaStartLocation);
+            this.psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
+            this.psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
+            this.psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
+            this.psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
         }
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)

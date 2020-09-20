@@ -13,14 +13,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
+        public PsaCommandHandler PsaCommandHandler { get; private set; }
         public CharacterSpecificParametersConfig CharacterSpecificParametersConfig { get; private set; }
 
-        public ArticlesParser(PsaFile psaFile, int dataSectionLocation, string movesetBaseName)
+        public ArticlesParser(PsaFile psaFile, int dataSectionLocation, string movesetBaseName, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            PsaCommandHandler = psaCommandHandler;
             CharacterSpecificParametersConfig = Utils.LoadJson<CharacterSpecificParametersConfig>($"data/char_specific/{movesetBaseName}.json");
         }
 
@@ -177,7 +177,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public List<PsaCommand> GetPsaCommandsForArticleAction(int articleId, int actionId)
         {
             int articleActionCodeLocation = GetArticleActionCodeLocation(articleId, actionId);
-            return PsaCommandParser.GetPsaCommands(articleActionCodeLocation);
+            return PsaCommandHandler.GetPsaCommands(articleActionCodeLocation);
         }
 
         // this is the offset where article subaction code starts (displayed in PSAC)
@@ -193,7 +193,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public List<PsaCommand> GetPsaCommandsForArticleSubAction(int articleId, int subActionId, int codeBlockId)
         {
             int articleSubActionCodeBlockLocation = GetArticleSubActionCodeBlockLocation(articleId, subActionId, codeBlockId); // i
-            return PsaCommandParser.GetPsaCommands(articleSubActionCodeBlockLocation);
+            return PsaCommandHandler.GetPsaCommands(articleSubActionCodeBlockLocation);
         }
 
         public string GetArticleSubActionAnimationName(int articleId, int subActionId)

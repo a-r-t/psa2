@@ -12,72 +12,23 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
+        public int OpenAreaStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation)
+        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            OpenAreaStartLocation = openAreaStartLocation;
+            PsaCommandParser = psaCommandParser;
         }
-
-        public int GetNumberOfSpecialActions()
-        {
-            //Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4));
-            return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
-        }
-
-        /// <summary>
-        /// Gets starting location in data section where new actions can be placed
-        /// </summary>
-        /// <returns>location in data section -- "stf" in psa-c</returns>
-        public int GetOpenAreaStartLocation() // stf
-        {
-            return 2014 + GetNumberOfSpecialActions() * 2;
-        }
-
-        /// <summary>
-        /// Searches through data section for the desired amount of free space
-        /// </summary>
-        /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
-        /// <returns>starting location where the desired amount of free space has been found</returns>
-        public int FindLocationWithAmountOfFreeSpace(int amountOfFreeSpace)
-        {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-            int stoppingPoint = openAreaStartLocation;
-
-            while (stoppingPoint < PsaFile.DataSectionSizeBytes)
-            {
-                if (PsaFile.FileContent[stoppingPoint] == Constants.FADEF00D)
-                {
-                    bool hasEnoughSpace = true;
-                    for (int i = 0; i < amountOfFreeSpace; i++)
-                    {
-                        if (PsaFile.FileContent[stoppingPoint + 1 + i] != Constants.FADEF00D)
-                        {
-                            hasEnoughSpace = false;
-                            break;
-                        }
-                    }
-                    if (hasEnoughSpace)
-                    {
-                        return stoppingPoint;
-                    }
-                }
-                stoppingPoint++;
-            }
-            return stoppingPoint;
-        }
-
 
         /********************************
          * ADDING NEW COMMAND TO ACTION *
          * ******************************/
         public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
         {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-
-            if (codeBlockCommandsLocation == 0 || (codeBlockCommandsLocation >= openAreaStartLocation * 4 && codeBlockCommandsLocation < PsaFile.DataSectionSize))
+            if (codeBlockCommandsLocation == 0 || (codeBlockCommandsLocation >= OpenAreaStartLocation * 4 && codeBlockCommandsLocation < PsaFile.DataSectionSize))
             {
                 // no commands yet exist for action
                 if (codeBlockCommandsLocation == 0)
@@ -101,10 +52,8 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
         public void CreateCodeBlock(int codeBlockLocation)
         {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-
             // I'm pretty sure this section finds the next available location to put a psa command, but not sure...
-            int stoppingPoint = FindLocationWithAmountOfFreeSpace(4);
+            int stoppingPoint = PsaFile.FindLocationWithAmountOfFreeSpace(OpenAreaStartLocation, 4);
 
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
             if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
@@ -174,11 +123,9 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
         /// <returns>new offset location for commands in action (relocated offset)</returns>
         public int RelocateCodeBlock(int codeBlockCommandsLocation, int numberOfCommandsAlreadyInAction, int commandStartLocation)
         {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-
             // I don't think "commandOffset" is the right name for this...
             int commandsParamsSpaceRequired = numberOfCommandsAlreadyInAction * 2 + 4; // k
-            int stoppingPoint = FindLocationWithAmountOfFreeSpace(commandsParamsSpaceRequired);
+            int stoppingPoint = PsaFile.FindLocationWithAmountOfFreeSpace(OpenAreaStartLocation, commandsParamsSpaceRequired);
 
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
             // stopping point is modified here if necessary
@@ -240,12 +187,10 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
         public void ApplyOffsetInterlockLogic(int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int newOffsetLocation)
         {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-
             // this is the "EvOffsetInterlock" stuff, not entirely sure what this does, maybe updates existing command offsets so they don't break (like gotos)?
             // actionCodeBlockEndLocation is probably not the right name for this variable...
             int actionCodeBlockEndLocation = actionCodeBlockLocation + numberOfCommandsAlreadyInAction * 8;
-            for (int i = openAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 if (PsaFile.FileContent[i] >= actionCodeBlockLocation && PsaFile.FileContent[i] <= actionCodeBlockEndLocation)
                 {

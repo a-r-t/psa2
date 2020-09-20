@@ -11,30 +11,16 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
+        public int OpenAreaStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation)
+        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            OpenAreaStartLocation = openAreaStartLocation;
+            PsaCommandParser = psaCommandParser;
         }
-
-        public int GetNumberOfSpecialActions()
-        {
-            //Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4));
-            return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
-        }
-
-        /// <summary>
-        /// Gets starting location in data section where new actions can be placed
-        /// </summary>
-        /// <returns>location in data section -- "stf" in psa-c</returns>
-        public int GetOpenAreaStartLocation() // stf
-        {
-            return 2014 + GetNumberOfSpecialActions() * 2;
-        }
-
 
         public void RemoveCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation) 
         {
@@ -57,14 +43,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
-            int openAreaStartLocation = GetOpenAreaStartLocation();
 
             int numberOfParams = removedPsaCommand.GetNumberOfParams(); // k
 
             if (numberOfParams != 0)
             {
                 int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
-                if (removedCommandParamsValuesLocation >= openAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
+                if (removedCommandParamsValuesLocation >= OpenAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
                 {
                     int pointerToCommandLocation = commandLocation * 4 + 4; // rmv
 
@@ -307,7 +292,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
 
             int k1 = codeBlockCommandsLocation + numberOfCommandsAlreadyInCodeBlock * 8;
             int h = k1 - (numberOfCommandsAlreadyInCodeBlock - 1) * 8;
-            for (int i = openAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 if (PsaFile.FileContent[i] >= h && PsaFile.FileContent[i] <= k1)
                 {
@@ -422,7 +407,6 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             }
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
-            int openAreaStartLocation = GetOpenAreaStartLocation();
 
             for (int i = 0; i < numberOfCommandsAlreadyInCodeBlock; i++)
             {
@@ -434,7 +418,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                     int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
                     //m is removedCommandParamsValuesLocation
                     
-                    if (removedCommandParamsValuesLocation >= openAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
+                    if (removedCommandParamsValuesLocation >= OpenAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
                     {
                         int pointerToCommandLocation = (commandLocation + i * 2) * 4 + 4; // rmv
 

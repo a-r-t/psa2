@@ -13,14 +13,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
+        public PsaCommandHandler PsaCommandHandler { get; private set; }
         public CharacterSpecificParametersConfig CharacterSpecificParametersConfig { get; private set; }
 
-        public CharacterParamsParser(PsaFile psaFile, int dataSectionLocation, string movesetBaseName)
+        public CharacterParamsParser(PsaFile psaFile, int dataSectionLocation, string movesetBaseName, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            PsaCommandHandler = psaCommandHandler;
             CharacterSpecificParametersConfig = Utils.LoadJson<CharacterSpecificParametersConfig>($"data/char_specific/{movesetBaseName}.json");
         }
 

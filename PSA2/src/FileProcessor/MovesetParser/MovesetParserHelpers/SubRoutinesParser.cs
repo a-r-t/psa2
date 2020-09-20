@@ -11,22 +11,22 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
+        public PsaCommandHandler PsaCommandHandler { get; private set; }
         public ActionsParser ActionsParser { get; private set; }
         public SubActionsParser SubActionsParser { get; private set; }
 
-        public SubRoutinesParser(PsaFile psaFile, int dataSectionLocation, ActionsParser actionsParser, SubActionsParser subActionsParser)
+        public SubRoutinesParser(PsaFile psaFile, int dataSectionLocation, ActionsParser actionsParser, SubActionsParser subActionsParser, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            PsaCommandHandler = psaCommandHandler;
             ActionsParser = actionsParser;
             SubActionsParser = subActionsParser;
         }
 
         public List<PsaCommand> GetPsaCommandsForSubRoutine(int subRoutineLocation)
         {
-            return PsaCommandParser.GetPsaCommands(subRoutineLocation);
+            return PsaCommandHandler.GetPsaCommands(subRoutineLocation);
         }
 
         public List<int> GetAllSubRoutines()

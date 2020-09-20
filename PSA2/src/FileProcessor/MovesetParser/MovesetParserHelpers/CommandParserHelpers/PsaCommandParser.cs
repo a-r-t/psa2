@@ -9,10 +9,12 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     public class PsaCommandParser
     {
         public PsaFile PsaFile { get; private set; }
+        public int OpenAreaStartLocation { get; private set; }
 
-        public PsaCommandParser(PsaFile psaFile)
+        public PsaCommandParser(PsaFile psaFile, int openAreaStartLocation)
         {
             PsaFile = psaFile;
+            OpenAreaStartLocation = openAreaStartLocation;
         }
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)

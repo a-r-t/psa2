@@ -12,59 +12,15 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
+        public int OpenAreaStartLocation { get; private set; }
+        public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation)
+        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-        }
-
-        public int GetNumberOfSpecialActions()
-        {
-            //Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4));
-            return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
-        }
-
-        /// <summary>
-        /// Gets starting location in data section where new actions can be placed
-        /// </summary>
-        /// <returns>location in data section -- "stf" in psa-c</returns>
-        public int GetOpenAreaStartLocation() // stf
-        {
-            return 2014 + GetNumberOfSpecialActions() * 2;
-        }
-
-        /// <summary>
-        /// Searches through data section for the desired amount of free space
-        /// </summary>
-        /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
-        /// <returns>starting location where the desired amount of free space has been found</returns>
-        public int FindLocationWithAmountOfFreeSpace(int amountOfFreeSpace)
-        {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-            int stoppingPoint = openAreaStartLocation;
-
-            while (stoppingPoint < PsaFile.DataSectionSizeBytes)
-            {
-                if (PsaFile.FileContent[stoppingPoint] == Constants.FADEF00D)
-                {
-                    bool hasEnoughSpace = true;
-                    for (int i = 0; i < amountOfFreeSpace; i++)
-                    {
-                        if (PsaFile.FileContent[stoppingPoint + 1 + i] != Constants.FADEF00D)
-                        {
-                            hasEnoughSpace = false;
-                            break;
-                        }
-                    }
-                    if (hasEnoughSpace)
-                    {
-                        return stoppingPoint;
-                    }
-                }
-                stoppingPoint++;
-            }
-            return stoppingPoint;
+            OpenAreaStartLocation = openAreaStartLocation;
+            PsaCommandParser = psaCommandParser;
         }
 
         /********************************
@@ -126,7 +82,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
             int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
 
             // determine stopping point, which is where new command params will be added (finds room where number of params can all fit)
-            int newCommandParametersLocation = FindLocationWithAmountOfFreeSpace(newCommandParamsSize);
+            int newCommandParametersLocation = PsaFile.FindLocationWithAmountOfFreeSpace(OpenAreaStartLocation, newCommandParamsSize);
 
             // if adding command params location causes data to go beyond data section limit, increase data section size
             if (newCommandParametersLocation >= PsaFile.DataSectionSizeBytes)
@@ -424,8 +380,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
                 // if new command params size is less than what's already there, create some FADEF00DS to represent free space that can later be used if needed
                 if (currentCommandParamSize < newCommandParamsSize)
                 {
-                    int opeanAreaStartLocation = GetOpenAreaStartLocation();
-                    oldPsaCommand.CommandParametersValuesLocation = opeanAreaStartLocation;
+                    oldPsaCommand.CommandParametersValuesLocation = OpenAreaStartLocation;
                     int bitStoppingPoint = 0;
 
                     while (oldPsaCommand.CommandParametersValuesLocation < PsaFile.DataSectionSizeBytes && bitStoppingPoint != oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize)

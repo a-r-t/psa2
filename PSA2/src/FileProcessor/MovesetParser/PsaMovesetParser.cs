@@ -37,15 +37,16 @@ namespace PSA2.src.FileProcessor.MovesetParser
             int dataSectionLocation = DataTableParser.GetDataTableEntryByName("data").Location;
             string movesetBaseName = GetMovesetBaseName();
 
-            PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation);
+            int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
+            int opeanAreaStartLocation = 2014 + numberOfSpecialActions * 2;
+            PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, opeanAreaStartLocation);
 
             ActionsParser = new ActionsParser(PsaFile, dataSectionLocation, psaCommandHandler);
-            SubActionsParser = new SubActionsParser(PsaFile, dataSectionLocation);
-            SubRoutinesParser = new SubRoutinesParser(PsaFile, dataSectionLocation, ActionsParser, SubActionsParser);
-            ActionOverridesParser = new ActionOverridesParser(PsaFile, dataSectionLocation, ActionsParser);
-            ArticlesParser = new ArticlesParser(PsaFile, dataSectionLocation, movesetBaseName);
-            CharacterParamsParser = new CharacterParamsParser(PsaFile, dataSectionLocation, movesetBaseName);
-            int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
+            SubActionsParser = new SubActionsParser(PsaFile, dataSectionLocation, psaCommandHandler);
+            SubRoutinesParser = new SubRoutinesParser(PsaFile, dataSectionLocation, ActionsParser, SubActionsParser, psaCommandHandler);
+            ActionOverridesParser = new ActionOverridesParser(PsaFile, dataSectionLocation, ActionsParser, psaCommandHandler);
+            ArticlesParser = new ArticlesParser(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
+            CharacterParamsParser = new CharacterParamsParser(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscParser = new MiscParser(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
 
             //PsaCommand psaCommand = ActionsParser.GetPsaCommandsForActionCodeBlock(0, 0)[0];

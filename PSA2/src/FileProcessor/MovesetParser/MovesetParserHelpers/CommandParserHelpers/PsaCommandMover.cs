@@ -11,61 +11,15 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers.CommandParse
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
+        public int OpenAreaStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation)
+        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
-        }
-
-        public int GetNumberOfSpecialActions()
-        {
-            //Console.WriteLine(String.Format("Number of Special Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4));
-            return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
-        }
-
-        /// <summary>
-        /// Gets starting location in data section where new actions can be placed
-        /// </summary>
-        /// <returns>location in data section -- "stf" in psa-c</returns>
-        public int GetOpenAreaStartLocation() // stf
-        {
-            return 2014 + GetNumberOfSpecialActions() * 2;
-        }
-
-        /// <summary>
-        /// Searches through data section for the desired amount of free space
-        /// </summary>
-        /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
-        /// <returns>starting location where the desired amount of free space has been found</returns>
-        public int FindLocationWithAmountOfFreeSpace(int amountOfFreeSpace)
-        {
-            int openAreaStartLocation = GetOpenAreaStartLocation();
-            int stoppingPoint = openAreaStartLocation;
-
-            while (stoppingPoint < PsaFile.DataSectionSizeBytes)
-            {
-                if (PsaFile.FileContent[stoppingPoint] == Constants.FADEF00D)
-                {
-                    bool hasEnoughSpace = true;
-                    for (int i = 0; i < amountOfFreeSpace; i++)
-                    {
-                        if (PsaFile.FileContent[stoppingPoint + 1 + i] != Constants.FADEF00D)
-                        {
-                            hasEnoughSpace = false;
-                            break;
-                        }
-                    }
-                    if (hasEnoughSpace)
-                    {
-                        return stoppingPoint;
-                    }
-                }
-                stoppingPoint++;
-            }
-            return stoppingPoint;
+            OpenAreaStartLocation = openAreaStartLocation;
+            PsaCommandParser = psaCommandParser;
         }
 
         public void MoveCommand(PsaCommand psaCommandToMove, int commandLocation, MoveDirection moveDirection)

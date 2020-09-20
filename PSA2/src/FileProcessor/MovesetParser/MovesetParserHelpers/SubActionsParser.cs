@@ -12,13 +12,13 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
+        public PsaCommandHandler PsaCommandHandler { get; private set; }
 
-        public SubActionsParser(PsaFile psaFile, int dataSectionLocation)
+        public SubActionsParser(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            PsaCommandHandler = psaCommandHandler;
         }
 
         public int GetNumberOfSubActions()
@@ -40,7 +40,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public List<PsaCommand> GetPsaCommandsForSubAction(int subActionId, int codeBlockId)
         {
             int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId); // i
-            return PsaCommandParser.GetPsaCommands(subActionCodeBlockLocation);
+            return PsaCommandHandler.GetPsaCommands(subActionCodeBlockLocation);
         }
 
         public string GetSubActionAnimationName(int subActionId)

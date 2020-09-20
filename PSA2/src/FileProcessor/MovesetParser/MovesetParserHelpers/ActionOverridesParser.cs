@@ -11,14 +11,14 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
+        public PsaCommandHandler PsaCommandHandler { get; private set; }
         public ActionsParser ActionsParser { get; private set; }
 
-        public ActionOverridesParser(PsaFile psaFile, int dataSectionLocation, ActionsParser actionsParser)
+        public ActionOverridesParser(PsaFile psaFile, int dataSectionLocation, ActionsParser actionsParser, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            PsaCommandParser = new PsaCommandParser(PsaFile);
+            PsaCommandHandler = psaCommandHandler;
             ActionsParser = actionsParser;
         }
 
@@ -75,7 +75,7 @@ namespace PSA2.src.FileProcessor.MovesetParser.MovesetParserHelpers
         public List<PsaCommand> GetPsaCommandsForActionOverride(int codeBlockId, int actionOverrideId)
         {
             int actionOverrideCodeBlockLocation = GetActionOverrideCodeBlockLocation(actionOverrideId, codeBlockId);
-            return PsaCommandParser.GetPsaCommands(actionOverrideCodeBlockLocation);
+            return PsaCommandHandler.GetPsaCommands(actionOverrideCodeBlockLocation);
         }
     }
 }
