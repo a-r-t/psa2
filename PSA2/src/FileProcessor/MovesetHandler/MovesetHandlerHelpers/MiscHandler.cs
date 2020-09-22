@@ -1,6 +1,6 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.MiscHandlerHelpers;
-using PSA2.src.models.fighter.Misc;
+using PSA2.src.Models.Fighter.Misc;
 using PSA2.src.utility;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using PSA2.src.models.fighter;
-using Attribute = PSA2.src.models.fighter.Attribute;
+using PSA2.src.Models.Fighter;
+using Attribute = PSA2.src.Models.Fighter.Attribute;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PSA2.src.utility;
-using PSA2.src.models.fighter.Misc;
+using PSA2.src.Models.Fighter.Misc;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
 

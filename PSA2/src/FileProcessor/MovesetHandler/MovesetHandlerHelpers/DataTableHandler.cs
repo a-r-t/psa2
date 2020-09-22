@@ -1,4 +1,4 @@
-﻿using PSA2.src.models.fighter;
+﻿using PSA2.src.Models.Fighter;
 using PSA2.src.utility;
 using System;
 using System.Collections.Generic;

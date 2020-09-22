@@ -1,4 +1,4 @@
-﻿using PSA2.src.models.fighter.Misc;
+﻿using PSA2.src.Models.Fighter.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Attribute = PSA2.src.models.fighter.Attribute;
+using Attribute = PSA2.src.Models.Fighter.Attribute;
 
 namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSA2.src.models.fighter.Misc
+namespace PSA2.src.Models.Fighter.Misc
 {
     public class DataFlags
     {
