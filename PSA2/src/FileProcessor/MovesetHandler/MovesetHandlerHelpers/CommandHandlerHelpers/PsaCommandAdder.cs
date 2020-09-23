@@ -55,7 +55,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
             if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
-                IncreaseDataSectionSizeForCodeBlockWithNoExistingCommands();
+                stoppingPoint = PsaFile.DataSectionSizeBytes;
+                if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                {
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 3] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                    stoppingPoint -= 2;
+                }
+                PsaFile.DataSectionSizeBytes += 4;                
             }
 
             // this creates the first "nop" command to start off the new location for the action's commands
@@ -127,9 +134,17 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // stopping point is modified here if necessary
             if (stoppingPoint >= PsaFile.DataSectionSizeBytes)
             {
-                stoppingPoint = IncreaseDataSectionSizeForCodeBlockWithExistingCommand(commandsParamsSpaceRequired);
+                // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section  
+                stoppingPoint = PsaFile.DataSectionSizeBytes;
+                if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                {
+                    stoppingPoint -= 2;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandsParamsSpaceRequired - 2] = Constants.FADE0D8A;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandsParamsSpaceRequired - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                }
+                PsaFile.DataSectionSizeBytes += commandsParamsSpaceRequired;
             }
-
+            
             commandsParamsSpaceRequired = numberOfCommandsAlreadyInAction * 2;
 
             // commandOffset might be the number of bits (or bytes?) taken up by all of the commands' pointers currently in the action
@@ -212,35 +227,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     }
                 }
             }
-        }
-
-        public int IncreaseDataSectionSizeForCodeBlockWithNoExistingCommands()
-        {
-            int stoppingPoint = PsaFile.DataSectionSizeBytes;
-            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-            {
-                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + 3] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
-                stoppingPoint -= 2;
-            }
-            PsaFile.DataSectionSizeBytes += 4;
-
-            return stoppingPoint;
-        }
-
-        // this increases the size of the data section, I guess this happens if you try to add a new command and there's no room left in the data section
-        public int IncreaseDataSectionSizeForCodeBlockWithExistingCommand(int commandOffset)
-        {
-            int stoppingPoint = PsaFile.DataSectionSizeBytes;
-            if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-            {
-                stoppingPoint -= 2;
-                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandOffset - 2] = Constants.FADE0D8A;
-                PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandOffset - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
-            }
-            PsaFile.DataSectionSizeBytes += commandOffset;
-
-            return stoppingPoint;
         }
 
         /// <summary>
