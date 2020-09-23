@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PSA2.src.utility
+namespace PSA2.src.Utility
 {
     public static class Utils
     {

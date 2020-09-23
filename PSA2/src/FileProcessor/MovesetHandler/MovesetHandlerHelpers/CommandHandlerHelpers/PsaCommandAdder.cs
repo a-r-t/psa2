@@ -1,4 +1,4 @@
-﻿using PSA2.src.utility;
+﻿using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +23,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaCommandParser = psaCommandParser;
         }
 
-        /********************************
-         * ADDING NEW COMMAND TO ACTION *
-         * ******************************/
         public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
         {
             if (codeBlockCommandsLocation == 0 || codeBlockCommandsLocation >= OpenAreaStartLocation * 4 && codeBlockCommandsLocation < PsaFile.DataSectionSize)

@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSA2.src.utility;
+using PSA2.src.Utility;
 using PSA2.src.Models.Fighter.Misc;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;

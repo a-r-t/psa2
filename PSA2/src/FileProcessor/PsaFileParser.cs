@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSA2.src.utility;
+using PSA2.src.Utility;
 using PSA2.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.FileProcessor

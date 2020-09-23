@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PSA2.src.views
+namespace PSA2.src.Views
 {
     public partial class Form1 : Form
     {

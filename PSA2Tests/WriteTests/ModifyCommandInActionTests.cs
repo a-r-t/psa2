@@ -1,16 +1,16 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 
 namespace PSA2Tests.WriteTests
 {
-    [TestClass]
+    [TestFixture]
     public class ModifyCommandInActionTests
     {
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithIdenticalCommand()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -24,7 +24,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommand.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommand.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithIdenticalCommandWithDifferentParameterValues()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -38,7 +38,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithIdenticalCommandWithDifferentParameterTypes()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -52,7 +52,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac", "./WriteTests/Out/FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithDifferentCommandWithIdenticalParameterCount()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -66,7 +66,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithDifferentCommandWithLargerParameterCount()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -81,7 +81,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithDifferentCommandWithSmallerParameterCount()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -94,7 +94,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac", "./WriteTests/Out/FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithNoParametersToCommandWithParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -108,7 +108,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac", "./WriteTests/Out/FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithParametersToCommandWithNoParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -118,7 +118,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac", "./WriteTests/Out/FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void ModifyCommandInActionWithPointerParameter()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");

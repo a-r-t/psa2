@@ -1,14 +1,14 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using System;
 
 namespace PSA2Tests.WriteTests
 {
-    [TestClass]
+    [TestFixture]
     public class MoveCommandInActionTests
     {
-        [TestMethod]
+        [Test]
         [Description("Move Command Upwards: Swap commands that both have parameters")]
         public void MoveCommandUpwards()
         {
@@ -18,7 +18,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Move/FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac", "./WriteTests/Out/FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         [Description("Move Command Upwards: Swap command that has no parameters with a command that has parameters")]
         public void MoveCommandUpwardsThatHasNoParameters()
         {
@@ -28,7 +28,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Move/FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac", "./WriteTests/Out/FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         [Description("Move Command Upwards: Swap command that has parameters with a command that has no parameters")]
         public void MoveCommandUpwardsThatHasParameters()
         {
@@ -38,7 +38,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Move/FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac", "./WriteTests/Out/FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         [Description("Move Command Downwards: Swap commands that both have parameters")]
         public void MoveCommandDownwards()
         {
@@ -48,7 +48,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Move/FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac", "./WriteTests/Out/FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         [Description("Move Command Downwards: Swap command that has no parameters with a command that has parameters")]
         public void MoveCommandDownwardsThatHasNoParameters()
         {
@@ -58,7 +58,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Move/FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac", "./WriteTests/Out/FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac"));
         }
 
-        [TestMethod]
+        [Test]
         [Description("Move Command Downwards: Swap command that has parameters with a command that has no parameters")]
         public void MoveCommandDownwardsThatHasParameters()
         {
