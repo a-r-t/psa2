@@ -37,15 +37,5 @@ namespace PSA2Tests.WriteTests
             psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/{comparisonFileName}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Add/{comparisonFileName}", $"./WriteTests/Out/{comparisonFileName}"));
         }
-
-/*        [Test]
-        [Description("Add command which will create code block (special action 1)")]
-        public void AddOneCommandToActionWithNoExistingCommands2()
-        {
-            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
-            psaMovesetParser.ActionsParser.AddCommandToAction(1, 1);
-            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioOneCommandAddedWithNoExistingCommands2.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioOneCommandAddedWithNoExistingCommands2.pac", "./WriteTests/Out/FitMarioOneCommandAddedWithNoExistingCommands2.pac"));
-        }*/
     }
 }

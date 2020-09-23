@@ -1,5 +1,5 @@
 ---
-name: Tests
+name: Workflow
 
 on: push
 
@@ -21,9 +21,9 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Setup VSTest.exe
       uses: Malcolmnixon/Setup-VSTest@v3
-    - name: restore nuget packages
+    - name: Restore Nuget Packages
       run: nuget restore $env:SOLUTION_PATH
-    - name: build projects
+    - name: Build Project
       run: msbuild $env:SOLUTION_PATH -p:Configuration=Release
-    - name: run tests
+    - name: Run Unit Tests
       run: vstest.console PSA2Tests/bin/Release/netcoreapp3.1/PSA2Tests.dll

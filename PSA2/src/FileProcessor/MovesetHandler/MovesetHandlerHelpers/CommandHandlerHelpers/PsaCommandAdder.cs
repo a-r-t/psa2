@@ -60,13 +60,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // this creates the first "nop" command to start off the new location for the action's commands
             SetFileLocationToNop(stoppingPoint);
+            int newCodeBlockCommandsLocation = stoppingPoint * 4;
 
             // this increases the offset entires table by 1 for the new action offset entry
-            PsaFile.FileContent[codeBlockLocation] = stoppingPoint * 4;
+            PsaFile.FileContent[codeBlockLocation] = newCodeBlockCommandsLocation;
             PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = codeBlockLocation * 4;
             PsaFile.NumberOfOffsetEntries++;
-
-            int newOffsetLocation = stoppingPoint * 4;
         }
 
         public void AddCommandToExistingCodeBlock(int codeBlockCommandsLocation)
