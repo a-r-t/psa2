@@ -100,17 +100,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (isFreeSpaceAvailable)
             {
                 SetFileLocationToNop(commandStartLocation + numberOfCommandsAlreadyInCodeBlock * 2);
-
-                int newOffsetLocation = codeBlockCommandsLocation / 4;
-
             }
 
             // The below code actually moves the action and its existing commands to a new location in the file if there's no room to add the new one
             // this part actually adds the new nop command
             else
             {
-                int newOffsetLocation = RelocateCodeBlock(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, commandStartLocation);
-                ApplyOffsetInterlockLogic(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, newOffsetLocation);
+                int newCodeBlockCommandsLocation = RelocateCodeBlock(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, commandStartLocation);
+                ApplyOffsetInterlockLogic(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, newCodeBlockCommandsLocation);
             }
         }
 

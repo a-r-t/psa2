@@ -54,7 +54,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             //Console.WriteLine(psaCommand.Instruction);
 
             //bool isMovesetParsable = IsMovesetParsable();
-            //ActionsParser.AddCommandToAction(0, 0);
+            ActionsParser.AddCommandToAction(0, 0);
             //ActionsParser.AddCommandToAction(0, 0);
             //ActionsParser.AddCommandToAction(0, 1);
             //PsaFile.SaveFile("results.pac");
