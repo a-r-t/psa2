@@ -23,12 +23,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaCommandParser = psaCommandParser;
         }
 
-        public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
+        public void AddCommand(int codeBlockLocation, int codeBlockCommandsPointerLocation)
         {
-            if (codeBlockCommandsLocation == 0 || codeBlockCommandsLocation >= OpenAreaStartLocation * 4 && codeBlockCommandsLocation < PsaFile.DataSectionSize)
+            if (codeBlockCommandsPointerLocation == 0 || codeBlockCommandsPointerLocation >= OpenAreaStartLocation * 4 && codeBlockCommandsPointerLocation < PsaFile.DataSectionSize)
             {
                 // no commands yet exist for action
-                if (codeBlockCommandsLocation == 0)
+                if (codeBlockCommandsPointerLocation == 0)
                 {
                     CreateCodeBlock(codeBlockLocation);
                 }
@@ -36,7 +36,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if there are already existing commands for action
                 else
                 {
-                    AddCommandToExistingCodeBlock(codeBlockCommandsLocation);
+                    AddCommandToExistingCodeBlock(codeBlockCommandsPointerLocation);
                 }
 
                 PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
@@ -75,14 +75,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFile.NumberOfOffsetEntries++;
         }
 
-        public void AddCommandToExistingCodeBlock(int codeBlockCommandsLocation)
+        public void AddCommandToExistingCodeBlock(int codeBlockCommandsPointerLocation)
         {
-            int commandStartLocation = codeBlockCommandsLocation / 4;
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
 
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             // TODO: Is this needed if I already get the count above?
-            if (PsaFile.FileContent[commandStartLocation] == Constants.FADEF00D) // -86052851 is FFFF FFFF FADE F00D
+            if (PsaFile.FileContent[codeBlockCommandsLocation] == Constants.FADEF00D) // -86052851 is FFFF FFFF FADE F00D
             {
                 numberOfCommandsAlreadyInCodeBlock = 0;
             }
@@ -90,24 +90,24 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if data section size needs to be resized, first check if it doesn't by seeing if there's any free space at the end (FADE0D8As) and if so that's free real estate to add a new command to
             // I think this is relpacing FADE0D8As with FADEF00DS if possible, and if this happens it means there is enough space to add the new command without needing to relocate the action
             bool isFreeSpaceAvailable = false;
-            if (commandStartLocation + numberOfCommandsAlreadyInCodeBlock * 2 + 5 > PsaFile.DataSectionSizeBytes)
+            if (codeBlockCommandsLocation + numberOfCommandsAlreadyInCodeBlock * 2 + 5 > PsaFile.DataSectionSizeBytes)
             {
-                isFreeSpaceAvailable = CheckForDataSectionTrailingFreeSpace(commandStartLocation, numberOfCommandsAlreadyInCodeBlock);
+                isFreeSpaceAvailable = CheckForDataSectionTrailingFreeSpace(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock);
             }
 
             // I think this part checks if there is room for new command, and if there is, it doesn't need to move the existing commands all over to a new location so it dips early and just adds the nop
             // basically if either of the above if statemetns are true, this will be true
             if (isFreeSpaceAvailable)
             {
-                SetFileLocationToNop(commandStartLocation + numberOfCommandsAlreadyInCodeBlock * 2);
+                SetFileLocationToNop(codeBlockCommandsLocation + numberOfCommandsAlreadyInCodeBlock * 2);
             }
 
             // The below code actually moves the action and its existing commands to a new location in the file if there's no room to add the new one
             // this part actually adds the new nop command
             else
             {
-                int newCodeBlockCommandsLocation = RelocateCodeBlock(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, commandStartLocation);
-                ApplyOffsetInterlockLogic(codeBlockCommandsLocation, numberOfCommandsAlreadyInCodeBlock, newCodeBlockCommandsLocation);
+                int newCodeBlockCommandsLocation = RelocateCodeBlock(codeBlockCommandsPointerLocation, numberOfCommandsAlreadyInCodeBlock, codeBlockCommandsLocation);
+                ApplyOffsetInterlockLogic(codeBlockCommandsPointerLocation, numberOfCommandsAlreadyInCodeBlock, newCodeBlockCommandsLocation);
             }
         }
 

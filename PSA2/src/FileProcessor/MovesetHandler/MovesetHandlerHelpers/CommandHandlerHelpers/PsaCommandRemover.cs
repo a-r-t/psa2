@@ -22,24 +22,26 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaCommandParser = psaCommandParser;
         }
 
-        public void RemoveCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             if (numberOfCommandsAlreadyInCodeBlock > 1)
             {
-                RemoveOneCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex);
+                RemoveOneCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex);
             }
             // aka removing this command will remove the last command that was in the action
             else
             {
-                RemoveLastCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex, codeBlockLocation);
+                RemoveLastCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, codeBlockLocation);
             }
         }
 
-        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex)
+        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
@@ -290,7 +292,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // event offset interlock logic
             // not sure what these variables mean
 
-            int k1 = codeBlockCommandsLocation + numberOfCommandsAlreadyInCodeBlock * 8;
+            int k1 = codeBlockCommandsPointerLocation + numberOfCommandsAlreadyInCodeBlock * 8;
             int h = k1 - (numberOfCommandsAlreadyInCodeBlock - 1) * 8;
             for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
@@ -386,10 +388,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
-        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
-
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int something = commandLocation + numberOfCommandsAlreadyInCodeBlock * 2;

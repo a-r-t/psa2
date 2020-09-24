@@ -39,9 +39,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return psaCommandParser.GetPsaCommand(commandLocation);
         }
 
-        public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
+        public void AddCommand(int codeBlockLocation, int codeBlockCommandsPointerLocation)
         {
-            psaCommandAdder.AddCommand(codeBlockLocation, codeBlockCommandsLocation);
+            psaCommandAdder.AddCommand(codeBlockLocation, codeBlockCommandsPointerLocation);
         }
 
         public void ModifyCommand(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
@@ -54,9 +54,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             psaCommandMover.MoveCommand(psaCommandToMove, commandLocation, moveDirection);
         }
 
-        public void RemoveCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
-            psaCommandRemover.RemoveCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex, codeBlockLocation);
+            psaCommandRemover.RemoveCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, codeBlockLocation);
         }
     }
 }

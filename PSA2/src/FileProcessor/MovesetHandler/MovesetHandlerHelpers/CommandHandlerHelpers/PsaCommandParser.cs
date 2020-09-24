@@ -19,7 +19,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)
         {
-            int commandsStartLocation = psaCodeLocation / 4; // j
+            int commandsStartLocation = psaCodeLocation; // j
             if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
             {
                 int nextCommandLocation = commandsStartLocation;
@@ -37,7 +37,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public List<PsaCommand> GetPsaCommands(int psaCodeLocation)
         {
             List<PsaCommand> psaCommands = new List<PsaCommand>();
-            int commandsStartLocation = psaCodeLocation / 4; // j
+            int commandsStartLocation = psaCodeLocation; // j
             if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
             {
                 int nextCommandLocation = commandsStartLocation;
