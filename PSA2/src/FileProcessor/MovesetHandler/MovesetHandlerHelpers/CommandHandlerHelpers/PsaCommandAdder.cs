@@ -126,7 +126,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             else
             {
                 int newCodeBlockCommandsLocation = RelocateCodeBlock(codeBlockCommandsPointerLocation, numberOfCommandsAlreadyInCodeBlock);
-                ApplyOffsetInterlockLogic(codeBlockCommandsPointerLocation, numberOfCommandsAlreadyInCodeBlock, newCodeBlockCommandsLocation);
+                UpdateCommandPointers(codeBlockCommandsPointerLocation, numberOfCommandsAlreadyInCodeBlock, newCodeBlockCommandsLocation);
             }
         }
 
@@ -216,31 +216,43 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             return newOffsetLocation;
         }
 
-        public void ApplyOffsetInterlockLogic(int actionCodeBlockLocation, int numberOfCommandsAlreadyInAction, int newOffsetLocation)
+        /// <summary>
+        /// Called after codeblock has been relocated
+        /// Goes through all the commands in the entire PSA
+        /// If any command has a pointer that pointed to this codeblock, it will be updated to point to its new location
+        /// </summary>
+        /// <param name="codeBlockLocation"></param>
+        /// <param name="numberOfCommandsAlreadyInCodeBlock"></param>
+        /// <param name="newOffsetLocation"></param>
+        public void UpdateCommandPointers(int codeBlockLocation, int numberOfCommandsAlreadyInCodeBlock, int newOffsetLocation)
         {
-            // this is the "EvOffsetInterlock" stuff, not entirely sure what this does, maybe updates existing command offsets so they don't break (like gotos)?
-            // actionCodeBlockEndLocation is probably not the right name for this variable...
-            int actionCodeBlockEndLocation = actionCodeBlockLocation + numberOfCommandsAlreadyInAction * 8;
+            int codeBlockEndLocation = codeBlockLocation + numberOfCommandsAlreadyInCodeBlock * 8;
             for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
-                if (PsaFile.FileContent[i] >= actionCodeBlockLocation && PsaFile.FileContent[i] <= actionCodeBlockEndLocation)
+                // if value falls within code block location
+                if (PsaFile.FileContent[i] >= codeBlockLocation && PsaFile.FileContent[i] <= codeBlockEndLocation)
                 {
                     // DEFINITELY not a good name for this variable, NO idea what it's for
-                    int locationRoot = i * 4;
+                    int pointerToOffsetLocation = i * 4;
 
                     for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[j] == locationRoot)
+                        // if pointer to offset is found in offset interlock tracker
+                        if (PsaFile.OffsetInterlockTracker[j] == pointerToOffsetLocation)
                         {
-                            if (PsaFile.FileContent[i] == actionCodeBlockLocation)
+                            // if pointer in file location is currently equal to the old code block, replace it with new code block location 
+                            if (PsaFile.FileContent[i] == codeBlockLocation)
                             {
                                 PsaFile.FileContent[i] = newOffsetLocation;
-                                break;
                             }
-                            int offsetDifference = PsaFile.FileContent[i] - actionCodeBlockLocation;
-                            if (offsetDifference % 8 == 0)
+                            else
                             {
-                                PsaFile.FileContent[i] = newOffsetLocation + offsetDifference;
+                                // if offset was pointing to a particular location in the code block, make sure it continues to point to that spot in the new code block
+                                int offsetDifference = PsaFile.FileContent[i] - codeBlockLocation;
+                                if (offsetDifference % 8 == 0)
+                                {
+                                    PsaFile.FileContent[i] = newOffsetLocation + offsetDifference;
+                                }
                             }
                             break;
                         }
