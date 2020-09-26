@@ -232,7 +232,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if value falls within code block location
                 if (PsaFile.FileContent[i] >= codeBlockLocation && PsaFile.FileContent[i] <= codeBlockEndLocation)
                 {
-                    // DEFINITELY not a good name for this variable, NO idea what it's for
                     int pointerToOffsetLocation = i * 4;
 
                     for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
