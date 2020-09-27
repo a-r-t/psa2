@@ -11,14 +11,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public int OpenAreaStartLocation { get; private set; }
+        public int CodeBlockDataStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
+        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            OpenAreaStartLocation = openAreaStartLocation;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
             PsaCommandParser = psaCommandParser;
         }
 
