@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers
 {
@@ -130,19 +131,20 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             for (int i = 0; i < oldCommandParamsSize; i += 2)
             {
                 // this only comes into play if the old psa command's param type at index i is "Pointer" (which is 2)
-                // it does some crazy relocating stuff
                 if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] == 2)
                 {
                     // I believe this is the location of the actual value of a particular pointer command param
-                    int commandParamValueLocation = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4; // rmv
+                    int commandParametersValuesLocation = oldPsaCommand.CommandParametersLocation + 4; // rmv
+                    // ^ used to be --> int commandParamValueLocation = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4; // rmv
 
+                    /*
                     // Delasc method -- this deletes an offset entry in the interlock tracker because it no longer needs to hold on to this pointer that is being modified/replaced
                     int iterator = 0;
                     bool existingOffsetFound = false;
 
                     while (iterator < PsaFile.NumberOfOffsetEntries)
                     {
-                        if (PsaFile.OffsetInterlockTracker[iterator] == commandParamValueLocation)
+                        if (PsaFile.OffsetInterlockTracker[iterator] == commandParametersValuesLocation)
                         {
                             existingOffsetFound = true;
                             break;
@@ -157,10 +159,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     }
 
                     // end delasc
+                    */
+                    bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParametersValuesLocation);
 
-                    // this part is a long series of nested if statements...
-                    // I can't figure out exactly what it does and can't get it to consistently trigger
-                    if (iterator >= PsaFile.NumberOfOffsetEntries)
+                    // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
+                    if (!wasOffsetRemoved)
                     {
                         // something to do with external subroutines
                         if (i == 0)
@@ -170,7 +173,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                 i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
                                 if (i > 8096 && i < PsaFile.DataSectionSize)
                                 {
-                                    if (commandParamValueLocation == i)
+                                    if (commandParametersValuesLocation == i)
                                     {
                                         oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1; // rmv
                                         int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
@@ -242,7 +245,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                 i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
                                 if (i > 8096 && i < PsaFile.DataSectionSize)
                                 {
-                                    if (commandParamValueLocation == i)
+                                    if (commandParametersValuesLocation == i)
                                     {
                                         oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 3; // rmv
                                         int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
@@ -430,6 +433,27 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // in psac, this is only called if "fnt" is 1, which means something was changed -- will see if this will break things or not to just call every time
             //PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+        }
+
+        // delasc method in psac
+        /// <summary>
+        /// This will remove an offset location from the tracker that is no longer being pointed to by a command
+        /// <para>Delasc method in PSA-C</para>
+        /// </summary>
+        /// <param name="locationToRemove">The offset to remove from the tracker</param>
+        /// <returns>If the offset existed in the tracker and was removed or not</returns>
+        public bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
+        {
+            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            {
+                if (PsaFile.OffsetInterlockTracker[i] == locationToRemove)
+                {
+                    PsaFile.OffsetInterlockTracker[i] = 16777216; // 100 0000
+                    PsaFile.NumberOfOffsetEntries--;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
