@@ -1,7 +1,7 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Utility;
-using System;
+using PSA2.src.Models.Fighter;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,6 +25,23 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             PsaCommandHandler = psaCommandHandler;
+        }
+
+        public Action GetAction(int actionId)
+        {
+            CodeBlock entry = GetCodeBlock(actionId, 0);
+            CodeBlock exit = GetCodeBlock(actionId, 1);
+            CodeBlock[] codeBlocks = new CodeBlock[] { entry, exit };
+            return new Action(actionId, codeBlocks);
+        }
+
+        public CodeBlock GetCodeBlock(int actionId, int codeBlockId)
+        {
+            int codeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int codeBlockCommandsPointerLocation = GetActionCodeBlockCommandsPointerLocation(actionId, codeBlockId);
+            int codeBlockCommandsLocation = GetActionCodeBlockCommandsLocation(actionId, codeBlockId);
+            List<PsaCommand> psaCommands = GetPsaCommandsForActionCodeBlock(actionId, codeBlockId);
+            return new CodeBlock(codeBlockLocation, codeBlockCommandsPointerLocation, codeBlockCommandsLocation, psaCommands);
         }
 
         public int GetNumberOfSpecialActions()
@@ -59,7 +76,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                     actionCodeBlockStartingLocation = PsaFile.FileContent[DataSectionLocation + 10] / 4;
                     break;
                 default:
-                    throw new ArgumentException("Invalid code block id -- only 0 (Entry) and 1 (Exit) are valid");
+                    throw new System.ArgumentException("Invalid code block id -- only 0 (Entry) and 1 (Exit) are valid");
             }
 
             return actionCodeBlockStartingLocation + actionId;
@@ -108,9 +125,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public void AddCommandToAction(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId); // h
-            int actionCodeBlockCommandsPointerLocation = GetActionCodeBlockCommandsPointerLocation(actionId, codeBlockId); // h
-            PsaCommandHandler.AddCommand(actionCodeBlockLocation, actionCodeBlockCommandsPointerLocation);
+            CodeBlock codeBlock = GetCodeBlock(actionId, codeBlockId);
+            PsaCommandHandler.AddCommand(codeBlock);
         }
 
         public void ModifyActionCommand(int actionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)

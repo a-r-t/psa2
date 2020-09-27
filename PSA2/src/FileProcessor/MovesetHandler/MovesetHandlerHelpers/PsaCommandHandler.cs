@@ -1,4 +1,5 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Models.Fighter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return psaCommandParser.GetPsaCommand(commandLocation);
         }
 
-        public void AddCommand(int codeBlockLocation, int codeBlockCommandsPointerLocation)
+        public void AddCommand(CodeBlock codeBlock)
         {
-            psaCommandAdder.AddCommand(codeBlockLocation, codeBlockCommandsPointerLocation);
+            psaCommandAdder.AddCommand(codeBlock);
         }
 
         public void ModifyCommand(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)

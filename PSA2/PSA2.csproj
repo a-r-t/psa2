@@ -83,6 +83,7 @@
     <Compile Include="src\FileProcessor\PsaFile.cs" />
     <Compile Include="src\Models\Fighter\AnimationFlag.cs" />
     <Compile Include="src\Models\Fighter\Bone.cs" />
+    <Compile Include="src\Models\Fighter\CodeBlock.cs" />
     <Compile Include="src\Models\Fighter\DataEntry.cs" />
     <Compile Include="src\Models\Fighter\Misc\ActionFlag.cs" />
     <Compile Include="src\Models\Fighter\Misc\ActionInterruptEntry.cs" />

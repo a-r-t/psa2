@@ -60,7 +60,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             //PsaFile.SaveFile("results.pac");
 
             //ActionsParser.MoveActionCommand(0, 0, 1, MoveDirection.UP);
-
+            //Console.WriteLine(ActionsParser.GetAction(0));
 
 
         }
