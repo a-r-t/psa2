@@ -35,6 +35,16 @@ namespace PSA2.src.Models.Fighter
             return PsaCommands[index];
         }
 
+        public int GetPsaCommandPointerLocation(int commandIndex)
+        {
+            return (CommandsLocation + (commandIndex * 2)) * 4 + 4;
+        }
+
+        public int GetPsaCommandLocation(int commandIndex)
+        {
+            return CommandsLocation + (commandIndex * 2);
+        }
+
         public override string ToString()
         {
             return $"{{{nameof(Location)}={Location.ToString("X")} ({Location}), {nameof(CommandsPointerLocation)}={CommandsPointerLocation.ToString("X")} ({CommandsPointerLocation}), {nameof(CommandsLocation)}={CommandsLocation.ToString("X")} ({CommandsLocation}), {nameof(PsaCommands)}={string.Join(",", PsaCommands.Select(x => x.ToString()).ToList())}}}";

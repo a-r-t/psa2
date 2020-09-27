@@ -160,36 +160,33 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 PsaFile.DataSectionSizeBytes += commandsParamsSpaceRequired;
             }
 
-            // commandOffset might be the number of bits (or bytes?) taken up by all of the commands' pointers currently in the action
-            // also NGL I have NO clue what this is doing
-            for (int i = 0; i < codeBlock.NumberOfCommands; i++)
+            // move commands one at a time from old location to new location
+            for (int commandIndex = 0; commandIndex < codeBlock.NumberOfCommands; commandIndex++)
             {
-                Console.WriteLine("I: " + i);
-                int commandLocationOffset = i * 2;
                 // asc stuff (PointerInterlock)
                 // NO clue what this does exactly or how it works
-                int numberOfParams = codeBlock.PsaCommands[i].NumberOfParams;
+                int numberOfParams = codeBlock.PsaCommands[commandIndex].NumberOfParams;
 
                 if (numberOfParams != 0)
                 {
-                    // psac uses rmv for this name, no idea what this variable means
-                    int commandPointerLocation = (codeBlock.CommandsLocation + commandLocationOffset) * 4 + 4;
-
                     for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[j] == commandPointerLocation)
+                        if (PsaFile.OffsetInterlockTracker[j] == codeBlock.GetPsaCommandPointerLocation(commandIndex))
                         {
-                            int newCommandPointerLocation = (newCodeBlockLocation + commandLocationOffset) * 4 + 4;
-                            PsaFile.OffsetInterlockTracker[j] = newCommandPointerLocation;
+                            int newCodeBlockCommandPointerLocation = (newCodeBlockLocation + (commandIndex * 2)) * 4 + 4;
+                            PsaFile.OffsetInterlockTracker[j] = newCodeBlockCommandPointerLocation;
                             break;
                         }
                     }
                 }
+
                 // replace old locations with new locations, replace old with FADEF00Ds
-                PsaFile.FileContent[newCodeBlockLocation + commandLocationOffset] = PsaFile.FileContent[codeBlock.CommandsLocation + commandLocationOffset];
-                PsaFile.FileContent[newCodeBlockLocation + commandLocationOffset + 1] = PsaFile.FileContent[codeBlock.CommandsLocation + commandLocationOffset + 1];
-                PsaFile.FileContent[codeBlock.CommandsLocation + commandLocationOffset] = Constants.FADEF00D;
-                PsaFile.FileContent[codeBlock.CommandsLocation + commandLocationOffset + 1] = Constants.FADEF00D;
+                int oldCodeBlockCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
+                int newCodeBlockCommandLocation = newCodeBlockLocation + (commandIndex * 2);
+                PsaFile.FileContent[newCodeBlockCommandLocation] = PsaFile.FileContent[oldCodeBlockCommandLocation];
+                PsaFile.FileContent[newCodeBlockCommandLocation + 1] = PsaFile.FileContent[oldCodeBlockCommandLocation + 1];
+                PsaFile.FileContent[oldCodeBlockCommandLocation] = Constants.FADEF00D;
+                PsaFile.FileContent[oldCodeBlockCommandLocation + 1] = Constants.FADEF00D;
             }
 
             // replace end of commands list with FADEF00D
