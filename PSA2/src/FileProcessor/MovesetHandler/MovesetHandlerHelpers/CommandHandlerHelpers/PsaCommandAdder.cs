@@ -164,14 +164,17 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // also NGL I have NO clue what this is doing
             for (int i = 0; i < codeBlock.NumberOfCommands; i++)
             {
+                Console.WriteLine("I: " + i);
                 int commandLocationOffset = i * 2;
                 // asc stuff (PointerInterlock)
                 // NO clue what this does exactly or how it works
                 int numberOfParams = codeBlock.PsaCommands[i].NumberOfParams;
+
                 if (numberOfParams != 0)
                 {
                     // psac uses rmv for this name, no idea what this variable means
                     int commandPointerLocation = (codeBlock.CommandsLocation + commandLocationOffset) * 4 + 4;
+
                     for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
                     {
                         if (PsaFile.OffsetInterlockTracker[j] == commandPointerLocation)
@@ -221,11 +224,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         /// <param name="newOffsetLocation"></param>
         public void UpdateCommandPointers(CodeBlock codeBlock, int newOffsetLocation)
         {
-            int codeBlockEndLocation = codeBlock.Location + codeBlock.NumberOfCommands * 8;
+            int codeBlockEndLocation = codeBlock.CommandsPointerLocation + codeBlock.NumberOfCommands * 8;
             for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 // if value falls within code block location
-                if (PsaFile.FileContent[i] >= codeBlock.Location && PsaFile.FileContent[i] <= codeBlockEndLocation)
+                if (PsaFile.FileContent[i] >= codeBlock.CommandsPointerLocation && PsaFile.FileContent[i] <= codeBlockEndLocation)
                 {
                     int pointerToOffsetLocation = i * 4;
 
@@ -235,14 +238,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         if (PsaFile.OffsetInterlockTracker[j] == pointerToOffsetLocation)
                         {
                             // if pointer in file location is currently equal to the old code block, replace it with new code block location 
-                            if (PsaFile.FileContent[i] == codeBlock.Location)
+                            if (PsaFile.FileContent[i] == codeBlock.CommandsPointerLocation)
                             {
                                 PsaFile.FileContent[i] = newOffsetLocation;
                             }
                             else
                             {
                                 // if offset was pointing to a particular location in the code block, make sure it continues to point to that spot in the new code block
-                                int offsetDifference = PsaFile.FileContent[i] - codeBlock.Location;
+                                int offsetDifference = PsaFile.FileContent[i] - codeBlock.CommandsPointerLocation;
                                 if (offsetDifference % 8 == 0)
                                 {
                                     PsaFile.FileContent[i] = newOffsetLocation + offsetDifference;
