@@ -8,19 +8,18 @@ namespace PSA2.src.Models.Fighter
 {
     public class Action
     {
-        public string ActionName { get; private set; }
         public int ActionNumber { get; private set; }
-        public ActionSection[] ActionSections { get; private set; }
+        public CodeBlock[] CodeBlocks { get; private set; }
 
-        public Action(int number)
+        public Action(int actionNumber, CodeBlock[] codeBlocks)
         {
-            ActionName = "Test State";
-            ActionNumber = number;
-            ActionSections = new ActionSection[]
-            {
-                new ActionSection("Entry"),
-                new ActionSection("Exit")
-            };
+            ActionNumber = actionNumber;
+            CodeBlocks = codeBlocks;
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(ActionNumber)}={ActionNumber}, {nameof(CodeBlocks)}={string.Join(",", CodeBlocks.Select(x => x.ToString()).ToList())}}}";
         }
     }
 }

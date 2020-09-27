@@ -1,4 +1,5 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Models.Fighter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,13 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         private PsaCommandMover psaCommandMover;
         private PsaCommandRemover psaCommandRemover;
 
-        public PsaCommandHandler(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation)
+        public PsaCommandHandler(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
-            psaCommandParser = new PsaCommandParser(psaFile, openAreaStartLocation);
-            psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
-            psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
-            psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
-            psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation, openAreaStartLocation, psaCommandParser);
+            psaCommandParser = new PsaCommandParser(psaFile, codeBlockDataStartLocation);
+            psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaCommandParser);
+            psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaCommandParser);
+            psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaCommandParser);
+            psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaCommandParser);
         }
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)
@@ -39,9 +40,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return psaCommandParser.GetPsaCommand(commandLocation);
         }
 
-        public void AddCommand(int codeBlockLocation, int codeBlockCommandsLocation)
+        public void AddCommand(CodeBlock codeBlock)
         {
-            psaCommandAdder.AddCommand(codeBlockLocation, codeBlockCommandsLocation);
+            psaCommandAdder.AddCommand(codeBlock);
         }
 
         public void ModifyCommand(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
@@ -54,9 +55,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             psaCommandMover.MoveCommand(psaCommandToMove, commandLocation, moveDirection);
         }
 
-        public void RemoveCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
-            psaCommandRemover.RemoveCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex, codeBlockLocation);
+            psaCommandRemover.RemoveCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, codeBlockLocation);
         }
     }
 }

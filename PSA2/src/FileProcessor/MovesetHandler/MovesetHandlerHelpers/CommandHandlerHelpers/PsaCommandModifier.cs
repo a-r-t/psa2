@@ -1,4 +1,4 @@
-﻿using PSA2.src.utility;
+﻿using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +12,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public int OpenAreaStartLocation { get; private set; }
+        public int CodeBlockDataStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
+        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            OpenAreaStartLocation = openAreaStartLocation;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
             PsaCommandParser = psaCommandParser;
         }
 
@@ -82,7 +82,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
 
             // determine stopping point, which is where new command params will be added (finds room where number of params can all fit)
-            int newCommandParametersLocation = PsaFile.FindLocationWithAmountOfFreeSpace(OpenAreaStartLocation, newCommandParamsSize);
+            int newCommandParametersLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
 
             // if adding command params location causes data to go beyond data section limit, increase data section size
             if (newCommandParametersLocation >= PsaFile.DataSectionSizeBytes)
@@ -380,7 +380,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if new command params size is less than what's already there, create some FADEF00DS to represent free space that can later be used if needed
                 if (currentCommandParamSize < newCommandParamsSize)
                 {
-                    oldPsaCommand.CommandParametersValuesLocation = OpenAreaStartLocation;
+                    oldPsaCommand.CommandParametersValuesLocation = CodeBlockDataStartLocation;
                     int bitStoppingPoint = 0;
 
                     while (oldPsaCommand.CommandParametersValuesLocation < PsaFile.DataSectionSizeBytes && bitStoppingPoint != oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize)

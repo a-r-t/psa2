@@ -1,13 +1,13 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PSA2.src.FileProcessor.MovesetHandler;
 using System;
 
 namespace PSA2Tests.WriteTests
 {
-    [TestClass]
+    [TestFixture]
     public class RemoveCommandFromActionTests
     {
-        [TestMethod]
+        [Test]
         public void RemoveOneCommandFromAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -16,7 +16,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveOneCommandInAction.pac", "./WriteTests/Out/FitMarioRemoveOneCommandInAction.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void RemoveAllCommandsFromAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
@@ -27,7 +27,7 @@ namespace PSA2Tests.WriteTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveAllCommandsInAction.pac", "./WriteTests/Out/FitMarioRemoveAllCommandsInAction.pac"));
         }
 
-        [TestMethod]
+        [Test]
         public void RemoveCommandWithPointerFromAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");

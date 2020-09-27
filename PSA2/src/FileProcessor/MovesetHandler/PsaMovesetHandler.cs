@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSA2.src.utility;
+using PSA2.src.Utility;
 using PSA2.src.Models.Fighter.Misc;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
@@ -38,8 +38,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             string movesetBaseName = GetMovesetBaseName();
 
             int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
-            int opeanAreaStartLocation = 2014 + numberOfSpecialActions * 2;
-            PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, opeanAreaStartLocation);
+            int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
+            PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
 
             ActionsParser = new ActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
             SubActionsParser = new SubActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
@@ -60,7 +60,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             //PsaFile.SaveFile("results.pac");
 
             //ActionsParser.MoveActionCommand(0, 0, 1, MoveDirection.UP);
-
+            //Console.WriteLine(ActionsParser.GetAction(0));
 
 
         }

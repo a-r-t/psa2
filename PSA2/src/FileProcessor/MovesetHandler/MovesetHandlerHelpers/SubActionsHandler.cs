@@ -1,5 +1,5 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
-using PSA2.src.utility;
+using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

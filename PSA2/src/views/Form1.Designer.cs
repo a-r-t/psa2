@@ -1,4 +1,4 @@
-﻿namespace PSA2.src.views
+﻿namespace PSA2.src.Views
 {
     partial class Form1
     {

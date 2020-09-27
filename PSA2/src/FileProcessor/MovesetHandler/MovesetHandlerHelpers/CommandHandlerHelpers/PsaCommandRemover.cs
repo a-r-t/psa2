@@ -1,4 +1,4 @@
-﻿using PSA2.src.utility;
+﻿using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,35 +11,37 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public int OpenAreaStartLocation { get; private set; }
+        public int CodeBlockDataStartLocation { get; private set; }
         public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation, int openAreaStartLocation, PsaCommandParser psaCommandParser)
+        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaCommandParser psaCommandParser)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
-            OpenAreaStartLocation = openAreaStartLocation;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
             PsaCommandParser = psaCommandParser;
         }
 
-        public void RemoveCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             if (numberOfCommandsAlreadyInCodeBlock > 1)
             {
-                RemoveOneCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex);
+                RemoveOneCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex);
             }
             // aka removing this command will remove the last command that was in the action
             else
             {
-                RemoveLastCommand(commandLocation, codeBlockCommandsLocation, removedPsaCommand, commandIndex, codeBlockLocation);
+                RemoveLastCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, codeBlockLocation);
             }
         }
 
-        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex)
+        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
@@ -49,7 +51,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (numberOfParams != 0)
             {
                 int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
-                if (removedCommandParamsValuesLocation >= OpenAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
+                if (removedCommandParamsValuesLocation >= CodeBlockDataStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
                 {
                     int pointerToCommandLocation = commandLocation * 4 + 4; // rmv
 
@@ -290,9 +292,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // event offset interlock logic
             // not sure what these variables mean
 
-            int k1 = codeBlockCommandsLocation + numberOfCommandsAlreadyInCodeBlock * 8;
+            int k1 = codeBlockCommandsPointerLocation + numberOfCommandsAlreadyInCodeBlock * 8;
             int h = k1 - (numberOfCommandsAlreadyInCodeBlock - 1) * 8;
-            for (int i = OpenAreaStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 if (PsaFile.FileContent[i] >= h && PsaFile.FileContent[i] <= k1)
                 {
@@ -386,10 +388,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
-        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
-
+            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int something = commandLocation + numberOfCommandsAlreadyInCodeBlock * 2;
@@ -418,7 +420,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
                                                                                               //m is removedCommandParamsValuesLocation
 
-                    if (removedCommandParamsValuesLocation >= OpenAreaStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
+                    if (removedCommandParamsValuesLocation >= CodeBlockDataStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
                     {
                         int pointerToCommandLocation = (commandLocation + i * 2) * 4 + 4; // rmv
 
