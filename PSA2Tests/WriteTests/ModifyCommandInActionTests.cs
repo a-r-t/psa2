@@ -119,7 +119,9 @@ namespace PSA2Tests.WriteTests
         }
 
         [Test]
-        public void ModifyCommandInActionWithPointerParameter()
+        [TestCase(2, 0, 11, "FitMarioModifyCommandWithPointerParameter.pac")]
+        [TestCase(5, 0, 16, "FitMarioModifyCommandWithPointerParameter2.pac")]
+        public void ModifyCommandInActionWithPointerParameter(int actionId, int codeBlockId, int commandIndex, string comparisonFileName)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
@@ -127,9 +129,9 @@ namespace PSA2Tests.WriteTests
                 new PsaCommandParameter(0, 0),
                 new PsaCommandParameter(6, 0)
             };
-            psaMovesetParser.ActionsParser.ModifyActionCommand(2, 0, 11, new PsaCommand(33620480, 25788, parameters));
-            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioModifyCommandWithPointerParameter.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Modify/FitMarioModifyCommandWithPointerParameter.pac", "./WriteTests/Out/FitMarioModifyCommandWithPointerParameter.pac"));
+            psaMovesetParser.ActionsParser.ModifyActionCommand(actionId, codeBlockId, commandIndex, new PsaCommand(33620480, 25788, parameters));
+            psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/{comparisonFileName}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Modify/{comparisonFileName}", $"./WriteTests/Out/{comparisonFileName}"));
         }
     }
 }

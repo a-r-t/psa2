@@ -62,7 +62,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             //ActionsParser.MoveActionCommand(0, 0, 1, MoveDirection.UP);
             //Console.WriteLine(ActionsParser.GetAction(0));
 
-
+            /*
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>
+            {
+                new PsaCommandParameter(0, 0),
+                new PsaCommandParameter(6, 0)
+            };
+            ActionsParser.ModifyActionCommand(5, 0, 16, new PsaCommand(33620480, 25788, parameters));
+            */
         }
 
         public bool IsMovesetParsable()
