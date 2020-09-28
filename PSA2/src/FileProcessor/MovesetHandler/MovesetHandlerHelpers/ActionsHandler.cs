@@ -133,7 +133,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         {
             int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
             PsaCommand oldPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
-            System.Console.WriteLine(oldPsaCommand);
             PsaCommandHandler.ModifyCommand(actionCodeBlockCommandLocation, oldPsaCommand, newPsaCommand);
         }
 
