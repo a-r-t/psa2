@@ -104,7 +104,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     {
                         //Console.WriteLine($"Pointer: {paramValue.ToString("X")}");
                     }
-
+                    Console.WriteLine(PsaFile.FileContent[commandParamsLocation + i + 1]);
                     parameters.Add(new PsaCommandParameter(PsaFile.FileContent[commandParamsLocation + i], PsaFile.FileContent[commandParamsLocation + i + 1]));
                 }
 

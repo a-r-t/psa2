@@ -68,7 +68,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
                 new PsaCommandParameter(0, 0),
                 new PsaCommandParameter(6, 0)
             };
-            ActionsParser.ModifyActionCommand(5, 0, 16, new PsaCommand(33620480, 25788, parameters));
+            ActionsParser.ModifyActionCommand(2, 0, 11, new PsaCommand(33620480, 25788, parameters));
             */
         }
 
