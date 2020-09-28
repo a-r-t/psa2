@@ -131,22 +131,20 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2)
             {
-                PointerLogic(0, oldPsaCommand, commandLocation, oldCommandParamsSize);
+                UpdatePointerLogicForExternalSubroutineCall(oldPsaCommand, commandLocation);
             }
-            if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2 && oldCommandParamsSize == 4)
+
+            if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2 && oldPsaCommand.NumberOfParams == 2)
             {
-                PointerLogic(2, oldPsaCommand, commandLocation, oldCommandParamsSize);
+                UpdatePointerLogicForConcurrentInfiniteLoopCall(oldPsaCommand, commandLocation);
             }
 
-            // basically iterates once for each param in the old command
-            for (int i = 0; i < oldCommandParamsSize; i += 2)
+            // Replace old param values with free space (FADEF00D)
+            for (int paramIndex = 0; paramIndex < oldPsaCommand.NumberOfParams; paramIndex++)
             {
-                // PointerLogic(i, oldPsaCommand, commandLocation, oldCommandParamsSize);
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = Constants.FADEF00D;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = Constants.FADEF00D;
+                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + (paramIndex * 2)] = Constants.FADEF00D;
+                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + (paramIndex * 2) + 1] = Constants.FADEF00D;
             }
-
-
 
             int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
             if (newCommandParamsSize == 0)
@@ -286,6 +284,170 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 }
             }
             return false;
+        }
+
+        public void UpdatePointerLogicForExternalSubroutineCall(PsaCommand oldPsaCommand, int commandLocation)
+        {
+            int commandParameterLocation = oldPsaCommand.CommandParametersLocation + 4;
+            //int commandParameterLocation = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4; // rmv --- OLD (works though)
+
+            bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParameterLocation);
+
+            // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
+            if (!wasOffsetRemoved)
+            {
+                // something to do with external subroutines
+
+                for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
+                {
+                    int something1 = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
+                    if (something1 > 8096 && something1 < PsaFile.DataSectionSize)
+                    {
+                        if (commandParameterLocation == something1)
+                        {
+                            oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1; // rmv
+                            int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
+                            if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
+                            {
+                                if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
+                                {
+                                    PsaFile.CompressionTracker[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                }
+                                else
+                                {
+                                    PsaFile.CompressionTracker[temp] = -1;
+                                }
+                            }
+                            else
+                            {
+                                PsaFile.CompressionTracker[temp] = -1;
+                            }
+                            oldPsaCommand.CommandParametersLocation = 0;
+                            break;
+                        }
+                        if (something1 >= 8096 && something1 < PsaFile.DataSectionSize)
+                        {
+                            for (int k = 0; k < 100; k++) // k is an1
+                            {
+                                // clearly I'm not sure what location this represents
+                                int somethingLocation = something1 / 4;
+
+                                int something2 = PsaFile.FileContent[somethingLocation];
+                                if (something2 < 8096 || something2 >= PsaFile.DataSectionSize)
+                                {
+                                    break;
+                                }
+                                if (oldPsaCommand.CommandParametersLocation == something2)
+                                {
+                                    oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
+                                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
+                                    {
+                                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
+                                        {
+                                            PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                        }
+                                        else
+                                        {
+                                            PsaFile.CompressionTracker[somethingLocation] = -1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        PsaFile.CompressionTracker[somethingLocation] = -1;
+                                    }
+                                    oldPsaCommand.CommandParametersLocation = 0;
+                                    break;
+                                }
+                            }
+                            if (oldPsaCommand.CommandParametersLocation == 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void UpdatePointerLogicForConcurrentInfiniteLoopCall(PsaCommand oldPsaCommand, int commandLocation)
+        {
+            int commandParameterLocation = oldPsaCommand.CommandParametersLocation + 12;
+            //int commandParameterLocation = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4; // rmv --- OLD (works though)
+
+            bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParameterLocation);
+
+            // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
+            if (!wasOffsetRemoved)
+            {
+                for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
+                {
+                    int something1 = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
+                    if (something1 > 8096 && something1 < PsaFile.DataSectionSize)
+                    {
+                        if (commandParameterLocation == something1)
+                        {
+                            oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 3; // rmv
+                            int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
+                            if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
+                            {
+                                if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
+                                {
+                                    PsaFile.CompressionTracker[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                }
+                                else
+                                {
+                                    PsaFile.CompressionTracker[temp] = -1;
+                                }
+                            }
+                            else
+                            {
+                                PsaFile.CompressionTracker[temp] = -1;
+                            }
+                            oldPsaCommand.CommandParametersLocation = 0;
+                            break;
+                        }
+                        if (something1 >= 8096 && something1 < PsaFile.DataSectionSize)
+                        {
+                            for (int k = 0; k < 100; k++) // k is an1
+                            {
+                                // clearly I'm not sure what location this represents
+                                int somethingLocation = something1 / 4;
+
+                                int something2 = PsaFile.FileContent[somethingLocation];
+                                if (something2 < 8096 || something2 >= PsaFile.DataSectionSize)
+                                {
+                                    break;
+                                }
+                                if (oldPsaCommand.CommandParametersLocation == something2)
+                                {
+                                    oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
+                                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
+                                    {
+                                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
+                                        {
+                                            PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                        }
+                                        else
+                                        {
+                                            PsaFile.CompressionTracker[somethingLocation] = -1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        PsaFile.CompressionTracker[somethingLocation] = -1;
+                                    }
+                                    oldPsaCommand.CommandParametersLocation = 0;
+                                    break;
+                                }
+                            }
+                            if (oldPsaCommand.CommandParametersLocation == 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void PointerLogic(int i, PsaCommand oldPsaCommand, int commandLocation, int oldCommandParamsSize)
