@@ -102,8 +102,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
                 if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                 {
-                    int valuePointerOffset = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
-                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = valuePointerOffset;
+                    int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
+                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
                     PsaFile.NumberOfOffsetEntries++;
                 }
                 PsaFile.FileContent[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
@@ -147,6 +147,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
 
             int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
+            int newCommandParametersvaluesLocation = oldPsaCommand.CommandParametersValuesLocation;
 
             // if new command has no params (such as a "nop" command)
             if (newCommandParamsSize == 0)
@@ -165,24 +166,27 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // resize command params if new command has more params than the one it is replacing
             else if (newCommandParamsSize > oldCommandParamsSize)
             {
-                ExpandCommandParametersSection(commandLocation, oldPsaCommand, newCommandParamsSize, oldCommandParamsSize);
+                newCommandParametersvaluesLocation = ExpandCommandParametersSection(commandLocation, oldPsaCommand, newCommandParamsSize, oldCommandParamsSize);
             }
             PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
 
-            int parameterIndex = 0;
-            for (int i = 0; i < newCommandParamsSize; i += 2)
+            // put param values in new param values location one by one
+            for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
             {
+                int paramTypeLocation = paramIndex * 2;
+                int paramValueLocation = paramIndex * 2 + 1;
+
                 // if command param type is Pointer and it actually points to something
-                if (newPsaCommand.Parameters[parameterIndex].Type == 2 && newPsaCommand.Parameters[parameterIndex].Value > 0)
+                if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                 {
-                    int something = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4;
-                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = something;
+                    int commandParameterPointerLocation = (newCommandParametersvaluesLocation + paramTypeLocation) * 4 + 4;
+                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
                     PsaFile.NumberOfOffsetEntries++;
                 }
 
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = newPsaCommand.Parameters[parameterIndex].Type;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = newPsaCommand.Parameters[parameterIndex].Value;
-                parameterIndex++;
+                // place parameter type in value in proper place
+                PsaFile.FileContent[newCommandParametersvaluesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
+                PsaFile.FileContent[newCommandParametersvaluesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
             }
         }
 
@@ -371,7 +375,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
         }
 
-        public void ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, int newCommandParamsSize, int oldCommandParamsSize)
+        public int ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, int newCommandParamsSize, int oldCommandParamsSize)
         {
             // determine how much space is currently available for params
             // to start, there is the original amount of space
@@ -410,42 +414,23 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (currentCommandParamSize < newCommandParamsSize)
             {
                 int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
-
-                /*
-                oldPsaCommand.CommandParametersValuesLocation = CodeBlockDataStartLocation;
-                int bitStoppingPoint = 0;
-
-                while (oldPsaCommand.CommandParametersValuesLocation < PsaFile.DataSectionSizeBytes && bitStoppingPoint != oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize)
+                if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
                 {
-                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == Constants.FADEF00D)
-                    {
-                        bitStoppingPoint = oldPsaCommand.CommandParametersValuesLocation + 1;
-                        while (bitStoppingPoint <= oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize && PsaFile.FileContent[bitStoppingPoint] != Constants.FADEF00D)
-                        {
-                            if (PsaFile.FileContent[bitStoppingPoint] != Constants.FADEF00D)
-                            {
-                                oldPsaCommand.CommandParametersValuesLocation = bitStoppingPoint;
-                                break;
-                            }
-                            bitStoppingPoint++;
-                        }
-                    }
-                    oldPsaCommand.CommandParametersValuesLocation++;
-                }
-                */
-                oldPsaCommand.CommandParametersValuesLocation = newCommandParametersValuesLocation;
-                if (oldPsaCommand.CommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
-                {
-                    oldPsaCommand.CommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
+                    newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
                     if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                     {
-                        oldPsaCommand.CommandParametersValuesLocation -= 2;
+                        newCommandParametersValuesLocation -= 2;
                         PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = Constants.FADE0D8A;
                         PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                     }
                     PsaFile.DataSectionSizeBytes += newCommandParamsSize;
                 }
-                PsaFile.FileContent[commandLocation + 1] = oldPsaCommand.CommandParametersValuesLocation * 4;
+                PsaFile.FileContent[commandLocation + 1] = newCommandParametersValuesLocation * 4;
+                return newCommandParametersValuesLocation;
+            } 
+            else
+            {
+                return oldPsaCommand.CommandParametersValuesLocation;
             }
         }
     }
