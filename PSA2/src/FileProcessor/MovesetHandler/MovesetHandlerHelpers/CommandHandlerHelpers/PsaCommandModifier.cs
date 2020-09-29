@@ -127,8 +127,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         /// <param name="newPsaCommand">new psa command that is replacing the old one</param>
         public void ModifyExistingCommandParametersLocation(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
         {
-            int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize();
-
             if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2)
             {
                 UpdatePointerLogicForExternalSubroutineCall(oldPsaCommand, commandLocation);
@@ -146,12 +144,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + (paramIndex * 2) + 1] = Constants.FADEF00D;
             }
 
-            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
+            // set new command instruction
             PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
 
+            // if new command has no parameters, set pointer to parameters to nothing and remove the pointer to the parameters from the offset interlock
             if (newPsaCommand.NumberOfParams == 0)
             {
-
                 // remove pointer to params since this command has no params
                 PsaFile.FileContent[commandLocation + 1] = 0;
 
@@ -159,11 +157,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 int commandParamValuePointerLocation = commandLocation * 4 + 4; // rmv
                 RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
             }
+            // if new command has parameters
             else
             {
+                // if new command has a less or equal parameter count to the old command, the parameter values location does not need to be relocated
+                // if the new command has a higher parameter count than the old comman,d the paramter values location will need to be expanded/relocated to have enough room for all the parameters
                 int newCommandParametersvaluesLocation = oldPsaCommand.NumberOfParams >= newPsaCommand.NumberOfParams
                     ? oldPsaCommand.CommandParametersValuesLocation
-                    : ExpandCommandParametersSection(commandLocation, oldPsaCommand, newCommandParamsSize, oldCommandParamsSize);
+                    : ExpandCommandParametersSection(commandLocation, oldPsaCommand, newPsaCommand);
 
                 // put param values in new param values location one by one
                 for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
@@ -186,7 +187,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
         }
 
-        // delasc method in psac
         /// <summary>
         /// This will remove an offset location from the tracker that is no longer being pointed to by a command
         /// <para>Delasc method in PSA-C</para>
@@ -371,12 +371,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
         }
 
-        public int ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, int newCommandParamsSize, int oldCommandParamsSize)
+        public int ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
         {
             // determine how much space is currently available for params
             // to start, there is the original amount of space
             // add 1 additional block of space for each free space that comes afterwards (FADEF00D)
-            int currentCommandParamSize = oldCommandParamsSize; // i
+            int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize();
+            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
+
+            int currentCommandParamSize = oldCommandParamsSize;
+
             while (currentCommandParamSize < newCommandParamsSize && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
             {
                 currentCommandParamSize++;
