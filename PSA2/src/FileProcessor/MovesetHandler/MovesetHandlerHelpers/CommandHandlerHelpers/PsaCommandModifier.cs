@@ -147,13 +147,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
 
             int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
-            int newCommandParametersvaluesLocation = oldPsaCommand.CommandParametersValuesLocation;
+            PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
 
-            // if new command has no params (such as a "nop" command)
-            if (newCommandParamsSize == 0)
+            if (newPsaCommand.NumberOfParams == 0)
             {
-                // set instruction
-                PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
 
                 // remove pointer to params since this command has no params
                 PsaFile.FileContent[commandLocation + 1] = 0;
@@ -162,31 +159,30 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 int commandParamValuePointerLocation = commandLocation * 4 + 4; // rmv
                 RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
             }
-
-            // resize command params if new command has more params than the one it is replacing
-            else if (newCommandParamsSize > oldCommandParamsSize)
+            else
             {
-                newCommandParametersvaluesLocation = ExpandCommandParametersSection(commandLocation, oldPsaCommand, newCommandParamsSize, oldCommandParamsSize);
-            }
-            PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
+                int newCommandParametersvaluesLocation = oldPsaCommand.NumberOfParams >= newPsaCommand.NumberOfParams
+                    ? oldPsaCommand.CommandParametersValuesLocation
+                    : ExpandCommandParametersSection(commandLocation, oldPsaCommand, newCommandParamsSize, oldCommandParamsSize);
 
-            // put param values in new param values location one by one
-            for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
-            {
-                int paramTypeLocation = paramIndex * 2;
-                int paramValueLocation = paramIndex * 2 + 1;
-
-                // if command param type is Pointer and it actually points to something
-                if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
+                // put param values in new param values location one by one
+                for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
                 {
-                    int commandParameterPointerLocation = (newCommandParametersvaluesLocation + paramTypeLocation) * 4 + 4;
-                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
-                    PsaFile.NumberOfOffsetEntries++;
-                }
+                    int paramTypeLocation = paramIndex * 2;
+                    int paramValueLocation = paramIndex * 2 + 1;
 
-                // place parameter type in value in proper place
-                PsaFile.FileContent[newCommandParametersvaluesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
-                PsaFile.FileContent[newCommandParametersvaluesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                    // if command param type is Pointer and it actually points to something
+                    if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
+                    {
+                        int commandParameterPointerLocation = (newCommandParametersvaluesLocation + paramTypeLocation) * 4 + 4;
+                        PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
+                        PsaFile.NumberOfOffsetEntries++;
+                    }
+
+                    // place parameter type in value in proper place
+                    PsaFile.FileContent[newCommandParametersvaluesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
+                    PsaFile.FileContent[newCommandParametersvaluesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                }
             }
         }
 
