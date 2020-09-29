@@ -373,32 +373,45 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
         public void ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, int newCommandParamsSize, int oldCommandParamsSize)
         {
-            // figure out how much space is in the current location for command params (increases if it finds some trailing FADEF00D spots)
+            // determine how much space is currently available for params
+            // to start, there is the original amount of space
+            // add 1 additional block of space for each free space that comes afterwards (FADEF00D)
             int currentCommandParamSize = oldCommandParamsSize; // i
             while (currentCommandParamSize < newCommandParamsSize && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
             {
                 currentCommandParamSize++;
             }
-            // resize data section if no more room for command params
-            if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSectionSize)
+
+            // if current parameters location is at the "edge" of the data section
+            // and if the current parameters location doesn't even have enough room in the data section to add one more parameter comfortably, 
+            // increase the data section size by the amount needed
+            if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSectionSizeBytes)
             {
+                // difference between the new size needed and the old size
                 int commandSizeDifference = newCommandParamsSize - oldCommandParamsSize;
+
+                // if at the end of the data section, expand data section by the required amount
                 if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
-                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = Constants.FADE0D8A;
                     PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                     PsaFile.DataSectionSizeBytes += commandSizeDifference;
                     currentCommandParamSize = newCommandParamsSize;
                 }
+                // if adding one additional command would cause going over the data section size, just straight up expand the data section size 
                 else if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSectionSizeBytes)
                 {
                     PsaFile.DataSectionSizeBytes += commandSizeDifference;
                     currentCommandParamSize = newCommandParamsSize;
                 }
             }
-            // if new command params size is less than what's already there, create some FADEF00DS to represent free space that can later be used if needed
+
+            // if the amount of space available at the current moment is STILL not enough for all of the new params
             if (currentCommandParamSize < newCommandParamsSize)
             {
+                int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
+
+                /*
                 oldPsaCommand.CommandParametersValuesLocation = CodeBlockDataStartLocation;
                 int bitStoppingPoint = 0;
 
@@ -419,13 +432,15 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     }
                     oldPsaCommand.CommandParametersValuesLocation++;
                 }
+                */
+                oldPsaCommand.CommandParametersValuesLocation = newCommandParametersValuesLocation;
                 if (oldPsaCommand.CommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
                 {
                     oldPsaCommand.CommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
                     if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                     {
                         oldPsaCommand.CommandParametersValuesLocation -= 2;
-                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
+                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = Constants.FADE0D8A;
                         PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                     }
                     PsaFile.DataSectionSizeBytes += newCommandParamsSize;
