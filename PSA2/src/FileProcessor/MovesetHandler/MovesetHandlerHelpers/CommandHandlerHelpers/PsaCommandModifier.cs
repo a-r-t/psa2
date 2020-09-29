@@ -206,6 +206,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandLocation)
         {
             bool isConcurrentLoop = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2;
+
             int commandParameterLocation = !isConcurrentLoop
                 ? oldPsaCommand.CommandParametersLocation + 4
                 : oldPsaCommand.CommandParametersLocation + 12;
@@ -215,11 +216,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
             if (!wasOffsetRemoved)
             {
-                // something to do with external subroutines
-
                 for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
                 {
-                    int something1 = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
+                    int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
+                    int something1 = PsaFile.CompressionTracker[temp];
                     if (something1 > 8096 && something1 < PsaFile.DataSectionSize)
                     {
                         if (commandParameterLocation == something1)
@@ -228,7 +228,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                 ? PsaFile.FileContent[commandLocation + 1] / 4 + 1
                                 : PsaFile.FileContent[commandLocation + 1] / 4 + 3;
 
-                            int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
                             if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
                             {
                                 if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)

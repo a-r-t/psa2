@@ -76,7 +76,7 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of offset entries in Offsets Section
-        /// Each Offset Entry is one doubleword (8 bytes)
+        /// Each Offset Entry is one doubleword (4 bytes)
         /// </summary>
         public int NumberOfOffsetEntries
         {
@@ -92,7 +92,8 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of data table entries in Data Table Section 
-        /// Each Data Table entry is one doubleword (8 bytes)
+        /// <para>Each Data Table entry is two doublewords (8 bytes)</para>
+        /// <para>First doubleword is the offset, second doubleword is the name of the section (string)</para>
         /// </summary>
         public int NumberOfDataTableEntries
         {
@@ -104,7 +105,8 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of external sub routine entries in External Data Section
-        /// Each External Sub Routine entry is 8 bytes
+        /// <para>Each External Sub Routine entry is two doublewords (8 bytes)</para>
+        /// <para>First doubleword is the offset, second doubleword is the name of the section (string)</para>
         /// </summary>
         public int NumberOfExternalSubRoutines
         {
