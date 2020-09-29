@@ -219,7 +219,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
                 {
                     int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
-                    int something1 = PsaFile.CompressionTracker[temp];
+                    int something1 = PsaFile.FileOtherData[temp];
                     if (something1 > 8096 && something1 < PsaFile.DataSectionSize)
                     {
                         if (commandParameterLocation == something1)
@@ -232,16 +232,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                             {
                                 if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
                                 {
-                                    PsaFile.CompressionTracker[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                    PsaFile.FileOtherData[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
                                 }
                                 else
                                 {
-                                    PsaFile.CompressionTracker[temp] = -1;
+                                    PsaFile.FileOtherData[temp] = -1;
                                 }
                             }
                             else
                             {
-                                PsaFile.CompressionTracker[temp] = -1;
+                                PsaFile.FileOtherData[temp] = -1;
                             }
                             oldPsaCommand.CommandParametersLocation = 0;
                             break;
@@ -265,16 +265,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                     {
                                         if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
                                         {
-                                            PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
+                                            PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
                                         }
                                         else
                                         {
-                                            PsaFile.CompressionTracker[somethingLocation] = -1;
+                                            PsaFile.FileOtherData[somethingLocation] = -1;
                                         }
                                     }
                                     else
                                     {
-                                        PsaFile.CompressionTracker[somethingLocation] = -1;
+                                        PsaFile.FileOtherData[somethingLocation] = -1;
                                     }
                                     oldPsaCommand.CommandParametersLocation = 0;
                                     break;

@@ -121,7 +121,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                 {
                                     for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
                                     {
-                                        i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
+                                        i = PsaFile.FileOtherData[(PsaFile.NumberOfDataTableEntries + j) * 2];
                                         if (i > 8096 && i < PsaFile.DataSectionSize)
                                         {
                                             if (commandParamValueLocation == i)
@@ -131,16 +131,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                 {
                                                     if (PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1] % 4 == 0)
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1];
+                                                        PsaFile.FileOtherData[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1];
                                                     }
                                                     else
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = -1;
+                                                        PsaFile.FileOtherData[temp] = -1;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    PsaFile.CompressionTracker[temp] = -1;
+                                                    PsaFile.FileOtherData[temp] = -1;
                                                 }
                                                 break;
                                             }
@@ -162,16 +162,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                         {
                                                             if (PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1] % 4 == 0)
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1];
+                                                                PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation + 1];
                                                             }
                                                             else
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                PsaFile.FileOtherData[somethingLocation] = -1;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                            PsaFile.FileOtherData[somethingLocation] = -1;
                                                         }
                                                         break;
                                                     }
@@ -190,7 +190,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                 {
                                     for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
                                     {
-                                        i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
+                                        i = PsaFile.FileOtherData[(PsaFile.NumberOfDataTableEntries + j) * 2];
                                         if (i > 8096 && i < PsaFile.DataSectionSize)
                                         {
                                             if (commandParamValueLocation == i)
@@ -200,16 +200,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                 {
                                                     if (PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3] % 4 == 0)
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
+                                                        PsaFile.FileOtherData[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
                                                     }
                                                     else
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = -1;
+                                                        PsaFile.FileOtherData[temp] = -1;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    PsaFile.CompressionTracker[temp] = -1;
+                                                    PsaFile.FileOtherData[temp] = -1;
                                                 }
                                                 break;
                                             }
@@ -231,16 +231,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                         {
                                                             if (PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3] % 4 == 0)
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
+                                                                PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
                                                             }
                                                             else
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                PsaFile.FileOtherData[somethingLocation] = -1;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                            PsaFile.FileOtherData[somethingLocation] = -1;
                                                         }
                                                         break;
                                                     }
@@ -490,7 +490,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                     {
                                         for (int k = 0; k < PsaFile.NumberOfExternalSubRoutines; k++) // j is mov
                                         {
-                                            k = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + k) * 2];
+                                            k = PsaFile.FileOtherData[(PsaFile.NumberOfDataTableEntries + k) * 2];
                                             if (k > 8096 && k < PsaFile.DataSectionSize)
                                             {
                                                 if (commandParamValueLocation == k)
@@ -500,16 +500,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                     {
                                                         if (PsaFile.FileContent[removedPsaCommand.CommandParametersLocation] % 4 == 0)
                                                         {
-                                                            PsaFile.CompressionTracker[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation];
+                                                            PsaFile.FileOtherData[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation];
                                                         }
                                                         else
                                                         {
-                                                            PsaFile.CompressionTracker[temp] = -1;
+                                                            PsaFile.FileOtherData[temp] = -1;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = -1;
+                                                        PsaFile.FileOtherData[temp] = -1;
                                                     }
                                                     break;
                                                 }
@@ -531,16 +531,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                             {
                                                                 if (PsaFile.FileContent[removedPsaCommand.CommandParametersLocation] % 4 == 0)
                                                                 {
-                                                                    PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation];
+                                                                    PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersLocation];
                                                                 }
                                                                 else
                                                                 {
-                                                                    PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                    PsaFile.FileOtherData[somethingLocation] = -1;
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                PsaFile.FileOtherData[somethingLocation] = -1;
                                                             }
                                                             break;
                                                         }
@@ -558,7 +558,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                     {
                                         for (int k = 0; k < PsaFile.NumberOfExternalSubRoutines; k++) // j is mov
                                         {
-                                            k = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + k) * 2];
+                                            k = PsaFile.FileOtherData[(PsaFile.NumberOfDataTableEntries + k) * 2];
                                             if (k > 8096 && k < PsaFile.DataSectionSize)
                                             {
                                                 if (commandParamValueLocation == k)
@@ -568,16 +568,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                     {
                                                         if (PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3] % 4 == 0)
                                                         {
-                                                            PsaFile.CompressionTracker[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
+                                                            PsaFile.FileOtherData[temp] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
                                                         }
                                                         else
                                                         {
-                                                            PsaFile.CompressionTracker[temp] = -1;
+                                                            PsaFile.FileOtherData[temp] = -1;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        PsaFile.CompressionTracker[temp] = -1;
+                                                        PsaFile.FileOtherData[temp] = -1;
                                                     }
                                                     break;
                                                 }
@@ -599,16 +599,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                                                             {
                                                                 if (PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3] % 4 == 0)
                                                                 {
-                                                                    PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
+                                                                    PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + 3];
                                                                 }
                                                                 else
                                                                 {
-                                                                    PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                    PsaFile.FileOtherData[somethingLocation] = -1;
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                PsaFile.CompressionTracker[somethingLocation] = -1;
+                                                                PsaFile.FileOtherData[somethingLocation] = -1;
                                                             }
                                                             break;
                                                         }
