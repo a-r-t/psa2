@@ -212,13 +212,12 @@ namespace PSA2.src.FileProcessor
                 OffsetInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
             }
 
-            // the rnexsize and rnext stuff I'm PRETTY sure has to do with compression, but I'm not positive
-            // this code is found when reading in movesets right before the attribute reading starts
-            // not sure if this code is right or not...
+            // store anything else in the moveset file (after the data section and offset section) into another array
+            // since the data section can be incrased at any time, this holds on to that data for later
+            int dataAndOffsetCombinedSize = DataSectionSizeBytes + NumberOfOffsetEntries; // calculate size of data section and offset section combined
+            FileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
 
-            int dataAndOffsetCombinedSize = DataSectionSizeBytes + NumberOfOffsetEntries;
-            FileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8;
-
+            // place all "other data" into this FileOtherData array to hold on to
             for (int i = 0; i < FileOtherDataSize; i++)
             {
                 FileOtherData[i] = FileContent[dataAndOffsetCombinedSize + i];
