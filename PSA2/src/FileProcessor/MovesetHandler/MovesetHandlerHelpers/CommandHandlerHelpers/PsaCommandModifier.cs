@@ -39,16 +39,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         {
             if (PsaFile.FileContent[commandLocation + 1] >= 0 && PsaFile.FileContent[commandLocation + 1] < PsaFile.DataSectionSize)
             {
-                // event modify method
-                int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize(); // k
-
                 // if there were no command params on the previous command
-                if (oldCommandParamsSize == 0)
+                if (oldPsaCommand.GetCommandParamsSize() == 0)
                 {
-                    int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
-
                     // if there are no command params on new command, it's simply a swap out of command instructions with nothing else needed
-                    if (newCommandParamsSize == 0)
+                    if (newPsaCommand.GetCommandParamsSize() == 0)
                     {
                         PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
                     }
@@ -70,7 +65,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
             else
             {
-                throw new ApplicationException("Cannot modify event...not sure why just can't okay");
+                throw new ApplicationException("Cannot modify command because it is not located within the data section");
             }
 
         }
@@ -140,7 +135,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
                 if (!wasOffsetRemoved)
                 {
-                    UpdateExternalPointerLogic(oldPsaCommand, commandLocation, commandParamExternalSubRoutineLocation);
+                    UpdateExternalPointerLogic(oldPsaCommand, commandParamExternalSubRoutineLocation);
                 }
             }
 
@@ -220,8 +215,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         /// <para>If so, it will...update the external data table?? Honestly I'm pretty unsure of this methods exact purpose as of now. I'm just positive it's external data subroutine related</para>
         /// </summary>
         /// <param name="oldPsaCommand"></param>
-        /// <param name="commandLocation"></param>
-        public void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandLocation, int commandParamExternalSubRoutineLocation)
+        public void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandParamExternalSubRoutineLocation)
         {
             for (int externalSubRoutineIndex = 0; externalSubRoutineIndex < PsaFile.NumberOfExternalSubRoutines; externalSubRoutineIndex++) // j is mov
             {
@@ -232,8 +226,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     if (commandParamExternalSubRoutineLocation == externalSubRoutineLocation)
                     {
                         int commandExternalDataPointerValue = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2
-                            ? PsaFile.FileContent[commandLocation + 1] / 4 + 1
-                            : PsaFile.FileContent[commandLocation + 1] / 4 + 3;
+                            ? oldPsaCommand.GetCommandParameterValueLocation(0)
+                            : oldPsaCommand.GetCommandParameterValueLocation(1);
 
                         if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096 
                             && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize 
@@ -255,7 +249,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         && externalSubRoutineCommandsPointerLocation < PsaFile.DataSectionSize 
                         && oldPsaCommand.CommandParametersLocation == externalSubRoutineCommandsPointerLocation)
                     {
-                        int commandExternalDataPointerValue = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
+                        int commandExternalDataPointerValue = oldPsaCommand.GetCommandParameterValueLocation(0);
                         if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096 
                             && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize 
                             && PsaFile.FileContent[commandExternalDataPointerValue] % 4 == 0)
