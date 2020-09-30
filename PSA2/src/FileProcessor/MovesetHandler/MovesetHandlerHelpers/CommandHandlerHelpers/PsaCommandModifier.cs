@@ -130,7 +130,18 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2 ||
                 (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2 && oldPsaCommand.NumberOfParams == 2))
             {
-                UpdateExternalPointerLogic(oldPsaCommand, commandLocation);
+                // I think this is what it is, not positive
+                int commandParamExternalSubRoutineLocation = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2
+                    ? oldPsaCommand.CommandParametersLocation + 4
+                    : oldPsaCommand.CommandParametersLocation + 12;
+
+                bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParamExternalSubRoutineLocation);
+
+                // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
+                if (!wasOffsetRemoved)
+                {
+                    UpdateExternalPointerLogic(oldPsaCommand, commandLocation, commandParamExternalSubRoutineLocation);
+                }
             }
 
             // Replace old param values with free space (FADEF00D)
@@ -203,91 +214,63 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             return false;
         }
 
-        public void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandLocation)
+        /// <summary>
+        /// This method will update the external data table to account for the removed pointer that pointed to an external data table item
+        /// <para>It goes through each external data table pointer and checks if it or the item it points to is the current command parameter value that is being removed</para>
+        /// <para>If so, it will...update the external data table?? Honestly I'm pretty unsure of this methods exact purpose as of now. I'm just positive it's external data subroutine related</para>
+        /// </summary>
+        /// <param name="oldPsaCommand"></param>
+        /// <param name="commandLocation"></param>
+        public void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandLocation, int commandParamExternalSubRoutineLocation)
         {
-            bool isConcurrentLoop = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2;
-
-            int commandParameterLocation = !isConcurrentLoop
-                ? oldPsaCommand.CommandParametersLocation + 4
-                : oldPsaCommand.CommandParametersLocation + 12;
-
-            bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParameterLocation);
-
-            // This will trigger if command was pointing to an external subroutine (like Mario's Up B has one, the home run bat has one, etc)
-            if (!wasOffsetRemoved)
+            for (int externalSubRoutineIndex = 0; externalSubRoutineIndex < PsaFile.NumberOfExternalSubRoutines; externalSubRoutineIndex++) // j is mov
             {
-                for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
+                int externalSubRoutineLocationIndex = (PsaFile.NumberOfDataTableEntries + externalSubRoutineIndex) * 2; // not entirely sure what this is yet  :/
+                int externalSubRoutineLocation = PsaFile.FileOtherData[externalSubRoutineLocationIndex];
+                if (externalSubRoutineLocation >= 8096 && externalSubRoutineLocation < PsaFile.DataSectionSize)
                 {
-                    int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
-                    int something1 = PsaFile.FileOtherData[temp];
-                    if (something1 > 8096 && something1 < PsaFile.DataSectionSize)
+                    if (commandParamExternalSubRoutineLocation == externalSubRoutineLocation)
                     {
-                        if (commandParameterLocation == something1)
-                        {
-                            oldPsaCommand.CommandParametersLocation = !isConcurrentLoop
-                                ? PsaFile.FileContent[commandLocation + 1] / 4 + 1
-                                : PsaFile.FileContent[commandLocation + 1] / 4 + 3;
+                        int commandExternalDataPointerValue = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2
+                            ? PsaFile.FileContent[commandLocation + 1] / 4 + 1
+                            : PsaFile.FileContent[commandLocation + 1] / 4 + 3;
 
-                            if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                            {
-                                if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                {
-                                    PsaFile.FileOtherData[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                }
-                                else
-                                {
-                                    PsaFile.FileOtherData[temp] = -1;
-                                }
-                            }
-                            else
-                            {
-                                PsaFile.FileOtherData[temp] = -1;
-                            }
-                            oldPsaCommand.CommandParametersLocation = 0;
-                            break;
-                        }
-                        if (something1 >= 8096 && something1 < PsaFile.DataSectionSize)
+                        if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] % 4 == 0)
                         {
-                            for (int k = 0; k < 100; k++) // k is an1
-                            {
-                                // clearly I'm not sure what location this represents
-                                int somethingLocation = something1 / 4;
-
-                                int something2 = PsaFile.FileContent[somethingLocation];
-                                if (something2 < 8096 || something2 >= PsaFile.DataSectionSize)
-                                {
-                                    break;
-                                }
-                                if (oldPsaCommand.CommandParametersLocation == something2)
-                                {
-                                    oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
-                                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                                    {
-                                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                        {
-                                            PsaFile.FileOtherData[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                        }
-                                        else
-                                        {
-                                            PsaFile.FileOtherData[somethingLocation] = -1;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        PsaFile.FileOtherData[somethingLocation] = -1;
-                                    }
-                                    oldPsaCommand.CommandParametersLocation = 0;
-                                    break;
-                                }
-                            }
-                            if (oldPsaCommand.CommandParametersLocation == 0)
-                            {
-                                break;
-                            }
+                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = PsaFile.FileContent[commandExternalDataPointerValue];
                         }
+                        else
+                        {
+                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = -1;
+                        }
+                        break;
+                    }
+
+                    int externalSubRoutineCodeBlockLocation = externalSubRoutineLocation / 4;
+
+                    int externalSubRoutineCommandsPointerLocation = PsaFile.FileContent[externalSubRoutineCodeBlockLocation];
+                    if (externalSubRoutineCommandsPointerLocation >= 8096
+                        && externalSubRoutineCommandsPointerLocation < PsaFile.DataSectionSize 
+                        && oldPsaCommand.CommandParametersLocation == externalSubRoutineCommandsPointerLocation)
+                    {
+                        int commandExternalDataPointerValue = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
+                        if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] % 4 == 0)
+                        { 
+                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = PsaFile.FileContent[commandExternalDataPointerValue];
+                        }
+                        else
+                        {
+                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = -1;
+                        }
+                        break;
                     }
                 }
             }
+            
         }
 
         public int ExpandCommandParametersSection(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
