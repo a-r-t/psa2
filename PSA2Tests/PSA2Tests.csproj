@@ -42,6 +42,9 @@
     <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioTwoCommandsAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandInActionWithCommandThatHasPointerParameter.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\ComparisonData\Actions\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

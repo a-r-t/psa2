@@ -12,8 +12,8 @@ namespace PSA2Tests.WriteTests
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             psaMovesetParser.ActionsParser.AddCommandToAction(0, 0);
-            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioOneCommandAdded.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioOneCommandAdded.pac", "./WriteTests/Out/FitMarioOneCommandAdded.pac"));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Add/FitMarioOneCommandAdded.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioOneCommandAdded.pac", "./WriteTests/Out/Actions/Add/FitMarioOneCommandAdded.pac"));
         }
 
         [Test]
@@ -22,8 +22,8 @@ namespace PSA2Tests.WriteTests
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             psaMovesetParser.ActionsParser.AddCommandToAction(0, 0);
             psaMovesetParser.ActionsParser.AddCommandToAction(0, 0);
-            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/FitMarioTwoCommandsAdded.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioTwoCommandsAdded.pac", "./WriteTests/Out/FitMarioTwoCommandsAdded.pac"));
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Add/FitMarioTwoCommandsAdded.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioTwoCommandsAdded.pac", "./WriteTests/Out/Actions/Add/FitMarioTwoCommandsAdded.pac"));
         }
 
         [Test]
@@ -34,8 +34,8 @@ namespace PSA2Tests.WriteTests
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
             psaMovesetParser.ActionsParser.AddCommandToAction(actionId, codeBlockId);
-            psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/{comparisonFileName}");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Add/{comparisonFileName}", $"./WriteTests/Out/{comparisonFileName}"));
+            psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/Actions/Add/{comparisonFileName}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Add/{comparisonFileName}", $"./WriteTests/Out/Actions/Add/{comparisonFileName}"));
         }
     }
 }

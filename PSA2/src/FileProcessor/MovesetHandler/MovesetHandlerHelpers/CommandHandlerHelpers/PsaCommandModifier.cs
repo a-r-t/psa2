@@ -142,8 +142,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // Replace old param values with free space (FADEF00D)
             for (int paramIndex = 0; paramIndex < oldPsaCommand.NumberOfParams; paramIndex++)
             {
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + (paramIndex * 2)] = Constants.FADEF00D;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + (paramIndex * 2) + 1] = Constants.FADEF00D;
+                int commandParameterTypeLocation = oldPsaCommand.GetCommandParameterTypeLocation(paramIndex);
+                int commandParameterValueLocation = oldPsaCommand.GetCommandParameterValueLocation(paramIndex);
+                PsaFile.FileContent[commandParameterTypeLocation] = Constants.FADEF00D;
+                PsaFile.FileContent[commandParameterValueLocation] = Constants.FADEF00D;
             }
 
             // set new command instruction
@@ -164,7 +166,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // if new command has a less or equal parameter count to the old command, the parameter values location does not need to be relocated
                 // if the new command has a higher parameter count than the old comman,d the paramter values location will need to be expanded/relocated to have enough room for all the parameters
-                int newCommandParametersvaluesLocation = oldPsaCommand.NumberOfParams >= newPsaCommand.NumberOfParams
+                int newCommandParametersValuesLocation = oldPsaCommand.NumberOfParams >= newPsaCommand.NumberOfParams
                     ? oldPsaCommand.CommandParametersValuesLocation
                     : ExpandCommandParametersSection(commandLocation, oldPsaCommand, newPsaCommand);
 
@@ -177,14 +179,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // if command param type is Pointer and it actually points to something
                     if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                     {
-                        int commandParameterPointerLocation = (newCommandParametersvaluesLocation + paramTypeLocation) * 4 + 4;
+                        int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
                         PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
                         PsaFile.NumberOfOffsetEntries++;
                     }
 
                     // place parameter type in value in proper place
-                    PsaFile.FileContent[newCommandParametersvaluesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
-                    PsaFile.FileContent[newCommandParametersvaluesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                    PsaFile.FileContent[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
+                    PsaFile.FileContent[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
                 }
             }
         }
@@ -277,7 +279,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             int currentCommandParamSize = oldCommandParamsSize;
 
-            while (currentCommandParamSize < newCommandParamsSize && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
+            while (currentCommandParamSize < newCommandParamsSize 
+                && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
             {
                 currentCommandParamSize++;
             }
