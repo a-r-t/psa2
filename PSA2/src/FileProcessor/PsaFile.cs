@@ -16,8 +16,8 @@ namespace PSA2.src.FileProcessor
         public int FileSize { get; set; }
         public int ExtraSpace { get; private set; } // efdts
         public int[] OffsetInterlockTracker { get; private set; } // asc
-        public int CompressedSize { get; set; } // rnexsize
-        public int[] CompressionTracker { get; private set; } = new int[2000]; // rnext
+        public int FileOtherDataSize { get; set; } // rnexsize
+        public int[] FileOtherData { get; private set; } = new int[2000]; // rnext
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -76,7 +76,7 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of offset entries in Offsets Section
-        /// Each Offset Entry is one doubleword (8 bytes)
+        /// Each Offset Entry is one doubleword (4 bytes)
         /// </summary>
         public int NumberOfOffsetEntries
         {
@@ -92,7 +92,8 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of data table entries in Data Table Section 
-        /// Each Data Table entry is one doubleword (8 bytes)
+        /// <para>Each Data Table entry is two doublewords (8 bytes)</para>
+        /// <para>First doubleword is the offset, second doubleword is the name of the section (string)</para>
         /// </summary>
         public int NumberOfDataTableEntries
         {
@@ -104,7 +105,8 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Number of external sub routine entries in External Data Section
-        /// Each External Sub Routine entry is 8 bytes
+        /// <para>Each External Sub Routine entry is two doublewords (8 bytes)</para>
+        /// <para>First doubleword is the offset, second doubleword is the name of the section (string)</para>
         /// </summary>
         public int NumberOfExternalSubRoutines
         {
@@ -136,7 +138,7 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return DataSectionStartLocation + DataSectionSize / 4;
+                return DataSectionStartLocation + DataSectionSizeBytes;
             }
         }
 
@@ -210,19 +212,19 @@ namespace PSA2.src.FileProcessor
                 OffsetInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
             }
 
-            // the rnexsize and rnext stuff I'm PRETTY sure has to do with compression, but I'm not positive
-            // this code is found when reading in movesets right before the attribute reading starts
-            // not sure if this code is right or not...
-            int totalSize = ((DataSectionSize / 4) + NumberOfOffsetEntries);
-            CompressedSize = (MovesetFileSize + 3) / 4 - totalSize - 8;
-            for (int i = 0; i < CompressedSize; i++)
+            // store anything else in the moveset file (after the data section and offset section) into another array
+            // since the data section can be incrased at any time, this holds on to that data for later
+            int dataAndOffsetCombinedSize = DataSectionSizeBytes + NumberOfOffsetEntries; // calculate size of data section and offset section combined
+            FileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
+
+            // place all "other data" into this FileOtherData array to hold on to
+            for (int i = 0; i < FileOtherDataSize; i++)
             {
-                CompressionTracker[i] = FileContent[totalSize];
-                totalSize++;
+                FileOtherData[i] = FileContent[dataAndOffsetCombinedSize + i];
             }
-            for (int i = CompressedSize; i < CompressionTracker.Length; i++)
+            for (int i = FileOtherDataSize; i < FileOtherData.Length; i++)
             {
-                CompressionTracker[i] = 0;
+                FileOtherData[i] = 0;
             }
         }
 
@@ -349,9 +351,9 @@ namespace PSA2.src.FileProcessor
                 movesetFileSizeLeftoverSpace = 4;
             }
 
-            for (int i = 0; i < CompressedSize; i++)
+            for (int i = 0; i < FileOtherDataSize; i++)
             {
-                FileContent[newDataSectionSize] = CompressionTracker[i];
+                FileContent[newDataSectionSize] = FileOtherData[i];
                 newDataSectionSize++;
             }
 

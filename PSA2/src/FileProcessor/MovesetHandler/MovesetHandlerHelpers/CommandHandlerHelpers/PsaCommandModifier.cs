@@ -2,50 +2,48 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers
 {
+    /// <summary>
+    /// This class is responsible for handling command modification in a code block
+    /// <para>This includes changing the command entirely to a new instruction or just changing parameter types/values</para>
+    /// </summary>
     public class PsaCommandModifier
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
-        public PsaCommandParser PsaCommandParser { get; private set; }
 
-        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaCommandParser psaCommandParser)
+        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
-            PsaCommandParser = psaCommandParser;
         }
 
-        /********************************
-         * MODIFYING COMMAND IN ACTION  *
-         * ******************************/
         /// <summary>
-        /// Modify a psa command to a new psa command
+        /// Modify a chosen command in a code block
+        /// <para>If the new command has more params than the old command (or the old command did not have params in the first place), the params location space may need to be expanded/relocated</para>
         /// </summary>
-        /// <param name="commandLocation">location of command</param>
-        /// <param name="oldPsaCommand">old psa command that is to be replaced</param>
-        /// <param name="newPsaCommand">new psa command that is replacing the old command</param>
+        /// <param name="commandLocation">The location of the command in the code block</param>
+        /// <param name="oldPsaCommand">The old psa command (the one that is being modified)</param>
+        /// <param name="newPsaCommand">The new psa command (the one that is replcaing the old psa command)</param>
         public void ModifyCommand(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
         {
             if (PsaFile.FileContent[commandLocation + 1] >= 0 && PsaFile.FileContent[commandLocation + 1] < PsaFile.DataSectionSize)
             {
-                // event modify method
-                int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize(); // k
-
                 // if there were no command params on the previous command
-                if (oldCommandParamsSize == 0)
+                if (oldPsaCommand.GetCommandParamsSize() == 0)
                 {
-                    int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
-
                     // if there are no command params on new command, it's simply a swap out of command instructions with nothing else needed
-                    if (newCommandParamsSize == 0)
+                    if (newPsaCommand.GetCommandParamsSize() == 0)
                     {
                         PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
                     }
@@ -54,6 +52,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     else
                     {
                         CreateNewCommandParametersLocation(commandLocation, newPsaCommand);
+                        PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
                     }
                 }
 
@@ -61,379 +60,317 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 else
                 {
                     ModifyExistingCommandParametersLocation(commandLocation, oldPsaCommand, newPsaCommand);
-                }
-
-
-                // end EventModify method
-                if (oldPsaCommand.CommandParametersLocation == -1)
-                {
-                    // I don't think I need any of this
+                    PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
                 }
             }
             else
             {
-                throw new ApplicationException("Cannot modify event...not sure why just can't okay");
+                throw new ApplicationException("Cannot modify command because it is not located within the data section");
             }
 
         }
-
-        public void CreateNewCommandParametersLocation(int commandLocation, PsaCommand newPsaCommand)
+        /// <summary>
+        /// Creates a new parameters section for a command
+        /// <para>This is called if the old psa command does not have any parameters, but the new command does -- that means a parameters section for the command needs to be created and pointed to</para>
+        /// </summary>
+        /// <param name="commandLocation"></param>
+        /// <param name="newPsaCommand"></param>
+        private void CreateNewCommandParametersLocation(int commandLocation, PsaCommand newPsaCommand)
         {
-            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
+            int newCommandParamsValuesSize = newPsaCommand.GetCommandParamsSize();
 
-            // determine stopping point, which is where new command params will be added (finds room where number of params can all fit)
-            int newCommandParametersLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
+            // determine where the new parameters values location will be by finding enough free space to fit it
+            int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsValuesSize);
 
-            // if adding command params location causes data to go beyond data section limit, increase data section size
-            if (newCommandParametersLocation >= PsaFile.DataSectionSizeBytes)
+            // if the only place with free space found is after the limits of the data section, expand the data section to make room
+            if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
             {
-                newCommandParametersLocation = PsaFile.DataSectionSizeBytes;
+                newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
                 if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
-                    newCommandParametersLocation -= 2;
-                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                    newCommandParametersValuesLocation -= 2;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsValuesSize - 2] = Constants.FADE0D8A;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsValuesSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
                 }
-                PsaFile.DataSectionSizeBytes += newCommandParamsSize;
+                PsaFile.DataSectionSizeBytes += newCommandParamsValuesSize;
             }
 
-            int paramsIndex = 0;
-            for (int i = 0; i < newCommandParamsSize; i += 2)
+            // go through each parameter in the new command one at a time and place it in the newly created parameters values location (type, value)
+            for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
             {
+                int paramTypeLocation = paramIndex * 2;
+                int paramValueLocation = paramIndex * 2 + 1;
                 // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
-                if (newPsaCommand.Parameters[paramsIndex].Type == 2 && newPsaCommand.Parameters[paramsIndex].Value > 0)
+                if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                 {
-                    int valuePointerOffset = (newCommandParametersLocation + i) * 4 + 4;
-                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = valuePointerOffset;
+                    int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
+                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
                     PsaFile.NumberOfOffsetEntries++;
                 }
-                PsaFile.FileContent[newCommandParametersLocation + i] = newPsaCommand.Parameters[paramsIndex].Type;
-                PsaFile.FileContent[newCommandParametersLocation + i + 1] = newPsaCommand.Parameters[paramsIndex].Value;
-                paramsIndex++;
+                PsaFile.FileContent[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
+                PsaFile.FileContent[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
             }
 
+            // place new command instruction at command location
             PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
-            int newCommandParamsLocation = newCommandParametersLocation * 4;
-            PsaFile.FileContent[commandLocation + 1] = newCommandParamsLocation;
-            PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandLocation * 4 + 4;
+
+            // set pointer to command parameters location
+            int newCommandParametersLocation = newCommandParametersValuesLocation * 4;
+            PsaFile.FileContent[commandLocation + 1] = newCommandParametersLocation;
+
+            // set pointer to command parameters pointer location in the offset interlock tracker
+            int newCommandParametersPointerLocation = commandLocation * 4 + 4;
+            PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = newCommandParametersPointerLocation;
             PsaFile.NumberOfOffsetEntries++;
-            PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
         /// <summary>
         /// Modify a command with existing parameters
+        /// <para>Case 1: both old and new command have same number of parameters, which is an easy params replace 1 by 1</para>
+        /// <para>Case 2: new command has less params than old command, which is the same as case 1, but the unused param space needs to be converted to free space (FADEF00D)</para>
+        /// <para>Case 3: new command has more params than old command, which will result in finding a new location for the parameters that has enough space</para>
         /// </summary>
-        /// <param name="commandLocation">location of command</param>
-        /// <param name="oldPsaCommand">old psa command that is going to be changed</param>
-        /// <param name="newPsaCommand">new psa command that is replacing the old one</param>
-        public void ModifyExistingCommandParametersLocation(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
+        /// <param name="commandLocation">The location of the command in the code block</param>
+        /// <param name="oldPsaCommand">The old psa command (the one that is being modified)</param>
+        /// <param name="newPsaCommand">The new psa command (the one that is replcaing the old psa command)</param>
+        private void ModifyExistingCommandParametersLocation(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
         {
-            int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize();
-
-            // basically iterates once for each param in the old command
-            for (int i = 0; i < oldCommandParamsSize; i += 2)
+            // If modifying a command that pointed to another location (the "Pointer" param type), the pointer location needs to be removed from the offset interlock tracker
+            // If the pointer param was an external subroutine (from the external data table) (such as Mario's Up B, the item ones like the home run bat, etc), 
+            // some additional work needs to be done to remove references to it from the external data table
+            // This if statement checks if the first parameter is of type Pointer or the second, which matches commands like "goto", "subroutine", and "concurrent subroutine"
+            if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2 ||
+                (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + 2] == 2 && oldPsaCommand.NumberOfParams == 2))
             {
-                // this only comes into play if the old psa command's param type at index i is "Pointer" (which is 2)
-                // it does some crazy relocating stuff
-                if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] == 2)
+                // Get the pointer location of the param value that is currently pointing to another location
+                int commandParamPointerValueLocation = PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == 2
+                    ? oldPsaCommand.CommandParametersLocation + 4
+                    : oldPsaCommand.CommandParametersLocation + 12;
+
+                // Attempt to remove the above offset from the offset interlock tracker
+                bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+
+                // If offset was not successfully removed, it means it either doesn't exist or is an external subroutine
+                // The below method call UpdateExternalPointerLogic will do some necessary work if the offset turns out to be an external subroutine call
+                if (!wasOffsetRemoved)
                 {
-                    // I believe this is the location of the actual value of a particular pointer command param
-                    int commandParamValueLocation = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4; // rmv
-
-                    // Delasc method -- this deletes an offset entry in the interlock tracker because it no longer needs to hold on to this pointer that is being modified/replaced
-                    int iterator = 0;
-                    bool existingOffsetFound = false;
-
-                    while (iterator < PsaFile.NumberOfOffsetEntries)
-                    {
-                        if (PsaFile.OffsetInterlockTracker[iterator] == commandParamValueLocation)
-                        {
-                            existingOffsetFound = true;
-                            break;
-                        }
-                        iterator++;
-                    }
-
-                    if (existingOffsetFound)
-                    {
-                        PsaFile.OffsetInterlockTracker[iterator] = 16777216; // 100 0000
-                        PsaFile.NumberOfOffsetEntries--;
-                    }
-
-                    // end delasc
-
-                    // this part is a long series of nested if statements...
-                    // I can't figure out exactly what it does and can't get it to consistently trigger
-                    if (iterator >= PsaFile.NumberOfOffsetEntries)
-                    {
-                        // something to do with external subroutines
-                        if (i == 0)
-                        {
-                            for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
-                            {
-                                i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
-                                if (i > 8096 && i < PsaFile.DataSectionSize)
-                                {
-                                    if (commandParamValueLocation == i)
-                                    {
-                                        oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1; // rmv
-                                        int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
-                                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                                        {
-                                            if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                            {
-                                                PsaFile.CompressionTracker[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                            }
-                                            else
-                                            {
-                                                PsaFile.CompressionTracker[temp] = -1;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            PsaFile.CompressionTracker[temp] = -1;
-                                        }
-                                        oldPsaCommand.CommandParametersLocation = 0;
-                                        break;
-                                    }
-                                    if (i >= 8096 && i < PsaFile.DataSectionSize)
-                                    {
-                                        for (int k = 0; k < 100; k++) // k is an1
-                                        {
-                                            // clearly I'm not sure what location this represents
-                                            int somethingLocation = i / 4;
-
-                                            i = PsaFile.FileContent[somethingLocation];
-                                            if (i < 8096 || i >= PsaFile.DataSectionSize)
-                                            {
-                                                break;
-                                            }
-                                            if (oldPsaCommand.CommandParametersLocation == i)
-                                            {
-                                                oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
-                                                if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                                                {
-                                                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                                    {
-                                                        PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                                    }
-                                                    else
-                                                    {
-                                                        PsaFile.CompressionTracker[somethingLocation] = -1;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    PsaFile.CompressionTracker[somethingLocation] = -1;
-                                                }
-                                                oldPsaCommand.CommandParametersLocation = 0;
-                                                break;
-                                            }
-                                        }
-                                        if (oldPsaCommand.CommandParametersLocation == 0)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            i = 0;
-                        }
-                        else if (oldCommandParamsSize == 4 && i == 2)
-                        {
-                            for (int j = 0; j < PsaFile.NumberOfExternalSubRoutines; j++) // j is mov
-                            {
-                                i = PsaFile.CompressionTracker[(PsaFile.NumberOfDataTableEntries + j) * 2];
-                                if (i > 8096 && i < PsaFile.DataSectionSize)
-                                {
-                                    if (commandParamValueLocation == i)
-                                    {
-                                        oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 3; // rmv
-                                        int temp = (PsaFile.NumberOfDataTableEntries + j) * 2; // not entirely sure what this is yet  :/
-                                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                                        {
-                                            if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                            {
-                                                PsaFile.CompressionTracker[temp] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                            }
-                                            else
-                                            {
-                                                PsaFile.CompressionTracker[temp] = -1;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            PsaFile.CompressionTracker[temp] = -1;
-                                        }
-                                        oldPsaCommand.CommandParametersLocation = 0;
-                                        break;
-                                    }
-                                    if (i >= 8096 && i < PsaFile.DataSectionSize)
-                                    {
-                                        for (int k = 0; k < 100; k++) // k is an1
-                                        {
-                                            // clearly I'm not sure what location this represents
-                                            int somethingLocation = i / 4;
-
-                                            i = PsaFile.FileContent[somethingLocation];
-                                            if (i < 8096 || i >= PsaFile.DataSectionSize)
-                                            {
-                                                break;
-                                            }
-                                            if (oldPsaCommand.CommandParametersLocation == i)
-                                            {
-                                                oldPsaCommand.CommandParametersLocation = PsaFile.FileContent[commandLocation + 1] / 4 + 1;
-                                                if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] >= 8096 && PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] < PsaFile.DataSectionSize)
-                                                {
-                                                    if (PsaFile.FileContent[oldPsaCommand.CommandParametersLocation] % 4 == 0)
-                                                    {
-                                                        PsaFile.CompressionTracker[somethingLocation] = PsaFile.FileContent[oldPsaCommand.CommandParametersLocation];
-                                                    }
-                                                    else
-                                                    {
-                                                        PsaFile.CompressionTracker[somethingLocation] = -1;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    PsaFile.CompressionTracker[somethingLocation] = -1;
-                                                }
-                                                oldPsaCommand.CommandParametersLocation = 0;
-                                                break;
-                                            }
-                                        }
-                                        if (oldPsaCommand.CommandParametersLocation == 0)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            i = 2;
-                        }
-                    }
-
-                }
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = Constants.FADEF00D;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = Constants.FADEF00D;
-            }
-            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize(); // m
-            if (newCommandParamsSize == 0)
-            {
-                PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
-                PsaFile.FileContent[commandLocation + 1] = 0;
-
-                // I believe this is the location of the actual value of a particular command param
-                int commandParamValueLocation = commandLocation * 4 + 4; // rmv
-
-                // Delasc method -- this checks if an offset already exists I think? Not quite sure
-                int iterator = 0;
-                bool existingOffsetFound = false;
-
-                while (iterator < PsaFile.NumberOfOffsetEntries)
-                {
-                    if (PsaFile.OffsetInterlockTracker[iterator] == commandParamValueLocation) // rmv
-                    {
-                        existingOffsetFound = true;
-                        break;
-                    }
-                    iterator++;
-                }
-
-                if (existingOffsetFound)
-                {
-                    PsaFile.OffsetInterlockTracker[iterator] = 16777216; // 100 0000
-                    PsaFile.NumberOfOffsetEntries--;
-                }
-
-                // end delasc
-
-                // fixam
-                PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
-            }
-            // resize command params if new command has more params than the one it is replacing
-            else if (newCommandParamsSize > oldCommandParamsSize)
-            {
-                // figure out how much space is in the current location for command params (increases if it finds some trailing FADEF00D spots)
-                int currentCommandParamSize = oldCommandParamsSize; // i
-                while (currentCommandParamSize < newCommandParamsSize && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
-                {
-                    currentCommandParamSize++;
-                }
-                // resize data section if no more room for command params
-                if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSectionSize)
-                {
-                    int commandSizeDifference = newCommandParamsSize - oldCommandParamsSize;
-                    if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-                    {
-                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
-                        PsaFile.DataSectionSizeBytes += commandSizeDifference;
-                        currentCommandParamSize = newCommandParamsSize;
-                    }
-                    else if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSectionSizeBytes)
-                    {
-                        PsaFile.DataSectionSizeBytes += commandSizeDifference;
-                        currentCommandParamSize = newCommandParamsSize;
-                    }
-                }
-                // if new command params size is less than what's already there, create some FADEF00DS to represent free space that can later be used if needed
-                if (currentCommandParamSize < newCommandParamsSize)
-                {
-                    oldPsaCommand.CommandParametersValuesLocation = CodeBlockDataStartLocation;
-                    int bitStoppingPoint = 0;
-
-                    while (oldPsaCommand.CommandParametersValuesLocation < PsaFile.DataSectionSizeBytes && bitStoppingPoint != oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize)
-                    {
-                        if (PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation] == Constants.FADEF00D)
-                        {
-                            bitStoppingPoint = oldPsaCommand.CommandParametersValuesLocation + 1;
-                            while (bitStoppingPoint <= oldPsaCommand.CommandParametersValuesLocation + newCommandParamsSize && PsaFile.FileContent[bitStoppingPoint] != Constants.FADEF00D)
-                            {
-                                if (PsaFile.FileContent[bitStoppingPoint] != Constants.FADEF00D)
-                                {
-                                    oldPsaCommand.CommandParametersValuesLocation = bitStoppingPoint;
-                                    break;
-                                }
-                                bitStoppingPoint++;
-                            }
-                        }
-                        oldPsaCommand.CommandParametersValuesLocation++;
-                    }
-                    if (oldPsaCommand.CommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
-                    {
-                        oldPsaCommand.CommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
-                        if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-                        {
-                            oldPsaCommand.CommandParametersValuesLocation -= 2;
-                            PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2];
-                            PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
-                        }
-                        PsaFile.DataSectionSizeBytes += newCommandParamsSize;
-                    }
-                    PsaFile.FileContent[commandLocation + 1] = oldPsaCommand.CommandParametersValuesLocation * 4;
+                    UpdateExternalPointerLogic(oldPsaCommand, commandParamPointerValueLocation);
                 }
             }
+
+            // Replace old param values with free space (FADEF00D)
+            for (int paramIndex = 0; paramIndex < oldPsaCommand.NumberOfParams; paramIndex++)
+            {
+                int commandParameterTypeLocation = oldPsaCommand.GetCommandParameterTypeLocation(paramIndex);
+                int commandParameterValueLocation = oldPsaCommand.GetCommandParameterValueLocation(paramIndex);
+                PsaFile.FileContent[commandParameterTypeLocation] = Constants.FADEF00D;
+                PsaFile.FileContent[commandParameterValueLocation] = Constants.FADEF00D;
+            }
+
+            // set new command instruction
             PsaFile.FileContent[commandLocation] = newPsaCommand.Instruction;
 
-            int parameterIndex = 0;
-            for (int i = 0; i < newCommandParamsSize; i += 2)
+            // if new command has no parameters, set pointer to parameters to nothing (which is 0) and remove the pointer to the parameters from the offset interlock
+            if (newPsaCommand.NumberOfParams == 0)
             {
-                // if command param type is Pointer and it actually points to something
-                if (newPsaCommand.Parameters[parameterIndex].Type == 2 && newPsaCommand.Parameters[parameterIndex].Value > 0)
-                {
-                    int something = (oldPsaCommand.CommandParametersValuesLocation + i) * 4 + 4;
-                    PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = something;
-                    PsaFile.NumberOfOffsetEntries++;
-                }
+                // remove pointer to params since this command has no params
+                PsaFile.FileContent[commandLocation + 1] = 0;
 
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i] = newPsaCommand.Parameters[parameterIndex].Type;
-                PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + i + 1] = newPsaCommand.Parameters[parameterIndex].Value;
-                parameterIndex++;
+                // remove offset from interlock tracker since it no longer exists
+                int commandParamValuePointerLocation = commandLocation * 4 + 4; // rmv
+                RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
             }
 
-            // in psac, this is only called if "fnt" is 1, which means something was changed -- will see if this will break things or not to just call every time
-            PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+            // if new command has parameters
+            else
+            {
+                // if new command has a less or equal parameter count to the old command, the parameter values location does not need to be relocated
+                // if the new command has a higher parameter count than the old command, the paramter values location will need to be expanded/relocated to have enough room for all the parameters
+                int newCommandParametersValuesLocation = oldPsaCommand.NumberOfParams >= newPsaCommand.NumberOfParams
+                    ? oldPsaCommand.CommandParametersValuesLocation
+                    : ExpandCommandParametersSection(oldPsaCommand, newPsaCommand);
+
+                PsaFile.FileContent[commandLocation + 1] = newCommandParametersValuesLocation * 4;
+
+
+                // put param values in new param values location one by one
+                for (int paramIndex = 0; paramIndex < newPsaCommand.NumberOfParams; paramIndex++)
+                {
+                    int paramTypeLocation = paramIndex * 2;
+                    int paramValueLocation = paramIndex * 2 + 1;
+
+                    // if command param type is Pointer and it actually points to something
+                    if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
+                    {
+                        int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
+                        PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
+                        PsaFile.NumberOfOffsetEntries++;
+                    }
+
+                    // place parameter type in value in proper place
+                    PsaFile.FileContent[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
+                    PsaFile.FileContent[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// This will remove an offset location from the tracker that is no longer being pointed to by a command
+        /// <para>Delasc method in PSA-C</para>
+        /// </summary>
+        /// <param name="locationToRemove">The offset to remove from the tracker</param>
+        /// <returns>If the offset existed in the tracker and was removed or not</returns>
+        private bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
+        {
+            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            {
+                if (PsaFile.OffsetInterlockTracker[i] == locationToRemove)
+                {
+                    PsaFile.OffsetInterlockTracker[i] = 16777216; // 100 0000
+                    PsaFile.NumberOfOffsetEntries--;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// This method is called when attempting to remove a param value that once pointed to another location (Pointer type) that MIGHT be an external subroutine call
+        /// <para>If it is determined to be a call to an external subroutine, the external subroutine data table is updated to no longer pointer to it</para>
+        /// </summary>
+        /// <param name="oldPsaCommand">The psa command being modified</param>
+        /// <param name="commandParamPointerValueLocation">The pointer to the param's value location</param>
+        private void UpdateExternalPointerLogic(PsaCommand oldPsaCommand, int commandParamPointerValueLocation)
+        {
+            // iterate through each external subroutine in the external data table
+            for (int externalSubRoutineIndex = 0; externalSubRoutineIndex < PsaFile.NumberOfExternalSubRoutines; externalSubRoutineIndex++)
+            {
+                // get a external subroutine's pointer
+                int externalSubRoutineLocationIndex = (PsaFile.NumberOfDataTableEntries + externalSubRoutineIndex) * 2;
+                int externalSubRoutineLocation = PsaFile.FileOtherData[externalSubRoutineLocationIndex];
+                if (externalSubRoutineLocation >= 8096 && externalSubRoutineLocation < PsaFile.DataSectionSize)
+                {
+                    // if the param being removed was pointing to an external subroutine
+                    if (commandParamPointerValueLocation == externalSubRoutineLocation)
+                    {
+                        // get the location of the value of the param
+                        int commandExternalSubroutineValueLocation = commandParamPointerValueLocation / 4;
+
+                        // This stops the external data table from pointing to the command param pointer value location
+                        if (PsaFile.FileContent[commandExternalSubroutineValueLocation] >= 8096 
+                            && PsaFile.FileContent[commandExternalSubroutineValueLocation] < PsaFile.DataSectionSize 
+                            && PsaFile.FileContent[commandExternalSubroutineValueLocation] % 4 == 0)
+                        {
+                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = PsaFile.FileContent[commandExternalSubroutineValueLocation];
+                        }
+                        else
+                        {
+                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = -1;
+                        }
+                        break;
+                    }
+
+                    // same deal as above for the most part, but I am NOT sure what location "externalSubRoutineCodeBlockLocation" actually is (I don't think it's right currently)
+                    // it's tough to test further because I also can't really figure out how to get this code to trigger at the moment, so I'm just going to leave this as is
+                    int externalSubRoutineCodeBlockLocation = externalSubRoutineLocation / 4;
+
+                    int externalSubRoutineCommandsPointerLocation = PsaFile.FileContent[externalSubRoutineCodeBlockLocation];
+                    if (externalSubRoutineCommandsPointerLocation >= 8096
+                        && externalSubRoutineCommandsPointerLocation < PsaFile.DataSectionSize 
+                        && oldPsaCommand.CommandParametersLocation == externalSubRoutineCommandsPointerLocation)
+                    {
+                        int commandExternalDataPointerValue = oldPsaCommand.GetCommandParameterValueLocation(0);
+                        if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize 
+                            && PsaFile.FileContent[commandExternalDataPointerValue] % 4 == 0)
+                        { 
+                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = PsaFile.FileContent[commandExternalDataPointerValue];
+                        }
+                        else
+                        {
+                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = -1;
+                        }
+                        break;
+                    }
+                }
+            }    
+        }
+
+        /// <summary>
+        /// This will expand (usually includes relocating) the command's parameters location if the new psa command has more parameters than the old psa command
+        /// <para>If possible, it will not relocate the params section if enough free space can be found</para>
+        /// <para>If it can't find enough free space in the data section, it resorts to expanding the data section</para>
+        /// </summary>
+        /// <param name="oldPsaCommand">The psa command being modified</param>
+        /// <param name="newPsaCommand">The psa command replacing the old psa command</param>
+        /// <returns>The new location of the command parameters section (if section does not end up getting relocated, it will return the original param section location of the old psa command)</returns>
+        private int ExpandCommandParametersSection(PsaCommand oldPsaCommand, PsaCommand newPsaCommand)
+        {
+            int oldCommandParamsSize = oldPsaCommand.GetCommandParamsSize();
+            int newCommandParamsSize = newPsaCommand.GetCommandParamsSize();
+
+            // determine how much space is currently available for params
+            // to start, there is the original amount of space that the old psa command had
+            int currentCommandParamSize = oldCommandParamsSize;
+
+            // if adding one command to the current parameters location would cause it to go over the data section limit, expand the data section by the amount needed
+            if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSectionSizeBytes)
+            {
+                // difference between the new size needed and the old size
+                int commandSizeDifference = newCommandParamsSize - oldCommandParamsSize;
+
+                // if at the end of the data section, expand data section by the required amount
+                if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                {
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = Constants.FADE0D8A;
+                    PsaFile.FileContent[PsaFile.DataSectionSizeBytes + commandSizeDifference - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                    PsaFile.DataSectionSizeBytes += commandSizeDifference;
+                    currentCommandParamSize = newCommandParamsSize;
+                }
+                // if adding one additional command would cause going over the data section size, just straight up expand the data section size
+                // not entirely sure what differs this case from the others...
+                else if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSectionSizeBytes)
+                {
+                    PsaFile.DataSectionSizeBytes += commandSizeDifference;
+                    currentCommandParamSize = newCommandParamsSize;
+                }
+            }
+
+            // add 1 additional block of space for each free space (FADEF00D) that comes afterwards
+            while (currentCommandParamSize < newCommandParamsSize
+                && PsaFile.FileContent[oldPsaCommand.CommandParametersValuesLocation + currentCommandParamSize] == Constants.FADEF00D)
+            {
+                currentCommandParamSize++;
+            }
+
+            // if expanding the data section was applicable or enough free space was found from the above loop
+            // the original location of the old psa command now has enough room to hold all necessary parameters for the new command
+            if (currentCommandParamSize >= newCommandParamsSize)
+            {
+                return oldPsaCommand.CommandParametersValuesLocation;
+            }
+
+            // if the amount of space available at the current moment is STILL not enough for all of the new params
+            // the parameter location is going to need to be relocated to a place in the file with enough free space
+            else
+            {
+                // find a location in the file with enough free space
+                int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
+
+                // if new location goes over data section limit, expand data sectoin
+                if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
+                {
+                    newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
+                    if (PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                    {
+                        newCommandParametersValuesLocation -= 2;
+                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = Constants.FADE0D8A;
+                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 1];
+                    }
+                    PsaFile.DataSectionSizeBytes += newCommandParamsSize;
+                }
+                return newCommandParametersValuesLocation;  
+            }
         }
     }
 }
