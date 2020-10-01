@@ -1,4 +1,5 @@
-﻿using PSA2.src.Utility;
+﻿using PSA2.src.Models.Fighter;
+using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,23 +23,26 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaCommandParser = psaCommandParser;
         }
 
-        public void RemoveCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveCommand(CodeBlock codeBlock, int commandLocation, PsaCommand removedPsaCommand)
         {
+            int codeBlockCommandsPointerLocation = codeBlock.CommandsPointerLocation;
+            int codeBlockLocation = codeBlock.Location;
+
             int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
             int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             if (numberOfCommandsAlreadyInCodeBlock > 1)
             {
-                RemoveOneCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex);
+                RemoveOneCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand);
             }
             // aka removing this command will remove the last command that was in the action
             else
             {
-                RemoveLastCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, codeBlockLocation);
+                RemoveLastCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, codeBlockLocation);
             }
         }
 
-        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex)
+        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
             int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
@@ -388,7 +392,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
-        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int commandIndex, int codeBlockLocation)
+        public void RemoveLastCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand, int codeBlockLocation)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
             int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;

@@ -102,6 +102,9 @@
     <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveOneCommandInAction.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveOneCommandInAction2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\Data\FitMario.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
