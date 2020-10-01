@@ -28,12 +28,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int codeBlockCommandsPointerLocation = codeBlock.CommandsPointerLocation;
             int codeBlockLocation = codeBlock.Location;
 
-            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
-            int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
+            // codeBlock.NumberOfCommands is g in PSA-C
 
-            if (numberOfCommandsAlreadyInCodeBlock > 1)
+            if (codeBlock.NumberOfCommands > 1)
             {
-                RemoveOneCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand);
+                RemoveOneCommand(codeBlock, commandLocation, removedPsaCommand);
             }
             // aka removing this command will remove the last command that was in the action
             else
@@ -42,17 +41,13 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
         }
 
-        public void RemoveOneCommand(int commandLocation, int codeBlockCommandsPointerLocation, PsaCommand removedPsaCommand)
+        public void RemoveOneCommand(CodeBlock codeBlock, int commandLocation, PsaCommand removedPsaCommand)
         {
             // commandLocation is j, codeBlockCommandsLocation is h
-            int codeBlockCommandsLocation = codeBlockCommandsPointerLocation / 4;
-            int numberOfCommandsAlreadyInCodeBlock = PsaCommandParser.GetNumberOfPsaCommands(codeBlockCommandsLocation); // g
 
             int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
 
-            int numberOfParams = removedPsaCommand.NumberOfParams; // k
-
-            if (numberOfParams != 0)
+            if (removedPsaCommand.NumberOfParams != 0)
             {
                 int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
                 if (removedCommandParamsValuesLocation >= CodeBlockDataStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
@@ -296,8 +291,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // event offset interlock logic
             // not sure what these variables mean
 
-            int k1 = codeBlockCommandsPointerLocation + numberOfCommandsAlreadyInCodeBlock * 8;
-            int h = k1 - (numberOfCommandsAlreadyInCodeBlock - 1) * 8;
+            int k1 = codeBlock.CommandsPointerLocation + codeBlock.NumberOfCommands * 8;
+            int h = k1 - (codeBlock.NumberOfCommands - 1) * 8;
             for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
                 if (PsaFile.FileContent[i] >= h && PsaFile.FileContent[i] <= k1)
