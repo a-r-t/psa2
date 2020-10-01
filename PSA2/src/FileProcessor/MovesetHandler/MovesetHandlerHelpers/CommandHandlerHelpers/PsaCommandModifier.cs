@@ -148,7 +148,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     : oldPsaCommand.CommandParametersLocation + 12;
 
                 // Attempt to remove the above offset from the offset interlock tracker
-                bool wasOffsetRemoved = RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                bool wasOffsetRemoved = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                 // If offset was not successfully removed, it means it either doesn't exist or is an external subroutine
                 // The below method call UpdateExternalPointerLogic will do some necessary work if the offset turns out to be an external subroutine call
@@ -177,8 +177,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 PsaFile.FileContent[commandLocation + 1] = 0;
 
                 // remove offset from interlock tracker since it no longer exists
-                int commandParamValuePointerLocation = commandLocation * 4 + 4; // rmv
-                RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
+                int commandParametersPointerLocation = commandLocation * 4 + 4; // rmv
+                PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
             }
 
             // if new command has parameters
@@ -202,8 +202,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // if command param type is Pointer and it actually points to something
                     if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                     {
-                        int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
-                        PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerLocation;
+                        // I believe this points to the location of the param value (if the param is a pointer)
+                        int commandParameterPointerValueLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
+                        PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = commandParameterPointerValueLocation;
                         PsaFile.NumberOfOffsetEntries++;
                     }
 
@@ -212,26 +213,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     PsaFile.FileContent[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
                 }
             }
-        }
-
-        /// <summary>
-        /// This will remove an offset location from the tracker that is no longer being pointed to by a command
-        /// <para>Delasc method in PSA-C</para>
-        /// </summary>
-        /// <param name="locationToRemove">The offset to remove from the tracker</param>
-        /// <returns>If the offset existed in the tracker and was removed or not</returns>
-        private bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
-        {
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
-            {
-                if (PsaFile.OffsetInterlockTracker[i] == locationToRemove)
-                {
-                    PsaFile.OffsetInterlockTracker[i] = 16777216; // 100 0000
-                    PsaFile.NumberOfOffsetEntries--;
-                    return true;
-                }
-            }
-            return false;
         }
 
         /// <summary>

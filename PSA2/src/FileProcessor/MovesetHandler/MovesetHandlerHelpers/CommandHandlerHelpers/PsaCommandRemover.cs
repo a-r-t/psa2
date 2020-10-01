@@ -43,38 +43,15 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
         public void RemoveOneCommand(CodeBlock codeBlock, int commandLocation, PsaCommand removedPsaCommand)
         {
-            // commandLocation is j, codeBlockCommandsLocation is h
-
-            int removedCommandParamsValuesLocation = removedPsaCommand.CommandParametersValuesLocation; // m
+            // commandLocation is j, codeBlockCommandsLocation is h, removedCommandParmasValuesLocation is m
 
             if (removedPsaCommand.NumberOfParams != 0)
             {
                 int removedCommandsParamsSize = removedPsaCommand.GetCommandParamsSize(); // n
-                if (removedCommandParamsValuesLocation >= CodeBlockDataStartLocation && removedCommandParamsValuesLocation < PsaFile.DataSectionSizeBytes)
+                if (removedPsaCommand.CommandParametersValuesLocation >= CodeBlockDataStartLocation && removedPsaCommand.CommandParametersValuesLocation < PsaFile.DataSectionSizeBytes)
                 {
-                    int pointerToCommandLocation = commandLocation * 4 + 4; // rmv
-
-                    // delasc method
-                    int iterator = 0;
-                    bool existingOffsetFound = false;
-
-                    while (iterator < PsaFile.NumberOfOffsetEntries)
-                    {
-                        if (PsaFile.OffsetInterlockTracker[iterator] == pointerToCommandLocation) // rmv
-                        {
-                            existingOffsetFound = true;
-                            break;
-                        }
-                        iterator++;
-                    }
-
-                    if (existingOffsetFound)
-                    {
-                        PsaFile.OffsetInterlockTracker[iterator] = 16777216; // 100 0000
-                        PsaFile.NumberOfOffsetEntries--;
-                    }
-
-                    // end delasc method
+                    int commandParametersPointerLocation = commandLocation * 4 + 4; // rmv
+                    PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
 
                     // iterates through each param the command had
                     int parameterIndex = 0;

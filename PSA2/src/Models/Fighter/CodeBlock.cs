@@ -35,7 +35,7 @@ namespace PSA2.src.Models.Fighter
             return PsaCommands[index];
         }
 
-        public int GetPsaCommandPointerLocation(int commandIndex)
+        public int GetPsaCommandParametersPointerLocation(int commandIndex)
         {
             return (CommandsLocation + (commandIndex * 2)) * 4 + 4;
         }
