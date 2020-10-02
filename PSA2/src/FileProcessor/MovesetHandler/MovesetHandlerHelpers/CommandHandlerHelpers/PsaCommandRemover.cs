@@ -3,6 +3,7 @@ using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,29 +51,41 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 RemoveCommandParameters(removedPsaCommand, commandLocation);
             }
 
-            while (PsaFile.FileContent[commandLocation + 2] != 0)
+            int removedCommandIndex = codeBlock.GetPsaCommandIndexByLocation(commandLocation);
+
+            // starting from the removed command, iterate through each command in the code block
+            // this loop will shift the commands all over by 1, closing the gap where the removed command used to exist
+            for (int commandIndex = removedCommandIndex; commandIndex < codeBlock.PsaCommands.Count - 1; commandIndex++)
             {
-                if ((PsaFile.FileContent[commandLocation + 2] >> 8 & 0xFF) != 0)
+                PsaCommand nextPsaCommand = codeBlock.PsaCommands[commandIndex + 1];
+                int currentCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
+
+                // if next command has params
+                if (nextPsaCommand.NumberOfParams > 0)
                 {
-                    int something = commandLocation * 4 + 12;
-                    for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                    // adjust pointer location for next command to point to the command before it (since all commands are shifted over now)
+                    int nextCommandPointerLocation = currentCommandLocation * 4 + 12;
+                    
+                    for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[i] == something)
+                        if (PsaFile.OffsetInterlockTracker[j] == nextCommandPointerLocation)
                         {
-                            PsaFile.OffsetInterlockTracker[i] -= 8;
+                            PsaFile.OffsetInterlockTracker[j] -= 8;
                             break;
                         }
                     }
                 }
-                PsaFile.FileContent[commandLocation] = PsaFile.FileContent[commandLocation + 2];
-                PsaFile.FileContent[commandLocation + 1] = PsaFile.FileContent[commandLocation + 3];
-                commandLocation += 2;
-            }
-            PsaFile.FileContent[commandLocation] = 0;
-            PsaFile.FileContent[commandLocation + 1] = 0;
-            PsaFile.FileContent[commandLocation + 2] = Constants.FADEF00D;
-            PsaFile.FileContent[commandLocation + 3] = Constants.FADEF00D;
 
+                // this is what actually shifts the command - the instruction and param pointer is shifted to the previous command location
+                PsaFile.FileContent[currentCommandLocation] = PsaFile.FileContent[currentCommandLocation + 2];
+                PsaFile.FileContent[currentCommandLocation + 1] = PsaFile.FileContent[currentCommandLocation + 3];
+            }
+            // mark the old last command location (that was shifted up in the the loop above) as the end of the code block
+            int lastCommandLocation = codeBlock.GetPsaCommandLocation(codeBlock.NumberOfCommands - 1);
+            PsaFile.FileContent[lastCommandLocation] = 0;
+            PsaFile.FileContent[lastCommandLocation + 1] = 0;
+            PsaFile.FileContent[lastCommandLocation + 2] = Constants.FADEF00D;
+            PsaFile.FileContent[lastCommandLocation + 3] = Constants.FADEF00D;
 
             // event offset interlock logic
             // not sure what these variables mean
@@ -185,8 +198,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 {
                     int parameterType = removedPsaCommand.Parameters[i / 2].Type;
                     int parameterValue = removedPsaCommand.Parameters[i / 2].Value;
-
-                    // crazy nested stuff from modify
 
                     // this only comes into play if the old psa command's param type at index i is "Pointer" (which is 2)
                     // it does some crazy relocating stuff

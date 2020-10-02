@@ -45,6 +45,18 @@ namespace PSA2.src.Models.Fighter
             return CommandsLocation + (commandIndex * 2);
         }
 
+        public int GetPsaCommandIndexByLocation(int commandLocation)
+        {
+            for (int commandIndex = 0; commandIndex < PsaCommands.Count; commandIndex++)
+            {
+                if (GetPsaCommandLocation(commandIndex) == commandLocation)
+                {
+                    return commandIndex;
+                }
+            }
+            throw new ArgumentException("Invalid command location");
+        }
+
         public override string ToString()
         {
             return $"{{{nameof(Location)}={Location.ToString("X")} ({Location}), {nameof(CommandsPointerLocation)}={CommandsPointerLocation.ToString("X")} ({CommandsPointerLocation}), {nameof(CommandsLocation)}={CommandsLocation.ToString("X")} ({CommandsLocation}), {nameof(PsaCommands)}={string.Join(",", PsaCommands.Select(x => x.ToString()).ToList())}}}";
