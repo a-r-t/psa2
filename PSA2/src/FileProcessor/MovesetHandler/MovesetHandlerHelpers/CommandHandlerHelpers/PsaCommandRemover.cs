@@ -40,6 +40,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 RemoveLastCommand(commandLocation, codeBlockCommandsPointerLocation, removedPsaCommand, codeBlockLocation);
             }
+            PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
         public void RemoveOneCommand(CodeBlock codeBlock, int commandLocation, PsaCommand removedPsaCommand)
@@ -63,8 +64,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     DeleteOffsetInterlockData(i);
                 }
             }
-            // end event offset interlock logic
-            PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
         public void RemoveCommandParameters(PsaCommand removedPsaCommand, int commandLocation)
@@ -549,8 +548,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             }
 
             // end delasc method
-
-            PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
         }
 
     }
