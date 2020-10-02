@@ -89,11 +89,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                             ? removedPsaCommand.CommandParametersLocation + 4
                             : removedPsaCommand.CommandParametersLocation + 12;
 
-                        int removedOffsetIndex = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                        bool wasOffsetRemoved = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                         // this part is a long series of nested if statements...
                         // I can't figure out exactly what it does and can't get it to consistently trigger
-                        if (removedOffsetIndex == -1)
+                        if (!wasOffsetRemoved)
                         {
                             // something to do with external subroutines
                             UpdateExternalPointerLogic(removedPsaCommand, commandParamPointerValueLocation);
