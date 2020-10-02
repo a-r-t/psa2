@@ -44,17 +44,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             return (Instruction >> 8 & 0xFF) * 2;
         }
 
-
-        public int GetCommandParameterTypePointerLocation(int paramIndex)
-        {
-            return CommandParametersLocation + (paramIndex * 2);
-        }
-
-        public int GetCommandParameterValuePointerLocation(int paramIndex)
-        {
-            return CommandParametersLocation + (paramIndex * 2) + 1;
-        }
-
         public int GetCommandParameterTypeLocation(int paramIndex)
         {
             return CommandParametersValuesLocation + (paramIndex * 2);
