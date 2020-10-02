@@ -89,11 +89,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                             ? removedPsaCommand.CommandParametersLocation + 4
                             : removedPsaCommand.CommandParametersLocation + 12;
 
-                        bool wasOffsetRemoved = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                        int removedOffsetIndex = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                         // this part is a long series of nested if statements...
                         // I can't figure out exactly what it does and can't get it to consistently trigger
-                        if (!wasOffsetRemoved)
+                        if (removedOffsetIndex == -1)
                         {
                             // something to do with external subroutines
                             UpdateExternalPointerLogic(removedPsaCommand, commandParamPointerValueLocation);
@@ -178,53 +178,33 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     fileContentPointerLocation -= 4;
 
                     // this is a bad name def
-                    int startOffsetOpenArea = 2025;
+                    int commandParamValueLocation = 2025;
                     offsetFound = false;
                     for (int i = 0; i < PsaFile.DataSectionSizeBytes; i++)
                     {
                         if (PsaFile.OffsetInterlockTracker[i] == fileContentPointerLocation)
                         {
                             offsetFound = true;
-                            startOffsetOpenArea = i;
+                            commandParamValueLocation = i;
                             break;
                         }
                     }
                     if (offsetFound)
                     {
                         // 459008 is subroutine instruction, 590080 is goto instruction
-                        if (PsaFile.FileContent[startOffsetOpenArea - 1] == 459008 || PsaFile.FileContent[startOffsetOpenArea - 1] == 590080)
+                        if (PsaFile.FileContent[commandParamValueLocation - 1] == 459008 || PsaFile.FileContent[commandParamValueLocation - 1] == 590080)
                         {
                             // replace command that was pointing to removed command to "nop" instruction
-                            PsaFile.FileContent[startOffsetOpenArea - 1] = Constants.NOP;
-                            PsaFile.FileContent[startOffsetOpenArea] = 0;
+                            PsaFile.FileContent[commandParamValueLocation - 1] = Constants.NOP;
+                            PsaFile.FileContent[commandParamValueLocation] = 0;
 
                             // set to freespace
                             PsaFile.FileContent[fileContentIndex] = Constants.FADEF00D;
                             PsaFile.FileContent[fileContentIndex - 1] = Constants.FADEF00D;
 
-                            int commandParamValuePointerLocation = startOffsetOpenArea * 4; // rmv
-                            // delasc method
+                            int commandParamValuePointerLocation = commandParamValueLocation * 4; // rmv
 
-                            int iterator = 0;
-                            bool existingOffsetFound = false;
-
-                            while (iterator < PsaFile.NumberOfOffsetEntries)
-                            {
-                                if (PsaFile.OffsetInterlockTracker[iterator] == commandParamValuePointerLocation) // rmv
-                                {
-                                    existingOffsetFound = true;
-                                    break;
-                                }
-                                iterator++;
-                            }
-
-                            if (existingOffsetFound)
-                            {
-                                PsaFile.OffsetInterlockTracker[iterator] = 16777216; // 100 0000
-                                PsaFile.NumberOfOffsetEntries--;
-                            }
-
-                            // end delasc method
+                            PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
                         }
                     }
                 }

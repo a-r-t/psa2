@@ -148,11 +148,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     : oldPsaCommand.CommandParametersLocation + 12;
 
                 // Attempt to remove the above offset from the offset interlock tracker
-                bool wasOffsetRemoved = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                int removedOffsetIndex = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                 // If offset was not successfully removed, it means it either doesn't exist or is an external subroutine
                 // The below method call UpdateExternalPointerLogic will do some necessary work if the offset turns out to be an external subroutine call
-                if (!wasOffsetRemoved)
+                if (removedOffsetIndex == -1)
                 {
                     UpdateExternalPointerLogic(oldPsaCommand, commandParamPointerValueLocation);
                 }

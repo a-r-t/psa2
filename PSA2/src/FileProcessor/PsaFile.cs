@@ -414,8 +414,8 @@ namespace PSA2.src.FileProcessor
         /// <para>Delasc method in PSA-C</para>
         /// </summary>
         /// <param name="locationToRemove">The offset to remove from the tracker</param>
-        /// <returns>If the offset existed in the tracker and was removed or not</returns>
-        public bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
+        /// <returns>The index in the offset interlock tracker where the location to remove was found (returns -1 if not found)</returns>
+        public int RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
         {
             for (int i = 0; i < NumberOfOffsetEntries; i++)
             {
@@ -423,10 +423,10 @@ namespace PSA2.src.FileProcessor
                 {
                     OffsetInterlockTracker[i] = 16777216; // 100 0000
                     NumberOfOffsetEntries--;
-                    return true;
+                    return i;
                 }
             }
-            return false;
+            return -1;
         }
 
     }
