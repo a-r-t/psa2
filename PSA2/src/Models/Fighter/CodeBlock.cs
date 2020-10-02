@@ -45,6 +45,11 @@ namespace PSA2.src.Models.Fighter
             return CommandsLocation + (commandIndex * 2);
         }
 
+        public int GetCommandsEndLocation()
+        {
+            return CommandsLocation + NumberOfCommands * 2;
+        }
+
         public int GetPsaCommandIndexByLocation(int commandLocation)
         {
             for (int commandIndex = 0; commandIndex < PsaCommands.Count; commandIndex++)
