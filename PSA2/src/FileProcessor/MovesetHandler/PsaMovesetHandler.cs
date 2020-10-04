@@ -61,6 +61,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
 
             //ActionsParser.MoveActionCommand(0, 0, 1, MoveDirection.UP);
             //Console.WriteLine(ActionsParser.GetAction(0));
+            //ActionsParser.RemoveCommandFromAction(0, 0, 0);
 
             /*
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>

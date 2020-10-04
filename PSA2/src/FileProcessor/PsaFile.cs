@@ -409,5 +409,25 @@ namespace PSA2.src.FileProcessor
             return stoppingPoint;
         }
 
+        /// <summary>
+        /// This will remove an offset location from the tracker that is no longer being pointed to by a command
+        /// <para>Delasc method in PSA-C</para>
+        /// </summary>
+        /// <param name="locationToRemove">The offset to remove from the tracker</param>
+        /// <returns>Whether the offset was found and removed or not</returns>
+        public bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
+        {
+            for (int i = 0; i < NumberOfOffsetEntries; i++)
+            {
+                if (OffsetInterlockTracker[i] == locationToRemove)
+                {
+                    OffsetInterlockTracker[i] = 16777216; // 100 0000
+                    NumberOfOffsetEntries--;
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }

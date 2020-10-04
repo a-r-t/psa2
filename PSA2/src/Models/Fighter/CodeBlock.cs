@@ -35,7 +35,7 @@ namespace PSA2.src.Models.Fighter
             return PsaCommands[index];
         }
 
-        public int GetPsaCommandPointerLocation(int commandIndex)
+        public int GetPsaCommandParametersPointerLocation(int commandIndex)
         {
             return (CommandsLocation + (commandIndex * 2)) * 4 + 4;
         }
@@ -43,6 +43,23 @@ namespace PSA2.src.Models.Fighter
         public int GetPsaCommandLocation(int commandIndex)
         {
             return CommandsLocation + (commandIndex * 2);
+        }
+
+        public int GetCommandsEndLocation()
+        {
+            return CommandsLocation + NumberOfCommands * 2;
+        }
+
+        public int GetPsaCommandIndexByLocation(int commandLocation)
+        {
+            for (int commandIndex = 0; commandIndex < PsaCommands.Count; commandIndex++)
+            {
+                if (GetPsaCommandLocation(commandIndex) == commandLocation)
+                {
+                    return commandIndex;
+                }
+            }
+            throw new ArgumentException("Invalid command location");
         }
 
         public override string ToString()

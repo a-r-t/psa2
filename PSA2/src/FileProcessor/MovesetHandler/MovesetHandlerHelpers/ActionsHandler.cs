@@ -138,11 +138,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public void RemoveCommandFromAction(int actionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockCommandLocation = GetActionCodeBlockCommandLocation(actionId, codeBlockId, commandIndex); // j
-            int actionCodeBlockCommandsPointerLocation = GetActionCodeBlockCommandsPointerLocation(actionId, codeBlockId); // h
             PsaCommand removedPsaCommand = GetPsaCommandForActionCodeBlock(actionId, codeBlockId, commandIndex);
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
-            PsaCommandHandler.RemoveCommand(actionCodeBlockCommandLocation, actionCodeBlockCommandsPointerLocation, removedPsaCommand, commandIndex, actionCodeBlockLocation);
+            CodeBlock codeBlock = GetCodeBlock(actionId, codeBlockId);
+            int actionCodeBlockCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
+            PsaCommandHandler.RemoveCommand(codeBlock, actionCodeBlockCommandLocation, removedPsaCommand);
         }
 
         public void MoveActionCommand(int actionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
