@@ -240,7 +240,11 @@ namespace PSA2.src.FileProcessor
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
-            catch (Exception e) { }
+            catch (Exception e) 
+            {
+                Console.WriteLine(e.Message);
+            }
+
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             for (int i = 0; i < 32; i++)
             {

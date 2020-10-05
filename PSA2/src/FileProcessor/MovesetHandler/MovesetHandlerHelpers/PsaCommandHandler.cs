@@ -50,9 +50,19 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             psaCommandModifier.ModifyCommand(commandLocation, oldPsaCommand, newPsaCommand);
         }
 
-        public void MoveCommand(PsaCommand psaCommandToMove, int commandLocation, MoveDirection moveDirection)
+        public void MoveCommand(CodeBlock codeBlock, PsaCommand psaCommandToMove, int commandLocation, MoveDirection moveDirection)
         {
-            psaCommandMover.MoveCommand(psaCommandToMove, commandLocation, moveDirection);
+            psaCommandMover.MoveCommand(codeBlock, psaCommandToMove, commandLocation, moveDirection);
+        }
+
+        public void MoveCommandUp(CodeBlock codeBlock, PsaCommand psaCommandToMove, int commandLocation)
+        {
+            psaCommandMover.MoveCommand(codeBlock, psaCommandToMove, commandLocation, MoveDirection.UP);
+        }
+
+        public void MoveCommandDown(CodeBlock codeBlock, PsaCommand psaCommandToMove, int commandLocation)
+        {
+            psaCommandMover.MoveCommand(codeBlock, psaCommandToMove, commandLocation, MoveDirection.DOWN);
         }
 
         public void RemoveCommand(CodeBlock codeBlock, int commandLocation, PsaCommand removedPsaCommand)
