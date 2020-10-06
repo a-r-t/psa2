@@ -17,37 +17,37 @@ namespace PSA2.src.FileProcessor.MovesetHandler
     public class PsaMovesetHandler
     {
         public PsaFile PsaFile { get; private set; }
-        public AttributesParser AttributesParser { get; private set; }
-        public DataTableHandler DataTableParser { get; private set; }
-        public ExternalDataHandler ExternalDataParser { get; private set; }
-        public ActionsHandler ActionsParser { get; private set; }
-        public SubActionsHandler SubActionsParser { get; private set; }
-        public SubRoutinesHandler SubRoutinesParser { get; private set; }
-        public ActionOverridesHandler ActionOverridesParser { get; private set; }
-        public ArticlesHandler ArticlesParser { get; private set; }
-        public CharacterParamsHandler CharacterParamsParser { get; private set; }
-        public MiscHandler MiscParser { get; private set; }
+        public AttributesParser AttributesHandler { get; private set; }
+        public DataTableHandler DataTableHandler { get; private set; }
+        public ExternalDataHandler ExternalDataHandler { get; private set; }
+        public ActionsHandler ActionsHandler { get; private set; }
+        public SubActionsHandler SubActionsHandler { get; private set; }
+        public SubRoutinesHandler SubRoutinesHandler { get; private set; }
+        public ActionOverridesHandler ActionOverridesHandler { get; private set; }
+        public ArticlesHandler ArticlesHandler { get; private set; }
+        public CharacterParamsHandler CharacterParamsHandler { get; private set; }
+        public MiscHandler MiscHandler { get; private set; }
 
         public PsaMovesetHandler(PsaFile psaFile)
         {
             PsaFile = psaFile;
-            AttributesParser = new AttributesParser(PsaFile);
-            DataTableParser = new DataTableHandler(PsaFile);
-            ExternalDataParser = new ExternalDataHandler(PsaFile);
-            int dataSectionLocation = DataTableParser.GetDataTableEntryByName("data").Location;
+            AttributesHandler = new AttributesParser(PsaFile);
+            DataTableHandler = new DataTableHandler(PsaFile);
+            ExternalDataHandler = new ExternalDataHandler(PsaFile);
+            int dataSectionLocation = DataTableHandler.GetDataTableEntryByName("data").Location;
             string movesetBaseName = GetMovesetBaseName();
 
             int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
-
-            ActionsParser = new ActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
-            SubActionsParser = new SubActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
-            SubRoutinesParser = new SubRoutinesHandler(PsaFile, dataSectionLocation, ActionsParser, SubActionsParser, psaCommandHandler);
-            ActionOverridesParser = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsParser, psaCommandHandler);
-            ArticlesParser = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
-            CharacterParamsParser = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
-            MiscParser = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
+            CodeBlockHandler codeBlockHandler = new CodeBlockHandler(psaFile, dataSectionLocation, psaCommandHandler);
+            ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlockHandler, psaCommandHandler);
+            SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
+            SubRoutinesHandler = new SubRoutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
+            ActionOverridesHandler = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsHandler, psaCommandHandler);
+            ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
+            CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
+            MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
 
             //PsaCommand psaCommand = ActionsParser.GetPsaCommandsForActionCodeBlock(0, 0)[0];
             //Console.WriteLine(psaCommand);

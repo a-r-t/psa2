@@ -55,6 +55,7 @@
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\ActionOverridesHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\ArticlesHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\CharacterParamsHandler.cs" />
+    <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\CodeBlockHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\PsaCommandHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\CommandHandlerHelpers\AnimationFlags.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\CommandHandlerHelpers\MoveDirection.cs" />
