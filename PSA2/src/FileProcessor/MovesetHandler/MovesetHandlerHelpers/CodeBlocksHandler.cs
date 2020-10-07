@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 {
-    public class CodeBlockHandler
+    public class CodeBlocksHandler
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
 
-        public CodeBlockHandler(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler)
+        public CodeBlocksHandler(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;

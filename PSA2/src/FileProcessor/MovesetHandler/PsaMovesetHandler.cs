@@ -40,8 +40,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
-            CodeBlockHandler codeBlockHandler = new CodeBlockHandler(psaFile, dataSectionLocation, psaCommandHandler);
-            ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlockHandler, psaCommandHandler);
+            CodeBlocksHandler codeBlocksHandler = new CodeBlocksHandler(psaFile, dataSectionLocation, psaCommandHandler);
+            ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler);
             SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, psaCommandHandler);
             SubRoutinesHandler = new SubRoutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
             ActionOverridesHandler = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsHandler, psaCommandHandler);
