@@ -20,12 +20,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
+        public PsaFileHelperMethods PsaFileHelperMethods { get; private set; }
 
-        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
+        public PsaCommandModifier(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaFileHelperMethods psaFileHelperMethods)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
+            PsaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     else
                     {
                         CreateNewCommandParametersLocation(commandLocation, newPsaCommand);
-                        PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+                        PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
                     }
                 }
 
@@ -60,7 +62,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 else
                 {
                     ModifyExistingCommandParametersLocation(commandLocation, oldPsaCommand, newPsaCommand);
-                    PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+                    PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
                 }
             }
             else
@@ -80,7 +82,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCommandParamsValuesSize = newPsaCommand.GetCommandParamsSize();
 
             // determine where the new parameters values location will be by finding enough free space to fit it
-            int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsValuesSize);
+            int newCommandParametersValuesLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsValuesSize);
 
             // if the only place with free space found is after the limits of the data section, expand the data section to make room
             if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
@@ -148,7 +150,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     : oldPsaCommand.CommandParametersLocation + 12;
 
                 // Attempt to remove the above offset from the offset interlock tracker
-                bool wasOffsetRemoved = PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                bool wasOffsetRemoved = PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                 // If offset was not successfully removed, it means it either doesn't exist or is an external subroutine
                 // The below method call UpdateExternalPointerLogic will do some necessary work if the offset turns out to be an external subroutine call
@@ -178,7 +180,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
                 // remove offset from interlock tracker since it no longer exists
                 int commandParametersPointerLocation = commandLocation * 4 + 4; // rmv
-                PsaFile.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
+                PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
             }
 
             // if new command has parameters
@@ -336,7 +338,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             else
             {
                 // find a location in the file with enough free space
-                int newCommandParametersValuesLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
+                int newCommandParametersValuesLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
 
                 // if new location goes over data section limit, expand data sectoin
                 if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)

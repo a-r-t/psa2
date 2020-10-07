@@ -79,6 +79,7 @@
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\CommandHandlerHelpers\PsaCommandParser.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\SubActionsHandler.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\SubRoutinesHandler.cs" />
+    <Compile Include="src\FileProcessor\PsaFileHelperMethods.cs" />
     <Compile Include="src\FileProcessor\PsaFileParser.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\PsaMovesetHandler.cs" />
     <Compile Include="src\FileProcessor\PsaFile.cs" />
