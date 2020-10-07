@@ -18,12 +18,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
+        public PsaFileHelperMethods PsaFileHelperMethods { get; private set; }
 
-        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
+        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaFileHelperMethods psaFileHelperMethods)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
+            PsaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 }
 
                 // update psa file headings
-                PsaFile.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+                PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
             }
             else
             {
@@ -68,7 +70,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         private void SetupCodeBlockForCommands(CodeBlock codeBlock)
         {
             // Get a new location to put commands in that has the required amount of free space
-            int newCodeBlockCommandsLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
+            int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
 
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
@@ -172,7 +174,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         {
             // get new location for commands to be moved to that has enough free space
             int commandsParamsSpaceRequired = codeBlock.NumberOfCommands * 2 + 4;
-            int newCodeBlockCommandsLocation = PsaFile.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, commandsParamsSpaceRequired);
+            int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, commandsParamsSpaceRequired);
 
             // if the new location is past the data section limit, expand the data section by the amount of space required
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)

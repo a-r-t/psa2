@@ -13,7 +13,7 @@ namespace PSA2Tests.WriteTests
         public void RemoveOneCommandFromAction(int actionId, int codeBlockId, int commandIndex, string comparisonFileName)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
-            psaMovesetParser.ActionsParser.RemoveCommandFromAction(actionId, codeBlockId, commandIndex);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(actionId, codeBlockId, commandIndex);
             psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/Actions/Remove/{comparisonFileName}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Remove/{comparisonFileName}", $"./WriteTests/Out/Actions/Remove/{comparisonFileName}"));
         }
@@ -22,9 +22,9 @@ namespace PSA2Tests.WriteTests
         public void RemoveAllCommandsFromAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
-            psaMovesetParser.ActionsParser.RemoveCommandFromAction(6, 1, 0);
-            psaMovesetParser.ActionsParser.RemoveCommandFromAction(6, 1, 0);
-            psaMovesetParser.ActionsParser.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Remove/FitMarioRemoveAllCommandsInAction.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveAllCommandsInAction.pac", "./WriteTests/Out/Actions/Remove/FitMarioRemoveAllCommandsInAction.pac"));
         }
@@ -33,7 +33,7 @@ namespace PSA2Tests.WriteTests
         public void RemoveCommandWithPointerFromAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
-            psaMovesetParser.ActionsParser.RemoveCommandFromAction(2, 0, 11);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(2, 0, 11);
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac", "./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac"));
         }
