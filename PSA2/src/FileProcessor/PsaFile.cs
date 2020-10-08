@@ -17,7 +17,7 @@ namespace PSA2.src.FileProcessor
         public int ExtraSpace { get; private set; } // efdts
         public List<int> OffsetInterlockTracker { get; private set; } // asc
         public int FileOtherDataSize { get; set; } // rnexsize
-        public int[] FileOtherData { get; private set; } = new int[2000]; // rnext
+        public List<int> FileOtherData { get; private set; } // rnext
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -214,13 +214,10 @@ namespace PSA2.src.FileProcessor
             FileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
 
             // place all "other data" into this FileOtherData array to hold on to
+            FileOtherData = new List<int>();
             for (int i = 0; i < FileOtherDataSize; i++)
             {
-                FileOtherData[i] = FileContent[dataAndOffsetCombinedSize + i];
-            }
-            for (int i = FileOtherDataSize; i < FileOtherData.Length; i++)
-            {
-                FileOtherData[i] = 0;
+                FileOtherData.Add(FileContent[dataAndOffsetCombinedSize + i]);
             }
         }
 
