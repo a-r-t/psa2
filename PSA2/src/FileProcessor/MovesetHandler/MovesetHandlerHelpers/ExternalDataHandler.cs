@@ -23,13 +23,13 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfExternalSubRoutines; i++)
             {
-                int dataOffset = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + i * 2] / 4;
-                int nameStringOffset = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + 1 + i * 2];
+                int dataOffset = PsaFile.DataSection[PsaFile.ExternalDataSectionStartLocation + i * 2] / 4;
+                int nameStringOffset = PsaFile.DataSection[PsaFile.ExternalDataSectionStartLocation + 1 + i * 2];
                 int startBit = nameStringOffset;
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {
@@ -52,13 +52,13 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfExternalSubRoutines; i++)
             {
-                int dataLocation = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + i * 2] / 4;
-                int nameStringOffset = PsaFile.FileContent[PsaFile.ExternalDataSectionStartLocation + 1 + i * 2];
+                int dataLocation = PsaFile.DataSection[PsaFile.ExternalDataSectionStartLocation + i * 2] / 4;
+                int nameStringOffset = PsaFile.DataSection[PsaFile.ExternalDataSectionStartLocation + 1 + i * 2];
                 int startBit = nameStringOffset;
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {

@@ -37,7 +37,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             int dataSectionLocation = DataTableHandler.GetDataTableEntryByName("data").Location;
             string movesetBaseName = GetMovesetBaseName();
 
-            int numberOfSpecialActions = (PsaFile.FileContent[dataSectionLocation + 10] - PsaFile.FileContent[dataSectionLocation + 9]) / 4;
+            int numberOfSpecialActions = (PsaFile.DataSection[dataSectionLocation + 10] - PsaFile.DataSection[dataSectionLocation + 9]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
             CodeBlocksHandler codeBlocksHandler = new CodeBlocksHandler(psaFile, dataSectionLocation, psaCommandHandler);
@@ -143,7 +143,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             int nameEndByteIndex = 4;
             while (true)
             {
-                string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileHeader[nameEndByteIndex]);
+                string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.HeaderSection[nameEndByteIndex]);
                 movesetBaseName.Append(nextStringData);
                 if (nextStringData.Length == 4)
                 {

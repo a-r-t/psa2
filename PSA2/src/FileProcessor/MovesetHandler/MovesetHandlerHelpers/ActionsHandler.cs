@@ -45,7 +45,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public int GetNumberOfSpecialActions()
         {
-            return (PsaFile.FileContent[DataSectionLocation + 10] - PsaFile.FileContent[DataSectionLocation + 9]) / 4;
+            return (PsaFile.DataSection[DataSectionLocation + 10] - PsaFile.DataSection[DataSectionLocation + 9]) / 4;
         }
 
         public int GetTotalNumberOfActions()
@@ -60,10 +60,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             switch (codeBlockId)
             {
                 case ENTRY_CODE_BLOCK:
-                    actionCodeBlockStartingLocation = PsaFile.FileContent[DataSectionLocation + 9] / 4;
+                    actionCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 9] / 4;
                     break;
                 case EXIT_CODE_BLOCK:
-                    actionCodeBlockStartingLocation = PsaFile.FileContent[DataSectionLocation + 10] / 4;
+                    actionCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 10] / 4;
                     break;
                 default:
                     throw new System.ArgumentException("Invalid code block id -- only 0 (Entry) and 1 (Exit) are valid");

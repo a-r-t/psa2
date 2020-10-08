@@ -28,7 +28,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetCharacterParametersDataLocation(int paramsId)
         {
             int paramsLocation = Convert.ToInt32(CharacterSpecificParametersConfig.Parameters[paramsId].Location, 16);
-            return PsaFile.FileContent[DataSectionLocation + paramsLocation / 4] / 4;
+            return PsaFile.DataSection[DataSectionLocation + paramsLocation / 4] / 4;
         }
 
         // formally known as the "No Selects", I don't believe these are article related at all
@@ -43,7 +43,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int numberOfParamValues = CharacterSpecificParametersConfig.Parameters[paramsId].Values.Count;
             for (int i = 0; i < numberOfParamValues; i++)
             {
-                characterParameterValues.Add(PsaFile.FileContent[characterParametersDataLocation + i]);
+                characterParameterValues.Add(PsaFile.DataSection[characterParametersDataLocation + i]);
             }
             characterParameterValues.ForEach(x => Console.WriteLine(x.ToString("X")));
             return characterParameterValues;
@@ -60,7 +60,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             for (int i = 0; i < numberOfLocations; i++)
             {
                 int nextValuesLocation = Convert.ToInt32(CharacterSpecificParametersConfig.ExtraParameters[paramsId].ParameterLocationPath[i], 16);
-                valuesDataLocation = PsaFile.FileContent[nextStartLocation + nextValuesLocation] / 4;
+                valuesDataLocation = PsaFile.DataSection[nextStartLocation + nextValuesLocation] / 4;
                 nextStartLocation = valuesDataLocation;
             }
 
@@ -76,7 +76,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int numberOfParamValues = CharacterSpecificParametersConfig.Parameters[paramsId].Values.Count;
             for (int i = 0; i < numberOfParamValues; i++)
             {
-                characterExtraParameterValues.Add(PsaFile.FileContent[characterExtraParametersDataLocation + i]);
+                characterExtraParameterValues.Add(PsaFile.DataSection[characterExtraParametersDataLocation + i]);
             }
             characterExtraParameterValues.ForEach(x => Console.WriteLine(x.ToString("X")));
             return characterExtraParameterValues;

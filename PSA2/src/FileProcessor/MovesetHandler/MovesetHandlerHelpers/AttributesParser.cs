@@ -34,8 +34,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                         attributeData.Description,
                         attributeData.Location,
                         attributeData.Type,
-                        PsaFile.FileContent[i],
-                        PsaFile.FileContent[i + TOTAL_NUMBER_OF_ATTRIBUTES]
+                        PsaFile.DataSection[i],
+                        PsaFile.DataSection[i + TOTAL_NUMBER_OF_ATTRIBUTES]
                     )
                 );
             }
@@ -54,8 +54,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                     attributeData.Description,
                     attributeData.Location,
                     attributeData.Type,
-                    PsaFile.FileContent[attributeIndex],
-                    PsaFile.FileContent[attributeIndex + TOTAL_NUMBER_OF_ATTRIBUTES]
+                    PsaFile.DataSection[attributeIndex],
+                    PsaFile.DataSection[attributeIndex + TOTAL_NUMBER_OF_ATTRIBUTES]
                 );
             }
             else
@@ -85,7 +85,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             if (attributeIndex < TOTAL_NUMBER_OF_ATTRIBUTES)
             {
                 int formatValue = AttributeConfig.Attributes[attributeIndex].Type == "float" ? Utils.ConvertIntToIeeFloatingPoint(value) : value;
-                PsaFile.FileContent[attributeIndex + (sse ? 185 : 0)] = formatValue;
+                PsaFile.DataSection[attributeIndex + (sse ? 185 : 0)] = formatValue;
             }
             else
             {
