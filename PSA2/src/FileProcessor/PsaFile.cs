@@ -15,7 +15,7 @@ namespace PSA2.src.FileProcessor
         public int[] FileContent { get; set; }
         public int FileSize { get; set; }
         public int ExtraSpace { get; private set; } // efdts
-        public int[] OffsetInterlockTracker { get; private set; } // asc
+        public List<int> OffsetInterlockTracker { get; private set; } // asc
         public int FileOtherDataSize { get; set; } // rnexsize
         public int[] FileOtherData { get; private set; } = new int[2000]; // rnext
 
@@ -202,16 +202,12 @@ namespace PSA2.src.FileProcessor
             // which is variable "asc" in PSAC
             // not entirely sure how this all works but this is used to automatically update pointers when new commands are added
             // like updating a "goto" offset to still point to the same thing after a new command is added
-            OffsetInterlockTracker = new int[37000];
+            OffsetInterlockTracker = new List<int>();
             for (int i = 0; i < NumberOfOffsetEntries; i++)
             {
-                OffsetInterlockTracker[i] = FileContent[(DataSectionSize / 4) + i];
+                OffsetInterlockTracker.Add(FileContent[(DataSectionSize / 4) + i]);
             }
-            for (int i = NumberOfOffsetEntries; i < OffsetInterlockTracker.Length; i++)
-            {
-                OffsetInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
-            }
-
+ 
             // store anything else in the moveset file (after the data section and offset section) into another array
             // since the data section can be incrased at any time, this holds on to that data for later
             int dataAndOffsetCombinedSize = DataSectionSizeBytes + NumberOfOffsetEntries; // calculate size of data section and offset section combined

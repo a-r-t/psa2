@@ -56,7 +56,7 @@ namespace PSA2.src.FileProcessor
             PsaFile.DataSectionSize = currentFileSizeBytes * 4;
 
             // sort offsets in the tracker, because they need to be placed into the psa file in order
-            Array.Sort(PsaFile.OffsetInterlockTracker);
+            PsaFile.OffsetInterlockTracker.Sort();
 
             // place offset table into Psa File
             for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
@@ -96,8 +96,6 @@ namespace PSA2.src.FileProcessor
             {
                 Console.WriteLine("Current data size over 544kb");
             }
-
-            Console.WriteLine(Utils.IntArrayToString(PsaFile.OffsetInterlockTracker));
         }
 
         /// <summary>

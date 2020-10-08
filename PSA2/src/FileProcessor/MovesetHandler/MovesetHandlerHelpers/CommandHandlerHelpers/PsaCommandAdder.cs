@@ -98,7 +98,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFile.FileContent[codeBlock.Location] = newCodeBlockCommandsPointerLocation;
 
             // update offset tracker to include code block commands pointer (since it now has commands again)
-            PsaFile.OffsetInterlockTracker[PsaFile.NumberOfOffsetEntries] = codeBlock.Location * 4;
+            PsaFile.OffsetInterlockTracker.Add(codeBlock.Location * 4);
             PsaFile.NumberOfOffsetEntries++;
         }
 
