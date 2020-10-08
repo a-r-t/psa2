@@ -73,7 +73,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // since command is being moved upwards, the command above will switch with it and as a result moves downwards
                     // this will increase the offset table's pointer to the command above's param location by 8 to adjust for the command moving downwards
                     int commandAboveParamsPointerLocation = codeBlock.GetPsaCommandParamsLocation(commandIndex - 1) * 4;
-                    for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                    for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
                     {
                         if (PsaFile.OffsetInterlockTracker[i] == commandAboveParamsPointerLocation)
                         {
@@ -91,7 +91,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // since command is being moved upwards, anything pointing to its params pointer will need to move upwards by 8
                 int commandParamsPointerLocation = codeBlock.GetPsaCommandParametersPointerLocation(commandIndex);
-                for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
                 {
                     if (PsaFile.OffsetInterlockTracker[i] == commandParamsPointerLocation)
                     {
@@ -134,7 +134,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // since command is being moved downwards, the command above will switch with it and as a result moves upwards
                     // this will decrease the offset table's pointer to the command above's param location by 8 to adjust for the command moving upwards
                     int commandBelowParamsPointerLocation = codeBlock.GetPsaCommandParamsLocation(commandIndex + 1) * 4;
-                    for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                    for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
                     {
                         if (PsaFile.OffsetInterlockTracker[i] == commandBelowParamsPointerLocation)
                         {
@@ -152,7 +152,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // since command is being moved downwards, anything pointing to its params pointer will need to move downwards by 8
                 int commandParamsPointerLocation = codeBlock.GetPsaCommandParametersPointerLocation(commandIndex);
-                for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
                 {
                     if (PsaFile.OffsetInterlockTracker[i] == commandParamsPointerLocation)
                     {

@@ -99,7 +99,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // update offset tracker to include code block commands pointer (since it now has commands again)
             PsaFile.OffsetInterlockTracker.Add(codeBlock.Location * 4);
-            PsaFile.NumberOfOffsetEntries++;
         }
 
         /// <summary>
@@ -196,7 +195,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 if (codeBlock.PsaCommands[commandIndex].NumberOfParams != 0)
                 {
                     // update offset tracker to replace any references to the old command pointer to the new one
-                    for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
+                    for (int j = 0; j < PsaFile.OffsetInterlockTracker.Count; j++)
                     {
                         if (PsaFile.OffsetInterlockTracker[j] == codeBlock.GetPsaCommandParametersPointerLocation(commandIndex))
                         {
@@ -256,7 +255,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     int pointerToOffsetLocation = i * 4;
 
                     // check if any current pointers reference that old location
-                    for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
+                    for (int j = 0; j < PsaFile.OffsetInterlockTracker.Count; j++)
                     {
                         // if pointer to offset is found in offset interlock tracker
                         if (PsaFile.OffsetInterlockTracker[j] == pointerToOffsetLocation)

@@ -163,7 +163,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // adjust pointer location for next command to point to the command before it (since all commands are shifted over now)
                     int nextCommandPointerLocation = currentCommandLocation * 4 + 12;
 
-                    for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
+                    for (int j = 0; j < PsaFile.OffsetInterlockTracker.Count; j++)
                     {
                         if (PsaFile.OffsetInterlockTracker[j] == nextCommandPointerLocation)
                         {
@@ -200,7 +200,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int fileContentPointerLocation = fileContentIndex * 4;
             bool offsetFound = false;
             int offsetIndex = 0;
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
             {
                 if (PsaFile.OffsetInterlockTracker[i] == fileContentPointerLocation)
                 {
@@ -216,7 +216,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // remove parm value since location was removed and offset pointing to that param value
                 PsaFile.FileContent[fileContentIndex] = 0;
                 PsaFile.OffsetInterlockTracker[offsetIndex] = 16777216; // 100 0000
-                PsaFile.NumberOfOffsetEntries--;
+                PsaFile.OffsetInterlockTracker.RemoveAt(offsetIndex);
 
                 // if param type is pointer
                 if (PsaFile.FileContent[fileContentIndex - 1] == 2)

@@ -107,7 +107,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 {
                     int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
                     PsaFile.OffsetInterlockTracker.Add(commandParameterPointerLocation);
-                    PsaFile.NumberOfOffsetEntries++;
                 }
                 PsaFile.FileContent[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
                 PsaFile.FileContent[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
@@ -123,7 +122,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // set pointer to command parameters pointer location in the offset interlock tracker
             int newCommandParametersPointerLocation = commandLocation * 4 + 4;
             PsaFile.OffsetInterlockTracker.Add(newCommandParametersPointerLocation);
-            PsaFile.NumberOfOffsetEntries++;
         }
 
         /// <summary>
@@ -207,7 +205,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         // I believe this points to the location of the param value (if the param is a pointer)
                         int commandParameterPointerValueLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
                         PsaFile.OffsetInterlockTracker.Add(commandParameterPointerValueLocation);
-                        PsaFile.NumberOfOffsetEntries++;
                     }
 
                     // place parameter type in value in proper place

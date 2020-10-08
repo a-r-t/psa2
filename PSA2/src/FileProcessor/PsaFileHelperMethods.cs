@@ -59,7 +59,8 @@ namespace PSA2.src.FileProcessor
             PsaFile.OffsetInterlockTracker.Sort();
 
             // place offset table into Psa File
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            PsaFile.NumberOfOffsetEntries = PsaFile.OffsetInterlockTracker.Count;
+            for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
             {
                 PsaFile.FileContent[currentFileSizeBytes] = PsaFile.OffsetInterlockTracker[i];
                 currentFileSizeBytes++;
@@ -138,12 +139,11 @@ namespace PSA2.src.FileProcessor
         /// <returns>Whether the offset was found and removed or not</returns>
         public bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
         {
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            for (int i = 0; i < PsaFile.OffsetInterlockTracker.Count; i++)
             {
                 if (PsaFile.OffsetInterlockTracker[i] == locationToRemove)
                 {
-                    PsaFile.OffsetInterlockTracker[i] = 16777216; // 100 0000
-                    PsaFile.NumberOfOffsetEntries--;
+                    PsaFile.OffsetInterlockTracker.RemoveAt(i);
                     return true;
                 }
             }
