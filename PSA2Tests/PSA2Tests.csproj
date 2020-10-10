@@ -33,6 +33,9 @@
     <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAddedWithNoExistingCommands.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -37,5 +37,18 @@ namespace PSA2Tests.WriteTests
             psaMovesetParser.PsaFile.SaveFile($"./WriteTests/Out/Actions/Add/{comparisonFileName}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./WriteTests/ComparisonData/Actions/Add/{comparisonFileName}", $"./WriteTests/Out/Actions/Add/{comparisonFileName}"));
         }
+
+
+        [Test]
+        public void AddCommandsToActionWithFreeSpaceInMiddleOfDataSection()
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
+            psaMovesetParser.ActionsHandler.AddCommandToAction(6, 1);
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac", "./WriteTests/Out/Actions/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac"));
+        }
     }
 }

@@ -74,30 +74,56 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
 
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
+            bool wasDataSectionExpanded = false;
+            bool doesSpaceExistAtEndOfAction = false;
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
             {
-                // TODO: Refactor this code
-                for (int i = 0; i < 4; i++)
-                {
-                    PsaFile.DataSection.Add(0);
-                }
+                wasDataSectionExpanded = true;
                 newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
-                if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                if (PsaFile.DataSection[PsaFile.DataSection.Count - 2] == Constants.FADE0D8A)
                 {
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + 2] = Constants.FADE0D8A;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + 3] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
+                    doesSpaceExistAtEndOfAction = true;
                     newCodeBlockCommandsLocation -= 2;
                 }
-                PsaFile.DataSectionSizeBytes += 4;                
             }
 
-            // add nop psa command
-            PsaFile.DataSection[newCodeBlockCommandsLocation] = Constants.NOP;
-            PsaFile.DataSection[newCodeBlockCommandsLocation + 1] = 0;
+            /*
+             * add a NOP command to the action code block
+             * 
+             * depending on if the data section was expanded, the NOP command either replaces existing free space 
+             * or is added on to the end of the data section
+             */
+            if (!wasDataSectionExpanded && !doesSpaceExistAtEndOfAction)
+            {
+                PsaFile.DataSection[newCodeBlockCommandsLocation] = Constants.NOP;
+                PsaFile.DataSection[newCodeBlockCommandsLocation + 1] = 0;
 
-            // signifies the end of the code block commands list
-            PsaFile.DataSection[newCodeBlockCommandsLocation + 2] = 0;
-            PsaFile.DataSection[newCodeBlockCommandsLocation + 3] = 0;
+                // signifies the end of the code block commands list
+                PsaFile.DataSection[newCodeBlockCommandsLocation + 2] = 0;
+                PsaFile.DataSection[newCodeBlockCommandsLocation + 3] = 0;
+            }
+            else if (wasDataSectionExpanded && !doesSpaceExistAtEndOfAction)
+            {
+                PsaFile.DataSection.Add(Constants.NOP);
+                PsaFile.DataSection.Add(0);
+
+                // signifies the end of the code block commands list
+                PsaFile.DataSection.Add(0);
+                PsaFile.DataSection.Add(0);
+            }
+            else // wasDataSectionExpanded && isFreeSpaceAvailable
+            {
+                // add nop psa command
+                PsaFile.DataSection[newCodeBlockCommandsLocation] = Constants.NOP;
+                PsaFile.DataSection[newCodeBlockCommandsLocation + 1] = 0;
+
+                // signifies the end of the code block commands list
+                PsaFile.DataSection.Add(0);
+                PsaFile.DataSection.Add(0);
+
+                PsaFile.DataSection.Add(Constants.FADE0D8A);
+                PsaFile.DataSection.Add(PsaFile.DataSection[PsaFile.DataSection.Count - 1]);
+            }
 
             // set code block to point to new commands location
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
@@ -105,6 +131,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // update offset tracker to include code block commands pointer (since it now has commands again)
             PsaFile.OffsetSection.Add(codeBlock.Location * 4);
+
+            PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
         }
 
         /// <summary>
