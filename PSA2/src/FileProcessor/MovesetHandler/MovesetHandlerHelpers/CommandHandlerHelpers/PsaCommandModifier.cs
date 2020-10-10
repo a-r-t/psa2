@@ -87,6 +87,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if the only place with free space found is after the limits of the data section, expand the data section to make room
             if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
             {
+                // TODO: Refactor this code
+                for (int i = 0; i < newCommandParamsValuesSize; i++)
+                {
+                    PsaFile.DataSection.Add(0);
+                }
                 newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
                 if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
@@ -302,6 +307,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if at the end of the data section, expand data section by the required amount
                 if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
+                    // TODO: Refactor this code
+                    for (int i = 0; i < commandSizeDifference; i++)
+                    {
+                        PsaFile.DataSection.Add(0);
+                    }
                     PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = Constants.FADE0D8A;
                     PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandSizeDifference - 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
                     PsaFile.DataSectionSizeBytes += commandSizeDifference;
@@ -311,6 +321,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // not entirely sure what differs this case from the others...
                 else if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSectionSizeBytes)
                 {
+                    // TODO: Refactor this code
+                    for (int i = 0; i < commandSizeDifference; i++)
+                    {
+                        PsaFile.DataSection.Add(0);
+                    }
+
                     PsaFile.DataSectionSizeBytes += commandSizeDifference;
                     currentCommandParamSize = newCommandParamsSize;
                 }
@@ -340,6 +356,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // if new location goes over data section limit, expand data sectoin
                 if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
                 {
+                    // TODO: Refactor this code
+                    for (int i = 0; i < newCommandParamsSize; i++)
+                    {
+                        PsaFile.DataSection.Add(0);
+                    }
+
                     newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
                     if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                     {

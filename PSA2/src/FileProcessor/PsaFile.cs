@@ -313,6 +313,7 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)(RemainingSections[i] & 0xFF));
             }
 
+            // TODO: Refactor this code
             int newMovesetFileSizeBytes = (MovesetFileSize + 3) / 4;
             if (newMovesetFileSizeBytes % 8 != 0)
             {

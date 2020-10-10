@@ -79,7 +79,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         {
                             // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
                             PsaFile.OffsetSection[i] += 8;
-                            PsaFile.DataSection[PsaFile.DataSectionSizeBytes + i] += 8;
+                            //PsaFile.DataSection[PsaFile.DataSectionSizeBytes + i] += 8;
                             break;
                         }
                     }
@@ -97,7 +97,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     {
                         // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
                         PsaFile.OffsetSection[i] -= 8;
-                        PsaFile.DataSection[PsaFile.DataSectionSizeBytes + i] -= 8;
+                        //PsaFile.DataSection[PsaFile.DataSectionSizeBytes + i] -= 8;
                         break;
                     }
                 }
@@ -140,7 +140,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         {
                             // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
                             PsaFile.OffsetSection[i] -= 8;
-                            PsaFile.DataSection[i + PsaFile.DataSectionSizeBytes] -= 8;
+                            //PsaFile.DataSection[i + PsaFile.DataSectionSizeBytes] -= 8;
                             break;
                         }
                     }
@@ -158,7 +158,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     {
                         // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
                         PsaFile.OffsetSection[i] += 8;
-                        PsaFile.DataSection[i + PsaFile.DataSectionSizeBytes] += 8;
+                        //PsaFile.DataSection[i + PsaFile.DataSectionSizeBytes] += 8;
                         break;
                     }
                 }
