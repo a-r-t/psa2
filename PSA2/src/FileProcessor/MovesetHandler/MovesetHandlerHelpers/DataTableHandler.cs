@@ -49,16 +49,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public DataEntry GetDataTableEntryByName(string dataTableEntryName)
         {
-            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
+            int dataElementNameEntriesStartLocation = (PsaFile.ExternalDataSectionStartLocation - PsaFile.DataTableSectionStartLocation) + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfDataTableEntries; i++)
             {
-                int dataLocation = PsaFile.DataSection[PsaFile.DataTableSectionStartLocation + i * 2] / 4;
-                int nameStringOffset = PsaFile.DataSection[PsaFile.DataTableSectionStartLocation + 1 + i * 2];
+                int dataLocation = PsaFile.RemainingSections[i * 2] / 4;
+                int nameStringOffset = PsaFile.RemainingSections[1 + i * 2];
                 int startBit = nameStringOffset;
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.RemainingSections[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {

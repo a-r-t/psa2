@@ -75,6 +75,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
             {
+                for (int i = 0; i < 4; i++)
+                {
+                    PsaFile.DataSection.Add(0);
+                }
                 newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
                 if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
