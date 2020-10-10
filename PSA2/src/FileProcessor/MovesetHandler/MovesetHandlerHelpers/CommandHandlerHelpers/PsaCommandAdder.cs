@@ -106,8 +106,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // update offset tracker to include code block commands pointer (since it now has commands again)
             PsaFile.OffsetSection.Add(codeBlock.Location * 4);
-
-            PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
         }
 
         /// <summary>
@@ -133,8 +131,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
                     PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation - 1, Constants.FADEF00D);
                     PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation, Constants.FADEF00D);
-
-                    PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
                 }
             }
 
@@ -230,13 +226,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
             {
                 PsaFile.DataSection.Add(Constants.FADE0D8A);
-                PsaFile.DataSection.Add(PsaFile.DataSection.GetAt(-commandsParamsSpaceRequired));
+                PsaFile.DataSection.Add(PsaFile.DataSection.GetAt(-commandsParamsSpaceRequired - 1));
             }
 
             // update commands pointer to point to new location 
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
-
-            PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
 
             return newCodeBlockCommandsPointerLocation;
         }

@@ -118,7 +118,7 @@ namespace PSA2.src.FileProcessor
 
         /// <summary>
         /// Sets a location in the Data Section to a specified value
-        /// <para>If the specified location is larger than the amount of space already in the Data Section, the value is appened on to the end of the Data Section instead</para>
+        /// <para>If the specified location is larger than the amount of space already in the Data Section, the value is appended on to the end of the Data Section instead</para>
         /// </summary>
         /// <param name="location">Location (index) in Data Section to set</param>
         /// <param name="value">Value to set the Data Section to at the specified location</param>
