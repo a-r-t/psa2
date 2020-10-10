@@ -58,20 +58,7 @@ namespace PSA2.src.FileProcessor
             // sort offsets in the tracker, because they need to be placed into the psa file in order
             PsaFile.OffsetSection.Sort();
 
-            // place offset table into Psa File
             PsaFile.NumberOfOffsetEntries = PsaFile.OffsetSection.Count;
-            for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
-            {
-                PsaFile.DataSection[currentFileSizeBytes] = PsaFile.OffsetSection[i];
-                currentFileSizeBytes++;
-            }
-
-            // place all other data in file into Psa File
-            for (int i = 0; i < PsaFile.RemainingSections.Count; i++)
-            {
-                PsaFile.DataSection[currentFileSizeBytes] = PsaFile.RemainingSections[i];
-                currentFileSizeBytes++;
-            }
 
             // this calculates the new MovesetFileSize
             int movesetFileSizeLeftoverSpace = PsaFile.MovesetFileSize % 4;
@@ -80,8 +67,10 @@ namespace PSA2.src.FileProcessor
                 movesetFileSizeLeftoverSpace = 4;
             }
 
-            PsaFile.MovesetFileSize = (currentFileSizeBytes * 4) + movesetFileSizeLeftoverSpace + 28;
-
+            PsaFile.MovesetFileSize = ((currentFileSizeBytes + PsaFile.OffsetSection.Count + PsaFile.RemainingSections.Count) * 4) + movesetFileSizeLeftoverSpace + 28;
+            
+            //Console.WriteLine((PsaFile.MovesetFileSize / 4));
+            
             // I guess this header location also needs to equal the MovesetFileSize :shrug:
             PsaFile.HeaderSection[17] = PsaFile.MovesetFileSize;
 
@@ -92,6 +81,8 @@ namespace PSA2.src.FileProcessor
                 currentFileSizeBytes = 8 - newMovesetFileSizeBytes % 8;
                 newMovesetFileSizeBytes += currentFileSizeBytes;
             }
+            //Console.WriteLine("NMFSB: " + newMovesetFileSizeBytes);
+
             newMovesetFileSizeBytes += PsaFile.ExtraSpace - 8;
             if (newMovesetFileSizeBytes > 139264)
             {
