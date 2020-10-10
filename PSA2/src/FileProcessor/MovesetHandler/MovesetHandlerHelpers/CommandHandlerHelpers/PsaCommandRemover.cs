@@ -215,7 +215,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // remove parm value since location was removed and offset pointing to that param value
                 PsaFile.DataSection[fileContentIndex] = 0;
-                PsaFile.OffsetSection[offsetIndex] = 16777216; // 100 0000
+                //PsaFile.OffsetSection[offsetIndex] = 16777216; // 100 0000
                 PsaFile.OffsetSection.RemoveAt(offsetIndex);
 
                 // if param type is pointer

@@ -1,4 +1,5 @@
-﻿using PSA2.src.Utility;
+﻿using PSA2.src.ExtentionMethods;
+using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,30 +31,26 @@ namespace PSA2.src.FileProcessor
         public void ApplyHeaderUpdatesToAccountForPsaCommandChanges()
         {
             // gets last valid value of data section
-            int lastDataSectionValidValue = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A
-                ? PsaFile.DataSectionSizeBytes - 3
-                : PsaFile.DataSectionSizeBytes - 1;
+            int lastDataSectionValidValue = PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A
+                ? PsaFile.DataSection.Count - 3
+                : PsaFile.DataSection.Count - 1;
 
-            // decrease last data section value if there is free space (FADEF00Ds) at the end of the data section until it reaches a non free space value
-            while (lastDataSectionValidValue >= DataSectionLocation && PsaFile.DataSection[lastDataSectionValidValue] == Constants.FADEF00D)
+            // remove any free space (FADEF00D) trailing at the end of the data section to save some space
+            for (int i = lastDataSectionValidValue; i >= DataSectionLocation; i--)
             {
-                lastDataSectionValidValue--;
-            }
-
-            // I believe this "closes the gap" of free space that was found beforehand to shrink the overall size of the file by a bit
-            int currentFileSizeBytes = lastDataSectionValidValue;
-            while (lastDataSectionValidValue < PsaFile.DataSectionSizeBytes)
-            {
-                if (PsaFile.DataSection[lastDataSectionValidValue] != Constants.FADEF00D)
+                if (PsaFile.DataSection[i] == Constants.FADEF00D)
                 {
-                    PsaFile.DataSection[currentFileSizeBytes] = PsaFile.DataSection[lastDataSectionValidValue];
-                    currentFileSizeBytes++;
+                    PsaFile.DataSection.RemoveAt(i);
                 }
-                lastDataSectionValidValue++;
+                else
+                {
+                    break;
+                }
+
             }
 
-            // change size of data section to match new size, which did change since a new command was added
-            PsaFile.DataSectionSize = currentFileSizeBytes * 4;
+            // change size of data section to match new size, which could have changed such as if a new command was added
+            PsaFile.DataSectionSize = PsaFile.DataSection.Count * 4;
 
             // sort offsets in the tracker, because they need to be placed into the psa file in order
             PsaFile.OffsetSection.Sort();
@@ -67,27 +64,10 @@ namespace PSA2.src.FileProcessor
                 movesetFileSizeLeftoverSpace = 4;
             }
 
-            PsaFile.MovesetFileSize = ((currentFileSizeBytes + PsaFile.OffsetSection.Count + PsaFile.RemainingSections.Count) * 4) + movesetFileSizeLeftoverSpace + 28;
-            
-            //Console.WriteLine((PsaFile.MovesetFileSize / 4));
+            PsaFile.MovesetFileSize = ((PsaFile.DataSection.Count + PsaFile.OffsetSection.Count + PsaFile.RemainingSections.Count) * 4) + movesetFileSizeLeftoverSpace + 28;
             
             // I guess this header location also needs to equal the MovesetFileSize :shrug:
             PsaFile.HeaderSection[17] = PsaFile.MovesetFileSize;
-
-            // this checks if moveset is now over 544kb, a limitation of PSA-C that I will later remove
-            int newMovesetFileSizeBytes = (PsaFile.MovesetFileSize + 3) / 4;
-            if (newMovesetFileSizeBytes % 8 != 0)
-            {
-                currentFileSizeBytes = 8 - newMovesetFileSizeBytes % 8;
-                newMovesetFileSizeBytes += currentFileSizeBytes;
-            }
-            //Console.WriteLine("NMFSB: " + newMovesetFileSizeBytes);
-
-            newMovesetFileSizeBytes += PsaFile.ExtraSpace - 8;
-            if (newMovesetFileSizeBytes > 139264)
-            {
-                Console.WriteLine("Current data size over 544kb");
-            }
         }
 
         /// <summary>

@@ -77,10 +77,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
             bool wasDataSectionExpanded = false;
             bool doesSpaceExistAtEndOfAction = false;
-            if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
+            if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
             {
                 wasDataSectionExpanded = true;
-                newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
+                newCodeBlockCommandsLocation = PsaFile.DataSection.Count;
                 if (PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A)
                 {
                     doesSpaceExistAtEndOfAction = true;
@@ -93,6 +93,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
             PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
             PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
+
             if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
             {
                 PsaFile.DataSection.Add(Constants.FADE0D8A);
@@ -173,21 +174,17 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, commandsParamsSpaceRequired);
 
             // if the new location is past the data section limit, expand the data section by the amount of space required
-            if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
+            bool wasDataSectionExpanded = false;
+            bool doesSpaceExistAtEndOfAction = false;
+            if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
             {
-                // TODO: Refactor this code
-                for (int i = 0; i < commandsParamsSpaceRequired; i++)
+                wasDataSectionExpanded = true;
+                newCodeBlockCommandsLocation = PsaFile.DataSection.Count;
+                if (PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A)
                 {
-                    PsaFile.DataSection.Add(0);
-                }
-                newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
-                if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-                {
+                    doesSpaceExistAtEndOfAction = true;
                     newCodeBlockCommandsLocation -= 2;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandsParamsSpaceRequired - 2] = Constants.FADE0D8A;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandsParamsSpaceRequired - 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
                 }
-                PsaFile.DataSectionSizeBytes += commandsParamsSpaceRequired;
             }
 
             // move commands one at a time from old location to new location
@@ -212,8 +209,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 // replace old command location with free space (FADEF00D)
                 int oldCodeBlockCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
                 int newCodeBlockCommandLocation = newCodeBlockCommandsLocation + (commandIndex * 2);
-                PsaFile.DataSection[newCodeBlockCommandLocation] = PsaFile.DataSection[oldCodeBlockCommandLocation];
-                PsaFile.DataSection[newCodeBlockCommandLocation + 1] = PsaFile.DataSection[oldCodeBlockCommandLocation + 1];
+                PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandLocation, PsaFile.DataSection[oldCodeBlockCommandLocation]);
+                PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandLocation + 1, PsaFile.DataSection[oldCodeBlockCommandLocation + 1]);
                 PsaFile.DataSection[oldCodeBlockCommandLocation] = Constants.FADEF00D;
                 PsaFile.DataSection[oldCodeBlockCommandLocation + 1] = Constants.FADEF00D;
             }
@@ -225,15 +222,21 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // add nop psa command to end of commands list
             int newCommandLocation = newCodeBlockCommandsLocation + commandPointerSpace;
-            PsaFile.DataSection[newCommandLocation] = Constants.NOP;
-            PsaFile.DataSection[newCommandLocation + 1] = 0;
+            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation, Constants.NOP);
+            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 1, 0);
+            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 2, 0);
+            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 3, 0);
 
-            // signifies the end of the action
-            PsaFile.DataSection[newCommandLocation + 2] = 0;
-            PsaFile.DataSection[newCommandLocation + 3] = 0;
+            if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
+            {
+                PsaFile.DataSection.Add(Constants.FADE0D8A);
+                PsaFile.DataSection.Add(PsaFile.DataSection.GetAt(-commandsParamsSpaceRequired));
+            }
 
             // update commands pointer to point to new location 
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
+
+            PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
 
             return newCodeBlockCommandsPointerLocation;
         }
@@ -248,7 +251,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         private void UpdateCommandPointers(CodeBlock codeBlock, int newCodeBlockCommandsPointerLocation)
         {
             int codeBlockEndLocation = codeBlock.CommandsPointerLocation + codeBlock.NumberOfCommands * 8;
-            for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSection.Count; i++)
             {
                 // if pointer value found falls within the code block commands' old location
                 if (PsaFile.DataSection[i] >= codeBlock.CommandsPointerLocation && PsaFile.DataSection[i] <= codeBlockEndLocation)
