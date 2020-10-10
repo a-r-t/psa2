@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,6 +76,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
             {
+                // TODO: Refactor this code
                 for (int i = 0; i < 4; i++)
                 {
                     PsaFile.DataSection.Add(0);
@@ -125,6 +127,13 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         PsaFile.DataSection[PsaFile.DataSectionSizeBytes] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2];
                         PsaFile.DataSection[PsaFile.DataSectionSizeBytes + 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
                     }
+
+                    // TODO: Refactor this code
+                    for (int i = 0; i < 2; i++)
+                    {
+                        PsaFile.DataSection.Add(0);
+                    }
+
                     PsaFile.DataSection[codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 2] = Constants.FADEF00D;
                     PsaFile.DataSection[codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 3] = Constants.FADEF00D;
                     PsaFile.DataSectionSizeBytes += 2;
@@ -182,6 +191,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             // if the new location is past the data section limit, expand the data section by the amount of space required
             if (newCodeBlockCommandsLocation >= PsaFile.DataSectionSizeBytes)
             {
+                // TODO: Refactor this code
+                for (int i = 0; i < commandsParamsSpaceRequired; i++)
+                {
+                    PsaFile.DataSection.Add(0);
+                }
                 newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
                 if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
                 {
@@ -236,7 +250,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
             // update commands pointer to point to new location 
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
-            PsaFile.DataSection[codeBlock.CommandsPointerLocation] = newCodeBlockCommandsPointerLocation;
 
             return newCodeBlockCommandsPointerLocation;
         }

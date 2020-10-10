@@ -69,7 +69,7 @@ namespace PSA2.src.FileProcessor
 
             PsaFile.MovesetFileSize = ((currentFileSizeBytes + PsaFile.OffsetSection.Count + PsaFile.RemainingSections.Count) * 4) + movesetFileSizeLeftoverSpace + 28;
             
-            Console.WriteLine((PsaFile.MovesetFileSize / 4));
+            //Console.WriteLine((PsaFile.MovesetFileSize / 4));
             
             // I guess this header location also needs to equal the MovesetFileSize :shrug:
             PsaFile.HeaderSection[17] = PsaFile.MovesetFileSize;
@@ -81,7 +81,7 @@ namespace PSA2.src.FileProcessor
                 currentFileSizeBytes = 8 - newMovesetFileSizeBytes % 8;
                 newMovesetFileSizeBytes += currentFileSizeBytes;
             }
-            Console.WriteLine("NMFSB: " + newMovesetFileSizeBytes);
+            //Console.WriteLine("NMFSB: " + newMovesetFileSizeBytes);
 
             newMovesetFileSizeBytes += PsaFile.ExtraSpace - 8;
             if (newMovesetFileSizeBytes > 139264)
