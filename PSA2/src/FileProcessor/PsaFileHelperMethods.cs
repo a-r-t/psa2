@@ -95,7 +95,7 @@ namespace PSA2.src.FileProcessor
         /// </summary>
         /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
         /// <returns>starting location where the desired amount of free space has been found</returns>
-        public int FindLocationWithAmountOfFreeSpace(int startLocation, int amountOfFreeSpace)
+ /*       public int FindLocationWithAmountOfFreeSpace(int startLocation, int amountOfFreeSpace)
         {
             int stoppingPoint = startLocation;
 
@@ -120,6 +120,29 @@ namespace PSA2.src.FileProcessor
                 stoppingPoint++;
             }
             return stoppingPoint;
+        }*/
+
+
+        public int FindLocationWithAmountOfFreeSpace(int startLocation, int amountOfFreeSpace)
+        {
+            int freeSpaceFound = 0;
+            for (int i = startLocation; i < PsaFile.DataSection.Count; i++)
+            {
+                if (PsaFile.DataSection[i] == Constants.FADEF00D)
+                {
+                    freeSpaceFound++;
+                }
+                else
+                {
+                    freeSpaceFound = 0;
+                }
+                
+                if (freeSpaceFound == amountOfFreeSpace)
+                {
+                    return i + 1 - amountOfFreeSpace;
+                }
+            }
+            return PsaFile.DataSection.Count;
         }
 
         /// <summary>
@@ -139,6 +162,24 @@ namespace PSA2.src.FileProcessor
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Sets a location in the Data Section to a specified value
+        /// <para>If the specified location is larger than the amount of space already in the Data Section, the value is appened on to the end of the Data Section instead</para>
+        /// </summary>
+        /// <param name="location">Location (index) in Data Section to set</param>
+        /// <param name="value">Value to set the Data Section to at the specified location</param>
+        public void SetDataSectionValue(int location, int value)
+        {
+            if (location < PsaFile.DataSection.Count)
+            {
+                PsaFile.DataSection[location] = value;
+            }
+            else
+            {
+                PsaFile.DataSection.Add(value);
+            }
         }
     }
 }

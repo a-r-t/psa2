@@ -1,4 +1,5 @@
-﻿using PSA2.src.Models.Fighter;
+﻿using PSA2.src.ExtentionMethods;
+using PSA2.src.Models.Fighter;
 using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
@@ -80,49 +81,22 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 wasDataSectionExpanded = true;
                 newCodeBlockCommandsLocation = PsaFile.DataSectionSizeBytes;
-                if (PsaFile.DataSection[PsaFile.DataSection.Count - 2] == Constants.FADE0D8A)
+                if (PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A)
                 {
                     doesSpaceExistAtEndOfAction = true;
                     newCodeBlockCommandsLocation -= 2;
                 }
             }
 
-            /*
-             * add a NOP command to the action code block
-             * 
-             * depending on if the data section was expanded, the NOP command either replaces existing free space 
-             * or is added on to the end of the data section
-             */
-            if (!wasDataSectionExpanded && !doesSpaceExistAtEndOfAction)
+            // add a NOP command to the action code block
+            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation, Constants.NOP);
+            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
+            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
+            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
+            if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
             {
-                PsaFile.DataSection[newCodeBlockCommandsLocation] = Constants.NOP;
-                PsaFile.DataSection[newCodeBlockCommandsLocation + 1] = 0;
-
-                // signifies the end of the code block commands list
-                PsaFile.DataSection[newCodeBlockCommandsLocation + 2] = 0;
-                PsaFile.DataSection[newCodeBlockCommandsLocation + 3] = 0;
-            }
-            else if (wasDataSectionExpanded && !doesSpaceExistAtEndOfAction)
-            {
-                PsaFile.DataSection.Add(Constants.NOP);
-                PsaFile.DataSection.Add(0);
-
-                // signifies the end of the code block commands list
-                PsaFile.DataSection.Add(0);
-                PsaFile.DataSection.Add(0);
-            }
-            else // wasDataSectionExpanded && isFreeSpaceAvailable
-            {
-                // add nop psa command
-                PsaFile.DataSection[newCodeBlockCommandsLocation] = Constants.NOP;
-                PsaFile.DataSection[newCodeBlockCommandsLocation + 1] = 0;
-
-                // signifies the end of the code block commands list
-                PsaFile.DataSection.Add(0);
-                PsaFile.DataSection.Add(0);
-
                 PsaFile.DataSection.Add(Constants.FADE0D8A);
-                PsaFile.DataSection.Add(PsaFile.DataSection[PsaFile.DataSection.Count - 1]);
+                PsaFile.DataSection.Add(PsaFile.DataSection.GetAt(-5));
             }
 
             // set code block to point to new commands location
@@ -143,64 +117,46 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         private void AddCommandToCodeBlock(CodeBlock codeBlock)
         {
             // if commands list is at the edge of the data section and adding a new command would send it over the data section's limit, expand the data section to add the new command
-            if (codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 5 > PsaFile.DataSectionSizeBytes)
+            if (codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 5 > PsaFile.DataSection.Count)
             {
                 // increase size of data section and then add nop command
                 int futureEndCodeBlockLocation = codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 3;
-                if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A || futureEndCodeBlockLocation > PsaFile.DataSectionSizeBytes)
+                if (PsaFile.DataSection[PsaFile.DataSection.Count - 2] == Constants.FADE0D8A || futureEndCodeBlockLocation > PsaFile.DataSection.Count)
                 {
                     // push back the end of the data section (signified with the FADE0D8A)
-                    if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                    if (PsaFile.DataSection[PsaFile.DataSection.Count - 2] == Constants.FADE0D8A)
                     {
-                        PsaFile.DataSection[PsaFile.DataSectionSizeBytes] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2];
-                        PsaFile.DataSection[PsaFile.DataSectionSizeBytes + 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
+                        PsaFile.DataSection.Add(PsaFile.DataSection.GetAt(-2));
+                        PsaFile.DataSection.Add(PsaFile.DataSection[PsaFile.DataSection.GetAt(-1)]);
                     }
 
-                    // TODO: Refactor this code
-                    for (int i = 0; i < 2; i++)
-                    {
-                        PsaFile.DataSection.Add(0);
-                    }
+                    PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation - 1, Constants.FADEF00D);
+                    PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation, Constants.FADEF00D);
 
-                    PsaFile.DataSection[codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 2] = Constants.FADEF00D;
-                    PsaFile.DataSection[codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 3] = Constants.FADEF00D;
-                    PsaFile.DataSectionSizeBytes += 2;
-
-                    int newCommandLocation = codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2;
-
-                    // add nop psa command
-                    PsaFile.DataSection[newCommandLocation] = Constants.NOP;
-                    PsaFile.DataSection[newCommandLocation + 1] = 0;
-
-                    // signifies the end of the action
-                    PsaFile.DataSection[newCommandLocation + 2] = 0;
-                    PsaFile.DataSection[newCommandLocation + 3] = 0;
+                    PsaFile.DataSectionSizeBytes = PsaFile.DataSection.Count;
                 }
             }
-            // if commands location is somewhere in the middle of the data section
+
+            // if code block commands list has free space at the end of it, replace free space with nop command and call it a day
+            int codeBlockEndLocation = codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2;
+            if (PsaFile.DataSection[codeBlockEndLocation + 2] == Constants.FADEF00D && PsaFile.DataSection[codeBlockEndLocation + 3] == Constants.FADEF00D)
+            {
+                // add nop psa command
+                PsaFile.DataSection[codeBlockEndLocation] = Constants.NOP;
+                PsaFile.DataSection[codeBlockEndLocation + 1] = 0;
+
+                // signifies the end of the action
+                PsaFile.DataSection[codeBlockEndLocation + 2] = 0;
+                PsaFile.DataSection[codeBlockEndLocation + 3] = 0;
+            }
+            // if code block commands list has no free space at the end of it, code block commands will need to be relocated to a new place with adequate space
             else
             {
-                // if code block commands list has free space at the end of it, replace free space with nop command and call it a day
-                int codeBlockEndLocation = codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2;
-                if (PsaFile.DataSection[codeBlockEndLocation + 2] == Constants.FADEF00D || PsaFile.DataSection[codeBlockEndLocation + 3] == Constants.FADEF00D)
-                {
-                    // add nop psa command
-                    PsaFile.DataSection[codeBlockEndLocation] = Constants.NOP;
-                    PsaFile.DataSection[codeBlockEndLocation + 1] = 0;
+                // relocates code block commands to a new place with more room and adds nop command to the end
+                int newCodeBlockCommandsLocation = RelocateCodeBlockCommands(codeBlock);
 
-                    // signifies the end of the action
-                    PsaFile.DataSection[codeBlockEndLocation + 2] = 0;
-                    PsaFile.DataSection[codeBlockEndLocation + 3] = 0;
-                }
-                // if code block commands list has no free space at the end of it, code block commands will need to be relocated to a new place with adequate space
-                else
-                {
-                    // relocates code block commands to a new place with more room and adds nop command to the end
-                    int newCodeBlockCommandsLocation = RelocateCodeBlockCommands(codeBlock);
-
-                    // updates pointers in other commands to point to the new location where the code block commands were moved to
-                    UpdateCommandPointers(codeBlock, newCodeBlockCommandsLocation);
-                }
+                // updates pointers in other commands to point to the new location where the code block commands were moved to
+                UpdateCommandPointers(codeBlock, newCodeBlockCommandsLocation);
             }
         }
 
