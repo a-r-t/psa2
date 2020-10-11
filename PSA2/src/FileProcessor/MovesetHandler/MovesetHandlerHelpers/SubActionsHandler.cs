@@ -97,6 +97,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return CodeBlocksHandler.GetNumberOfPsaCommandsInCodeBlock(subActionCodeBlockLocation);
         }
 
+        public Animation GetSubActionAnimationData(int subActionId)
+        {
+            return new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
+        }
+
         public string GetSubActionAnimationName(int subActionId)
         {
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
@@ -140,15 +145,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             // will need to look at this later to figure out why it works
             int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
             int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
-            int inTransition = animationFlagsValue >> 24 & 0xFF;
-            int noOutTransition = animationFlagsValue & 0x1;
-            int loop = animationFlagsValue >> 16 & 0xFF & 0x2;
-            int movesCharacter = animationFlagsValue >> 16 & 0xFF & 0x4;
-            int unknown3 = animationFlagsValue >> 16 & 0xFF & 0x8;
-            int unknown4 = animationFlagsValue >> 16 & 0xFF & 0x10;
-            int unknown5 = animationFlagsValue >> 16 & 0xFF & 0x20;
-            int transitionOutFromStart = animationFlagsValue >> 16 & 0xFF & 0x40;
-            int unknown7 = animationFlagsValue >> 16 & 0xFF & 0x80;
+            int animationFlagsOptions = (animationFlagsValue >> 16) & 0xFF;
+            int inTransition = (animationFlagsValue >> 24) & 0xFF;
+            int noOutTransition = animationFlagsOptions & 0x1;
+            int loop = animationFlagsOptions & 0x2;
+            int movesCharacter = animationFlagsOptions & 0x4;
+            int unknown3 = animationFlagsOptions & 0x8;
+            int unknown4 = animationFlagsOptions & 0x10;
+            int unknown5 = animationFlagsOptions & 0x20;
+            int transitionOutFromStart = animationFlagsOptions & 0x40;
+            int unknown7 = animationFlagsOptions & 0x80;
             return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 
