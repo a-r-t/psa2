@@ -21,41 +21,47 @@ namespace PSA2Tests.Tests.SubActionsTests
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Add/{comparisonFileName}", $"./Tests/SubActionsTests/Out/Add/{comparisonFileName}"));
         }
 
-        /*
+        
         [Test]
-        public void AddTwoCommandsToActionWithExistingCommands()
+        public void AddTwoCommandsToSubActionWithExistingCommands()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.AddCommandToAction(0, 0);
-            psaMovesetParser.ActionsHandler.AddCommandToAction(0, 0);
-            psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Add/FitMarioTwoCommandsAdded.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Add/FitMarioTwoCommandsAdded.pac", "./Tests/ActionsTests/Out/Add/FitMarioTwoCommandsAdded.pac"));
+            psaMovesetParser.SubActionsHandler.AddCommand(72, 0);
+            psaMovesetParser.SubActionsHandler.AddCommand(72, 0);
+            psaMovesetParser.PsaFile.SaveFile("./Tests/SubActionsTests/Out/Add/FitMarioTwoCommandsAdded.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/SubActionsTests/ComparisonData/Add/FitMarioTwoCommandsAdded.pac", "./Tests/SubActionsTests/Out/Add/FitMarioTwoCommandsAdded.pac"));
         }
 
         [Test]
         [Description("Add command which will create code block")]
-        [TestCase(0, 1, "FitMarioOneCommandAddedWithNoExistingCommands.pac")]
-        [TestCase(1, 1, "FitMarioOneCommandAddedWithNoExistingCommands2.pac")]
-        public void AddOneCommandToActionWithNoExistingCommands(int actionId, int codeBlockId, string comparisonFileName)
+        [TestCase(4, 0, "FitMarioOneCommandAddedWithNoExistingCommands.pac")]
+        [TestCase(72, 1, "FitMarioOneCommandAddedWithNoExistingCommands2.pac")]
+        public void AddOneCommandToSubActionWithNoExistingCommands(int subActionId, int codeBlockId, string comparisonFileName)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.AddCommandToAction(actionId, codeBlockId);
-            psaMovesetParser.PsaFile.SaveFile($"./Tests/ActionsTests/Out/Add/{comparisonFileName}");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/ActionsTests/ComparisonData/Add/{comparisonFileName}", $"./Tests/ActionsTests/Out/Add/{comparisonFileName}"));
+            psaMovesetParser.SubActionsHandler.AddCommand(subActionId, codeBlockId);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Add/{comparisonFileName}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Add/{comparisonFileName}", $"./Tests/SubActionsTests/Out/Add/{comparisonFileName}"));
         }
-
+        
+        [Test]
+        [Description("Add command to codeblock with no commands but still has an offset")]
+        public void AddOneCommandToSubActionWithNoExistingCommandsWithExistingOffset()
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
+            psaMovesetParser.SubActionsHandler.AddCommand(0, 0);
+            psaMovesetParser.PsaFile.SaveFile("./Tests/SubActionsTests/Out/Add/FitMarioOneCommandAddedWithNoExistingCommandsWithExistingOffset.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/SubActionsTests/ComparisonData/Add/FitMarioOneCommandAddedWithNoExistingCommandsWithExistingOffset.pac", "./Tests/SubActionsTests/Out/Add/FitMarioOneCommandAddedWithNoExistingCommandsWithExistingOffset.pac"));
+        }
 
         [Test]
-        public void AddCommandsToActionWithFreeSpaceInMiddleOfDataSection()
+        public void AddCommandsToSubActionWithFreeSpaceInMiddleOfDataSection()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
-            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
-            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 0);
-            psaMovesetParser.ActionsHandler.AddCommandToAction(6, 1);
-            psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac", "./Tests/ActionsTests/Out/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac"));
+            psaMovesetParser.SubActionsHandler.RemoveCommand(19, 0, 0);
+            psaMovesetParser.SubActionsHandler.AddCommand(19, 0);
+            psaMovesetParser.PsaFile.SaveFile("./Tests/SubActionsTests/Out/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/SubActionsTests/ComparisonData/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac", "./Tests/SubActionsTests/Out/Add/FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac"));
         }
-        */
     }
 }

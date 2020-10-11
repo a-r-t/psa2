@@ -132,6 +132,21 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded4.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommands.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommands2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommandsWithExistingOffset.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
