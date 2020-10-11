@@ -180,6 +180,21 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithPointerParameter2.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveAllCommandsInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveCommandAtEndOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveCommandWithPointerInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveOneCommandInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveOneCommandInSubAction2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
