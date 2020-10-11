@@ -43,6 +43,16 @@ namespace PSA2.src.FileProcessor
                 }
             }
 
+            // if FADE0D8A is in moveset file, it was used to mark the end of the data section
+            // it's not required, but just to keep things consistent with PSA-C and the old PSA, this checks the moveset to see if FADE0D8A is present
+            // if it is present, it removes it from its location and places it at the end of the data section
+            int dataSectionEndNotatorIndex = PsaFile.DataSection.FindIndex(data => data == Constants.FADE0D8A);
+            if (dataSectionEndNotatorIndex >= 0)
+            {
+                PsaFile.DataSection.RemoveAt(dataSectionEndNotatorIndex);
+                PsaFile.DataSection.Add(Constants.FADE0D8A);
+            }
+
             // change size of data section to match new size, which could have changed such as if a new command was added
             PsaFile.DataSectionSize = PsaFile.DataSection.Count * 4;
 
