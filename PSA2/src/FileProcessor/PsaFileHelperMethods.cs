@@ -30,13 +30,8 @@ namespace PSA2.src.FileProcessor
         /// </summary>
         public void ApplyHeaderUpdatesToAccountForPsaCommandChanges()
         {
-            // gets last valid value of data section
-            int lastDataSectionValidValue = PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A
-                ? PsaFile.DataSection.Count - 3
-                : PsaFile.DataSection.Count - 1;
-
             // remove any free space (FADEF00D) trailing at the end of the data section to save some space
-            for (int i = lastDataSectionValidValue; i >= DataSectionLocation; i--)
+            for (int i = PsaFile.DataSection.Count - 1; i >= DataSectionLocation; i--)
             {
                 if (PsaFile.DataSection[i] == Constants.FADEF00D)
                 {
@@ -46,7 +41,6 @@ namespace PSA2.src.FileProcessor
                 {
                     break;
                 }
-
             }
 
             // change size of data section to match new size, which could have changed such as if a new command was added

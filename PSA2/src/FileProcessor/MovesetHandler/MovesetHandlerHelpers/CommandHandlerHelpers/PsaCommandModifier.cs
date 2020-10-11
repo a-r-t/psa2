@@ -86,17 +86,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCommandParametersValuesLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsValuesSize);
 
             // if the only place with free space found is after the limits of the data section, expand the data section to make room
-            bool wasDataSectionExpanded = false;
-            bool doesSpaceExistAtEndOfAction = false;
-            if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
+            if (newCommandParametersValuesLocation >= PsaFile.DataSection.Count)
             {
-                wasDataSectionExpanded = true;
-                newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
-                if (PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A)
-                {
-                    doesSpaceExistAtEndOfAction = true;
-                    newCommandParametersValuesLocation -= 2;
-                }
+                newCommandParametersValuesLocation = PsaFile.DataSection.Count;
             }
 
             // go through each parameter in the new command one at a time and place it in the newly created parameters values location (type, value)
@@ -104,6 +96,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 int paramTypeLocation = paramIndex * 2;
                 int paramValueLocation = paramIndex * 2 + 1;
+
                 // if command param type is "Pointer" and the param value is greater than 0 (meaning it points to something)
                 if (newPsaCommand.Parameters[paramIndex].Type == 2 && newPsaCommand.Parameters[paramIndex].Value > 0)
                 {
@@ -112,12 +105,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 }
                 PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramTypeLocation, newPsaCommand.Parameters[paramIndex].Type);
                 PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramValueLocation, newPsaCommand.Parameters[paramIndex].Value);
-            }
-
-            if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
-            {
-                PsaFile.DataSection.Add(Constants.FADE0D8A);
-                PsaFile.DataSection.Add(PsaFile.DataSection[-newCommandParamsValuesSize - 1]);
             }
 
             // place new command instruction at command location
@@ -185,7 +172,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 PsaFile.DataSection[commandLocation + 1] = 0;
 
                 // remove offset from interlock tracker since it no longer exists
-                int commandParametersPointerLocation = commandLocation * 4 + 4; // rmv
+                int commandParametersPointerLocation = commandLocation * 4 + 4;
                 PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
             }
 
@@ -216,8 +203,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     }
 
                     // place parameter type in value in proper place
-                    PsaFile.DataSection[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
-                    PsaFile.DataSection[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                    PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramTypeLocation, newPsaCommand.Parameters[paramIndex].Type);
+                    PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramValueLocation, newPsaCommand.Parameters[paramIndex].Value);
                 }
             }
         }
@@ -302,35 +289,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int currentCommandParamSize = oldCommandParamsSize;
 
             // if adding one command to the current parameters location would cause it to go over the data section limit, expand the data section by the amount needed
-            if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSectionSizeBytes)
+            if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 5 > PsaFile.DataSection.Count)
             {
-                // difference between the new size needed and the old size
-                int commandSizeDifference = newCommandParamsSize - oldCommandParamsSize;
-
-                // if at the end of the data section, expand data section by the required amount
-                if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSection.Count)
                 {
-                    // TODO: Refactor this code
-                    for (int i = 0; i < commandSizeDifference; i++)
-                    {
-                        PsaFile.DataSection.Add(0);
-                    }
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandSizeDifference - 2] = Constants.FADE0D8A;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + commandSizeDifference - 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
-                    PsaFile.DataSectionSizeBytes += commandSizeDifference;
-                    currentCommandParamSize = newCommandParamsSize;
-                }
-                // if adding one additional command would cause going over the data section size, just straight up expand the data section size
-                // not entirely sure what differs this case from the others...
-                else if (oldPsaCommand.CommandParametersValuesLocation + oldCommandParamsSize + 3 > PsaFile.DataSectionSizeBytes)
-                {
-                    // TODO: Refactor this code
-                    for (int i = 0; i < commandSizeDifference; i++)
-                    {
-                        PsaFile.DataSection.Add(0);
-                    }
-
-                    PsaFile.DataSectionSizeBytes += commandSizeDifference;
+                    // difference between the new size needed and the old size                   
                     currentCommandParamSize = newCommandParamsSize;
                 }
             }
@@ -357,22 +320,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 int newCommandParametersValuesLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsSize);
 
                 // if new location goes over data section limit, expand data sectoin
-                if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
+                if (newCommandParametersValuesLocation >= PsaFile.DataSection.Count)
                 {
-                    // TODO: Refactor this code
-                    for (int i = 0; i < newCommandParamsSize; i++)
-                    {
-                        PsaFile.DataSection.Add(0);
-                    }
-
-                    newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
-                    if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
-                    {
-                        newCommandParametersValuesLocation -= 2;
-                        PsaFile.DataSection[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 2] = Constants.FADE0D8A;
-                        PsaFile.DataSection[PsaFile.DataSectionSizeBytes + newCommandParamsSize - 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
-                    }
-                    PsaFile.DataSectionSizeBytes += newCommandParamsSize;
+                    newCommandParametersValuesLocation = PsaFile.DataSection.Count;
                 }
                 return newCommandParametersValuesLocation;  
             }
