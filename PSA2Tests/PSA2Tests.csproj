@@ -26,6 +26,10 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Add\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -114,6 +118,99 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\Data\FitMario.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded3.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded4.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommands.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommands2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAddedWithNoExistingCommandsWithExistingOffset.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandInSubActionWithCommandThatHasPointerParameter.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithIdenticalParameterCount.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithLargerParameterCount.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithDifferentCommandWithSmallerParameterCount.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommand.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterTypes.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithIdenticalCommandWithDifferentParameterValues.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithNoParametersToCommandWithParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithParametersToCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithPointerParameter.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithPointerParameter2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-CommandWithParametersSwapWithCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveAllCommandsInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveCommandAtEndOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveCommandWithPointerInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveOneCommandInSubAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveOneCommandInSubAction2.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

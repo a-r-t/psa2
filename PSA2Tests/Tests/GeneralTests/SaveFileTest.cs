@@ -2,7 +2,7 @@ using NUnit.Framework;
 using PSA2.src.FileProcessor.MovesetHandler;
 using System;
 
-namespace PSA2Tests.Tests
+namespace PSA2Tests.Tests.GeneralTests
 {
     [TestFixture]
     public class SaveFileTest

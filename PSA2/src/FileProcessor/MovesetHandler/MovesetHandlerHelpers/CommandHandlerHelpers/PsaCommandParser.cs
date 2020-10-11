@@ -14,7 +14,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public PsaCommandParser(PsaFile psaFile, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
-            this.CodeBlockDataStartLocation = codeBlockDataStartLocation;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
         }
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)

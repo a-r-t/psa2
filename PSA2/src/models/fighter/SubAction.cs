@@ -8,23 +8,15 @@ namespace PSA2.src.Models.Fighter
 {
     public class SubAction
     {
-        public string SubActionName { get; private set; }
         public int SubActionNumber { get; private set; }
-        public SubActionSection[] SubActionSections { get; private set; }
+        public CodeBlock[] CodeBlocks { get; private set; }
         public Animation Animation { get; set; }
 
-        public SubAction(int number)
+        public SubAction(int subActionNumber, CodeBlock[] codeBlocks, Animation animation)
         {
-            SubActionName = "Test State";
-            SubActionNumber = number;
-            SubActionSections = new SubActionSection[]
-            {
-                new SubActionSection("Main"),
-                new SubActionSection("GFX"),
-                new SubActionSection("SFX"),
-                new SubActionSection("Other")
-            };
-            Animation = new Animation("<null>");
+            SubActionNumber = subActionNumber;
+            CodeBlocks = codeBlocks;
+            Animation = animation;
         }
     }
 }
