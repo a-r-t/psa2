@@ -12,12 +12,18 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
+        public CodeBlocksHandler CodeBlocksHandler { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
+        public const int MAIN_CODE_BLOCK = 0;
+        public const int GFX_CODE_BLOCK = 1;
+        public const int SFX_CODE_BLOCK = 2;
+        public const int OTHER_CODE_BLOCK = 3;
 
-        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler)
+        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
+            CodeBlocksHandler = codeBlocksHandler;
             PsaCommandHandler = psaCommandHandler;
         }
 
