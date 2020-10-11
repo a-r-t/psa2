@@ -8,7 +8,7 @@ using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandler
 namespace PSA2Tests.Tests.ActionsTests
 {
     [TestFixture]
-    public class ModifyCommandInActionTests
+    public class ModifyCommandTests
     {
         [Test]
         public void ModifyCommandInActionWithIdenticalCommand()

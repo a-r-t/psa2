@@ -5,7 +5,7 @@ using System;
 namespace PSA2Tests.Tests.ActionsTests
 {
     [TestFixture]
-    public class AddCommandToActionTests
+    public class AddCommandTests
     {
         [Test]
         [Description("Add command which will relocate code block")]

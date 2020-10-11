@@ -5,7 +5,7 @@ using System;
 namespace PSA2Tests.Tests.ActionsTests
 {
     [TestFixture]
-    public class RemoveCommandFromActionTests
+    public class RemoveCommandTests
     {
         [Test]
         [TestCase(0, 0, 0, "FitMarioRemoveOneCommandInAction.pac")]

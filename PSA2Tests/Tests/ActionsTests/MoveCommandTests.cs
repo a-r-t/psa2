@@ -6,7 +6,7 @@ using System;
 namespace PSA2Tests.Tests.ActionsTests
 {
     [TestFixture]
-    public class MoveCommandInActionTests
+    public class MoveCommandTests
     {
         [Test]
         [Description("Move Command Upwards: Swap commands that both have parameters")]
