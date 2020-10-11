@@ -59,12 +59,28 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return subActionCodeBlockLocation;
         }
 
+        public int GetSubActionCodeBlockCommandsPointerLocation(int subActionId, int codeBlockId)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetCodeBlockCommandsPointerLocation(subActionCodeBlockLocation);
+        }
 
+        public int GetSubActionCodeBlockCommandsLocation(int subActionId, int codeBlockId)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetCodeBlockCommandsLocation(subActionCodeBlockLocation);
+        }
+
+        public int GetSubActionCodeBlockCommandLocation(int subActionId, int codeBlockId, int commandIndex)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetCodeBlockCommandLocation(subActionCodeBlockLocation, commandIndex);
+        }
 
 
         public List<PsaCommand> GetPsaCommandsForSubAction(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId); // i
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
             return PsaCommandHandler.GetPsaCommands(subActionCodeBlockLocation);
         }
 

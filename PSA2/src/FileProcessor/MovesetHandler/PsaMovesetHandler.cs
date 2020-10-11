@@ -48,8 +48,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler
             ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
-
-            Console.WriteLine(SubActionsHandler.GetCodeBlock(72, 0));
         }
 
         public bool IsMovesetParsable()
