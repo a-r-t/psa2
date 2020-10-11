@@ -1,4 +1,5 @@
 ﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Models.Fighter;
 using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,22 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             PsaCommandHandler = psaCommandHandler;
         }
 
+        public SubAction GetSubAction(int subActionId)
+        {
+            CodeBlock main = GetCodeBlock(subActionId, MAIN_CODE_BLOCK);
+            CodeBlock gfx = GetCodeBlock(subActionId, GFX_CODE_BLOCK);
+            CodeBlock sfx = GetCodeBlock(subActionId, SFX_CODE_BLOCK);
+            CodeBlock other = GetCodeBlock(subActionId, OTHER_CODE_BLOCK);
+            CodeBlock[] codeBlocks = new CodeBlock[] { main, gfx, sfx, other };
+            return new SubAction(subActionId, codeBlocks);
+        }
+
+        public CodeBlock GetCodeBlock(int subActionId, int codeBlockId)
+        {
+            int codeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetCodeBlock(codeBlockLocation);
+        }
+
         public int GetNumberOfSubActions()
         {
             Console.WriteLine(string.Format("Number of Sub Actions: {0}", (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4));
@@ -37,7 +54,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetSubActionCodeBlockLocation(int subActionId, int codeBlockId)
         {
             int subActionsCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 12 + codeBlockId] / 4; // n
-            int subActionCodeBlockLocation = PsaFile.DataSection[subActionsCodeBlockStartingLocation + subActionId];
+            int subActionCodeBlockLocation = subActionsCodeBlockStartingLocation + subActionId;
 
             return subActionCodeBlockLocation;
         }

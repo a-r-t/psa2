@@ -31,8 +31,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public Action GetAction(int actionId)
         {
-            CodeBlock entry = GetCodeBlock(actionId, 0);
-            CodeBlock exit = GetCodeBlock(actionId, 1);
+            CodeBlock entry = GetCodeBlock(actionId, ENTRY_CODE_BLOCK);
+            CodeBlock exit = GetCodeBlock(actionId, EXIT_CODE_BLOCK);
             CodeBlock[] codeBlocks = new CodeBlock[] { entry, exit };
             return new Action(actionId, codeBlocks);
         }
