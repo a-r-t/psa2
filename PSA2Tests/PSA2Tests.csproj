@@ -180,6 +180,24 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandWithPointerParameter2.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandDownwards-CommandWithParametersSwapWithCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Move\FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveAllCommandsInSubAction.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
