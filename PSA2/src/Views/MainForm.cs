@@ -1,5 +1,6 @@
 ﻿using PSA2.src.FileProcessor;
 using PSA2.src.FileProcessor.MovesetHandler;
+using PSA2.src.Views.MovesetEditorViews;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,9 +13,9 @@ using System.Windows.Forms;
 
 namespace PSA2.src.Views
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form, IMovesetEditorListener
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -28,9 +29,13 @@ namespace PSA2.src.Views
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitSnake.pac");
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitMetaKnight.pac");
             //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Workbench/decompile psac/testmoveset/FitWario.pac");
-            PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Brawl File Partition/Clean Fighters/mario/FitMario.pac");
+            //PsaFileParser psaFileParser = new PsaFileParser("E:/Hobby Stuff/Super Smash Bros Brawl Hacking/Brawl File Partition/Clean Fighters/mario/FitMario.pac");
 
-            PsaMovesetHandler psaMovesetParser = psaFileParser.ParseMovesetFile();
+            //PsaMovesetHandler psaMovesetParser = psaFileParser.ParseMovesetFile();
+            MovesetEditor movesetEditor = new MovesetEditor();
+            movesetEditor.AddListener(this);
+            viewPanel.Controls.Add(movesetEditor);
+            movesetEditor.Dock = DockStyle.Fill;
         }
     }
 }

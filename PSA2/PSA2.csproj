@@ -154,11 +154,31 @@
     <Compile Include="src\Models\Fighter\SubAction.cs" />
     <Compile Include="src\Models\Fighter\SubActionSection.cs" />
     <Compile Include="src\Models\Fighter\Subroutine.cs" />
-    <Compile Include="src\Views\Form1.cs">
+    <Compile Include="src\Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Views\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="src\Views\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ILocationSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\LocationSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\LocationSelector.Designer.cs">
+      <DependentUpon>LocationSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.Designer.cs">
+      <DependentUpon>MovesetEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\IMovesetEditorListener.cs" />
+    <Compile Include="src\Views\ObservableUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\ObservableUserControl.Designer.cs">
+      <DependentUpon>ObservableUserControl.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -172,8 +192,11 @@
     <Content Include="data\psa_command_data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="src\Views\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="src\Views\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\MovesetEditor.resx">
+      <DependentUpon>MovesetEditor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="data\attribute_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
