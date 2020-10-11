@@ -82,7 +82,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public List<PsaCommand> GetPsaCommandsForSubAction(int subActionId, int codeBlockId)
         {
             int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
-            return PsaCommandHandler.GetPsaCommands(subActionCodeBlockLocation);
+            return CodeBlocksHandler.GetPsaCommandsForCodeBlock(subActionCodeBlockLocation);
         }
 
         public PsaCommand GetPsaCommandForSubActionCodeBlock(int subActionId, int codeBlockId, int commandIndex)
