@@ -26,7 +26,10 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Tests\ActionsTests\ComparisonData\Read\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Add\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -115,6 +118,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\Data\FitMario.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded3.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioOneCommandAdded4.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

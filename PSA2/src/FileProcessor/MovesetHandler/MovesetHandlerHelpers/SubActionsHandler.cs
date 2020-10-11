@@ -35,7 +35,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             CodeBlock sfx = GetCodeBlock(subActionId, SFX_CODE_BLOCK);
             CodeBlock other = GetCodeBlock(subActionId, OTHER_CODE_BLOCK);
             CodeBlock[] codeBlocks = new CodeBlock[] { main, gfx, sfx, other };
-            return new SubAction(subActionId, codeBlocks);
+            Animation animation = new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
+            return new SubAction(subActionId, codeBlocks, animation);
         }
 
         public CodeBlock GetCodeBlock(int subActionId, int codeBlockId)
@@ -84,10 +85,20 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return PsaCommandHandler.GetPsaCommands(subActionCodeBlockLocation);
         }
 
+        public PsaCommand GetPsaCommandForSubActionCodeBlock(int subActionId, int codeBlockId, int commandIndex)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetPsaCommandForCodeBlock(subActionCodeBlockLocation, commandIndex);
+        }
+
+        public int GetNumberOfPsaCommandsInSubActionCodeBlock(int subActionId, int codeBlockId)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            return CodeBlocksHandler.GetNumberOfPsaCommandsInCodeBlock(subActionCodeBlockLocation);
+        }
+
         public string GetSubActionAnimationName(int subActionId)
         {
-            // h = subActionId
-            // not 100% sure why this chain works but it does
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
             if (PsaFile.DataSection[animationLocation] == 0)
             {
@@ -97,11 +108,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             {
                 int animationNameLocation = PsaFile.DataSection[animationLocation] / 4; // j
 
+                // TODO: Double check this, I think it should be PsaFile.DataSection.Count
                 if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
                 {
                     StringBuilder animationName = new StringBuilder();
                     int nameEndByteIndex = 0;
-                    while (true) // originally i < 47 -- 48 char limit?
+                    while (true) // originally i < 47 -- 48 char limit
                     {
                         string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
                         animationName.Append(nextStringData);
@@ -138,6 +150,30 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int transitionOutFromStart = animationFlagsValue >> 16 & 0xFF & 0x40;
             int unknown7 = animationFlagsValue >> 16 & 0xFF & 0x80;
             return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
+        }
+
+        public void AddCommand(int subActionId, int codeBlockId)
+        {
+            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            CodeBlocksHandler.AddCommand(actionCodeBlockLocation);
+        }
+
+        public void ModifyCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
+        {
+            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            CodeBlocksHandler.ModifyCommand(actionCodeBlockLocation, commandIndex, newPsaCommand);
+        }
+
+        public void RemoveCommand(int subActionId, int codeBlockId, int commandIndex)
+        {
+            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            CodeBlocksHandler.RemoveCommand(actionCodeBlockLocation, commandIndex);
+        }
+
+        public void MoveCommand(int subActionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
+        {
+            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            CodeBlocksHandler.MoveCommand(actionCodeBlockLocation, commandIndex, moveDirection);
         }
     }
 }

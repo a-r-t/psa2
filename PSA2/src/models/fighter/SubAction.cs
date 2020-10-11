@@ -12,11 +12,11 @@ namespace PSA2.src.Models.Fighter
         public CodeBlock[] CodeBlocks { get; private set; }
         public Animation Animation { get; set; }
 
-        public SubAction(int subActionNumber, CodeBlock[] codeBlocks)
+        public SubAction(int subActionNumber, CodeBlock[] codeBlocks, Animation animation)
         {
             SubActionNumber = subActionNumber;
             CodeBlocks = codeBlocks;
-            Animation = new Animation("<null>");
+            Animation = animation;
         }
     }
 }
