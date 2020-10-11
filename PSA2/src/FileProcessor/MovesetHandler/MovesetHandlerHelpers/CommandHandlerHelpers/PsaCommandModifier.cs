@@ -1,4 +1,5 @@
-﻿using PSA2.src.Utility;
+﻿using PSA2.src.ExtentionMethods;
+using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,21 +86,17 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int newCommandParametersValuesLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, newCommandParamsValuesSize);
 
             // if the only place with free space found is after the limits of the data section, expand the data section to make room
+            bool wasDataSectionExpanded = false;
+            bool doesSpaceExistAtEndOfAction = false;
             if (newCommandParametersValuesLocation >= PsaFile.DataSectionSizeBytes)
             {
-                // TODO: Refactor this code
-                for (int i = 0; i < newCommandParamsValuesSize; i++)
-                {
-                    PsaFile.DataSection.Add(0);
-                }
+                wasDataSectionExpanded = true;
                 newCommandParametersValuesLocation = PsaFile.DataSectionSizeBytes;
-                if (PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A)
+                if (PsaFile.DataSection.GetAt(-2) == Constants.FADE0D8A)
                 {
+                    doesSpaceExistAtEndOfAction = true;
                     newCommandParametersValuesLocation -= 2;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + newCommandParamsValuesSize - 2] = Constants.FADE0D8A;
-                    PsaFile.DataSection[PsaFile.DataSectionSizeBytes + newCommandParamsValuesSize - 1] = PsaFile.DataSection[PsaFile.DataSectionSizeBytes - 1];
                 }
-                PsaFile.DataSectionSizeBytes += newCommandParamsValuesSize;
             }
 
             // go through each parameter in the new command one at a time and place it in the newly created parameters values location (type, value)
@@ -113,8 +110,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     int commandParameterPointerLocation = (newCommandParametersValuesLocation + paramTypeLocation) * 4 + 4;
                     PsaFile.OffsetSection.Add(commandParameterPointerLocation);
                 }
-                PsaFile.DataSection[newCommandParametersValuesLocation + paramTypeLocation] = newPsaCommand.Parameters[paramIndex].Type;
-                PsaFile.DataSection[newCommandParametersValuesLocation + paramValueLocation] = newPsaCommand.Parameters[paramIndex].Value;
+                PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramTypeLocation, newPsaCommand.Parameters[paramIndex].Type);
+                PsaFileHelperMethods.SetDataSectionValue(newCommandParametersValuesLocation + paramValueLocation, newPsaCommand.Parameters[paramIndex].Value);
+            }
+
+            if (wasDataSectionExpanded && doesSpaceExistAtEndOfAction)
+            {
+                PsaFile.DataSection.Add(Constants.FADE0D8A);
+                PsaFile.DataSection.Add(PsaFile.DataSection[-newCommandParamsValuesSize - 1]);
             }
 
             // place new command instruction at command location

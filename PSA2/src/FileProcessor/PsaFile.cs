@@ -14,7 +14,7 @@ namespace PSA2.src.FileProcessor
         public int[] HeaderSection { get; private set; }
         public List<int> DataSection { get; set; }
         public int FileSize { get; set; }
-        public int ExtraSpace { get; private set; } // efdts
+        public int EffectDataStartLocation { get; private set; } // efdts
         public List<int> OffsetSection { get; private set; } // asc
         //public int FileOtherDataSize { get; set; } // rnexsize
         public List<int> RemainingSections { get; private set; } // rnext
@@ -191,7 +191,7 @@ namespace PSA2.src.FileProcessor
             }
             movesetFileSizeBytes -= 8;
             int fileSizeBytes = fileSize / 4;
-            ExtraSpace = fileSizeBytes - movesetFileSizeBytes;
+            EffectDataStartLocation = fileSizeBytes - movesetFileSizeBytes;
 
             for (int i = 0; i < DataSectionSizeBytes; i++)
             {
