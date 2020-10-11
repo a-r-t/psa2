@@ -11,13 +11,12 @@ namespace PSA2.src.FileProcessor
 {
     public class PsaFile
     {
-        public int[] FileHeader { get; private set; }
-        public int[] FileContent { get; set; }
         public int FileSize { get; set; }
-        public int ExtraSpace { get; private set; } // efdts
-        public int[] OffsetInterlockTracker { get; private set; } // asc
-        public int FileOtherDataSize { get; set; } // rnexsize
-        public int[] FileOtherData { get; private set; } = new int[2000]; // rnext
+        public int[] HeaderSection { get; private set; } // tds
+        public List<int> DataSection { get; set; }
+        public List<int> OffsetSection { get; private set; } // asc
+        public List<int> DataTableSections { get; private set; } // rnext
+        public List<int> EffectData { get; private set; }
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -27,11 +26,11 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[24];
+                return HeaderSection[24];
             }
             set
             {
-                FileHeader[24] = value;
+                HeaderSection[24] = value;
             }
         }
 
@@ -39,7 +38,7 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileSize + (FileHeader.Length * 4);
+                return FileSize + (HeaderSection.Length * 4);
             }
         }
 
@@ -51,11 +50,11 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[25];
+                return HeaderSection[25];
             }
             set
             {
-                FileHeader[25] = value;
+                HeaderSection[25] = value;
             }
         }
 
@@ -66,11 +65,11 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[25] / 4;
+                return HeaderSection[25] / 4;
             }
             set
             {
-                FileHeader[25] = value * 4;
+                HeaderSection[25] = value * 4;
             }
         }
 
@@ -82,11 +81,11 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[26];
+                return HeaderSection[26];
             }
             set
             {
-                FileHeader[26] = value;
+                HeaderSection[26] = value;
             }
         }
 
@@ -99,7 +98,7 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[27];
+                return HeaderSection[27];
             }
         }
 
@@ -112,7 +111,7 @@ namespace PSA2.src.FileProcessor
         {
             get
             {
-                return FileHeader[28];
+                return HeaderSection[28];
             }
         }
 
@@ -169,8 +168,8 @@ namespace PSA2.src.FileProcessor
 
         public PsaFile(int[] fileHeader, int[] fileContent, int fileSize)
         {
-            FileHeader = fileHeader;
-            FileContent = fileContent;
+            HeaderSection = fileHeader;
+            DataSection = new List<int>();
             FileSize = fileSize;
 
             // if file has "extra space", account for it...not quite sure what this does exactly yet, but it's the efdts variable in PSAC, and it comes back again when saving the file
@@ -190,48 +189,45 @@ namespace PSA2.src.FileProcessor
             }
             movesetFileSizeBytes -= 8;
             int fileSizeBytes = fileSize / 4;
-            ExtraSpace = fileSizeBytes - movesetFileSizeBytes;
 
-            for (int i = FileContent.Length - 1; fileSizeBytes >= movesetFileSizeBytes; i--)
+            for (int i = 0; i < DataSectionSizeBytes; i++)
             {
-                FileContent[i] = FileContent[fileSizeBytes];
-                fileSizeBytes--;
+                DataSection.Add(fileContent[i]);
             }
 
             // this is for the offset interlock tracker
             // which is variable "asc" in PSAC
             // not entirely sure how this all works but this is used to automatically update pointers when new commands are added
             // like updating a "goto" offset to still point to the same thing after a new command is added
-            OffsetInterlockTracker = new int[37000];
+            OffsetSection = new List<int>();
             for (int i = 0; i < NumberOfOffsetEntries; i++)
             {
-                OffsetInterlockTracker[i] = FileContent[(DataSectionSize / 4) + i];
-            }
-            for (int i = NumberOfOffsetEntries; i < OffsetInterlockTracker.Length; i++)
-            {
-                OffsetInterlockTracker[i] = 16777216; // hex is 100 0000, not sure the significance
+                OffsetSection.Add(fileContent[(DataSectionSize / 4) + i]);
             }
 
             // store anything else in the moveset file (after the data section and offset section) into another array
             // since the data section can be incrased at any time, this holds on to that data for later
             int dataAndOffsetCombinedSize = DataSectionSizeBytes + NumberOfOffsetEntries; // calculate size of data section and offset section combined
-            FileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
+            int fileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
 
             // place all "other data" into this FileOtherData array to hold on to
-            for (int i = 0; i < FileOtherDataSize; i++)
+            DataTableSections = new List<int>();
+            for (int i = 0; i < fileOtherDataSize; i++)
             {
-                FileOtherData[i] = FileContent[dataAndOffsetCombinedSize + i];
+                DataTableSections.Add(fileContent[dataAndOffsetCombinedSize + i]);
             }
-            for (int i = FileOtherDataSize; i < FileOtherData.Length; i++)
+
+            EffectData = new List<int>();
+            for (int i = movesetFileSizeBytes; i < fileSizeBytes; i++)
             {
-                FileOtherData[i] = 0;
+                EffectData.Add(fileContent[i]);
             }
         }
 
         // TODO: Bad name, this isn't quite accurate
         public bool IsValidDataSectionLocation(int location)
         {
-            return FileContent[location] >= 8096 && FileContent[location] < DataSectionSize;
+            return DataSection[location] >= 8096 && DataSection[location] < DataSectionSize;
         }
 
         public void SaveFile(string path)
@@ -248,48 +244,55 @@ namespace PSA2.src.FileProcessor
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             for (int i = 0; i < 32; i++)
             {
-                fileStream.WriteByte((byte)((FileHeader[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((FileHeader[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((FileHeader[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(FileHeader[i] & 0xFF));
+                fileStream.WriteByte((byte)((HeaderSection[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((HeaderSection[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((HeaderSection[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(HeaderSection[i] & 0xFF));
             }
 
-            int fileSize;
-            if (MovesetFileSize % 4 == 0)
+            for (int i = 0; i < DataSection.Count; i++)
             {
-                fileSize = MovesetFileSize / 4;
-            }
-            else
-            {
-                fileSize = (MovesetFileSize + 3) / 4;
-            }
-            fileSize -= 8;
-            for (int i = 0; i < fileSize; i++)
-            {
-                fileStream.WriteByte((byte)((FileContent[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((FileContent[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((FileContent[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(FileContent[i] & 0xFF));
+                fileStream.WriteByte((byte)((DataSection[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((DataSection[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((DataSection[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(DataSection[i] & 0xFF));
             }
 
-            if (fileSize % 8 != 0)
+            for (int i = 0; i < OffsetSection.Count; i++)
             {
-                int newFileSize = 8 - fileSize % 8;
-                for (int i = 0; i < newFileSize; i++)
-                {
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                }
+                fileStream.WriteByte((byte)((OffsetSection[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((OffsetSection[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((OffsetSection[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(OffsetSection[i] & 0xFF));
+            }
+            for (int i = 0; i < DataTableSections.Count; i++)
+            {
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(DataTableSections[i] & 0xFF));
             }
 
-            for (int i = FileContent.Length - 1 - ExtraSpace; i < FileContent.Length - 1; i++)
+            // TODO: Refactor this code
+            int newMovesetFileSizeBytes = (MovesetFileSize + 3) / 4;
+            if (newMovesetFileSizeBytes % 8 != 0)
             {
-                fileStream.WriteByte((byte)((FileContent[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((FileContent[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((FileContent[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(FileContent[i] & 0xFF));
+                int s = 8 - newMovesetFileSizeBytes % 8;
+                newMovesetFileSizeBytes += s;
+            }
+            int difference = newMovesetFileSizeBytes - (MovesetFileSize / 4);
+
+            for (int i = 0; i < difference * 4; i++)
+            {
+                fileStream.WriteByte((byte)(0));
+            }
+
+            for (int i = 0; i < EffectData.Count; i++)
+            {
+                fileStream.WriteByte((byte)((EffectData[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((EffectData[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((EffectData[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(EffectData[i] & 0xFF));
             }
             fileStream.Close();
         }
@@ -298,9 +301,9 @@ namespace PSA2.src.FileProcessor
         {
             return new StringBuilder()
                 .Append("File Header:")
-                .AppendLine(Utils.IntArrayToString(FileHeader))
+                .AppendLine(Utils.IntArrayToString(HeaderSection))
                 .Append("File Content:")
-                .AppendLine(Utils.IntArrayToString(FileContent))
+                .AppendLine("[" + string.Join(", ", DataSection + "]"))
                 .Append("File Size:")
                 .AppendLine(FileSize.ToString())
                 .ToString();

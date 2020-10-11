@@ -73,13 +73,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // since command is being moved upwards, the command above will switch with it and as a result moves downwards
                     // this will increase the offset table's pointer to the command above's param location by 8 to adjust for the command moving downwards
                     int commandAboveParamsPointerLocation = codeBlock.GetPsaCommandParamsLocation(commandIndex - 1) * 4;
-                    for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                    for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[i] == commandAboveParamsPointerLocation)
+                        if (PsaFile.OffsetSection[i] == commandAboveParamsPointerLocation)
                         {
                             // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
-                            PsaFile.OffsetInterlockTracker[i] += 8;
-                            PsaFile.FileContent[PsaFile.DataSectionSizeBytes + i] += 8;
+                            PsaFile.OffsetSection[i] += 8;
                             break;
                         }
                     }
@@ -91,25 +90,24 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // since command is being moved upwards, anything pointing to its params pointer will need to move upwards by 8
                 int commandParamsPointerLocation = codeBlock.GetPsaCommandParametersPointerLocation(commandIndex);
-                for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
                 {
-                    if (PsaFile.OffsetInterlockTracker[i] == commandParamsPointerLocation)
+                    if (PsaFile.OffsetSection[i] == commandParamsPointerLocation)
                     {
                         // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
-                        PsaFile.OffsetInterlockTracker[i] -= 8;
-                        PsaFile.FileContent[PsaFile.DataSectionSizeBytes + i] -= 8;
+                        PsaFile.OffsetSection[i] -= 8;
                         break;
                     }
                 }
             }
 
             // replace the command to move with the command above
-            PsaFile.FileContent[commandLocation] = psaCommandAbove.Instruction;
-            PsaFile.FileContent[commandLocation + 1] = psaCommandAbove.CommandParametersLocation;
+            PsaFile.DataSection[commandLocation] = psaCommandAbove.Instruction;
+            PsaFile.DataSection[commandLocation + 1] = psaCommandAbove.CommandParametersLocation;
 
             // replace the command above with the command to move
-            PsaFile.FileContent[commandLocation - 2] = psaCommandToMove.Instruction;
-            PsaFile.FileContent[commandLocation - 1] = psaCommandToMove.CommandParametersLocation;
+            PsaFile.DataSection[commandLocation - 2] = psaCommandToMove.Instruction;
+            PsaFile.DataSection[commandLocation - 1] = psaCommandToMove.CommandParametersLocation;
         }
 
         /// <summary>
@@ -134,13 +132,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // since command is being moved downwards, the command above will switch with it and as a result moves upwards
                     // this will decrease the offset table's pointer to the command above's param location by 8 to adjust for the command moving upwards
                     int commandBelowParamsPointerLocation = codeBlock.GetPsaCommandParamsLocation(commandIndex + 1) * 4;
-                    for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                    for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[i] == commandBelowParamsPointerLocation)
+                        if (PsaFile.OffsetSection[i] == commandBelowParamsPointerLocation)
                         {
                             // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
-                            PsaFile.OffsetInterlockTracker[i] -= 8;
-                            PsaFile.FileContent[i + PsaFile.DataSectionSizeBytes] -= 8;
+                            PsaFile.OffsetSection[i] -= 8;
                             break;
                         }
                     }
@@ -152,25 +149,24 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // since command is being moved downwards, anything pointing to its params pointer will need to move downwards by 8
                 int commandParamsPointerLocation = codeBlock.GetPsaCommandParametersPointerLocation(commandIndex);
-                for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+                for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
                 {
-                    if (PsaFile.OffsetInterlockTracker[i] == commandParamsPointerLocation)
+                    if (PsaFile.OffsetSection[i] == commandParamsPointerLocation)
                     {
                         // Update actual offset pointer in both offset tracker and file content (since the apply header updates method is never called for moving commands)
-                        PsaFile.OffsetInterlockTracker[i] += 8;
-                        PsaFile.FileContent[i + PsaFile.DataSectionSizeBytes] += 8;
+                        PsaFile.OffsetSection[i] += 8;
                         break;
                     }
                 }
             }
 
             // replace the command to move with the command below
-            PsaFile.FileContent[commandLocation] = psaCommandBelow.Instruction;
-            PsaFile.FileContent[commandLocation + 1] = psaCommandBelow.CommandParametersLocation;
+            PsaFile.DataSection[commandLocation] = psaCommandBelow.Instruction;
+            PsaFile.DataSection[commandLocation + 1] = psaCommandBelow.CommandParametersLocation;
 
             // replace the command below with the command to move
-            PsaFile.FileContent[commandLocation + 2] = psaCommandToMove.Instruction;
-            PsaFile.FileContent[commandLocation + 3] = psaCommandToMove.CommandParametersLocation;
+            PsaFile.DataSection[commandLocation + 2] = psaCommandToMove.Instruction;
+            PsaFile.DataSection[commandLocation + 3] = psaCommandToMove.CommandParametersLocation;
         }
     }
 }

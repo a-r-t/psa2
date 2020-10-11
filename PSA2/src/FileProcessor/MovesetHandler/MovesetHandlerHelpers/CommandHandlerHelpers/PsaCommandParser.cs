@@ -24,7 +24,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 int nextCommandLocation = commandsStartLocation;
                 int commandCount = 0;
-                while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
+                while (PsaFile.DataSection[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
                 {
                     commandCount++;
                     nextCommandLocation += 2;
@@ -41,7 +41,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
             {
                 int nextCommandLocation = commandsStartLocation;
-                while (PsaFile.FileContent[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
+                while (PsaFile.DataSection[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)
                 {
                     psaCommands.Add(GetPsaCommand(nextCommandLocation));
                     nextCommandLocation += 2;
@@ -53,7 +53,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
         public PsaCommand GetPsaCommand(int commandLocation) // instructionLocation = j
         {
             //Console.WriteLine("Get PSA Command");
-            if (PsaFile.FileContent[commandLocation] == -86052851 || PsaFile.FileContent[commandLocation + 1] < 0 || PsaFile.FileContent[commandLocation + 1] >= PsaFile.DataSectionSize)
+            if (PsaFile.DataSection[commandLocation] == -86052851 || PsaFile.DataSection[commandLocation + 1] < 0 || PsaFile.DataSection[commandLocation + 1] >= PsaFile.DataSectionSize)
             {
                 // FADEF00D
                 // Error Data x8 something something
@@ -63,7 +63,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
 
-                int rawPsaInstruction = PsaFile.FileContent[commandLocation];
+                int rawPsaInstruction = PsaFile.DataSection[commandLocation];
                 //Console.WriteLine($"Instruction: {rawPsaInstruction.ToString("X8")}");
 
                 // gets number of params in instruction based on 3rd byte in word for instruction's location
@@ -71,11 +71,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                 int numberOfParams = rawPsaInstruction >> 8 & 0xFF;
 
                 // guessing
-                int commandParamsLocation = PsaFile.FileContent[commandLocation + 1] / 4;
+                int commandParamsLocation = PsaFile.DataSection[commandLocation + 1] / 4;
                 for (int i = 0; i < numberOfParams * 2; i += 2)
                 {
-                    int paramType = PsaFile.FileContent[commandParamsLocation + i];
-                    int paramValue = PsaFile.FileContent[commandParamsLocation + i + 1];
+                    int paramType = PsaFile.DataSection[commandParamsLocation + i];
+                    int paramValue = PsaFile.DataSection[commandParamsLocation + i + 1];
                     //Console.WriteLine(String.Format("Param Type: {0}", paramType));
                     //Console.WriteLine(String.Format("Param Value: {0}", paramValue));
 
@@ -104,7 +104,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     {
                         //Console.WriteLine($"Pointer: {paramValue.ToString("X")}");
                     }
-                    parameters.Add(new PsaCommandParameter(PsaFile.FileContent[commandParamsLocation + i], PsaFile.FileContent[commandParamsLocation + i + 1]));
+                    parameters.Add(new PsaCommandParameter(PsaFile.DataSection[commandParamsLocation + i], PsaFile.DataSection[commandParamsLocation + i + 1]));
                 }
 
                 //Console.WriteLine(String.Format("Instruction: {0}", instruction));

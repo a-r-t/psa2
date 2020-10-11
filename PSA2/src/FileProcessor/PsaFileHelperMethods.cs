@@ -1,4 +1,5 @@
-﻿using PSA2.src.Utility;
+﻿using PSA2.src.ExtentionMethods;
+using PSA2.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,48 +30,36 @@ namespace PSA2.src.FileProcessor
         /// </summary>
         public void ApplyHeaderUpdatesToAccountForPsaCommandChanges()
         {
-            // gets last valid value of data section
-            int lastDataSectionValidValue = PsaFile.FileContent[PsaFile.DataSectionSizeBytes - 2] == Constants.FADE0D8A
-                ? PsaFile.DataSectionSizeBytes - 3
-                : PsaFile.DataSectionSizeBytes - 1;
-
-            // decrease last data section value if there is free space (FADEF00Ds) at the end of the data section until it reaches a non free space value
-            while (lastDataSectionValidValue >= DataSectionLocation && PsaFile.FileContent[lastDataSectionValidValue] == Constants.FADEF00D)
+            // remove any free space (FADEF00D) trailing at the end of the data section to save some space
+            for (int i = PsaFile.DataSection.Count - 1; i >= DataSectionLocation; i--)
             {
-                lastDataSectionValidValue--;
-            }
-
-            // I believe this "closes the gap" of free space that was found beforehand to shrink the overall size of the file by a bit
-            int currentFileSizeBytes = lastDataSectionValidValue;
-            while (lastDataSectionValidValue < PsaFile.DataSectionSizeBytes)
-            {
-                if (PsaFile.FileContent[lastDataSectionValidValue] != Constants.FADEF00D)
+                if (PsaFile.DataSection[i] == Constants.FADEF00D)
                 {
-                    PsaFile.FileContent[currentFileSizeBytes] = PsaFile.FileContent[lastDataSectionValidValue];
-                    currentFileSizeBytes++;
+                    PsaFile.DataSection.RemoveAt(i);
                 }
-                lastDataSectionValidValue++;
+                else
+                {
+                    break;
+                }
             }
 
-            // change size of data section to match new size, which did change since a new command was added
-            PsaFile.DataSectionSize = currentFileSizeBytes * 4;
+            // if FADE0D8A is in moveset file, it was used to mark the end of the data section
+            // it's not required, but just to keep things consistent with PSA-C and the old PSA, this checks the moveset to see if FADE0D8A is present
+            // if it is present, it removes it from its location and places it at the end of the data section
+            int dataSectionEndNotatorIndex = PsaFile.DataSection.FindIndex(data => data == Constants.FADE0D8A);
+            if (dataSectionEndNotatorIndex >= 0)
+            {
+                PsaFile.DataSection.RemoveAt(dataSectionEndNotatorIndex);
+                PsaFile.DataSection.Add(Constants.FADE0D8A);
+            }
+
+            // change size of data section to match new size, which could have changed such as if a new command was added
+            PsaFile.DataSectionSize = PsaFile.DataSection.Count * 4;
 
             // sort offsets in the tracker, because they need to be placed into the psa file in order
-            Array.Sort(PsaFile.OffsetInterlockTracker);
+            PsaFile.OffsetSection.Sort();
 
-            // place offset table into Psa File
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
-            {
-                PsaFile.FileContent[currentFileSizeBytes] = PsaFile.OffsetInterlockTracker[i];
-                currentFileSizeBytes++;
-            }
-
-            // place all other data in file into Psa File
-            for (int i = 0; i < PsaFile.FileOtherDataSize; i++)
-            {
-                PsaFile.FileContent[currentFileSizeBytes] = PsaFile.FileOtherData[i];
-                currentFileSizeBytes++;
-            }
+            PsaFile.NumberOfOffsetEntries = PsaFile.OffsetSection.Count;
 
             // this calculates the new MovesetFileSize
             int movesetFileSizeLeftoverSpace = PsaFile.MovesetFileSize % 4;
@@ -79,57 +68,39 @@ namespace PSA2.src.FileProcessor
                 movesetFileSizeLeftoverSpace = 4;
             }
 
-            PsaFile.MovesetFileSize = (currentFileSizeBytes * 4) + movesetFileSizeLeftoverSpace + 28;
-
+            // update header MovesetFileSize
+            int movesetFileSizeBytes = PsaFile.DataSection.Count + PsaFile.OffsetSection.Count + PsaFile.DataTableSections.Count;
+            PsaFile.MovesetFileSize = (movesetFileSizeBytes * 4) + movesetFileSizeLeftoverSpace + 28;
+            
             // I guess this header location also needs to equal the MovesetFileSize :shrug:
-            PsaFile.FileHeader[17] = PsaFile.MovesetFileSize;
-
-            // this checks if moveset is now over 544kb, a limitation of PSA-C that I will later remove
-            int newMovesetFileSizeBytes = (PsaFile.MovesetFileSize + 3) / 4;
-            if (newMovesetFileSizeBytes % 8 != 0)
-            {
-                currentFileSizeBytes = 8 - newMovesetFileSizeBytes % 8;
-                newMovesetFileSizeBytes += currentFileSizeBytes;
-            }
-            newMovesetFileSizeBytes += PsaFile.ExtraSpace - 8;
-            if (newMovesetFileSizeBytes > 139264)
-            {
-                Console.WriteLine("Current data size over 544kb");
-            }
-
-            Console.WriteLine(Utils.IntArrayToString(PsaFile.OffsetInterlockTracker));
+            PsaFile.HeaderSection[17] = PsaFile.MovesetFileSize;
         }
 
         /// <summary>
-        /// Searches through data section for the desired amount of free space
+        /// Searches through data section for the desired amount of free space (FADEF00D)
         /// </summary>
         /// <param name="amountOfFreeSpace">amount of free space desired (as doubleword, e.g. 4 would look for 4 doublewords)</param>
         /// <returns>starting location where the desired amount of free space has been found</returns>
         public int FindLocationWithAmountOfFreeSpace(int startLocation, int amountOfFreeSpace)
         {
-            int stoppingPoint = startLocation;
-
-            while (stoppingPoint < PsaFile.DataSectionSizeBytes)
+            int freeSpaceFound = 0;
+            for (int i = startLocation; i < PsaFile.DataSection.Count; i++)
             {
-                if (PsaFile.FileContent[stoppingPoint] == Constants.FADEF00D)
+                if (PsaFile.DataSection[i] == Constants.FADEF00D)
                 {
-                    bool hasEnoughSpace = true;
-                    for (int i = 0; i < amountOfFreeSpace; i++)
-                    {
-                        if (PsaFile.FileContent[stoppingPoint + 1 + i] != Constants.FADEF00D)
-                        {
-                            hasEnoughSpace = false;
-                            break;
-                        }
-                    }
-                    if (hasEnoughSpace)
-                    {
-                        return stoppingPoint;
-                    }
+                    freeSpaceFound++;
                 }
-                stoppingPoint++;
+                else
+                {
+                    freeSpaceFound = 0;
+                }
+                
+                if (freeSpaceFound == amountOfFreeSpace)
+                {
+                    return i + 1 - amountOfFreeSpace;
+                }
             }
-            return stoppingPoint;
+            return PsaFile.DataSection.Count;
         }
 
         /// <summary>
@@ -140,16 +111,33 @@ namespace PSA2.src.FileProcessor
         /// <returns>Whether the offset was found and removed or not</returns>
         public bool RemoveOffsetFromOffsetInterlockTracker(int locationToRemove)
         {
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
             {
-                if (PsaFile.OffsetInterlockTracker[i] == locationToRemove)
+                if (PsaFile.OffsetSection[i] == locationToRemove)
                 {
-                    PsaFile.OffsetInterlockTracker[i] = 16777216; // 100 0000
-                    PsaFile.NumberOfOffsetEntries--;
+                    PsaFile.OffsetSection.RemoveAt(i);
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Sets a location in the Data Section to a specified value
+        /// <para>If the specified location is larger than the amount of space already in the Data Section, the value is appended on to the end of the Data Section instead</para>
+        /// </summary>
+        /// <param name="location">Location (index) in Data Section to set</param>
+        /// <param name="value">Value to set the Data Section to at the specified location</param>
+        public void SetDataSectionValue(int location, int value)
+        {
+            if (location < PsaFile.DataSection.Count)
+            {
+                PsaFile.DataSection[location] = value;
+            }
+            else
+            {
+                PsaFile.DataSection.Add(value);
+            }
         }
     }
 }

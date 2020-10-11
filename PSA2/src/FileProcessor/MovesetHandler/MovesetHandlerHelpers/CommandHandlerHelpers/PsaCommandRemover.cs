@@ -55,18 +55,18 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             else
             {
                 // set removed command location to free space
-                PsaFile.FileContent[commandLocation] = Constants.FADEF00D;
-                PsaFile.FileContent[commandLocation + 1] = Constants.FADEF00D;
+                PsaFile.DataSection[commandLocation] = Constants.FADEF00D;
+                PsaFile.DataSection[commandLocation + 1] = Constants.FADEF00D;
 
                 // set end of code block commands space to free space
                 // this location is normally what marks the "end" of the commands in a code block (using 0s)
                 // since it no longer represents a code block's commands space, it can be changed to free space
                 int codeBlockCommandsEnd = codeBlock.GetCommandsEndLocation();
-                PsaFile.FileContent[codeBlockCommandsEnd] = Constants.FADEF00D;
-                PsaFile.FileContent[codeBlockCommandsEnd + 1] = Constants.FADEF00D;
+                PsaFile.DataSection[codeBlockCommandsEnd] = Constants.FADEF00D;
+                PsaFile.DataSection[codeBlockCommandsEnd + 1] = Constants.FADEF00D;
 
                 // code block location is set to 0 since a code block with no commands is pointless anyway
-                PsaFile.FileContent[codeBlock.Location] = 0;
+                PsaFile.DataSection[codeBlock.Location] = 0;
 
                 // remove any existing pointer references to the cdoe block
                 int pointerToCodeBlockLocation = codeBlock.Location * 4;
@@ -78,7 +78,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int codeBlockCommandsStartLocation = codeBlockCommandsEndLocation - 8;
             for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
             {
-                if (PsaFile.FileContent[i] >= codeBlockCommandsStartLocation && PsaFile.FileContent[i] <= codeBlockCommandsEndLocation)
+                if (PsaFile.DataSection[i] >= codeBlockCommandsStartLocation && PsaFile.DataSection[i] <= codeBlockCommandsEndLocation)
                 {
                     DeleteOffsetInterlockData(i);
                 }
@@ -129,8 +129,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
 
                     // replace removed param values with free space (FADEF00D)
                     // first replaces the param type, second replaces the param value
-                    PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + i] = Constants.FADEF00D;
-                    PsaFile.FileContent[removedPsaCommand.CommandParametersValuesLocation + i + 1] = Constants.FADEF00D;
+                    PsaFile.DataSection[removedPsaCommand.CommandParametersValuesLocation + i] = Constants.FADEF00D;
+                    PsaFile.DataSection[removedPsaCommand.CommandParametersValuesLocation + i + 1] = Constants.FADEF00D;
                 }
             }
         }
@@ -163,29 +163,29 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // adjust pointer location for next command to point to the command before it (since all commands are shifted over now)
                     int nextCommandPointerLocation = currentCommandLocation * 4 + 12;
 
-                    for (int j = 0; j < PsaFile.NumberOfOffsetEntries; j++)
+                    for (int j = 0; j < PsaFile.OffsetSection.Count; j++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[j] == nextCommandPointerLocation)
+                        if (PsaFile.OffsetSection[j] == nextCommandPointerLocation)
                         {
-                            PsaFile.OffsetInterlockTracker[j] -= 8;
+                            PsaFile.OffsetSection[j] -= 8;
                             break;
                         }
                     }
                 }
 
                 // this is what actually shifts the command - the instruction and param pointer is shifted to the previous command location
-                PsaFile.FileContent[currentCommandLocation] = PsaFile.FileContent[currentCommandLocation + 2];
-                PsaFile.FileContent[currentCommandLocation + 1] = PsaFile.FileContent[currentCommandLocation + 3];
+                PsaFile.DataSection[currentCommandLocation] = PsaFile.DataSection[currentCommandLocation + 2];
+                PsaFile.DataSection[currentCommandLocation + 1] = PsaFile.DataSection[currentCommandLocation + 3];
             }
 
             // mark the old last command location (that was shifted up in the the loop above) as the end of the code block
             int lastCommandLocation = codeBlock.GetPsaCommandLocation(codeBlock.NumberOfCommands - 1);
-            PsaFile.FileContent[lastCommandLocation] = 0;
-            PsaFile.FileContent[lastCommandLocation + 1] = 0;
+            PsaFile.DataSection[lastCommandLocation] = 0;
+            PsaFile.DataSection[lastCommandLocation + 1] = 0;
 
             // this space is left over from all of the commands shifting -- it is now unused so it can be set to free space
-            PsaFile.FileContent[lastCommandLocation + 2] = Constants.FADEF00D;
-            PsaFile.FileContent[lastCommandLocation + 3] = Constants.FADEF00D;
+            PsaFile.DataSection[lastCommandLocation + 2] = Constants.FADEF00D;
+            PsaFile.DataSection[lastCommandLocation + 3] = Constants.FADEF00D;
         }
 
         /// <summary>
@@ -200,9 +200,9 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             int fileContentPointerLocation = fileContentIndex * 4;
             bool offsetFound = false;
             int offsetIndex = 0;
-            for (int i = 0; i < PsaFile.NumberOfOffsetEntries; i++)
+            for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
             {
-                if (PsaFile.OffsetInterlockTracker[i] == fileContentPointerLocation)
+                if (PsaFile.OffsetSection[i] == fileContentPointerLocation)
                 {
                     offsetFound = true;
                     offsetIndex = i;
@@ -214,15 +214,15 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             if (offsetFound)
             {
                 // remove parm value since location was removed and offset pointing to that param value
-                PsaFile.FileContent[fileContentIndex] = 0;
-                PsaFile.OffsetInterlockTracker[offsetIndex] = 16777216; // 100 0000
-                PsaFile.NumberOfOffsetEntries--;
+                PsaFile.DataSection[fileContentIndex] = 0;
+                //PsaFile.OffsetSection[offsetIndex] = 16777216; // 100 0000
+                PsaFile.OffsetSection.RemoveAt(offsetIndex);
 
                 // if param type is pointer
-                if (PsaFile.FileContent[fileContentIndex - 1] == 2)
+                if (PsaFile.DataSection[fileContentIndex - 1] == 2)
                 {
                     // remove param type
-                    PsaFile.FileContent[fileContentIndex - 1] = 0;
+                    PsaFile.DataSection[fileContentIndex - 1] = 0;
                     fileContentPointerLocation -= 4;
 
                     // find if anything was pointing to the command itself that had the pointer
@@ -230,7 +230,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     offsetFound = false;
                     for (int i = 0; i < PsaFile.DataSectionSizeBytes; i++)
                     {
-                        if (PsaFile.OffsetInterlockTracker[i] == fileContentPointerLocation)
+                        if (PsaFile.OffsetSection[i] == fileContentPointerLocation)
                         {
                             offsetFound = true;
                             commandParamValueLocation = i;
@@ -243,16 +243,16 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     {
                         // if command was subroutine or goto
                         // 459008 is subroutine instruction, 590080 is goto instruction
-                        if (PsaFile.FileContent[commandParamValueLocation - 1] == 459008 || PsaFile.FileContent[commandParamValueLocation - 1] == 590080)
+                        if (PsaFile.DataSection[commandParamValueLocation - 1] == 459008 || PsaFile.DataSection[commandParamValueLocation - 1] == 590080)
                         {
                             // replace command to a "nop" instruction 
                             // TODO: I don't actually agree with doing this
-                            PsaFile.FileContent[commandParamValueLocation - 1] = Constants.NOP;
-                            PsaFile.FileContent[commandParamValueLocation] = 0;
+                            PsaFile.DataSection[commandParamValueLocation - 1] = Constants.NOP;
+                            PsaFile.DataSection[commandParamValueLocation] = 0;
 
                             // set to freespace
-                            PsaFile.FileContent[fileContentIndex] = Constants.FADEF00D;
-                            PsaFile.FileContent[fileContentIndex - 1] = Constants.FADEF00D;
+                            PsaFile.DataSection[fileContentIndex] = Constants.FADEF00D;
+                            PsaFile.DataSection[fileContentIndex - 1] = Constants.FADEF00D;
 
                             // remove any offset pointer to the command's param value location (since all params were removed when changing to NOP)
                             int commandParamValuePointerLocation = commandParamValueLocation * 4;
@@ -277,7 +277,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // get a external subroutine's pointer
                 int externalSubRoutineLocationIndex = (PsaFile.NumberOfDataTableEntries + externalSubRoutineIndex) * 2;
-                int externalSubRoutineLocation = PsaFile.FileOtherData[externalSubRoutineLocationIndex];
+                int externalSubRoutineLocation = PsaFile.DataTableSections[externalSubRoutineLocationIndex];
                 if (externalSubRoutineLocation >= 8096 && externalSubRoutineLocation < PsaFile.DataSectionSize)
                 {
                     // if the param being removed was pointing to an external subroutine
@@ -287,15 +287,15 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                         int commandExternalSubroutineValueLocation = commandParamPointerValueLocation / 4;
 
                         // This stops the external data table from pointing to the command param pointer value location
-                        if (PsaFile.FileContent[commandExternalSubroutineValueLocation] >= 8096
-                            && PsaFile.FileContent[commandExternalSubroutineValueLocation] < PsaFile.DataSectionSize
-                            && PsaFile.FileContent[commandExternalSubroutineValueLocation] % 4 == 0)
+                        if (PsaFile.DataSection[commandExternalSubroutineValueLocation] >= 8096
+                            && PsaFile.DataSection[commandExternalSubroutineValueLocation] < PsaFile.DataSectionSize
+                            && PsaFile.DataSection[commandExternalSubroutineValueLocation] % 4 == 0)
                         {
-                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = PsaFile.FileContent[commandExternalSubroutineValueLocation];
+                            PsaFile.DataTableSections[externalSubRoutineLocationIndex] = PsaFile.DataSection[commandExternalSubroutineValueLocation];
                         }
                         else
                         {
-                            PsaFile.FileOtherData[externalSubRoutineLocationIndex] = -1;
+                            PsaFile.DataTableSections[externalSubRoutineLocationIndex] = -1;
                         }
                         break;
                     }
@@ -304,21 +304,21 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                     // it's tough to test further because I also can't really figure out how to get this code to trigger at the moment, so I'm just going to leave this as is
                     int externalSubRoutineCodeBlockLocation = externalSubRoutineLocation / 4;
 
-                    int externalSubRoutineCommandsPointerLocation = PsaFile.FileContent[externalSubRoutineCodeBlockLocation];
+                    int externalSubRoutineCommandsPointerLocation = PsaFile.DataSection[externalSubRoutineCodeBlockLocation];
                     if (externalSubRoutineCommandsPointerLocation >= 8096
                         && externalSubRoutineCommandsPointerLocation < PsaFile.DataSectionSize
                         && removedPsaCommand.CommandParametersLocation == externalSubRoutineCommandsPointerLocation)
                     {
                         int commandExternalDataPointerValue = removedPsaCommand.GetCommandParameterValueLocation(0);
-                        if (PsaFile.FileContent[commandExternalDataPointerValue] >= 8096
-                            && PsaFile.FileContent[commandExternalDataPointerValue] < PsaFile.DataSectionSize
-                            && PsaFile.FileContent[commandExternalDataPointerValue] % 4 == 0)
+                        if (PsaFile.DataSection[commandExternalDataPointerValue] >= 8096
+                            && PsaFile.DataSection[commandExternalDataPointerValue] < PsaFile.DataSectionSize
+                            && PsaFile.DataSection[commandExternalDataPointerValue] % 4 == 0)
                         {
-                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = PsaFile.FileContent[commandExternalDataPointerValue];
+                            PsaFile.DataTableSections[externalSubRoutineCodeBlockLocation] = PsaFile.DataSection[commandExternalDataPointerValue];
                         }
                         else
                         {
-                            PsaFile.FileOtherData[externalSubRoutineCodeBlockLocation] = -1;
+                            PsaFile.DataTableSections[externalSubRoutineCodeBlockLocation] = -1;
                         }
                         break;
                     }

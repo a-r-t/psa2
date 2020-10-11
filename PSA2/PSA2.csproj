@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ExtentionMethods\ListExtensions.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\CharacterSpecificParametersConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\ActionOverridesHandler.cs" />

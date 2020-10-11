@@ -37,5 +37,15 @@ namespace PSA2Tests.WriteTests
             psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac", "./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandWithPointerInAction.pac"));
         }
+
+        [Test]
+        public void RemoveCommandAtEndOfDataSection()
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./WriteTests/Data/FitMario.pac");
+            psaMovesetParser.ActionsHandler.AddCommandToAction(6, 1);
+            psaMovesetParser.ActionsHandler.RemoveCommandFromAction(6, 1, 3);
+            psaMovesetParser.PsaFile.SaveFile("./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandAtEndOfDataSection.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./WriteTests/ComparisonData/Actions/Remove/FitMarioRemoveCommandAtEndOfDataSection.pac", "./WriteTests/Out/Actions/Remove/FitMarioRemoveCommandAtEndOfDataSection.pac"));
+        }
     }
 }

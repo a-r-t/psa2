@@ -41,17 +41,17 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                 int actionOverridesLocation;
                 if (codeBlockId == 0)
                 {
-                    actionOverridesLocation = PsaFile.FileContent[DataSectionLocation + 20] / 4;
+                    actionOverridesLocation = PsaFile.DataSection[DataSectionLocation + 20] / 4;
                 }
                 else // if (codeBlockId == 1)
                 {
-                    actionOverridesLocation = PsaFile.FileContent[DataSectionLocation + 21] / 4;
+                    actionOverridesLocation = PsaFile.DataSection[DataSectionLocation + 21] / 4;
                 }
 
                 int nextActionOverridesLocation = actionOverridesLocation;
-                while (PsaFile.FileContent[nextActionOverridesLocation] >= 0)
+                while (PsaFile.DataSection[nextActionOverridesLocation] >= 0)
                 {
-                    actionOverrideIds.Add(PsaFile.FileContent[nextActionOverridesLocation]);
+                    actionOverrideIds.Add(PsaFile.DataSection[nextActionOverridesLocation]);
                     nextActionOverridesLocation += 2;
                 }
                 actionOverrideIds.ForEach(x => Console.WriteLine(x.ToString("X")));
@@ -64,10 +64,10 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetActionOverrideCodeBlockLocation(int actionOverrideId, int codeBlockId) // issue -- actionOverrideId needs to be in order of existence
         {
             int actionOverridesCodeBlockStartingLocation = codeBlockId == 0 ?
-                PsaFile.FileContent[DataSectionLocation + 20] / 4 :
-                PsaFile.FileContent[DataSectionLocation + 21] / 4;
+                PsaFile.DataSection[DataSectionLocation + 20] / 4 :
+                PsaFile.DataSection[DataSectionLocation + 21] / 4;
 
-            int actionOverrideCodeBlockLocation = PsaFile.FileContent[actionOverridesCodeBlockStartingLocation + actionOverrideId * 2 + 1];
+            int actionOverrideCodeBlockLocation = PsaFile.DataSection[actionOverridesCodeBlockStartingLocation + actionOverrideId * 2 + 1];
 
             return actionOverrideCodeBlockLocation;
         }

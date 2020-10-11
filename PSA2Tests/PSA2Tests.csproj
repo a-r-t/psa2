@@ -33,6 +33,12 @@
     <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAdded2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAddedWithFreeSpaceInMiddleOfDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WriteTests\ComparisonData\Actions\Add\FitMarioOneCommandAddedWithNoExistingCommands.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -94,6 +100,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveAllCommandsInAction.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveCommandAtEndOfDataSection.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="WriteTests\ComparisonData\Actions\Remove\FitMarioRemoveCommandWithPointerInAction.pac">

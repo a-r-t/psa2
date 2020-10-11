@@ -32,7 +32,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetArticleDataLocation(int articleId)
         {
             int articleLocation = Convert.ToInt32(CharacterSpecificParametersConfig.Articles[articleId].Location, 16);
-            return PsaFile.FileContent[DataSectionLocation + articleLocation / 4] / 4;
+            return PsaFile.DataSection[DataSectionLocation + articleLocation / 4] / 4;
 
             // to get article offset, multiple the result of this by 4
             // ArtOffset.Text = "0x" + (artdt * 4).ToString("X");
@@ -42,7 +42,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetNumberOfArticleActions(int articleId)
         {
             int articleDataLocation = GetArticleDataLocation(articleId);
-            if (PsaFile.FileContent[articleDataLocation + 5] > 8096 && PsaFile.FileContent[articleDataLocation + 5] < PsaFile.DataSectionSize)
+            if (PsaFile.DataSection[articleDataLocation + 5] > 8096 && PsaFile.DataSection[articleDataLocation + 5] < PsaFile.DataSectionSize)
             {
                 return CharacterSpecificParametersConfig.Articles[articleId].NumberOfActions;
             }
@@ -55,7 +55,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetNumberOfArticleSubActions(int articleId)
         {
             int articleDataLocation = GetArticleDataLocation(articleId);
-            if (PsaFile.FileContent[articleDataLocation + 4] > 8096 && PsaFile.FileContent[articleDataLocation + 4] < PsaFile.DataSectionSize)
+            if (PsaFile.DataSection[articleDataLocation + 4] > 8096 && PsaFile.DataSection[articleDataLocation + 4] < PsaFile.DataSectionSize)
             {
                 return CharacterSpecificParametersConfig.Articles[articleId].NumberOfSubActions;
             }
@@ -74,7 +74,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int articleDataLocation = GetArticleDataLocation(articleId);
             for (int i = 0; i < 3; i++)
             {
-                if (PsaFile.FileContent[articleDataLocation + i + 6] > 8096 && PsaFile.FileContent[articleDataLocation + i + 6] < PsaFile.DataSectionSize)
+                if (PsaFile.DataSection[articleDataLocation + i + 6] > 8096 && PsaFile.DataSection[articleDataLocation + i + 6] < PsaFile.DataSectionSize)
                 {
                     codeBlockIds.Add(i);
                 }
@@ -130,7 +130,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int articleDataLocation = GetArticleDataLocation(articleId);
             for (int i = 0; i < offsetNames.Count; i++)
             {
-                articleOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.FileContent[articleDataLocation + i]));
+                articleOffsets.Add(offsetNames[i], Utils.ConvertIntToOffset(PsaFile.DataSection[articleDataLocation + i]));
             }
             foreach (KeyValuePair<string, string> pair in articleOffsets)
             {
@@ -144,7 +144,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             List<int> articleParameterValues = new List<int>();
             int articleDataLocation = GetArticleDataLocation(articleId);
             int paramsLocation = Convert.ToInt32(CharacterSpecificParametersConfig.Articles[articleId].ArticleParameters[paramsId].Location, 16);
-            int articleParametersDataLocation = PsaFile.FileContent[articleDataLocation + paramsLocation / 4] / 4; // artpo
+            int articleParametersDataLocation = PsaFile.DataSection[articleDataLocation + paramsLocation / 4] / 4; // artpo
 
             /*
             int m = articleParametersLocation + 3;
@@ -158,7 +158,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int numberOfParamValues = CharacterSpecificParametersConfig.Articles[articleId].ArticleParameters[paramsId].Values.Count;
             for (int i = 0; i < numberOfParamValues; i++)
             {
-                articleParameterValues.Add(PsaFile.FileContent[articleParametersDataLocation + i]);
+                articleParameterValues.Add(PsaFile.DataSection[articleParametersDataLocation + i]);
             }
             articleParameterValues.ForEach(x => Console.WriteLine(x.ToString("X")));
             return articleParameterValues;
@@ -169,8 +169,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetArticleActionCodeLocation(int articleId, int actionId)
         {
             int articleDataLocation = GetArticleDataLocation(articleId);
-            int articleActionCodeStartingLocation = PsaFile.FileContent[articleDataLocation + 5] / 4; // n -- also in one rare case for Pikmin, + 13 is its exit code block...worry about that later
-            int articleActionCodeLocation = PsaFile.FileContent[articleActionCodeStartingLocation + actionId];
+            int articleActionCodeStartingLocation = PsaFile.DataSection[articleDataLocation + 5] / 4; // n -- also in one rare case for Pikmin, + 13 is its exit code block...worry about that later
+            int articleActionCodeLocation = PsaFile.DataSection[articleActionCodeStartingLocation + actionId];
             return articleActionCodeLocation;
         }
 
@@ -184,8 +184,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public int GetArticleSubActionCodeBlockLocation(int articleId, int subActionId, int codeBlockId)
         {
             int articleDataLocation = GetArticleDataLocation(articleId);
-            int articleSubActionsCodeBlockStartingLocation = PsaFile.FileContent[articleDataLocation + 6 + codeBlockId] / 4; // k
-            int articleSubActionCodeBlockLocation = PsaFile.FileContent[articleSubActionsCodeBlockStartingLocation + subActionId];
+            int articleSubActionsCodeBlockStartingLocation = PsaFile.DataSection[articleDataLocation + 6 + codeBlockId] / 4; // k
+            int articleSubActionCodeBlockLocation = PsaFile.DataSection[articleSubActionsCodeBlockStartingLocation + subActionId];
 
             return articleSubActionCodeBlockLocation;
         }
@@ -201,14 +201,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             // i = subActionId
             // not 100% sure why this chain works but it does
             int articleDataLocation = GetArticleDataLocation(articleId);
-            int animationLocation = PsaFile.FileContent[articleDataLocation + 4] / 4 + 1 + subActionId * 2;
-            if (PsaFile.FileContent[animationLocation] == 0)
+            int animationLocation = PsaFile.DataSection[articleDataLocation + 4] / 4 + 1 + subActionId * 2;
+            if (PsaFile.DataSection[animationLocation] == 0)
             {
                 return "NONE";
             }
             else
             {
-                int animationNameLocation = PsaFile.FileContent[animationLocation] / 4; // j
+                int animationNameLocation = PsaFile.DataSection[animationLocation] / 4; // j
 
                 if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
                 {
@@ -216,7 +216,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                     int nameEndByteIndex = 0;
                     while (true)
                     {
-                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[animationNameLocation + nameEndByteIndex]);
+                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
                         animationName.Append(nextStringData);
                         if (nextStringData.Length == 4)
                         {
@@ -240,8 +240,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         {
             // will need to look at this later to figure out why it works
             int articleDataLocation = GetArticleDataLocation(articleId);
-            int animationFlagsLocation = PsaFile.FileContent[articleDataLocation + 4] / 4 + subActionId * 2;
-            int animationFlagsValue = PsaFile.FileContent[animationFlagsLocation];
+            int animationFlagsLocation = PsaFile.DataSection[articleDataLocation + 4] / 4 + subActionId * 2;
+            int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
             int inTransition = animationFlagsValue >> 24 & 0xFF;
             int noOutTransition = animationFlagsValue & 0x1;
             int loop = animationFlagsValue >> 16 & 0xFF & 0x2;

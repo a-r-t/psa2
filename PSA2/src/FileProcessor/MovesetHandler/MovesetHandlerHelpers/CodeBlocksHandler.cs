@@ -31,7 +31,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public int GetCodeBlockCommandsPointerLocation(int codeBlockLocation)
         {
-            return PsaFile.FileContent[codeBlockLocation];
+            return PsaFile.DataSection[codeBlockLocation];
         }
 
         public int GetCodeBlockCommandsLocation(int codeBlockLocation)

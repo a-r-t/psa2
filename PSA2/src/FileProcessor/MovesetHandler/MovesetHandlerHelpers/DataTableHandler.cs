@@ -17,19 +17,20 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             PsaFile = psaFile;
         }
 
+        // TODO: This method is broken, needs to switch to using PsaFile.DataTableSections instead of PsaFile.DataSection
         public List<DataEntry> GetDataTableEntries()
         {
             List<DataEntry> dataTableEntries = new List<DataEntry>();
             int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfDataTableEntries; i++)
             {
-                int dataOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + i * 2] / 4;
-                int nameStringOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + 1 + i * 2];
+                int dataOffset = PsaFile.DataSection[PsaFile.DataTableSectionStartLocation + i * 2] / 4;
+                int nameStringOffset = PsaFile.DataSection[PsaFile.DataTableSectionStartLocation + 1 + i * 2];
                 int startBit = nameStringOffset;
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {
@@ -43,22 +44,21 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                 }
                 dataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
             }
-
             return dataTableEntries;
         }
 
         public DataEntry GetDataTableEntryByName(string dataTableEntryName)
         {
-            int dataElementNameEntriesStartLocation = PsaFile.ExternalDataSectionStartLocation + PsaFile.NumberOfExternalSubRoutines * 2;
+            int dataElementNameEntriesStartLocation = (PsaFile.ExternalDataSectionStartLocation - PsaFile.DataTableSectionStartLocation) + PsaFile.NumberOfExternalSubRoutines * 2;
             for (int i = 0; i < PsaFile.NumberOfDataTableEntries; i++)
             {
-                int dataLocation = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + i * 2] / 4;
-                int nameStringOffset = PsaFile.FileContent[PsaFile.DataTableSectionStartLocation + 1 + i * 2];
+                int dataLocation = PsaFile.DataTableSections[i * 2] / 4;
+                int nameStringOffset = PsaFile.DataTableSections[1 + i * 2];
                 int startBit = nameStringOffset;
                 StringBuilder dataEntryName = new StringBuilder();
                 while (true)
                 {
-                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
+                    string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataTableSections[dataElementNameEntriesStartLocation + startBit / 4], startByte: startBit % 4);
 
                     if (nextStringData.Length != 0)
                     {

@@ -23,15 +23,15 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public int GetNumberOfSubActions()
         {
-            Console.WriteLine(string.Format("Number of Sub Actions: {0}", (PsaFile.FileContent[DataSectionLocation + 13] - PsaFile.FileContent[DataSectionLocation + 12]) / 4));
-            return (PsaFile.FileContent[DataSectionLocation + 13] - PsaFile.FileContent[DataSectionLocation + 12]) / 4;
+            Console.WriteLine(string.Format("Number of Sub Actions: {0}", (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4));
+            return (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4;
         }
 
         // this is the offset where subaction code starts (displayed in PSAC)
         public int GetSubActionCodeBlockLocation(int subActionId, int codeBlockId)
         {
-            int subActionsCodeBlockStartingLocation = PsaFile.FileContent[DataSectionLocation + 12 + codeBlockId] / 4; // n
-            int subActionCodeBlockLocation = PsaFile.FileContent[subActionsCodeBlockStartingLocation + subActionId];
+            int subActionsCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 12 + codeBlockId] / 4; // n
+            int subActionCodeBlockLocation = PsaFile.DataSection[subActionsCodeBlockStartingLocation + subActionId];
 
             return subActionCodeBlockLocation;
         }
@@ -47,14 +47,14 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         {
             // h = subActionId
             // not 100% sure why this chain works but it does
-            int animationLocation = PsaFile.FileContent[DataSectionLocation] / 4 + 1 + subActionId * 2;
-            if (PsaFile.FileContent[animationLocation] == 0)
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
+            if (PsaFile.DataSection[animationLocation] == 0)
             {
                 return "NONE";
             }
             else
             {
-                int animationNameLocation = PsaFile.FileContent[animationLocation] / 4; // j
+                int animationNameLocation = PsaFile.DataSection[animationLocation] / 4; // j
 
                 if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
                 {
@@ -62,7 +62,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                     int nameEndByteIndex = 0;
                     while (true) // originally i < 47 -- 48 char limit?
                     {
-                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.FileContent[animationNameLocation + nameEndByteIndex]);
+                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
                         animationName.Append(nextStringData);
                         if (nextStringData.Length == 4)
                         {
@@ -85,8 +85,8 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
         public AnimationFlags GetSubActionAnimationFlags(int subActionId)
         {
             // will need to look at this later to figure out why it works
-            int animationFlagsLocation = PsaFile.FileContent[DataSectionLocation] / 4 + subActionId * 2;
-            int animationFlagsValue = PsaFile.FileContent[animationFlagsLocation];
+            int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
             int inTransition = animationFlagsValue >> 24 & 0xFF;
             int noOutTransition = animationFlagsValue & 0x1;
             int loop = animationFlagsValue >> 16 & 0xFF & 0x2;
