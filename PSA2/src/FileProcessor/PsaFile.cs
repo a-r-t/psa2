@@ -16,9 +16,8 @@ namespace PSA2.src.FileProcessor
         public int FileSize { get; set; }
         public int EffectDataStartLocation { get; private set; } // efdts
         public List<int> OffsetSection { get; private set; } // asc
-        //public int FileOtherDataSize { get; set; } // rnexsize
-        public List<int> RemainingSections { get; private set; } // rnext
-        public List<int> EverythingElse { get; private set; }
+        public List<int> DataTableSections { get; private set; } // rnext
+        public List<int> EffectData { get; private set; }
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -214,16 +213,16 @@ namespace PSA2.src.FileProcessor
             int fileOtherDataSize = (MovesetFileSize + 3) / 4 - dataAndOffsetCombinedSize - 8; // calculate size of remaining file
 
             // place all "other data" into this FileOtherData array to hold on to
-            RemainingSections = new List<int>();
+            DataTableSections = new List<int>();
             for (int i = 0; i < fileOtherDataSize; i++)
             {
-                RemainingSections.Add(fileContent[dataAndOffsetCombinedSize + i]);
+                DataTableSections.Add(fileContent[dataAndOffsetCombinedSize + i]);
             }
 
-            EverythingElse = new List<int>();
+            EffectData = new List<int>();
             for (int i = movesetFileSizeBytes; i < fileSizeBytes; i++)
             {
-                EverythingElse.Add(fileContent[i]);
+                EffectData.Add(fileContent[i]);
             }
         }
 
@@ -305,12 +304,12 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)((OffsetSection[i] >> 8) & 0xFF));
                 fileStream.WriteByte((byte)(OffsetSection[i] & 0xFF));
             }
-            for (int i = 0; i < RemainingSections.Count; i++)
+            for (int i = 0; i < DataTableSections.Count; i++)
             {
-                fileStream.WriteByte((byte)((RemainingSections[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((RemainingSections[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((RemainingSections[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(RemainingSections[i] & 0xFF));
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((DataTableSections[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(DataTableSections[i] & 0xFF));
             }
 
             // TODO: Refactor this code
@@ -327,12 +326,12 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)(0));
             }
 
-            for (int i = 0; i < EverythingElse.Count; i++)
+            for (int i = 0; i < EffectData.Count; i++)
             {
-                fileStream.WriteByte((byte)((EverythingElse[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((EverythingElse[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((EverythingElse[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(EverythingElse[i] & 0xFF));
+                fileStream.WriteByte((byte)((EffectData[i] >> 24) & 0xFF));
+                fileStream.WriteByte((byte)((EffectData[i] >> 16) & 0xFF));
+                fileStream.WriteByte((byte)((EffectData[i] >> 8) & 0xFF));
+                fileStream.WriteByte((byte)(EffectData[i] & 0xFF));
             }
             fileStream.Close();
         }

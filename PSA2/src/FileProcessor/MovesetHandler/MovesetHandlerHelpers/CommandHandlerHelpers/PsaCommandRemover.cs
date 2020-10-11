@@ -277,7 +277,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
             {
                 // get a external subroutine's pointer
                 int externalSubRoutineLocationIndex = (PsaFile.NumberOfDataTableEntries + externalSubRoutineIndex) * 2;
-                int externalSubRoutineLocation = PsaFile.RemainingSections[externalSubRoutineLocationIndex];
+                int externalSubRoutineLocation = PsaFile.DataTableSections[externalSubRoutineLocationIndex];
                 if (externalSubRoutineLocation >= 8096 && externalSubRoutineLocation < PsaFile.DataSectionSize)
                 {
                     // if the param being removed was pointing to an external subroutine
@@ -291,11 +291,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                             && PsaFile.DataSection[commandExternalSubroutineValueLocation] < PsaFile.DataSectionSize
                             && PsaFile.DataSection[commandExternalSubroutineValueLocation] % 4 == 0)
                         {
-                            PsaFile.RemainingSections[externalSubRoutineLocationIndex] = PsaFile.DataSection[commandExternalSubroutineValueLocation];
+                            PsaFile.DataTableSections[externalSubRoutineLocationIndex] = PsaFile.DataSection[commandExternalSubroutineValueLocation];
                         }
                         else
                         {
-                            PsaFile.RemainingSections[externalSubRoutineLocationIndex] = -1;
+                            PsaFile.DataTableSections[externalSubRoutineLocationIndex] = -1;
                         }
                         break;
                     }
@@ -314,11 +314,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHan
                             && PsaFile.DataSection[commandExternalDataPointerValue] < PsaFile.DataSectionSize
                             && PsaFile.DataSection[commandExternalDataPointerValue] % 4 == 0)
                         {
-                            PsaFile.RemainingSections[externalSubRoutineCodeBlockLocation] = PsaFile.DataSection[commandExternalDataPointerValue];
+                            PsaFile.DataTableSections[externalSubRoutineCodeBlockLocation] = PsaFile.DataSection[commandExternalDataPointerValue];
                         }
                         else
                         {
-                            PsaFile.RemainingSections[externalSubRoutineCodeBlockLocation] = -1;
+                            PsaFile.DataTableSections[externalSubRoutineCodeBlockLocation] = -1;
                         }
                         break;
                     }

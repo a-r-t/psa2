@@ -69,7 +69,7 @@ namespace PSA2.src.FileProcessor
             }
 
             // update header MovesetFileSize
-            int movesetFileSizeBytes = PsaFile.DataSection.Count + PsaFile.OffsetSection.Count + PsaFile.RemainingSections.Count;
+            int movesetFileSizeBytes = PsaFile.DataSection.Count + PsaFile.OffsetSection.Count + PsaFile.DataTableSections.Count;
             PsaFile.MovesetFileSize = (movesetFileSizeBytes * 4) + movesetFileSizeLeftoverSpace + 28;
             
             // I guess this header location also needs to equal the MovesetFileSize :shrug:
