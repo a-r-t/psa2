@@ -11,10 +11,9 @@ namespace PSA2.src.FileProcessor
 {
     public class PsaFile
     {
-        public int[] HeaderSection { get; private set; }
-        public List<int> DataSection { get; set; }
         public int FileSize { get; set; }
-        public int EffectDataStartLocation { get; private set; } // efdts
+        public int[] HeaderSection { get; private set; } // tds
+        public List<int> DataSection { get; set; }
         public List<int> OffsetSection { get; private set; } // asc
         public List<int> DataTableSections { get; private set; } // rnext
         public List<int> EffectData { get; private set; }
@@ -190,7 +189,6 @@ namespace PSA2.src.FileProcessor
             }
             movesetFileSizeBytes -= 8;
             int fileSizeBytes = fileSize / 4;
-            EffectDataStartLocation = fileSizeBytes - movesetFileSizeBytes;
 
             for (int i = 0; i < DataSectionSizeBytes; i++)
             {
@@ -252,43 +250,6 @@ namespace PSA2.src.FileProcessor
                 fileStream.WriteByte((byte)(HeaderSection[i] & 0xFF));
             }
 
-            int fileSize;
-            if (MovesetFileSize % 4 == 0)
-            {
-                fileSize = MovesetFileSize / 4;
-            }
-            else
-            {
-                fileSize = (MovesetFileSize + 3) / 4;
-            }
-            fileSize -= 8;
-            /*for (int i = 0; i < fileSize; i++)
-            {
-                fileStream.WriteByte((byte)((DataSection[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((DataSection[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((DataSection[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(DataSection[i] & 0xFF));
-            }*/
-
-/*            if (fileSize % 8 != 0)
-            {
-                int newFileSize = 8 - fileSize % 8;
-                for (int i = 0; i < newFileSize; i++)
-                {
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                    fileStream.WriteByte(0);
-                }
-            }*/
-
-            /*for (int i = DataSection.Count - 1 - ExtraSpace; i < DataSection.Count - 1; i++)
-            {
-                fileStream.WriteByte((byte)((DataSection[i] >> 24) & 0xFF));
-                fileStream.WriteByte((byte)((DataSection[i] >> 16) & 0xFF));
-                fileStream.WriteByte((byte)((DataSection[i] >> 8) & 0xFF));
-                fileStream.WriteByte((byte)(DataSection[i] & 0xFF));
-            }*/
             for (int i = 0; i < DataSection.Count; i++)
             {
                 fileStream.WriteByte((byte)((DataSection[i] >> 24) & 0xFF));

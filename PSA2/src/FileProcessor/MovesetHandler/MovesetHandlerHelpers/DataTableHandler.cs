@@ -17,6 +17,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             PsaFile = psaFile;
         }
 
+        // TODO: This method is broken, needs to switch to using PsaFile.DataTableSections instead of PsaFile.DataSection
         public List<DataEntry> GetDataTableEntries()
         {
             List<DataEntry> dataTableEntries = new List<DataEntry>();
@@ -43,7 +44,6 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                 }
                 dataTableEntries.Add(new DataEntry(dataOffset, dataEntryName.ToString()));
             }
-
             return dataTableEntries;
         }
 
