@@ -39,7 +39,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public CodeBlock GetCodeBlock(int actionId, int codeBlockId)
         {
-            int codeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int codeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlock(codeBlockLocation);
         }
 
@@ -53,7 +53,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return 274 + GetNumberOfSpecialActions();
         }
 
-        public int GetActionCodeBlockLocation(int actionId, int codeBlockId)
+        public int GetCodeBlockLocation(int actionId, int codeBlockId)
         {
             int actionCodeBlockStartingLocation;
 
@@ -72,63 +72,63 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             return actionCodeBlockStartingLocation + actionId;
         }
 
-        public int GetActionCodeBlockCommandsPointerLocation(int actionId, int codeBlockId)
+        public int GetCodeBlockCommandsPointerLocation(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsPointerLocation(actionCodeBlockLocation);
         }
 
-        public int GetActionCodeBlockCommandsLocation(int actionId, int codeBlockId)
+        public int GetCodeBlockCommandsLocation(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsLocation(actionCodeBlockLocation);
         }
 
-        public int GetActionCodeBlockCommandLocation(int actionId, int codeBlockId, int commandIndex)
+        public int GetCodeBlockCommandLocation(int actionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandLocation(actionCodeBlockLocation, commandIndex);
         }
 
-        public List<PsaCommand> GetPsaCommandsForActionCodeBlock(int actionId, int codeBlockId)
+        public List<PsaCommand> GetPsaCommandsInCodeBlock(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandsForCodeBlock(actionCodeBlockLocation);
         }
 
-        public PsaCommand GetPsaCommandForActionCodeBlock(int actionId, int codeBlockId, int commandIndex)
+        public PsaCommand GetPsaCommandInCodeBlock(int actionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandForCodeBlock(actionCodeBlockLocation, commandIndex);
         }
 
-        public int GetNumberOfPsaCommandsInActionCodeBlock(int actionId, int codeBlockId)
+        public int GetNumberOfPsaCommandsInCodeBlock(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             return CodeBlocksHandler.GetNumberOfPsaCommandsInCodeBlock(actionCodeBlockLocation);
         }
 
-        public void AddCommandToAction(int actionId, int codeBlockId)
+        public void AddCommand(int actionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             CodeBlocksHandler.AddCommand(actionCodeBlockLocation);
         }
 
-        public void ModifyActionCommand(int actionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
+        public void ModifyCommand(int actionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             CodeBlocksHandler.ModifyCommand(actionCodeBlockLocation, commandIndex, newPsaCommand);
         }
 
-        public void RemoveCommandFromAction(int actionId, int codeBlockId, int commandIndex)
+        public void RemoveCommand(int actionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             CodeBlocksHandler.RemoveCommand(actionCodeBlockLocation, commandIndex);    
         }
 
-        public void MoveActionCommand(int actionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
+        public void MoveCommand(int actionId, int codeBlockId, int commandIndex, MoveDirection moveDirection)
         {
-            int actionCodeBlockLocation = GetActionCodeBlockLocation(actionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(actionId, codeBlockId);
             CodeBlocksHandler.MoveCommand(actionCodeBlockLocation, commandIndex, moveDirection);
         }
 

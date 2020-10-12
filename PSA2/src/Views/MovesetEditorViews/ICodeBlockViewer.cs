@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public interface ILocationSelectorListener
+    public interface ICodeBlockViewer
     {
-        void OnSelect(LocationType locationType, int locationIndex);
     }
 }
