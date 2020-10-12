@@ -40,7 +40,7 @@
             this.codeBlockOptionsListBox.FormattingEnabled = true;
             this.codeBlockOptionsListBox.Location = new System.Drawing.Point(4, 4);
             this.codeBlockOptionsListBox.Name = "codeBlockOptionsListBox";
-            this.codeBlockOptionsListBox.Size = new System.Drawing.Size(120, 329);
+            this.codeBlockOptionsListBox.Size = new System.Drawing.Size(120, 433);
             this.codeBlockOptionsListBox.TabIndex = 6;
             this.codeBlockOptionsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockOptionsListBox_SelectedIndexChanged);
             // 
@@ -53,7 +53,7 @@
             this.codeBlockCommandsListBox.HorizontalScrollbar = true;
             this.codeBlockCommandsListBox.Location = new System.Drawing.Point(131, 4);
             this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
-            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(343, 329);
+            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(422, 433);
             this.codeBlockCommandsListBox.TabIndex = 7;
             // 
             // commandOptionsListBox
@@ -61,9 +61,10 @@
             this.commandOptionsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commandOptionsListBox.FormattingEnabled = true;
-            this.commandOptionsListBox.Location = new System.Drawing.Point(481, 4);
+            this.commandOptionsListBox.HorizontalScrollbar = true;
+            this.commandOptionsListBox.Location = new System.Drawing.Point(559, 4);
             this.commandOptionsListBox.Name = "commandOptionsListBox";
-            this.commandOptionsListBox.Size = new System.Drawing.Size(184, 329);
+            this.commandOptionsListBox.Size = new System.Drawing.Size(228, 433);
             this.commandOptionsListBox.TabIndex = 8;
             // 
             // CodeBlockViewer
@@ -74,7 +75,7 @@
             this.Controls.Add(this.codeBlockCommandsListBox);
             this.Controls.Add(this.codeBlockOptionsListBox);
             this.Name = "CodeBlockViewer";
-            this.Size = new System.Drawing.Size(668, 336);
+            this.Size = new System.Drawing.Size(790, 441);
             this.Load += new System.EventHandler(this.CodeBlockViewer_Load);
             this.ResumeLayout(false);
 

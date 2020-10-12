@@ -28,11 +28,16 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 actionOptionsListBox.Items.Add((i + 274).ToString("X"));
             }
+            actionOptionsListBox.Items[0] += " - Neutral Special";
+            actionOptionsListBox.Items[1] += " - Side Special";
+            actionOptionsListBox.Items[2] += " - Up Special";
+            actionOptionsListBox.Items[3] += " - Down Special";
 
             int numberOfSubActions = psaMovesetHandler.SubActionsHandler.GetNumberOfSubActions();
             for (int i = 0; i < numberOfSubActions; i++)
             {
-                subActionOptionsListBox.Items.Add(i.ToString("X"));
+                string animationName = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(i);
+                subActionOptionsListBox.Items.Add(i.ToString("X") + " - " + animationName);
             }
             actionOptionsListBox.SelectedIndex = 0;
 

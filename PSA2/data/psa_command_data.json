@@ -619,6 +619,14 @@
       "instruction": "02010200",
       "commandParams": [
         {
+          "paramName": "Action",
+          "description": "The id of the action that will be executed.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": true
+        },
+        {
           "paramName": "Requirement",
           "description": "The form of requirement used in evaluation of the event.",
           "dataTypes": [
@@ -633,6 +641,14 @@
       "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a requirement with a specified value being met.",
       "instruction": "02010300",
       "commandParams": [
+        {
+          "paramName": "Action",
+          "description": "The id of the action that will be executed.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": true
+        },
         {
           "paramName": "Requirement",
           "description": "The form of requirement used in evaluation of the event.",
@@ -656,6 +672,14 @@
       "description": "Change the current action upon the specified requirement being met. The requirement does not have to be met at the time this ID is executed - it can be used anytime after execution. This Change Action is based on a comparison.",
       "instruction": "02010500",
       "commandParams": [
+        {
+          "paramName": "Action",
+          "description": "The id of the action that will be executed.",
+          "dataTypes": [
+            "Value"
+          ],
+          "canUseVariable": true
+        },
         {
           "paramName": "Requirement",
           "description": "The form of requirement used in evaluation of the event.",

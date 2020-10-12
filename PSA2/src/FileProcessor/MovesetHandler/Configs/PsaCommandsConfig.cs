@@ -14,6 +14,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.Configs
         {
             PsaCommands = new List<PsaCommandConfig>();
         }
+
+        public PsaCommandConfig GetPsaCommandConfigByInstruction(int instruction)
+        {
+            string instructionHex = instruction.ToString("X8");
+            return PsaCommands.Find(command => command.Instruction == instructionHex);
+        }
     }
 
     public class PsaCommandConfig

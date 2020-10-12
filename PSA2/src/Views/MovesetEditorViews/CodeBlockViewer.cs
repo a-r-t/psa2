@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.FileProcessor.MovesetHandler.Configs;
+using PSA2.src.Utility;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -18,6 +20,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected LocationType? currentLocationType;
         protected int currentLocationIndex = -1;
         protected int currentCodeBlockIndex = -1;
+        protected PsaCommandsConfig psaCommandsConfig;
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler)
         {
@@ -29,15 +32,15 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             if (currentLocationType == LocationType.ACTION)
             {
-                codeBlockOptionsListBox.Items.Add("ENTRY");
-                codeBlockOptionsListBox.Items.Add("EXIT");
+                codeBlockOptionsListBox.Items.Add("Entry");
+                codeBlockOptionsListBox.Items.Add("Exit");
             }
             else if (currentLocationType == LocationType.SUBACTION)
             {
-                codeBlockOptionsListBox.Items.Add("MAIN");
-                codeBlockOptionsListBox.Items.Add("GFX");
-                codeBlockOptionsListBox.Items.Add("SFX");
-                codeBlockOptionsListBox.Items.Add("OTHER");
+                codeBlockOptionsListBox.Items.Add("Main");
+                codeBlockOptionsListBox.Items.Add("Gfx");
+                codeBlockOptionsListBox.Items.Add("Sfx");
+                codeBlockOptionsListBox.Items.Add("Other");
             }
         }
 
@@ -54,16 +57,12 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             currentCodeBlockIndex = codeBlockOptionsListBox.SelectedIndex;
             LoadCodeBlockCommands();
-            
-
-
-            Console.WriteLine(locationType.ToString() + ", " + locationIndex);
         }
 
         public void LoadCodeBlockCommands()
         {
             codeBlockCommandsListBox.Items.Clear();
-            Console.WriteLine(currentLocationIndex + ", " + currentCodeBlockIndex);
+
             List<PsaCommand> psaCommands = null;
             switch (currentLocationType)
             {
@@ -74,20 +73,79 @@ namespace PSA2.src.Views.MovesetEditorViews
                     psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(currentLocationIndex, currentCodeBlockIndex);
                     break;
             }
-            foreach (PsaCommand psaCommand in psaCommands)
-            {
-                codeBlockCommandsListBox.Items.Add(psaCommand.ToString());
+            foreach (PsaCommand psaCommand in psaCommands) {
+                string commandText = GetCommandText(psaCommand);
+                codeBlockCommandsListBox.Items.Add(commandText);
             }
+        }
+
+        public string GetCommandText(PsaCommand psaCommand)
+        {
+            PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
+
+            StringBuilder commandTextBuilder = new StringBuilder();
+
+            if (psaCommandConfig != null)
+            {
+                commandTextBuilder
+                    .Append(psaCommandConfig.CommandName);
+
+                if (psaCommand.Parameters.Count > 0)
+                {
+                    commandTextBuilder.Append(": ");
+                }
+
+                for (int i = 0; i < psaCommand.Parameters.Count; i++)
+                {
+                    commandTextBuilder
+                        .Append(psaCommandConfig.CommandParams[i].ParamName)
+                        .Append("=")
+                        .Append(psaCommand.Parameters[i].Value);
+
+                    if (i < psaCommand.Parameters.Count - 1)
+                    {
+                        commandTextBuilder.Append(", ");
+                    }
+                }
+            }
+            else
+            {
+                commandTextBuilder
+                    .Append(psaCommand.Instruction);
+
+                if (psaCommand.Parameters.Count > 0)
+                {
+                    commandTextBuilder.Append(": ");
+                }
+
+                for (int i = 0; i < psaCommand.Parameters.Count; i++)
+                {
+                    commandTextBuilder
+                        .Append($"arg{i}=")
+                        .Append(psaCommand.Parameters[i].Value);
+
+                    if (i < psaCommand.Parameters.Count - 1)
+                    {
+                        commandTextBuilder.Append(", ");
+                    }
+
+                }
+            }
+            return commandTextBuilder.ToString();
         }
 
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
+            this.psaCommandsConfig = Utils.LoadJson<PsaCommandsConfig>("data/psa_command_data.json");
 
+            foreach (PsaCommandConfig psaCommandConfig in psaCommandsConfig.PsaCommands)
+            {
+                commandOptionsListBox.Items.Add(psaCommandConfig.CommandName);
+            }
         }
 
         private void codeBlockOptionsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("Code Block Options Changed");
             if (codeBlockOptionsListBox.SelectedIndex != currentCodeBlockIndex)
             {
                 currentCodeBlockIndex = codeBlockOptionsListBox.SelectedIndex;
