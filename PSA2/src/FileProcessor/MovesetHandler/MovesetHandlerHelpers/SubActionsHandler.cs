@@ -47,7 +47,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public int GetNumberOfSubActions()
         {
-            Console.WriteLine(string.Format("Number of Sub Actions: {0}", (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4));
+            //Console.WriteLine(string.Format("Number of Sub Actions: {0}", (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4));
             return (PsaFile.DataSection[DataSectionLocation + 13] - PsaFile.DataSection[DataSectionLocation + 12]) / 4;
         }
 
@@ -131,7 +131,7 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
                             break;
                         }
                     }
-                    Console.WriteLine(animationName.ToString());
+                    //Console.WriteLine(animationName.ToString());
                     return animationName.ToString();
                 }
 

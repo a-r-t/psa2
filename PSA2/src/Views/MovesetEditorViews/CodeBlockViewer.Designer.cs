@@ -53,6 +53,7 @@
             this.codeBlockCommandsListBox.HorizontalScrollbar = true;
             this.codeBlockCommandsListBox.Location = new System.Drawing.Point(131, 4);
             this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
+            this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.codeBlockCommandsListBox.Size = new System.Drawing.Size(422, 433);
             this.codeBlockCommandsListBox.TabIndex = 7;
             // 
