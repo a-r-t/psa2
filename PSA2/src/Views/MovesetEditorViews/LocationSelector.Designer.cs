@@ -1,6 +1,6 @@
 ﻿namespace PSA2.src.Views.MovesetEditorViews
 {
-    partial class LocationSelector
+    partial class SectionSelector
     {
         /// <summary> 
         /// Required designer variable.

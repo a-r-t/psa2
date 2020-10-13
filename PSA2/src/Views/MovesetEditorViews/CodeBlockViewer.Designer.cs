@@ -47,6 +47,7 @@
             this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.codeBlockCommandsListBox.Size = new System.Drawing.Size(790, 349);
             this.codeBlockCommandsListBox.TabIndex = 7;
+            this.codeBlockCommandsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockCommandsListBox_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
@@ -71,6 +72,7 @@
             // 
             this.commandParamsView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.commandParamsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commandParamsView.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.commandParamsView.Location = new System.Drawing.Point(0, 0);
             this.commandParamsView.Name = "commandParamsView";
             this.commandParamsView.Size = new System.Drawing.Size(790, 96);

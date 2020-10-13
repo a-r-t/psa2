@@ -8,33 +8,46 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2.src.FileProcessor.MovesetHandler;
+using PSA2.src.FileProcessor.MovesetHandler.Configs;
+using PSA2.src.Utility;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, ILocationSelectorListener
+    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, ISectionSelectorListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
+        protected PsaCommandsConfig psaCommandsConfig;
+        protected SectionSelector sectionSelector;
+        protected ParametersEditor parametersEditor;
 
         public MovesetEditor(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
+            this.psaCommandsConfig = Utils.LoadJson<PsaCommandsConfig>("data/psa_command_data.json");
+
             InitializeComponent();
-            LocationSelector locationSelector = new LocationSelector(psaMovesetHandler);
-            locationSelector.Dock = DockStyle.Fill;
-            locationSelector.AddListener(this);
-            selectorView.Controls.Add(locationSelector);
+
+            this.sectionSelector = new SectionSelector(psaMovesetHandler);
+            sectionSelector.Dock = DockStyle.Fill;
+            sectionSelector.AddListener(this);
+            selectorView.Controls.Add(sectionSelector);
+
+            this.parametersEditor = new ParametersEditor(psaMovesetHandler);
+            parametersEditor.Dock = DockStyle.Fill;
+            parametersEditorViewer.Controls.Add(parametersEditor);
         }
 
-        public void OnSelect(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex)
+        public void OnCodeBlockSelected(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex)
         {
             TabPage existingTabPage = FindExistingTabPage(sectionType, sectionIndex, codeBlockIndex);
 
             if (existingTabPage == null) 
             {
                 TabPage codeBlockCommandsTab = new TabPage(sectionText);
-                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, sectionType, sectionIndex, codeBlockIndex);
+                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, sectionType, sectionIndex, codeBlockIndex);
                 codeBlockViewer.Name = "codeBlockViewer";
                 codeBlockViewer.Dock = DockStyle.Fill;
+                codeBlockViewer.AddListener(parametersEditor);
                 codeBlockCommandsTab.Controls.Add(codeBlockViewer);
                 eventsTabControl.TabPages.Insert(0, codeBlockCommandsTab);
                 eventsTabControl.SelectedTab = codeBlockCommandsTab;
@@ -60,6 +73,16 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
             return null;
+        }
+
+        private void eventsTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void eventsTabControl_Click(object sender, EventArgs e)
+        {
+            this.ActiveControl = commandOptionsViewer;
         }
     }
 }

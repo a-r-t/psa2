@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public interface ICodeBlockViewer
+    public interface IParametersEditorListener
     {
     }
 }

@@ -11,11 +11,11 @@ using PSA2.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class LocationSelector : ObservableUserControl<ILocationSelectorListener>
+    public partial class SectionSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
 
-        public LocationSelector(PsaMovesetHandler psaMovesetHandler)
+        public SectionSelector(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
@@ -98,9 +98,9 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
 
                 string sectionText = string.Join(" - ", sectionsText);
-                foreach (ILocationSelectorListener listener in listeners)
+                foreach (ISectionSelectorListener listener in listeners)
                 {
-                    listener.OnSelect(
+                    listener.OnCodeBlockSelected(
                         sectionText,
                         sectionType,
                         sectionsTreeView.SelectedNode.Parent.Index,

@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -154,6 +155,21 @@
     <Compile Include="src\Models\Fighter\SubAction.cs" />
     <Compile Include="src\Models\Fighter\SubActionSection.cs" />
     <Compile Include="src\Models\Fighter\Subroutine.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\BrowsableTypeConverter.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomChoices.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomColorScheme.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomProperty.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomPropertyCollection.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomPropertyCollectionSet.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\PropertyGridEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\PropertyGridEx.Designer.cs">
+      <DependentUpon>PropertyGridEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
+    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,13 +182,20 @@
     <Compile Include="src\Views\MovesetEditorViews\CodeBlockViewer.Designer.cs">
       <DependentUpon>CodeBlockViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ICodeBlockViewer.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\ILocationSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\ICodeBlockViewerListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\ISectionSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\LocationSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\LocationSelector.Designer.cs">
       <DependentUpon>LocationSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.Designer.cs">
+      <DependentUpon>ParametersEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\SectionType.cs" />
     <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.cs">
@@ -188,10 +211,10 @@
     <Compile Include="src\Views\ObservableUserControl.Designer.cs">
       <DependentUpon>ObservableUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\ResizablePanel.cs">
+    <Compile Include="src\Views\CustomControls\ResizablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Views\SectionsTreeView.cs">
+    <Compile Include="src\Views\CustomControls\SectionsTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -217,6 +240,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\MovesetEditor.resx">
       <DependentUpon>MovesetEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParametersEditor.resx">
+      <DependentUpon>ParametersEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="data\attribute_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

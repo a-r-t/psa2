@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public interface ILocationSelectorListener
+    public interface ISectionSelectorListener
     {
-        void OnSelect(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex);
+        void OnCodeBlockSelected(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex);
     }
 }
