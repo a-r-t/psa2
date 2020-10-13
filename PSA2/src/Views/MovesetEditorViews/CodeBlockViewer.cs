@@ -14,49 +14,22 @@ using PSA2.src.Utility;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class CodeBlockViewer : ObservableUserControl<ICodeBlockViewer>, ILocationSelectorListener
+    public partial class CodeBlockViewer : ObservableUserControl<ICodeBlockViewer>
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        protected LocationType? currentLocationType;
-        protected int currentLocationIndex = -1;
-        protected int currentCodeBlockIndex = -1;
+        public SectionType SectionType { get; private set; }
+        public int SectionIndex { get; private set; }
+        public int CodeBlockIndex { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
 
-        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler)
+        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, SectionType sectionType, int sectionIndex, int codeBlockIndex)
         {
             this.psaMovesetHandler = psaMovesetHandler;
+            this.psaCommandsConfig = Utils.LoadJson<PsaCommandsConfig>("data/psa_command_data.json");
+            SectionType = sectionType;
+            SectionIndex = sectionIndex;
+            CodeBlockIndex = codeBlockIndex;
             InitializeComponent();
-        }
-
-        private void PopulateCodeBlockOptions()
-        {
-            if (currentLocationType == LocationType.ACTION)
-            {
-                codeBlockOptionsListBox.Items.Add("Entry");
-                codeBlockOptionsListBox.Items.Add("Exit");
-            }
-            else if (currentLocationType == LocationType.SUBACTION)
-            {
-                codeBlockOptionsListBox.Items.Add("Main");
-                codeBlockOptionsListBox.Items.Add("Gfx");
-                codeBlockOptionsListBox.Items.Add("Sfx");
-                codeBlockOptionsListBox.Items.Add("Other");
-            }
-        }
-
-        public void OnSelect(LocationType locationType, int locationIndex)
-        {
-            if (currentLocationType != locationType)
-            {
-                currentLocationType = locationType;
-                codeBlockOptionsListBox.Items.Clear();
-                PopulateCodeBlockOptions();
-                codeBlockOptionsListBox.SelectedIndex = 0;
-            }
-            currentLocationIndex = locationIndex;
-
-            currentCodeBlockIndex = codeBlockOptionsListBox.SelectedIndex;
-            LoadCodeBlockCommands();
         }
 
         public void LoadCodeBlockCommands()
@@ -64,13 +37,13 @@ namespace PSA2.src.Views.MovesetEditorViews
             codeBlockCommandsListBox.Items.Clear();
 
             List<PsaCommand> psaCommands = null;
-            switch (currentLocationType)
+            switch (SectionType)
             {
-                case LocationType.ACTION:
-                    psaCommands = psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(currentLocationIndex, currentCodeBlockIndex);
+                case SectionType.ACTION:
+                    psaCommands = psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                     break;
-                case LocationType.SUBACTION:
-                    psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(currentLocationIndex, currentCodeBlockIndex);
+                case SectionType.SUBACTION:
+                    psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(SectionIndex, CodeBlockIndex);
                     break;
             }
             foreach (PsaCommand psaCommand in psaCommands) {
@@ -136,21 +109,20 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
-            this.psaCommandsConfig = Utils.LoadJson<PsaCommandsConfig>("data/psa_command_data.json");
-
-            foreach (PsaCommandConfig psaCommandConfig in psaCommandsConfig.PsaCommands)
+            LoadCodeBlockCommands();
+/*            foreach (PsaCommandConfig psaCommandConfig in psaCommandsConfig.PsaCommands)
             {
                 commandOptionsListBox.Items.Add(psaCommandConfig.CommandName);
-            }
+            }*/
         }
 
         private void codeBlockOptionsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (codeBlockOptionsListBox.SelectedIndex != currentCodeBlockIndex)
+/*            if (codeBlockOptionsListBox.SelectedIndex != currentCodeBlockIndex)
             {
                 currentCodeBlockIndex = codeBlockOptionsListBox.SelectedIndex;
                 LoadCodeBlockCommands();
-            }
+            }*/
         }
     }
 }

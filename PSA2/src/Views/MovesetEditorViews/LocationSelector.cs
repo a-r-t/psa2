@@ -23,42 +23,94 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void LocationSelector_Load(object sender, EventArgs e)
         {
+            sectionsTreeView.Nodes.Add("Actions");
             int numberOfSpecialActions = psaMovesetHandler.ActionsHandler.GetNumberOfSpecialActions();
             for (int i = 0; i < numberOfSpecialActions; i++)
             {
-                actionOptionsListBox.Items.Add((i + 274).ToString("X"));
-            }
-            actionOptionsListBox.Items[0] += " - Neutral Special";
-            actionOptionsListBox.Items[1] += " - Side Special";
-            actionOptionsListBox.Items[2] += " - Up Special";
-            actionOptionsListBox.Items[3] += " - Down Special";
+                sectionsTreeView.Nodes[0].Nodes.Add((i + 274).ToString("X"));
 
+                sectionsTreeView.Nodes[0].Nodes[i].Nodes.Add("Entry");
+                sectionsTreeView.Nodes[0].Nodes[i].Nodes.Add("Exit");
+            }
+            sectionsTreeView.Nodes[0].Nodes[0].Text += " - Neutral Special";
+            sectionsTreeView.Nodes[0].Nodes[1].Text += " - Side Special";
+            sectionsTreeView.Nodes[0].Nodes[2].Text += " - Up Special";
+            sectionsTreeView.Nodes[0].Nodes[3].Text += " - Down Special";
+
+            sectionsTreeView.Nodes.Add("Sub Actions");
             int numberOfSubActions = psaMovesetHandler.SubActionsHandler.GetNumberOfSubActions();
             for (int i = 0; i < numberOfSubActions; i++)
             {
                 string animationName = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(i);
-                subActionOptionsListBox.Items.Add(i.ToString("X") + " - " + animationName);
+                sectionsTreeView.Nodes[1].Nodes.Add(i.ToString("X") + " - " + animationName);
+
+                sectionsTreeView.Nodes[1].Nodes[i].Nodes.Add("Main");
+                sectionsTreeView.Nodes[1].Nodes[i].Nodes.Add("GFX");
+                sectionsTreeView.Nodes[1].Nodes[i].Nodes.Add("SFX");
+                sectionsTreeView.Nodes[1].Nodes[i].Nodes.Add("Other");
             }
-            actionOptionsListBox.SelectedIndex = 0;
+            sectionsTreeView.SelectedNode = sectionsTreeView.Nodes[0];
 
         }
 
-        private void actionOptionsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void sectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            Console.WriteLine("OLD EVENT");
+            /*
             foreach (ILocationSelectorListener listener in listeners)
             {
-                listener.OnSelect(LocationType.ACTION, actionOptionsListBox.SelectedIndex);
+                listener.OnSelect(LocationType.ACTION, sectionsTreeView.SelectedNode.Index);
             }
+            */
         }
 
-        private void subActionOptionsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void sectionsTreeView_SelectedNodeChanged(object sender, TreeViewEventArgs e)
         {
-            foreach (ILocationSelectorListener listener in listeners)
+
+        }
+
+        private void sectionsTreeView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("CUSTOM EVENT");
+
+            if (sectionsTreeView.SelectedNode.Nodes.Count == 0)
             {
-                listener.OnSelect(LocationType.SUBACTION, subActionOptionsListBox.SelectedIndex);
+                TreeNode node = sectionsTreeView.SelectedNode;
+                List<string> sectionsText = new List<string>();
+                while (node.Parent != null)
+                {
+                    sectionsText.Insert(0, node.Text);
+                    node = node.Parent;
+                }
+
+                sectionsText.Insert(0, node.Text);
+
+                SectionType sectionType;
+                switch (node.Index) {
+                    case 0:
+                        sectionType = SectionType.ACTION;
+                        break;
+                    case 1:
+                        sectionType = SectionType.SUBACTION;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid section type");
+                }
+
+                string sectionText = string.Join(" - ", sectionsText);
+                foreach (ILocationSelectorListener listener in listeners)
+                {
+                    listener.OnSelect(
+                        sectionText,
+                        sectionType,
+                        sectionsTreeView.SelectedNode.Parent.Index,
+                        sectionsTreeView.SelectedNode.Index
+                    );
+                }
             }
         }
 
+        /*
         private void sectionsTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             LocationType locationType = 0;
@@ -86,6 +138,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 listener.OnSelect(locationType, selectedIndex);
             }
-        }
+        }*/
     }
 }

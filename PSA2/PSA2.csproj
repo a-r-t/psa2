@@ -174,7 +174,7 @@
     <Compile Include="src\Views\MovesetEditorViews\LocationSelector.Designer.cs">
       <DependentUpon>LocationSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\LocationType.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\SectionType.cs" />
     <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -187,6 +187,12 @@
     </Compile>
     <Compile Include="src\Views\ObservableUserControl.Designer.cs">
       <DependentUpon>ObservableUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\ResizablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Views\SectionsTreeView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

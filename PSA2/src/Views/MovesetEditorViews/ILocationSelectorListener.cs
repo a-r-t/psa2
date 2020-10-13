@@ -8,6 +8,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 {
     public interface ILocationSelectorListener
     {
-        void OnSelect(LocationType locationType, int locationIndex);
+        void OnSelect(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex);
     }
 }

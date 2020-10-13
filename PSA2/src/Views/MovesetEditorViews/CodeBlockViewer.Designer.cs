@@ -28,64 +28,73 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.codeBlockOptionsListBox = new System.Windows.Forms.ListBox();
             this.codeBlockCommandsListBox = new System.Windows.Forms.ListBox();
-            this.commandOptionsListBox = new System.Windows.Forms.ListBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.commandParamsView = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // codeBlockOptionsListBox
-            // 
-            this.codeBlockOptionsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.codeBlockOptionsListBox.FormattingEnabled = true;
-            this.codeBlockOptionsListBox.Location = new System.Drawing.Point(4, 4);
-            this.codeBlockOptionsListBox.Name = "codeBlockOptionsListBox";
-            this.codeBlockOptionsListBox.Size = new System.Drawing.Size(120, 433);
-            this.codeBlockOptionsListBox.TabIndex = 6;
-            this.codeBlockOptionsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockOptionsListBox_SelectedIndexChanged);
             // 
             // codeBlockCommandsListBox
             // 
-            this.codeBlockCommandsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.codeBlockCommandsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.codeBlockCommandsListBox.FormattingEnabled = true;
             this.codeBlockCommandsListBox.HorizontalScrollbar = true;
-            this.codeBlockCommandsListBox.Location = new System.Drawing.Point(131, 4);
+            this.codeBlockCommandsListBox.Location = new System.Drawing.Point(0, 0);
             this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
             this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(422, 433);
+            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(790, 349);
             this.codeBlockCommandsListBox.TabIndex = 7;
             // 
-            // commandOptionsListBox
+            // splitContainer1
             // 
-            this.commandOptionsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.commandOptionsListBox.FormattingEnabled = true;
-            this.commandOptionsListBox.HorizontalScrollbar = true;
-            this.commandOptionsListBox.Location = new System.Drawing.Point(559, 4);
-            this.commandOptionsListBox.Name = "commandOptionsListBox";
-            this.commandOptionsListBox.Size = new System.Drawing.Size(228, 433);
-            this.commandOptionsListBox.TabIndex = 8;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.codeBlockCommandsListBox);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.commandParamsView);
+            this.splitContainer1.Size = new System.Drawing.Size(790, 449);
+            this.splitContainer1.SplitterDistance = 349;
+            this.splitContainer1.TabIndex = 8;
+            // 
+            // commandParamsView
+            // 
+            this.commandParamsView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.commandParamsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commandParamsView.Location = new System.Drawing.Point(0, 0);
+            this.commandParamsView.Name = "commandParamsView";
+            this.commandParamsView.Size = new System.Drawing.Size(790, 96);
+            this.commandParamsView.TabIndex = 0;
             // 
             // CodeBlockViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.commandOptionsListBox);
-            this.Controls.Add(this.codeBlockCommandsListBox);
-            this.Controls.Add(this.codeBlockOptionsListBox);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "CodeBlockViewer";
-            this.Size = new System.Drawing.Size(790, 441);
+            this.Size = new System.Drawing.Size(790, 449);
             this.Load += new System.EventHandler(this.CodeBlockViewer_Load);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox codeBlockOptionsListBox;
         private System.Windows.Forms.ListBox codeBlockCommandsListBox;
-        private System.Windows.Forms.ListBox commandOptionsListBox;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel commandParamsView;
     }
 }
