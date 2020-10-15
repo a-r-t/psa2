@@ -19,6 +19,9 @@ namespace PSA2.src.Views.MovesetEditorViews
         public SectionSelectionInfo(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
+            SectionIndex = -1;
+            CodeBlockIndex = -1;
+            CommandIndex = -1;
         }
 
         public List<PsaCommand> PsaCommands 
@@ -61,6 +64,16 @@ namespace PSA2.src.Views.MovesetEditorViews
                 default:
                     return null;
             }
+        }
+
+        public SectionSelectionInfo Clone()
+        {
+            SectionSelectionInfo clone = new SectionSelectionInfo(psaMovesetHandler);
+            clone.SectionType = SectionType;
+            clone.SectionIndex = SectionIndex;
+            clone.CodeBlockIndex = CodeBlockIndex;
+            clone.CommandIndex = CommandIndex;
+            return clone;
         }
     }
 }

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ExtentionMethods\ControlExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ListExtensions.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\CharacterSpecificParametersConfig.cs" />
@@ -170,6 +171,9 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
+    <Compile Include="src\Views\CustomControls\ListBoxHailMary.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,7 +186,14 @@
     <Compile Include="src\Views\MovesetEditorViews\CodeBlockViewer.Designer.cs">
       <DependentUpon>CodeBlockViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\CommandSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\CommandSelector.Designer.cs">
+      <DependentUpon>CommandSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ICodeBlockViewerListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\ICommandSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
@@ -235,6 +246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\CodeBlockViewer.resx">
       <DependentUpon>CodeBlockViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\CommandSelector.resx">
+      <DependentUpon>CommandSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelector.resx">
       <DependentUpon>SectionSelector.cs</DependentUpon>

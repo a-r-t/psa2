@@ -161,6 +161,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "MovesetEditor";
             this.Size = new System.Drawing.Size(548, 408);
+            this.Load += new System.EventHandler(this.MovesetEditor_Load);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();

@@ -1,4 +1,5 @@
-﻿namespace PSA2.src.Views.MovesetEditorViews
+﻿
+namespace PSA2.src.Views.MovesetEditorViews
 {
     partial class CodeBlockViewer
     {
@@ -28,26 +29,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.codeBlockCommandsListBox = new System.Windows.Forms.ListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.commandParamsView = new System.Windows.Forms.Panel();
+            this.codeBlockCommandsListBox = new ListBoxHailMary();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // codeBlockCommandsListBox
-            // 
-            this.codeBlockCommandsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeBlockCommandsListBox.FormattingEnabled = true;
-            this.codeBlockCommandsListBox.HorizontalScrollbar = true;
-            this.codeBlockCommandsListBox.Location = new System.Drawing.Point(0, 0);
-            this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
-            this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(790, 349);
-            this.codeBlockCommandsListBox.TabIndex = 7;
-            this.codeBlockCommandsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockCommandsListBox_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
@@ -78,6 +67,22 @@
             this.commandParamsView.Size = new System.Drawing.Size(790, 96);
             this.commandParamsView.TabIndex = 0;
             // 
+            // codeBlockCommandsListBox
+            // 
+            this.codeBlockCommandsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeBlockCommandsListBox.FormattingEnabled = true;
+            this.codeBlockCommandsListBox.HorizontalScrollbar = true;
+            this.codeBlockCommandsListBox.HorizontalExtent = 1000;
+            this.codeBlockCommandsListBox.Location = new System.Drawing.Point(0, 0);
+            this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
+            this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(790, 349);
+            this.codeBlockCommandsListBox.TabIndex = 7;
+            this.codeBlockCommandsListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsListBox_MouseClick);
+            this.codeBlockCommandsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockCommandsListBox_SelectedIndexChanged);
+            this.codeBlockCommandsListBox.Enter += new System.EventHandler(this.codeBlockCommandsListBox_Enter);
+            this.codeBlockCommandsListBox.Leave += new System.EventHandler(this.codeBlockCommandsListBox_Leave);
+            // 
             // CodeBlockViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -95,8 +100,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.ListBox codeBlockCommandsListBox;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel commandParamsView;
+        private ListBoxHailMary codeBlockCommandsListBox;
     }
 }

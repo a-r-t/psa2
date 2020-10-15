@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Utility;
+using System.Reflection;
+using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -19,6 +21,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaCommandsConfig psaCommandsConfig;
         protected SectionSelector sectionSelector;
         protected ParametersEditor parametersEditor;
+        protected CommandSelector commandSelector;
 
         public MovesetEditor(PsaMovesetHandler psaMovesetHandler)
         {
@@ -35,6 +38,10 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.parametersEditor = new ParametersEditor(psaMovesetHandler);
             parametersEditor.Dock = DockStyle.Fill;
             parametersEditorViewer.Controls.Add(parametersEditor);
+
+            this.commandSelector = new CommandSelector(psaMovesetHandler, psaCommandsConfig);
+            commandSelector.Dock = DockStyle.Fill;
+            commandOptionsViewer.Controls.Add(commandSelector);
         }
 
         public void OnCodeBlockSelected(string sectionText, SectionSelectionInfo sectionSelectionInfo)
@@ -86,6 +93,12 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void eventsTabControl_Click(object sender, EventArgs e)
         {
             this.ActiveControl = commandOptionsViewer;
+        }
+
+        private void MovesetEditor_Load(object sender, EventArgs e)
+        {
+            //this.DoubleBuffered(true);
+            //eventsTabControl.DoubleBuffered(true);
         }
     }
 }

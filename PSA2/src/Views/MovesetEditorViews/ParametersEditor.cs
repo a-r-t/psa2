@@ -18,21 +18,23 @@ namespace PSA2.src.Views.MovesetEditorViews
     {
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
+        public PsaCommand PsaCommand { get; private set; }
         public SectionSelectionInfo SectionSelectionInfo { get; private set; }
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
+            parametersPropertyGrid.PropertySort = PropertySort.CategorizedAlphabetical;
         }
 
         public void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, SectionSelectionInfo sectionSelectionInfo)
         {
             PsaCommandConfig = psaCommandConfig;
             SectionSelectionInfo = sectionSelectionInfo;
+            PsaCommand = psaCommand;
 
             parametersPropertyGrid.MoveSplitterTo((int)(parametersPropertyGrid.Width * .5));
-            parametersPropertyGrid.PropertySort = PropertySort.CategorizedAlphabetical;
 
             // This code allows you to put a rich text box inside the property grid - holding on to this for later
             //foreach (Control control in parametersPropertyGrid.DocComment.Controls)
@@ -43,7 +45,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             //parametersPropertyGrid.DocComment.Controls.Clear();
             //parametersPropertyGrid.DocComment.Controls.Add(new RichTextBox() { Dock = DockStyle.Fill, Text = "HI" });
 
-
             parametersPropertyGrid.Item.Clear();
 
             if (psaCommandConfig != null && psaCommandConfig.CommandParams != null)
@@ -52,7 +53,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 {
                     PsaCommandParamConfig psaCommandParamConfig = psaCommandConfig.CommandParams[i];
                     parametersPropertyGrid.Item.Add(
-                        psaCommandParamConfig.ParamName, 
+                        psaCommandParamConfig.ParamName,
                         psaCommand.Parameters[i].Type,
                         false,
                         "Parameter",
@@ -75,7 +76,12 @@ namespace PSA2.src.Views.MovesetEditorViews
                     );
                 }
             }
+
             parametersPropertyGrid.Refresh();
+            parametersPropertyGrid.Enabled = false;
+            parametersPropertyGrid.Enabled = true;
+
+
         }
 
         private void parametersPropertyGrid_Resize(object sender, EventArgs e)

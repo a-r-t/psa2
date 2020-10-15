@@ -11,6 +11,7 @@ using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Utility;
+using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -109,6 +110,11 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
+            this.DoubleBuffered(true);
+            splitContainer1.DoubleBuffered(true);
+            splitContainer1.Panel1.DoubleBuffered(true);
+            codeBlockCommandsListBox.DoubleBuffered(true);
+
             LoadCodeBlockCommands();
             if (codeBlockCommandsListBox.Items.Count > 0)
             {
@@ -131,25 +137,43 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void codeBlockCommandsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PsaCommand psaCommand;
-            switch(SectionSelectionInfo.SectionType)
+            if (codeBlockCommandsListBox.SelectedIndex != SectionSelectionInfo.CommandIndex)
             {
-                case SectionType.ACTION:
-                    psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
-                    break;
-                case SectionType.SUBACTION:
-                    psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid section type");
-            }
+                PsaCommand psaCommand;
+                switch (SectionSelectionInfo.SectionType)
+                {
+                    case SectionType.ACTION:
+                        psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
+                        break;
+                    case SectionType.SUBACTION:
+                        psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid section type");
+                }
 
-            PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-            SectionSelectionInfo.CommandIndex = codeBlockCommandsListBox.SelectedIndex;
-            foreach (ICodeBlockViewerListener listener in listeners)
-            {
-                listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
+                PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
+                SectionSelectionInfo.CommandIndex = codeBlockCommandsListBox.SelectedIndex;
+                foreach (ICodeBlockViewerListener listener in listeners)
+                {
+                    listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
+                }
             }
+        }
+
+        private void codeBlockCommandsListBox_Leave(object sender, EventArgs e)
+        {
+            //codeBlockCommandsListBox.Update();
+        }
+
+        private void codeBlockCommandsListBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void codeBlockCommandsListBox_MouseClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }
