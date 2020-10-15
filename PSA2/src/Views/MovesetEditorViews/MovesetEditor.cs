@@ -37,14 +37,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             parametersEditorViewer.Controls.Add(parametersEditor);
         }
 
-        public void OnCodeBlockSelected(string sectionText, SectionType sectionType, int sectionIndex, int codeBlockIndex)
+        public void OnCodeBlockSelected(string sectionText, SectionSelectionInfo sectionSelectionInfo)
         {
-            TabPage existingTabPage = FindExistingTabPage(sectionType, sectionIndex, codeBlockIndex);
+            TabPage existingTabPage = FindExistingTabPage(sectionSelectionInfo);
 
             if (existingTabPage == null) 
             {
                 TabPage codeBlockCommandsTab = new TabPage(sectionText);
-                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, sectionType, sectionIndex, codeBlockIndex);
+                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, sectionSelectionInfo);
                 codeBlockViewer.Name = "codeBlockViewer";
                 codeBlockViewer.Dock = DockStyle.Fill;
                 codeBlockViewer.AddListener(parametersEditor);
@@ -54,20 +54,23 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
             else
             {
-                eventsTabControl.TabPages.Remove(existingTabPage);
-                eventsTabControl.TabPages.Insert(0, existingTabPage);
-                eventsTabControl.SelectedTab = existingTabPage;
+                if (eventsTabControl.SelectedTab != existingTabPage)
+                {
+                    eventsTabControl.TabPages.Remove(existingTabPage);
+                    eventsTabControl.TabPages.Insert(0, existingTabPage);
+                    eventsTabControl.SelectedTab = existingTabPage;
+                }
             }
         }
 
-        public TabPage FindExistingTabPage(SectionType sectionType, int sectionIndex, int codeBlockIndex)
+        public TabPage FindExistingTabPage(SectionSelectionInfo sectionSelectionInfo)
         {
             foreach (TabPage tabPage in eventsTabControl.TabPages)
             {
                 CodeBlockViewer codeBlockViewer = (CodeBlockViewer)tabPage.Controls["codeBlockViewer"];
-                if (codeBlockViewer.SectionType == sectionType 
-                    && codeBlockViewer.SectionIndex == sectionIndex
-                    && codeBlockViewer.CodeBlockIndex == codeBlockIndex)
+                if (codeBlockViewer.SectionSelectionInfo.SectionType == sectionSelectionInfo.SectionType
+                    && codeBlockViewer.SectionSelectionInfo.SectionIndex == sectionSelectionInfo.SectionIndex
+                    && codeBlockViewer.SectionSelectionInfo.CodeBlockIndex == sectionSelectionInfo.CodeBlockIndex)
                 {
                     return tabPage;
                 }

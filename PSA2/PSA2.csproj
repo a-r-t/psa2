@@ -185,11 +185,11 @@
     <Compile Include="src\Views\MovesetEditorViews\ICodeBlockViewerListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\IParametersEditorListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\LocationSelector.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\LocationSelector.Designer.cs">
-      <DependentUpon>LocationSelector.cs</DependentUpon>
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelector.Designer.cs">
+      <DependentUpon>SectionSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.cs">
       <SubType>UserControl</SubType>
@@ -197,6 +197,7 @@
     <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.Designer.cs">
       <DependentUpon>ParametersEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectionInfo.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionType.cs" />
     <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.cs">
       <SubType>UserControl</SubType>
@@ -235,8 +236,8 @@
     <EmbeddedResource Include="src\Views\MovesetEditorViews\CodeBlockViewer.resx">
       <DependentUpon>CodeBlockViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\LocationSelector.resx">
-      <DependentUpon>LocationSelector.cs</DependentUpon>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelector.resx">
+      <DependentUpon>SectionSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\MovesetEditor.resx">
       <DependentUpon>MovesetEditor.cs</DependentUpon>

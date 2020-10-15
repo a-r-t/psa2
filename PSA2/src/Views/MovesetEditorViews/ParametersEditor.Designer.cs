@@ -38,6 +38,7 @@
             // 
             // 
             // 
+            this.parametersPropertyGrid.DocCommentDescription.AccessibleName = "";
             this.parametersPropertyGrid.DocCommentDescription.AutoEllipsis = true;
             this.parametersPropertyGrid.DocCommentDescription.Cursor = System.Windows.Forms.Cursors.Default;
             this.parametersPropertyGrid.DocCommentDescription.Location = new System.Drawing.Point(3, 18);
@@ -58,6 +59,7 @@
             this.parametersPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.parametersPropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.parametersPropertyGrid.Name = "parametersPropertyGrid";
+            this.parametersPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
             this.parametersPropertyGrid.SelectedObject = ((object)(resources.GetObject("parametersPropertyGrid.SelectedObject")));
             this.parametersPropertyGrid.ShowCustomProperties = true;
             this.parametersPropertyGrid.Size = new System.Drawing.Size(405, 314);
@@ -79,6 +81,7 @@
             this.parametersPropertyGrid.ToolStrip.TabIndex = 1;
             this.parametersPropertyGrid.ToolStrip.TabStop = true;
             this.parametersPropertyGrid.ToolStrip.Text = "PropertyGridToolBar";
+            this.parametersPropertyGrid.Resize += new System.EventHandler(this.parametersPropertyGrid_Resize);
             // 
             // ParametersEditor
             // 

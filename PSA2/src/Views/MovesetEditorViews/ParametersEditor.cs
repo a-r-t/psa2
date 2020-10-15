@@ -18,10 +18,7 @@ namespace PSA2.src.Views.MovesetEditorViews
     {
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
-        public SectionType SectionType { get; private set; }
-        public int SectionIndex { get; private set; }
-        public int CodeBlockIndex { get; private set;  }
-        public int CommandIndex { get; private set; }
+        public SectionSelectionInfo SectionSelectionInfo { get; private set; }
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler)
         {
@@ -29,13 +26,23 @@ namespace PSA2.src.Views.MovesetEditorViews
             InitializeComponent();
         }
 
-        public void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, SectionType sectionType, int sectionIndex, int codeBlockIndex, int commandIndex)
+        public void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, SectionSelectionInfo sectionSelectionInfo)
         {
             PsaCommandConfig = psaCommandConfig;
-            SectionType = sectionType;
-            SectionIndex = sectionIndex;
-            CodeBlockIndex = codeBlockIndex;
-            CommandIndex = commandIndex;
+            SectionSelectionInfo = sectionSelectionInfo;
+
+            parametersPropertyGrid.MoveSplitterTo((int)(parametersPropertyGrid.Width * .5));
+            parametersPropertyGrid.PropertySort = PropertySort.CategorizedAlphabetical;
+
+            // This code allows you to put a rich text box inside the property grid - holding on to this for later
+            //foreach (Control control in parametersPropertyGrid.DocComment.Controls)
+            //{
+            //    Console.WriteLine(control.ToString());
+            //}
+            //parametersPropertyGrid.DocComment.Controls.ToString();
+            //parametersPropertyGrid.DocComment.Controls.Clear();
+            //parametersPropertyGrid.DocComment.Controls.Add(new RichTextBox() { Dock = DockStyle.Fill, Text = "HI" });
+
 
             parametersPropertyGrid.Item.Clear();
 
@@ -69,6 +76,11 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
             parametersPropertyGrid.Refresh();
+        }
+
+        private void parametersPropertyGrid_Resize(object sender, EventArgs e)
+        {
+            parametersPropertyGrid.MoveSplitterTo((int)(parametersPropertyGrid.Width * .5));
         }
     }
 }

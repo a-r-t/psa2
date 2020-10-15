@@ -65,8 +65,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.selectorView);
-            this.splitContainer2.Size = new System.Drawing.Size(409, 393);
-            this.splitContainer2.SplitterDistance = 283;
+            this.splitContainer2.Size = new System.Drawing.Size(358, 408);
+            this.splitContainer2.SplitterDistance = 167;
             this.splitContainer2.TabIndex = 0;
             // 
             // codeBlockView
@@ -76,7 +76,7 @@
             this.codeBlockView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.codeBlockView.Location = new System.Drawing.Point(0, 0);
             this.codeBlockView.Name = "codeBlockView";
-            this.codeBlockView.Size = new System.Drawing.Size(283, 393);
+            this.codeBlockView.Size = new System.Drawing.Size(167, 408);
             this.codeBlockView.TabIndex = 1;
             // 
             // eventsTabControl
@@ -86,7 +86,7 @@
             this.eventsTabControl.Location = new System.Drawing.Point(0, 0);
             this.eventsTabControl.Name = "eventsTabControl";
             this.eventsTabControl.SelectedIndex = 0;
-            this.eventsTabControl.Size = new System.Drawing.Size(281, 391);
+            this.eventsTabControl.Size = new System.Drawing.Size(165, 406);
             this.eventsTabControl.TabIndex = 0;
             this.eventsTabControl.SelectedIndexChanged += new System.EventHandler(this.eventsTabControl_SelectedIndexChanged);
             this.eventsTabControl.Click += new System.EventHandler(this.eventsTabControl_Click);
@@ -97,7 +97,7 @@
             this.selectorView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.selectorView.Location = new System.Drawing.Point(0, 0);
             this.selectorView.Name = "selectorView";
-            this.selectorView.Size = new System.Drawing.Size(122, 393);
+            this.selectorView.Size = new System.Drawing.Size(187, 408);
             this.selectorView.TabIndex = 2;
             // 
             // splitContainer1
@@ -114,8 +114,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(522, 393);
-            this.splitContainer1.SplitterDistance = 109;
+            this.splitContainer1.Size = new System.Drawing.Size(548, 408);
+            this.splitContainer1.SplitterDistance = 186;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer3
@@ -132,8 +132,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.parametersEditorViewer);
-            this.splitContainer3.Size = new System.Drawing.Size(109, 393);
-            this.splitContainer3.SplitterDistance = 194;
+            this.splitContainer3.Size = new System.Drawing.Size(186, 408);
+            this.splitContainer3.SplitterDistance = 201;
             this.splitContainer3.TabIndex = 0;
             // 
             // commandOptionsViewer
@@ -142,7 +142,7 @@
             this.commandOptionsViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commandOptionsViewer.Location = new System.Drawing.Point(0, 0);
             this.commandOptionsViewer.Name = "commandOptionsViewer";
-            this.commandOptionsViewer.Size = new System.Drawing.Size(109, 194);
+            this.commandOptionsViewer.Size = new System.Drawing.Size(186, 201);
             this.commandOptionsViewer.TabIndex = 0;
             // 
             // parametersEditorViewer
@@ -151,7 +151,7 @@
             this.parametersEditorViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.parametersEditorViewer.Location = new System.Drawing.Point(0, 0);
             this.parametersEditorViewer.Name = "parametersEditorViewer";
-            this.parametersEditorViewer.Size = new System.Drawing.Size(109, 195);
+            this.parametersEditorViewer.Size = new System.Drawing.Size(186, 203);
             this.parametersEditorViewer.TabIndex = 0;
             // 
             // MovesetEditor
@@ -160,7 +160,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "MovesetEditor";
-            this.Size = new System.Drawing.Size(522, 393);
+            this.Size = new System.Drawing.Size(548, 408);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();

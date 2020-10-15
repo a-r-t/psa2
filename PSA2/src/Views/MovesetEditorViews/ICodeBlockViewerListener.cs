@@ -10,6 +10,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 {
     public interface ICodeBlockViewerListener
     {
-        void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, SectionType sectionType, int sectionIndex, int codeBlockIndex, int commandIndex);
+        void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, SectionSelectionInfo sectionSelectionInfo);
     }
 }
