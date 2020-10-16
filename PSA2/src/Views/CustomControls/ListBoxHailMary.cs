@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
 internal class ListBoxHailMary : ListBox
@@ -34,7 +35,6 @@ internal class ListBoxHailMary : ListBox
     private const int SIF_PAGE = 0x2;
     private const int SIF_ALL = SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS;
     private int mHScroll;
-    bool justGotFocus = false;
 
     protected override void OnGotFocus(EventArgs e)
     {
@@ -72,20 +72,30 @@ internal class ListBoxHailMary : ListBox
         if (this.Items.Count > 0)
         {
             e.DrawBackground();
-            if (e.State == DrawItemState.Default)
+            if ((e.State & DrawItemState.Default) == DrawItemState.Default)
+            {
+                e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X - mHScroll, e.Bounds.Y));
+            }
+            else if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && (e.State & DrawItemState.NoAccelerator) == DrawItemState.NoAccelerator)
+            {
+                e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X, e.Bounds.Y));
+            }
+            else if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
                 e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X - mHScroll, e.Bounds.Y));
             }
             else
             {
-                e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X, e.Bounds.Y));
+                e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X - mHScroll, e.Bounds.Y));
             }
+
         }
         base.OnDrawItem(e);
     }
 
     protected override void OnPaint(PaintEventArgs e)
     {
+        int largestStringSize = 0;
         Region iRegion = new Region(e.ClipRectangle);
         e.Graphics.FillRegion(new SolidBrush(this.BackColor), iRegion);
         if (this.Items.Count > 0)
@@ -112,11 +122,16 @@ internal class ListBoxHailMary : ListBox
                             this.BackColor));
                     }
                     iRegion.Complement(irect);
+
+                    int stringSize = (int)e.Graphics.MeasureString(Items[1].ToString(), this.Font).Width;
+                    if (stringSize > largestStringSize)
+                    {
+                        largestStringSize = stringSize;
+                    }
                 }
             }
         }
-        justGotFocus = false;
-        //HorizontalExtent = (int)e.Graphics.MeasureString(Items[1].ToString(), this.Font).Width;
+        HorizontalExtent = largestStringSize;
 
         base.OnPaint(e);
     }
