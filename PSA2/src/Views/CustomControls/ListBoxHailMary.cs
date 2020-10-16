@@ -53,13 +53,13 @@ internal class ListBoxHailMary : ListBox
 
     protected override void WndProc(ref System.Windows.Forms.Message msg)
     {
+        
         if (msg.Msg == WM_HSCROLL)
         {
             switch ((int)msg.WParam & 0xffff)
             {
                 case SB_LINERIGHT:
                 case SB_LINELEFT:
-                    //mHScroll = ((int)msg.WParam >> 16) & 0xffff;
                     break;
                 case SB_PAGELEFT:
                     mHScroll = Math.Max(0, mHScroll - ClientSize.Width * 2 / 3); //A page is 2/3 the width.

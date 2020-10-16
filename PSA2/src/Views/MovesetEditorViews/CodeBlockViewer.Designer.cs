@@ -30,8 +30,8 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.codeBlockCommandsScintilla = new ScintillaNET.Scintilla();
             this.commandParamsView = new System.Windows.Forms.Panel();
-            this.codeBlockCommandsListBox = new ListBoxHailMary();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,7 +48,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.codeBlockCommandsListBox);
+            this.splitContainer1.Panel1.Controls.Add(this.codeBlockCommandsScintilla);
             // 
             // splitContainer1.Panel2
             // 
@@ -56,6 +56,17 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer1.Size = new System.Drawing.Size(790, 449);
             this.splitContainer1.SplitterDistance = 349;
             this.splitContainer1.TabIndex = 8;
+            // 
+            // codeBlockCommandsScintilla
+            // 
+            this.codeBlockCommandsScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeBlockCommandsScintilla.Location = new System.Drawing.Point(0, 0);
+            this.codeBlockCommandsScintilla.Name = "codeBlockCommandsScintilla";
+            this.codeBlockCommandsScintilla.Size = new System.Drawing.Size(790, 349);
+            this.codeBlockCommandsScintilla.TabIndex = 8;
+            this.codeBlockCommandsScintilla.Text = "scintilla1";
+            this.codeBlockCommandsScintilla.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.codeBlockCommandsScintilla_UpdateUI);
+            this.codeBlockCommandsScintilla.TextChanged += new System.EventHandler(this.codeBlockCommandsScintilla_TextChanged);
             // 
             // commandParamsView
             // 
@@ -66,22 +77,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.commandParamsView.Name = "commandParamsView";
             this.commandParamsView.Size = new System.Drawing.Size(790, 96);
             this.commandParamsView.TabIndex = 0;
-            // 
-            // codeBlockCommandsListBox
-            // 
-            this.codeBlockCommandsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeBlockCommandsListBox.FormattingEnabled = true;
-            this.codeBlockCommandsListBox.HorizontalScrollbar = true;
-            this.codeBlockCommandsListBox.HorizontalExtent = 1000;
-            this.codeBlockCommandsListBox.Location = new System.Drawing.Point(0, 0);
-            this.codeBlockCommandsListBox.Name = "codeBlockCommandsListBox";
-            this.codeBlockCommandsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.codeBlockCommandsListBox.Size = new System.Drawing.Size(790, 349);
-            this.codeBlockCommandsListBox.TabIndex = 7;
-            this.codeBlockCommandsListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsListBox_MouseClick);
-            this.codeBlockCommandsListBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockCommandsListBox_SelectedIndexChanged);
-            this.codeBlockCommandsListBox.Enter += new System.EventHandler(this.codeBlockCommandsListBox_Enter);
-            this.codeBlockCommandsListBox.Leave += new System.EventHandler(this.codeBlockCommandsListBox_Leave);
             // 
             // CodeBlockViewer
             // 
@@ -102,6 +97,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         #endregion
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel commandParamsView;
-        private ListBoxHailMary codeBlockCommandsListBox;
+        private ScintillaNET.Scintilla codeBlockCommandsScintilla;
     }
 }
