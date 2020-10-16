@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 internal class ListBoxHailMary : ListBox
@@ -58,7 +59,7 @@ internal class ListBoxHailMary : ListBox
             {
                 case SB_LINERIGHT:
                 case SB_LINELEFT:
-                    mHScroll = ((int)msg.WParam >> 2) & 0xffff;
+                    //mHScroll = ((int)msg.WParam >> 16) & 0xffff;
                     break;
                 case SB_PAGELEFT:
                     mHScroll = Math.Max(0, mHScroll - ClientSize.Width * 2 / 3); //A page is 2/3 the width.
@@ -105,11 +106,15 @@ internal class ListBoxHailMary : ListBox
         if (this.Items.Count > 0)
         {
             e.DrawBackground();
+            if (e.Index == 0)
+            {
+                Console.WriteLine(e.Index + " " + e.State);
+            }
             if ((e.State & DrawItemState.Default) == DrawItemState.Default)
             {
                 e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X - mHScroll, e.Bounds.Y));
             }
-            else if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && (e.State & DrawItemState.NoAccelerator) == DrawItemState.NoAccelerator)
+            else if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && ((e.State & DrawItemState.NoAccelerator) == DrawItemState.NoAccelerator))
             {
                 e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), new PointF(e.Bounds.X, e.Bounds.Y));
             }
