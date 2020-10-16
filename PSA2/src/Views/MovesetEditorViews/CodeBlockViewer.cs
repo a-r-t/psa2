@@ -122,16 +122,20 @@ namespace PSA2.src.Views.MovesetEditorViews
             splitContainer1.Panel1.DoubleBuffered(true);
 
             codeBlockCommandsScintilla.SetSelectionBackColor(true, SystemColors.Highlight);
+            codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
+            codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
             //codeBlockCommandsListBox.DoubleBuffered(true);
 
             LoadCodeBlockCommands();
+            codeBlockCommandsScintilla.Lexer = Lexer.Container;
+            //codeBlockCommandsScintilla.Refresh();
             /*
             if (codeBlockCommandsListBox.Items.Count > 0)
             {
                 codeBlockCommandsListBox.SelectedIndex = 0;
             }
             */
-            
+
         }
 
         private void codeBlockCommandsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,6 +184,9 @@ namespace PSA2.src.Views.MovesetEditorViews
         private int maxLineNumberCharLength;
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
+            //Console.WriteLine("HI");
+            //StyleVisibleLines();
+
             // Did the number of characters in the line number display change?
             // i.e. nnn VS nn, or nnnn VS nn, etc...
             var maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
@@ -223,6 +230,73 @@ namespace PSA2.src.Views.MovesetEditorViews
                     codeBlockCommandsScintilla.Focus();
                 }
             } 
+        }
+
+        private void codeBlockCommandsScintilla_StyleNeeded(object sender, StyleNeededEventArgs e)
+        {
+            
+            var startPos = codeBlockCommandsScintilla.GetEndStyled();
+            var endPos = e.Position;
+
+            int startLineIndex = codeBlockCommandsScintilla.LineFromPosition(startPos);
+            int endLineIndex = codeBlockCommandsScintilla.LineFromPosition(endPos);
+
+            if (endLineIndex >= codeBlockCommandsScintilla.Lines.Count)
+            {
+                endLineIndex = codeBlockCommandsScintilla.Lines.Count - 1;
+            }
+
+            string text = codeBlockCommandsScintilla.Text;
+            while (startPos != 0 && text[startPos - 1] != '\n')
+            {
+                startPos--;
+            }
+
+            codeBlockCommandsScintilla.StartStyling(startPos);
+
+            for (int i = startLineIndex; i <= endLineIndex; i++)
+            {
+                StyleLineIndex(i);
+            }
+            
+        }
+
+/*        private void StyleVisibleLines()
+        {
+            int startLineIndex = codeBlockCommandsScintilla.FirstVisibleLine;
+            int endLineIndex = startLineIndex + codeBlockCommandsScintilla.LinesOnScreen;
+
+            if (endLineIndex >= codeBlockCommandsScintilla.Lines.Count)
+            {
+                endLineIndex = codeBlockCommandsScintilla.Lines.Count - 1;
+            }
+
+            codeBlockCommandsScintilla.StartStyling(codeBlockCommandsScintilla.GetEndStyled());
+            Console.WriteLine("START: " + startLineIndex + ", END: " + endLineIndex);
+            for (int i = startLineIndex; i < endLineIndex; i++)
+            {
+                StyleLineIndex(i);
+            }
+        }*/
+
+        private void StyleLineIndex(int lineIndex)
+        {
+            string text = codeBlockCommandsScintilla.Lines[lineIndex].Text;
+            Console.WriteLine("Command: " + text.Trim());
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                int lastIndexOfColon = text.LastIndexOf(':');
+                if (lastIndexOfColon >= 0)
+                {
+                    codeBlockCommandsScintilla.SetStyling(lastIndexOfColon, 1);
+                    codeBlockCommandsScintilla.SetStyling(text.Length - lastIndexOfColon, 2);
+                }
+                else
+                {
+                    codeBlockCommandsScintilla.SetStyling(text.Length, 1);
+                }
+            }
         }
     }
 }
