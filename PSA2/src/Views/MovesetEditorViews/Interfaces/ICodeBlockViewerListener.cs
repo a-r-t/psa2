@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSA2.src.Views.MovesetEditorViews
+namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
     public interface ICodeBlockViewerListener
     {

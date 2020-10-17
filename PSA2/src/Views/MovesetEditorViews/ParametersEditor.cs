@@ -11,6 +11,7 @@ using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PropertyGridEx;
+using PSA2.src.Views.MovesetEditorViews.Interfaces;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -76,6 +77,18 @@ namespace PSA2.src.Views.MovesetEditorViews
                     );
                 }
             }
+
+            /*
+             * How to add a drop down to the property grid
+             
+            parametersPropertyGrid.Item.Add("Language", "", false, "Misc", "", true);
+            string[] choices = new string[80];
+            for (int i = 0; i < 80; i++)
+            {
+                choices[i] = $"{i}";
+            }
+            parametersPropertyGrid.Item[parametersPropertyGrid.Item.Count - 1].Choices = new CustomChoices(choices);
+            */
 
             parametersPropertyGrid.Refresh();
             parametersPropertyGrid.Enabled = false;

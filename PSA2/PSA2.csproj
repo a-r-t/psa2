@@ -198,10 +198,10 @@
     <Compile Include="src\Views\MovesetEditorViews\CommandSelector.Designer.cs">
       <DependentUpon>CommandSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ICodeBlockViewerListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\ICommandSelectorListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\ISectionSelectorListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\IParametersEditorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICodeBlockViewerListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICommandSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\ISectionSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,7 +222,7 @@
     <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.Designer.cs">
       <DependentUpon>MovesetEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\IMovesetEditorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IMovesetEditorListener.cs" />
     <Compile Include="src\Views\ObservableUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

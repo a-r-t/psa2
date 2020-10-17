@@ -12,6 +12,7 @@ using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Utility;
 using System.Reflection;
 using PSA2.src.ExtentionMethods;
+using PSA2.src.Views.MovesetEditorViews.Interfaces;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {

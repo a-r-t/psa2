@@ -13,6 +13,7 @@ using PSA2.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Utility;
 using PSA2.src.ExtentionMethods;
 using ScintillaNET;
+using PSA2.src.Views.MovesetEditorViews.Interfaces;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -118,8 +119,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             
             this.DoubleBuffered(true);
-            splitContainer1.DoubleBuffered(true);
-            splitContainer1.Panel1.DoubleBuffered(true);
 
             codeBlockCommandsScintilla.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
             codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.White;

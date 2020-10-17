@@ -1,6 +1,7 @@
 ﻿using PSA2.src.FileProcessor;
 using PSA2.src.FileProcessor.MovesetHandler;
 using PSA2.src.Views.MovesetEditorViews;
+using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
