@@ -360,6 +360,19 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void AddCommandAbove(PsaCommandConfig psaCommandConfig)
         {
             int currentLineIndex = codeBlockCommandsScintilla.CurrentLine;
+            PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
+            switch (SectionSelectionInfo.SectionType)
+            {
+                case SectionType.ACTION:
+                    psaMovesetHandler.ActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex, psaCommand);
+                    break;
+                case SectionType.SUBACTION:
+                    psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex);
+                    break;
+            }
+            string commandText = GetCommandText(psaCommand);
+            commandTexts.Insert(currentLineIndex, commandText);
+            LoadCodeBlockCommands();
         }
 
         public void AddCommandBelow(PsaCommandConfig psaCommandConfig)

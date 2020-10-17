@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,19 @@ namespace PSA2.src.FileProcessor.MovesetHandler.Configs
             Description = description;
             Instruction = instruction;
             CommandParams = commandParams;
+        }
+
+        public PsaCommand ToPsaCommand()
+        {
+            int instructionInt = int.Parse(Instruction, System.Globalization.NumberStyles.HexNumber);
+
+            List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
+            foreach (PsaCommandParamConfig psaCommandParamConfig in CommandParams)
+            {
+                parameters.Add(psaCommandParamConfig.ToPsaCommandParameter());
+            }
+
+            return new PsaCommand(instructionInt, 0, parameters);
         }
     }
 
@@ -76,6 +90,26 @@ namespace PSA2.src.FileProcessor.MovesetHandler.Configs
                 case "Any":
                 default: return "00000000";
             }
+        }
+
+        private int GetTypeIndex()
+        {
+            switch (DataTypes[0].ToLower())
+            {
+                case "value": return 0;
+                case "scalar": return 1;
+                case "pointer": return 2;
+                case "boolean": return 3;
+                case "(4)": return 4;
+                case "variable": return 5;
+                case "requirement": return 6;
+                default: return 0;
+            }
+        }
+
+        public PsaCommandParameter ToPsaCommandParameter()
+        {
+            return new PsaCommandParameter(GetTypeIndex(), 0);
         }
     }
 }
