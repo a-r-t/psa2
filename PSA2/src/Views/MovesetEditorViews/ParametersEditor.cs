@@ -54,7 +54,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     PsaCommandParamConfig psaCommandParamConfig = psaCommandConfig.CommandParams[i];
                     parametersPropertyGrid.Item.Add(
                         psaCommandParamConfig.ParamName,
-                        psaCommand.Parameters[i].Type,
+                        psaCommand.Parameters[i].Value,
                         false,
                         "Parameter",
                         psaCommandParamConfig.Description,
@@ -68,7 +68,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 {
                     parametersPropertyGrid.Item.Add(
                         $"arg{i}",
-                        psaCommand.Parameters[i].Type,
+                        psaCommand.Parameters[i].Value,
                         false,
                         "Parameter",
                         "N/A",
