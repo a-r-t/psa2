@@ -29,6 +29,7 @@
     <Folder Include="Tests\SubActionsTests\ComparisonData\Add\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
   </ItemGroup>
 
@@ -55,6 +56,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\ActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\ActionsTests\ComparisonData\Insert\FitMarioOneCommandInsertedToEmptyCodeBlock.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\ActionsTests\ComparisonData\Modify\FitMarioModifyCommandInActionWithCommandThatHasPointerParameter.pac">
@@ -151,6 +155,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInsertedToEmptyCodeBlock.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Modify\FitMarioModifyCommandInSubActionWithCommandThatHasPointerParameter.pac">

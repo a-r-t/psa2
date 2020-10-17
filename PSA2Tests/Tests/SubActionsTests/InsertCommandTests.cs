@@ -4,16 +4,16 @@ using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandler
 using System;
 using System.Collections.Generic;
 
-namespace PSA2Tests.Tests.ActionsTests
+namespace PSA2Tests.Tests.SubActionsTests
 {
     [TestFixture]
     public class InsertCommandTests
     {
         [Test]
         [Description("Insert command which will relocate code block")]
-        [TestCase(0, 0, 0, "FitMarioOneCommandInserted.pac")]
-        [TestCase(0, 0, 5, "FitMarioOneCommandInserted2.pac")]
-        public void InsertOneCommandInActionWithExistingCommands(int actionId, int codeBlockId, int commandIndex, string comparisonFileName)
+        [TestCase(72, 0, 0, "FitMarioOneCommandInserted.pac")]
+        [TestCase(72, 0, 5, "FitMarioOneCommandInserted2.pac")]
+        public void InsertOneCommandInActionWithExistingCommands(int subActionId, int codeBlockId, int commandIndex, string comparisonFileName)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
 
@@ -24,9 +24,9 @@ namespace PSA2Tests.Tests.ActionsTests
             };
             PsaCommand psaCommand = new PsaCommand(33620480, 0, parameters);
 
-            psaMovesetParser.ActionsHandler.InsertCommand(actionId, codeBlockId, commandIndex, psaCommand);
-            psaMovesetParser.PsaFile.SaveFile($"./Tests/ActionsTests/Out/Insert/{comparisonFileName}");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/ActionsTests/ComparisonData/Insert/{comparisonFileName}", $"./Tests/ActionsTests/Out/Insert/{comparisonFileName}"));
+            psaMovesetParser.SubActionsHandler.InsertCommand(subActionId, codeBlockId, commandIndex, psaCommand);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Insert/{comparisonFileName}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Insert/{comparisonFileName}", $"./Tests/SubActionsTests/Out/Insert/{comparisonFileName}"));
         }
 
         [Test]
@@ -42,9 +42,9 @@ namespace PSA2Tests.Tests.ActionsTests
             };
             PsaCommand psaCommand = new PsaCommand(33620480, 0, parameters);
 
-            psaMovesetParser.ActionsHandler.InsertCommand(0, 1, 0, psaCommand);
-            psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac", "./Tests/ActionsTests/Out/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac"));
+            psaMovesetParser.SubActionsHandler.InsertCommand(0, 0, 0, psaCommand);
+            psaMovesetParser.PsaFile.SaveFile("./Tests/SubActionsTests/Out/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/SubActionsTests/ComparisonData/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac", "./Tests/SubActionsTests/Out/Insert/FitMarioOneCommandInsertedToEmptyCodeBlock.pac"));
         }
     }
 }
