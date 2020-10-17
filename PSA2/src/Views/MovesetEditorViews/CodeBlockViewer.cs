@@ -122,9 +122,27 @@ namespace PSA2.src.Views.MovesetEditorViews
             splitContainer1.Panel1.DoubleBuffered(true);
 
             codeBlockCommandsScintilla.SetSelectionBackColor(true, SystemColors.Highlight);
+            codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.White;
+            codeBlockCommandsScintilla.CaretForeColor = Color.Black;
+            codeBlockCommandsScintilla.Styles[Style.Default].Font = "Consolas";
+            codeBlockCommandsScintilla.Styles[Style.Default].SizeF = 12;
+            codeBlockCommandsScintilla.StyleClearAll();
+
             codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
             codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
-            codeBlockCommandsScintilla.Styles[3].ForeColor = Color.FromArgb(220, 210, 127);
+            codeBlockCommandsScintilla.Styles[3].ForeColor = Color.Green;
+            codeBlockCommandsScintilla.Styles[4].ForeColor = Color.White;
+
+            /*
+             For dark mode:
+                codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
+                codeBlockCommandsScintilla.CaretForeColor = Color.White;
+                codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
+                codeBlockCommandsScintilla.Styles[2].ForeColor = Color.White;
+                codeBlockCommandsScintilla.Styles[3].ForeColor = Color.FromArgb(220, 210, 127);
+                codeBlockCommandsScintilla.Styles[4].ForeColor = Color.Black;
+
+             */
             //codeBlockCommandsListBox.DoubleBuffered(true);
 
             LoadCodeBlockCommands();
@@ -294,24 +312,35 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                     codeBlockCommandsScintilla.SetStyling(1, 2);
 
-                    int stoppingPoint = 0;
-                    for (int i = lastIndexOfColon + 2; i < text.Length; i++)
-                    {
-                        Console.WriteLine("C: " + text[i]);
-                        if (text[i] != '=')
+                    int stoppingPoint = lastIndexOfColon;
+                    for (int i = 0; i < psaCommands[lineIndex].NumberOfParams; i++) {
+                        for (int j = stoppingPoint + 2; j < text.Length; j++)
                         {
-                            codeBlockCommandsScintilla.SetStyling(1, 2);
+                            Console.WriteLine("C: " + text[j]);
+                            if (text[j] != '=')
+                            {
+                                codeBlockCommandsScintilla.SetStyling(1, 2);
+                            }
+                            else
+                            {
+                                codeBlockCommandsScintilla.SetStyling(2, 2);
+                                stoppingPoint = j;
+                                break;
+                            }
                         }
-                        else
+                        for (int j = stoppingPoint + 1; j < text.Length; j++)
                         {
-                            codeBlockCommandsScintilla.SetStyling(2, 2);
-                            stoppingPoint = i;
-                            break;
+                            if (text[j] != ',')
+                            {
+                                codeBlockCommandsScintilla.SetStyling(1, 3);
+                            }
+                            else
+                            {
+                                codeBlockCommandsScintilla.SetStyling(3, 2);
+                                stoppingPoint = j + 2;
+                                break;
+                            }
                         }
-                    }
-                    for (int i = stoppingPoint + 1; i < text.Length; i++)
-                    {
-                        codeBlockCommandsScintilla.SetStyling(1, 3);
                     }
 
                 }
