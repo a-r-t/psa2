@@ -86,10 +86,31 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
         public void MoveCommand(int codeBlockLocation, int commandIndex, MoveDirection moveDirection)
         {
-            int actionCodeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, commandIndex);
+            int codeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, commandIndex);
             PsaCommand psaCommandToMove = GetPsaCommandForCodeBlock(codeBlockLocation, commandIndex);
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
-            PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, actionCodeBlockCommandLocation, moveDirection);
+            PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, codeBlockCommandLocation, moveDirection);
+        }
+
+        public void InsertCommand(int codeBlockLocation, int commandIndex, PsaCommand newPsaCommand)
+        {
+            // add command (NOP) to end of code block
+            AddCommand(codeBlockLocation);
+
+            CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
+
+            // move command upwards to desired index
+            for (int i = codeBlock.NumberOfCommands - 1; i > commandIndex; i--)
+            {
+                PsaCommand psaCommandToMove = GetPsaCommandForCodeBlock(codeBlockLocation, i);
+                int codeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, i);
+                PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, codeBlockCommandLocation, MoveDirection.UP);
+            }
+
+            // replace NOP command with desired command
+            PsaCommand oldPsaCommand = GetPsaCommandForCodeBlock(codeBlockLocation, commandIndex);
+            int oldPsaCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
+            PsaCommandHandler.ModifyCommand(oldPsaCommandLocation, oldPsaCommand, newPsaCommand);
         }
 
     }

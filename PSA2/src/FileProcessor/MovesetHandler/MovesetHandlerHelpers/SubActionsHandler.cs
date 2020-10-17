@@ -181,5 +181,11 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.MoveCommand(actionCodeBlockLocation, commandIndex, moveDirection);
         }
+
+        public void InsertCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
+        {
+            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            CodeBlocksHandler.InsertCommand(subActionCodeBlockLocation, commandIndex, newPsaCommand);
+        }
     }
 }

@@ -32,23 +32,28 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.codeBlockView = new System.Windows.Forms.Panel();
-            this.eventsTabControl = new System.Windows.Forms.TabControl();
-            this.selectorView = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.commandOptionsViewer = new System.Windows.Forms.Panel();
-            this.parametersEditorViewer = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.eventsTabControl = new System.Windows.Forms.TabControl();
             this.optionsTabControl = new System.Windows.Forms.TabControl();
             this.actionTabPage = new System.Windows.Forms.TabPage();
             this.commandDescriptionTabPage = new System.Windows.Forms.TabPage();
             this.errorListTabPage = new System.Windows.Forms.TabPage();
             this.hexCalculatorTabPage = new System.Windows.Forms.TabPage();
+            this.selectorView = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.commandOptionsViewer = new System.Windows.Forms.Panel();
+            this.parametersEditorViewer = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.codeBlockView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
+            this.optionsTabControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -57,11 +62,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
-            this.optionsTabControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -92,6 +92,25 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.codeBlockView.Size = new System.Drawing.Size(167, 408);
             this.codeBlockView.TabIndex = 1;
             // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.eventsTabControl);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.optionsTabControl);
+            this.splitContainer4.Size = new System.Drawing.Size(165, 406);
+            this.splitContainer4.SplitterDistance = 260;
+            this.splitContainer4.TabIndex = 1;
+            // 
             // eventsTabControl
             // 
             this.eventsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -99,10 +118,63 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.eventsTabControl.Location = new System.Drawing.Point(0, 0);
             this.eventsTabControl.Name = "eventsTabControl";
             this.eventsTabControl.SelectedIndex = 0;
-            this.eventsTabControl.Size = new System.Drawing.Size(165, 287);
+            this.eventsTabControl.Size = new System.Drawing.Size(165, 260);
             this.eventsTabControl.TabIndex = 0;
             this.eventsTabControl.SelectedIndexChanged += new System.EventHandler(this.eventsTabControl_SelectedIndexChanged);
             this.eventsTabControl.Click += new System.EventHandler(this.eventsTabControl_Click);
+            // 
+            // optionsTabControl
+            // 
+            this.optionsTabControl.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.optionsTabControl.Controls.Add(this.actionTabPage);
+            this.optionsTabControl.Controls.Add(this.commandDescriptionTabPage);
+            this.optionsTabControl.Controls.Add(this.errorListTabPage);
+            this.optionsTabControl.Controls.Add(this.hexCalculatorTabPage);
+            this.optionsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.optionsTabControl.Location = new System.Drawing.Point(0, 0);
+            this.optionsTabControl.Name = "optionsTabControl";
+            this.optionsTabControl.SelectedIndex = 0;
+            this.optionsTabControl.Size = new System.Drawing.Size(165, 142);
+            this.optionsTabControl.TabIndex = 1;
+            // 
+            // actionTabPage
+            // 
+            this.actionTabPage.Location = new System.Drawing.Point(4, 4);
+            this.actionTabPage.Name = "actionTabPage";
+            this.actionTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.actionTabPage.Size = new System.Drawing.Size(157, 116);
+            this.actionTabPage.TabIndex = 0;
+            this.actionTabPage.Text = "Actions";
+            this.actionTabPage.UseVisualStyleBackColor = true;
+            // 
+            // commandDescriptionTabPage
+            // 
+            this.commandDescriptionTabPage.Location = new System.Drawing.Point(4, 4);
+            this.commandDescriptionTabPage.Name = "commandDescriptionTabPage";
+            this.commandDescriptionTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.commandDescriptionTabPage.Size = new System.Drawing.Size(157, 89);
+            this.commandDescriptionTabPage.TabIndex = 1;
+            this.commandDescriptionTabPage.Text = "Descriptions";
+            this.commandDescriptionTabPage.UseVisualStyleBackColor = true;
+            // 
+            // errorListTabPage
+            // 
+            this.errorListTabPage.Location = new System.Drawing.Point(4, 4);
+            this.errorListTabPage.Name = "errorListTabPage";
+            this.errorListTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.errorListTabPage.Size = new System.Drawing.Size(157, 89);
+            this.errorListTabPage.TabIndex = 2;
+            this.errorListTabPage.Text = "Errors";
+            this.errorListTabPage.UseVisualStyleBackColor = true;
+            // 
+            // hexCalculatorTabPage
+            // 
+            this.hexCalculatorTabPage.Location = new System.Drawing.Point(4, 4);
+            this.hexCalculatorTabPage.Name = "hexCalculatorTabPage";
+            this.hexCalculatorTabPage.Size = new System.Drawing.Size(157, 89);
+            this.hexCalculatorTabPage.TabIndex = 3;
+            this.hexCalculatorTabPage.Text = "Hex Calculator";
+            this.hexCalculatorTabPage.UseVisualStyleBackColor = true;
             // 
             // selectorView
             // 
@@ -167,78 +239,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.parametersEditorViewer.Size = new System.Drawing.Size(186, 203);
             this.parametersEditorViewer.TabIndex = 0;
             // 
-            // splitContainer4
-            // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer4.Panel1
-            // 
-            this.splitContainer4.Panel1.Controls.Add(this.eventsTabControl);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.optionsTabControl);
-            this.splitContainer4.Size = new System.Drawing.Size(165, 406);
-            this.splitContainer4.SplitterDistance = 287;
-            this.splitContainer4.TabIndex = 1;
-            // 
-            // optionsTabControl
-            // 
-            this.optionsTabControl.Alignment = System.Windows.Forms.TabAlignment.Bottom;
-            this.optionsTabControl.Controls.Add(this.actionTabPage);
-            this.optionsTabControl.Controls.Add(this.commandDescriptionTabPage);
-            this.optionsTabControl.Controls.Add(this.errorListTabPage);
-            this.optionsTabControl.Controls.Add(this.hexCalculatorTabPage);
-            this.optionsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.optionsTabControl.Location = new System.Drawing.Point(0, 0);
-            this.optionsTabControl.Name = "optionsTabControl";
-            this.optionsTabControl.SelectedIndex = 0;
-            this.optionsTabControl.Size = new System.Drawing.Size(165, 115);
-            this.optionsTabControl.TabIndex = 1;
-            // 
-            // actionTabPage
-            // 
-            this.actionTabPage.Location = new System.Drawing.Point(4, 4);
-            this.actionTabPage.Name = "actionTabPage";
-            this.actionTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.actionTabPage.Size = new System.Drawing.Size(157, 89);
-            this.actionTabPage.TabIndex = 0;
-            this.actionTabPage.Text = "Actions";
-            this.actionTabPage.UseVisualStyleBackColor = true;
-            // 
-            // commandDescriptionTabPage
-            // 
-            this.commandDescriptionTabPage.Location = new System.Drawing.Point(4, 4);
-            this.commandDescriptionTabPage.Name = "commandDescriptionTabPage";
-            this.commandDescriptionTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.commandDescriptionTabPage.Size = new System.Drawing.Size(782, 70);
-            this.commandDescriptionTabPage.TabIndex = 1;
-            this.commandDescriptionTabPage.Text = "Descriptions";
-            this.commandDescriptionTabPage.UseVisualStyleBackColor = true;
-            // 
-            // errorListTabPage
-            // 
-            this.errorListTabPage.Location = new System.Drawing.Point(4, 4);
-            this.errorListTabPage.Name = "errorListTabPage";
-            this.errorListTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.errorListTabPage.Size = new System.Drawing.Size(782, 70);
-            this.errorListTabPage.TabIndex = 2;
-            this.errorListTabPage.Text = "Errors";
-            this.errorListTabPage.UseVisualStyleBackColor = true;
-            // 
-            // hexCalculatorTabPage
-            // 
-            this.hexCalculatorTabPage.Location = new System.Drawing.Point(4, 4);
-            this.hexCalculatorTabPage.Name = "hexCalculatorTabPage";
-            this.hexCalculatorTabPage.Size = new System.Drawing.Size(782, 70);
-            this.hexCalculatorTabPage.TabIndex = 3;
-            this.hexCalculatorTabPage.Text = "Hex Calculator";
-            this.hexCalculatorTabPage.UseVisualStyleBackColor = true;
-            // 
             // MovesetEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,6 +252,11 @@ namespace PSA2.src.Views.MovesetEditorViews
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.codeBlockView.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
+            this.optionsTabControl.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -260,11 +265,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-            this.splitContainer4.ResumeLayout(false);
-            this.optionsTabControl.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

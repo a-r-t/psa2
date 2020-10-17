@@ -13,16 +13,35 @@ using PSA2.src.Utility;
 using System.Reflection;
 using PSA2.src.ExtentionMethods;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
+using System.Runtime.InteropServices;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, ISectionSelectorListener
+    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, ISectionSelectorListener, IEventActionsListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         protected PsaCommandsConfig psaCommandsConfig;
         protected SectionSelector sectionSelector;
         protected ParametersEditor parametersEditor;
         protected CommandSelector commandSelector;
+        protected EventActions eventActions;
+        protected PsaCommandConfig currentlySelectedCommandOption;
+
+        public CodeBlockViewer ActiveCodeBlockViewer
+        {
+            get
+            {
+                if (eventsTabControl.TabCount > 0)
+                {
+                    TabPage selectedTabPage = eventsTabControl.TabPages[eventsTabControl.SelectedIndex];
+                    return (CodeBlockViewer)selectedTabPage.Controls["codeBlockViewer"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         public MovesetEditor(PsaMovesetHandler psaMovesetHandler)
         {
@@ -43,6 +62,11 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.commandSelector = new CommandSelector(psaMovesetHandler, psaCommandsConfig);
             commandSelector.Dock = DockStyle.Fill;
             commandOptionsViewer.Controls.Add(commandSelector);
+
+            this.eventActions = new EventActions(psaMovesetHandler);
+            eventActions.Dock = DockStyle.Fill;
+            optionsTabControl.TabPages[0].Controls.Add(eventActions);
+            eventActions.AddListener(this);
         }
 
         public void OnCodeBlockSelected(string sectionText, SectionSelectionInfo sectionSelectionInfo)
@@ -100,6 +124,36 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             //this.DoubleBuffered(true);
             //eventsTabControl.DoubleBuffered(true);
+        }
+
+        public void OnAddCommandAbove()
+        {
+            ActiveCodeBlockViewer?.AddCommandAbove(currentlySelectedCommandOption);
+        }
+
+        public void OnAddCommandBelow()
+        {
+            ActiveCodeBlockViewer?.AddCommandBelow(currentlySelectedCommandOption);
+        }
+
+        public void OnReplaceCommand()
+        {
+            ActiveCodeBlockViewer?.ReplaceCommand(currentlySelectedCommandOption);
+        }
+
+        public void OnMoveCommandUp()
+        {
+            ActiveCodeBlockViewer?.MoveCommandUp();
+        }
+
+        public void OnMoveCommandDown()
+        {
+            ActiveCodeBlockViewer?.MoveCommandDown();
+        }
+
+        public void OnRemoveCommand()
+        {
+            ActiveCodeBlockViewer?.RemoveCommand();
         }
     }
 }

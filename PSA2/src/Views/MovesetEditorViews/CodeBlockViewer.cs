@@ -356,5 +356,35 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
         }
+
+        public void AddCommandAbove(PsaCommandConfig psaCommandConfig)
+        {
+            int currentLineIndex = codeBlockCommandsScintilla.CurrentLine;
+        }
+
+        public void AddCommandBelow(PsaCommandConfig psaCommandConfig)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReplaceCommand(PsaCommandConfig psaCommandConfig)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void MoveCommandUp()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void MoveCommandDown()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveCommand()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

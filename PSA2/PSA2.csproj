@@ -198,8 +198,15 @@
     <Compile Include="src\Views\MovesetEditorViews\CommandSelector.Designer.cs">
       <DependentUpon>CommandSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\EventActions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\EventActions.Designer.cs">
+      <DependentUpon>EventActions.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICodeBlockViewerListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICommandSelectorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IEventActionsListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
@@ -255,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\CommandSelector.resx">
       <DependentUpon>CommandSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\EventActions.resx">
+      <DependentUpon>EventActions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelector.resx">
       <DependentUpon>SectionSelector.cs</DependentUpon>
