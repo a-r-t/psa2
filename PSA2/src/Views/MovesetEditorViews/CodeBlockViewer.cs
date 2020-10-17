@@ -21,6 +21,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaMovesetHandler psaMovesetHandler;
         public SectionSelectionInfo SectionSelectionInfo { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
+        private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, SectionSelectionInfo sectionSelectionInfo)
@@ -36,7 +37,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             
             codeBlockCommandsScintilla.ClearAll();
 
-            List<PsaCommand> psaCommands = null;
             switch (SectionSelectionInfo.SectionType)
             {
                 case SectionType.ACTION:
@@ -124,6 +124,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             codeBlockCommandsScintilla.SetSelectionBackColor(true, SystemColors.Highlight);
             codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
             codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
+            codeBlockCommandsScintilla.Styles[3].ForeColor = Color.FromArgb(220, 210, 127);
             //codeBlockCommandsListBox.DoubleBuffered(true);
 
             LoadCodeBlockCommands();
@@ -282,15 +283,37 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void StyleLineIndex(int lineIndex)
         {
             string text = codeBlockCommandsScintilla.Lines[lineIndex].Text;
-            Console.WriteLine("Command: " + text.Trim());
 
             if (!string.IsNullOrEmpty(text))
             {
                 int lastIndexOfColon = text.LastIndexOf(':');
                 if (lastIndexOfColon >= 0)
                 {
+                    // style everything up to the last colon
                     codeBlockCommandsScintilla.SetStyling(lastIndexOfColon, 1);
-                    codeBlockCommandsScintilla.SetStyling(text.Length - lastIndexOfColon, 2);
+
+                    codeBlockCommandsScintilla.SetStyling(1, 2);
+
+                    int stoppingPoint = 0;
+                    for (int i = lastIndexOfColon + 2; i < text.Length; i++)
+                    {
+                        Console.WriteLine("C: " + text[i]);
+                        if (text[i] != '=')
+                        {
+                            codeBlockCommandsScintilla.SetStyling(1, 2);
+                        }
+                        else
+                        {
+                            codeBlockCommandsScintilla.SetStyling(2, 2);
+                            stoppingPoint = i;
+                            break;
+                        }
+                    }
+                    for (int i = stoppingPoint + 1; i < text.Length; i++)
+                    {
+                        codeBlockCommandsScintilla.SetStyling(1, 3);
+                    }
+
                 }
                 else
                 {
