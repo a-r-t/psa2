@@ -42,6 +42,7 @@
             this.commandsListBox.Name = "commandsListBox";
             this.commandsListBox.Size = new System.Drawing.Size(147, 355);
             this.commandsListBox.TabIndex = 0;
+            this.commandsListBox.SelectedIndexChanged += new System.EventHandler(this.commandsListBox_SelectedIndexChanged);
             // 
             // CommandSelector
             // 

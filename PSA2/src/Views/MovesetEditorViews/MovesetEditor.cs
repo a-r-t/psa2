@@ -17,7 +17,10 @@ using System.Runtime.InteropServices;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, ISectionSelectorListener, IEventActionsListener
+    public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, 
+        ISectionSelectorListener, 
+        IEventActionsListener,
+        ICommandSelectorListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         protected PsaCommandsConfig psaCommandsConfig;
@@ -62,6 +65,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.commandSelector = new CommandSelector(psaMovesetHandler, psaCommandsConfig);
             commandSelector.Dock = DockStyle.Fill;
             commandOptionsViewer.Controls.Add(commandSelector);
+            commandSelector.AddListener(this);
 
             this.eventActions = new EventActions(psaMovesetHandler);
             eventActions.Dock = DockStyle.Fill;
@@ -154,6 +158,11 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void OnRemoveCommand()
         {
             ActiveCodeBlockViewer?.RemoveCommand();
+        }
+
+        public void OnCommandSelected(PsaCommandConfig psaCommandConfig)
+        {
+            this.currentlySelectedCommandOption = psaCommandConfig;
         }
     }
 }

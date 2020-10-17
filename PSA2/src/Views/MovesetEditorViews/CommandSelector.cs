@@ -35,5 +35,13 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             commandsListBox.DataSource = commands;
         }
+
+        private void commandsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (ICommandSelectorListener listener in listeners)
+            {
+                listener.OnCommandSelected(psaCommandsConfig.PsaCommands[commandsListBox.SelectedIndex]);
+            }
+        }
     }
 }

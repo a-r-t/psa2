@@ -47,6 +47,8 @@ namespace PSA2.src.Views.MovesetEditorViews
                     psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex);
                     break;
             }
+
+            commandTexts.Clear();
             foreach (PsaCommand psaCommand in psaCommands) {
                 string commandText = GetCommandText(psaCommand);
                 //codeBlockCommandsListBox.Items.Add(commandText);
@@ -371,7 +373,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     break;
             }
             string commandText = GetCommandText(psaCommand);
-            commandTexts.Insert(currentLineIndex, commandText);
+            //commandTexts.Insert(currentLineIndex, commandText);
             LoadCodeBlockCommands();
         }
 
