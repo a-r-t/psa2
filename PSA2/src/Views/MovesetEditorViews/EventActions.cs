@@ -22,19 +22,28 @@ namespace PSA2.src.Views.MovesetEditorViews
             InitializeComponent();
         }
 
-        private void addCommandAboveBtn_Click(object sender, EventArgs e)
+        private void insertCommandAboveBtn_Click(object sender, EventArgs e)
         {
             foreach (IEventActionsListener listener in listeners)
             {
-                listener.OnAddCommandAbove();
+                listener.OnInsertCommandAbove();
             }
         }
 
-        private void addCommandBelowBtn_Click(object sender, EventArgs e)
+        private void insertCommandBelowBtn_Click(object sender, EventArgs e)
         {
             foreach (IEventActionsListener listener in listeners)
             {
-                listener.OnAddCommandBelow();
+                listener.OnInsertCommandBelow();
+            }
+        }
+
+
+        private void appendCommandBtn_Click(object sender, EventArgs e)
+        {
+            foreach (IEventActionsListener listener in listeners)
+            {
+                listener.OnAppendCommand();
             }
         }
 

@@ -72,8 +72,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void sectionsTreeView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Console.WriteLine("CUSTOM EVENT");
-
             if (sectionsTreeView.SelectedNode.Nodes.Count == 0)
             {
                 TreeNode node = sectionsTreeView.SelectedNode;

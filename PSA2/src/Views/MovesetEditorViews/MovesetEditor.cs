@@ -130,14 +130,19 @@ namespace PSA2.src.Views.MovesetEditorViews
             //eventsTabControl.DoubleBuffered(true);
         }
 
-        public void OnAddCommandAbove()
+        public void OnAppendCommand()
         {
-            ActiveCodeBlockViewer?.AddCommandAbove(currentlySelectedCommandOption);
+            ActiveCodeBlockViewer?.AppendCommand(currentlySelectedCommandOption);
         }
 
-        public void OnAddCommandBelow()
+        public void OnInsertCommandAbove()
         {
-            ActiveCodeBlockViewer?.AddCommandBelow(currentlySelectedCommandOption);
+            ActiveCodeBlockViewer?.InsertCommandAbove(currentlySelectedCommandOption);
+        }
+
+        public void OnInsertCommandBelow()
+        {
+            ActiveCodeBlockViewer?.InsertCommandBelow(currentlySelectedCommandOption);
         }
 
         public void OnReplaceCommand()

@@ -9,8 +9,9 @@ namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
     public interface IEventActionsListener
     {
-        void OnAddCommandAbove();
-        void OnAddCommandBelow();
+        void OnInsertCommandAbove();
+        void OnInsertCommandBelow();
+        void OnAppendCommand();
         void OnReplaceCommand();
         void OnMoveCommandUp();
         void OnMoveCommandDown();
