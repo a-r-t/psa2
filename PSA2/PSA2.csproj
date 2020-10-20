@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="src\ExtentionMethods\ControlExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ListExtensions.cs" />
+    <Compile Include="src\ExtentionMethods\ScintillaExtensions.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\AttributesConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\Configs\CharacterSpecificParametersConfig.cs" />
     <Compile Include="src\FileProcessor\MovesetHandler\MovesetHandlerHelpers\ActionOverridesHandler.cs" />
@@ -177,6 +178,9 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
+    <Compile Include="src\Views\CustomControls\CustomScintilla.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\ListBoxHailMary.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -230,6 +234,7 @@
       <DependentUpon>MovesetEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IMovesetEditorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\StyleNeededForSelectedLinesEventArgs.cs" />
     <Compile Include="src\Views\ObservableUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

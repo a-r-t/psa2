@@ -41,7 +41,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.codeBlockCommandsScintilla.TabIndex = 8;
             this.codeBlockCommandsScintilla.Text = "scintilla1";
             this.codeBlockCommandsScintilla.WrapStartIndent = 4;
-            this.codeBlockCommandsScintilla.StyleNeeded += new System.EventHandler<ScintillaNET.StyleNeededEventArgs>(this.codeBlockCommandsScintilla_StyleNeeded);
             this.codeBlockCommandsScintilla.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.codeBlockCommandsScintilla_UpdateUI);
             this.codeBlockCommandsScintilla.TextChanged += new System.EventHandler(this.codeBlockCommandsScintilla_TextChanged);
             this.codeBlockCommandsScintilla.MouseMove += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsScintilla_MouseMove);

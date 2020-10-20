@@ -133,13 +133,24 @@ namespace PSA2.src.Views.MovesetEditorViews
             codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
 
             codeBlockCommandsScintilla.Styles[3].ForeColor = Color.Green;
-            codeBlockCommandsScintilla.Styles[4].ForeColor = Color.White;
+
+            codeBlockCommandsScintilla.Styles[4].FillLine = true;
+            codeBlockCommandsScintilla.Styles[4].ForeColor = Color.FromArgb(68, 156, 214);
+            codeBlockCommandsScintilla.Styles[4].BackColor = Color.FromArgb(38, 79, 120);
+
+            codeBlockCommandsScintilla.Styles[5].FillLine = true;
+            codeBlockCommandsScintilla.Styles[5].ForeColor = Color.White;
+            codeBlockCommandsScintilla.Styles[5].BackColor = Color.FromArgb(38, 79, 120);
+
+            codeBlockCommandsScintilla.Styles[6].FillLine = true;
+            codeBlockCommandsScintilla.Styles[6].ForeColor = Color.Green;
+            codeBlockCommandsScintilla.Styles[6].BackColor = Color.FromArgb(38, 79, 120);
 
             // sets margin colors
             codeBlockCommandsScintilla.Styles[Style.LineNumber].BackColor = Color.FromArgb(240, 240, 240);
             codeBlockCommandsScintilla.Styles[Style.LineNumber].ForeColor = Color.Black;
             codeBlockCommandsScintilla.MultipleSelection = true;
-
+            codeBlockCommandsScintilla.CaretStyle = CaretStyle.Line;
             // Turns wrap mode on
             //codeBlockCommandsScintilla.WrapStartIndent = 4;
             //codeBlockCommandsScintilla.WrapMode = WrapMode.Whitespace;
@@ -161,6 +172,8 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             LoadCodeBlockCommands();
             codeBlockCommandsScintilla.Lexer = Lexer.Container;
+            StyleDocument();
+
             //codeBlockCommandsScintilla.Margins[0].Width = 0;
             //codeBlockCommandsScintilla.Margins[1].Width = 0;
 
@@ -267,53 +280,47 @@ namespace PSA2.src.Views.MovesetEditorViews
                     codeBlockCommandsScintilla.Focus();
                 }
 
-                Console.WriteLine("SELECTION CHANGED");
+                StyleDocument();
             }
 
             // if selection changes
             if ((e.Change & UpdateChange.Selection) > 0)
             {
-                HighlightSelectedLines();
             }
 
         }
 
-        private void HighlightSelectedLines()
+        private void HighlightSelectedLines3()
         {
-            Console.WriteLine("CALL TO HIGHLIGHT SELECTED LINES");
-            string text = codeBlockCommandsScintilla.Text;
+        }
 
-            Console.WriteLine("COUNT: " + codeBlockCommandsScintilla.Selections.Count);
-            for (int i = 0; i < codeBlockCommandsScintilla.Selections.Count; i++)
+        private void StyleDocument()
+        {
+            List<int> selectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            codeBlockCommandsScintilla.StartStyling(0);
+            for (int i = 0; i < codeBlockCommandsScintilla.Lines.Count; i++)
             {
-                int lineStartPosition = codeBlockCommandsScintilla.Selections[i].Start;
-                Console.WriteLine("START BEFORE: " + lineStartPosition);
-                while (lineStartPosition != 0 && text[lineStartPosition - 1] != '\n')
-                {
-                    lineStartPosition--;
-                }
-                Console.WriteLine("START AFTER: " + lineStartPosition);
-
-                int lineEndPosition = codeBlockCommandsScintilla.Selections[i].End;
-                Console.WriteLine("END BEFORE: " + lineEndPosition);
-                while (lineEndPosition < text.Length && text[lineEndPosition] != '\n')
-                {
-                    lineEndPosition++;
-                }
-                Console.WriteLine("END AFTER: " + lineEndPosition);
-
-                codeBlockCommandsScintilla.Selections[i].Start = lineStartPosition;
-                codeBlockCommandsScintilla.Selections[i].End = lineEndPosition;
+                StyleLineIndex(i, selectedLines.Contains(i));
             }
-            // codeBlockCommandsScintilla.CaretLineVisible = false;
 
         }
 
+        /*
         private void codeBlockCommandsScintilla_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            
-            var startPos = codeBlockCommandsScintilla.GetEndStyled();
-            var endPos = e.Position;
+            List<int> selectedLines;
+            int startPos;
+            if (e is StyleNeededForSelectedLinesEventArgs ex) {
+                startPos = ex.StartPosition;
+                selectedLines = ex.SelectedLines;
+            }
+            else
+            {
+                startPos = codeBlockCommandsScintilla.GetEndStyled();
+                selectedLines = new List<int>();
+            }
+
+            int endPos = e.Position;
 
             int startLineIndex = codeBlockCommandsScintilla.LineFromPosition(startPos);
             int endLineIndex = codeBlockCommandsScintilla.LineFromPosition(endPos);
@@ -322,6 +329,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 endLineIndex = codeBlockCommandsScintilla.Lines.Count - 1;
             }
+            Console.WriteLine("END LINE INDEX: " + endLineIndex);
 
             string text = codeBlockCommandsScintilla.Text;
             while (startPos != 0 && text[startPos - 1] != '\n')
@@ -329,14 +337,16 @@ namespace PSA2.src.Views.MovesetEditorViews
                 startPos--;
             }
 
+            Console.WriteLine(startPos + ", " + endPos);
             codeBlockCommandsScintilla.StartStyling(startPos);
 
             for (int i = startLineIndex; i <= endLineIndex; i++)
             {
-                StyleLineIndex(i);
+                StyleLineIndex(i, selectedLines.Contains(i));
             }
             
         }
+        */
 
 /*        private void StyleVisibleLines()
         {
@@ -356,8 +366,12 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }*/
 
-        private void StyleLineIndex(int lineIndex)
+        private void StyleLineIndex(int lineIndex, bool isSelected)
         {
+            int commandNameStyle = !isSelected ? 1 : 4;
+            int paramNameStyle = !isSelected ? 2 : 5;
+            int valueStyle = !isSelected ? 3 : 6;
+
             string text = codeBlockCommandsScintilla.Lines[lineIndex].Text;
 
             if (!string.IsNullOrEmpty(text))
@@ -366,9 +380,9 @@ namespace PSA2.src.Views.MovesetEditorViews
                 if (lastIndexOfColon >= 0)
                 {
                     // style everything up to the last colon
-                    codeBlockCommandsScintilla.SetStyling(lastIndexOfColon, 1);
+                    codeBlockCommandsScintilla.SetStyling(lastIndexOfColon, commandNameStyle);
 
-                    codeBlockCommandsScintilla.SetStyling(1, 2);
+                    codeBlockCommandsScintilla.SetStyling(1, paramNameStyle);
 
                     int stoppingPoint = lastIndexOfColon;
                     for (int i = 0; i < psaCommands[lineIndex].NumberOfParams; i++) {
@@ -376,11 +390,11 @@ namespace PSA2.src.Views.MovesetEditorViews
                         {
                             if (text[j] != '=')
                             {
-                                codeBlockCommandsScintilla.SetStyling(1, 2);
+                                codeBlockCommandsScintilla.SetStyling(1, paramNameStyle);
                             }
                             else
                             {
-                                codeBlockCommandsScintilla.SetStyling(2, 2);
+                                codeBlockCommandsScintilla.SetStyling(2, paramNameStyle);
                                 stoppingPoint = j;
                                 break;
                             }
@@ -389,11 +403,11 @@ namespace PSA2.src.Views.MovesetEditorViews
                         {
                             if (text[j] != ',')
                             {
-                                codeBlockCommandsScintilla.SetStyling(1, 3);
+                                codeBlockCommandsScintilla.SetStyling(1, valueStyle);
                             }
                             else
                             {
-                                codeBlockCommandsScintilla.SetStyling(3, 2);
+                                codeBlockCommandsScintilla.SetStyling(3, paramNameStyle);
                                 stoppingPoint = j + 2;
                                 break;
                             }
@@ -403,7 +417,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
                 else
                 {
-                    codeBlockCommandsScintilla.SetStyling(text.Length, 1);
+                    codeBlockCommandsScintilla.SetStyling(text.Length, commandNameStyle);
                 }
             }
         }
