@@ -25,6 +25,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaCommandsConfig psaCommandsConfig;
         private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
+        private SelectedLines selectedLines = new SelectedLines();
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, SectionSelectionInfo sectionSelectionInfo)
         {
@@ -187,49 +188,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         }
 
-        private void codeBlockCommandsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*
-            if (codeBlockCommandsListBox.SelectedIndex != SectionSelectionInfo.CommandIndex)
-            {
-                PsaCommand psaCommand;
-                switch (SectionSelectionInfo.SectionType)
-                {
-                    case SectionType.ACTION:
-                        psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
-                        break;
-                    case SectionType.SUBACTION:
-                        psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsListBox.SelectedIndex);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid section type");
-                }
-
-                PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-                SectionSelectionInfo.CommandIndex = codeBlockCommandsListBox.SelectedIndex;
-                foreach (ICodeBlockViewerListener listener in listeners)
-                {
-                    listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
-                }
-            }
-            */
-        }
-
-        private void codeBlockCommandsListBox_Leave(object sender, EventArgs e)
-        {
-            //codeBlockCommandsListBox.Update();
-        }
-
-        private void codeBlockCommandsListBox_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void codeBlockCommandsListBox_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private int maxLineNumberCharLength;
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
@@ -240,7 +198,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             // i.e. nnn VS nn, or nnnn VS nn, etc...
             var maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
             if (maxLineNumberCharLength == this.maxLineNumberCharLength)
+            {
                 return;
+            }
 
             // Calculate the width required to display the last line number
             // and include some padding for good measure.
@@ -280,6 +240,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     codeBlockCommandsScintilla.Focus();
                 }
 
+                HighlightSelectedLines();
                 StyleDocument();
             }
 
@@ -288,15 +249,29 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
             }
 
+            if ((e.Change & UpdateChange.VScroll) > 0 || (e.Change & UpdateChange.HScroll) > 0)
+            {
+                HighlightSelectedLines();
+                StyleDocument();
+            }
+
         }
 
-        private void HighlightSelectedLines3()
+        private void HighlightSelectedLines()
         {
+            selectedLines.ClearAll();
+            for (int i = 0; i < codeBlockCommandsScintilla.Selections.Count; i++)
+            {
+                for (int j = codeBlockCommandsScintilla.Selections[i].Start; j <= codeBlockCommandsScintilla.Selections[i].End; j++)
+                {
+                    selectedLines.Add(codeBlockCommandsScintilla.LineFromPosition(j));
+                }
+            }
         }
 
         private void StyleDocument()
         {
-            List<int> selectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            //List<int> selectedLines = codeBlockCommandsScintilla.GetSelectedLines();
             codeBlockCommandsScintilla.StartStyling(0);
             for (int i = 0; i < codeBlockCommandsScintilla.Lines.Count; i++)
             {
@@ -304,67 +279,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
 
         }
-
-        /*
-        private void codeBlockCommandsScintilla_StyleNeeded(object sender, StyleNeededEventArgs e)
-        {
-            List<int> selectedLines;
-            int startPos;
-            if (e is StyleNeededForSelectedLinesEventArgs ex) {
-                startPos = ex.StartPosition;
-                selectedLines = ex.SelectedLines;
-            }
-            else
-            {
-                startPos = codeBlockCommandsScintilla.GetEndStyled();
-                selectedLines = new List<int>();
-            }
-
-            int endPos = e.Position;
-
-            int startLineIndex = codeBlockCommandsScintilla.LineFromPosition(startPos);
-            int endLineIndex = codeBlockCommandsScintilla.LineFromPosition(endPos);
-
-            if (endLineIndex >= codeBlockCommandsScintilla.Lines.Count)
-            {
-                endLineIndex = codeBlockCommandsScintilla.Lines.Count - 1;
-            }
-            Console.WriteLine("END LINE INDEX: " + endLineIndex);
-
-            string text = codeBlockCommandsScintilla.Text;
-            while (startPos != 0 && text[startPos - 1] != '\n')
-            {
-                startPos--;
-            }
-
-            Console.WriteLine(startPos + ", " + endPos);
-            codeBlockCommandsScintilla.StartStyling(startPos);
-
-            for (int i = startLineIndex; i <= endLineIndex; i++)
-            {
-                StyleLineIndex(i, selectedLines.Contains(i));
-            }
-            
-        }
-        */
-
-/*        private void StyleVisibleLines()
-        {
-            int startLineIndex = codeBlockCommandsScintilla.FirstVisibleLine;
-            int endLineIndex = startLineIndex + codeBlockCommandsScintilla.LinesOnScreen;
-
-            if (endLineIndex >= codeBlockCommandsScintilla.Lines.Count)
-            {
-                endLineIndex = codeBlockCommandsScintilla.Lines.Count - 1;
-            }
-
-            codeBlockCommandsScintilla.StartStyling(codeBlockCommandsScintilla.GetEndStyled());
-            Console.WriteLine("START: " + startLineIndex + ", END: " + endLineIndex);
-            for (int i = startLineIndex; i < endLineIndex; i++)
-            {
-                StyleLineIndex(i);
-            }
-        }*/
 
         private void StyleLineIndex(int lineIndex, bool isSelected)
         {
@@ -478,10 +392,69 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             throw new NotImplementedException();
         }
+    }
 
-        private void codeBlockCommandsScintilla_MouseMove(object sender, MouseEventArgs e)
+    class SelectedLines
+    {
+        private List<SelectedLine> lines;
+
+        public SelectedLines()
         {
- 
+            lines = new List<SelectedLine>();
+        }
+
+        public bool Contains(int lineIndex)
+        {
+            return lines.Find(line => line.LineIndex == lineIndex) != null;
+        }
+
+        public SelectedLine Get(int lineIndex)
+        {
+            return lines.Find(line => line.LineIndex == lineIndex);
+        }
+
+        public void Add(int lineIndex)
+        {
+            if (!Contains(lineIndex))
+            {
+                lines.Add(new SelectedLine(lineIndex, false));
+            }
+        }
+
+        public void Remove(int lineIndex)
+        {
+            lines = lines.FindAll(line => line.LineIndex != lineIndex);
+        }
+
+        public void CommitAll()
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                lines[i].IsCommitted = true;
+            }
+        }
+
+        public void ClearAll()
+        {
+            lines.Clear();
+        }
+
+        public int Count()
+        {
+            return lines.Count;
+        }
+
+    }
+
+    class SelectedLine
+    {
+        public int LineIndex { get; set; }
+        public bool IsCommitted { get; set; }
+
+        public SelectedLine(int lineIndex, bool isCommitted)
+        {
+            LineIndex = lineIndex;
+            IsCommitted = isCommitted;
         }
     }
 }
