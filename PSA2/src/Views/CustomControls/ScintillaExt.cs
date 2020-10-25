@@ -124,7 +124,7 @@ namespace PSA2.src.Views.CustomControls
         {
             ClearSelections();
             lines.Sort();
-
+           
             int currentSelectionIndex = 0;
             int currentStart = 0;
             int currentEnd = 0;

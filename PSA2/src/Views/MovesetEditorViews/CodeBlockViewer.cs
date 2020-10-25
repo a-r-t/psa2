@@ -353,6 +353,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     break;
             }
 
+            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
             LoadCodeBlockCommands();
 
             for (int i = 0; i < currentSelectedLines.Count; i++)
@@ -363,6 +364,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
 
+            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
             codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
 
             StyleDocument();
@@ -384,6 +386,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     break;
             }
 
+            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
             LoadCodeBlockCommands();
 
             for (int i = 0; i < currentSelectedLines.Count; i++)
@@ -393,7 +396,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     currentSelectedLines[i]++;
                 }
             }
-
+            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
             codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
 
             StyleDocument();
@@ -401,7 +404,25 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void AppendCommand(PsaCommandConfig psaCommandConfig)
         {
-            throw new NotImplementedException();
+
+            PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
+            switch (SectionSelectionInfo.SectionType)
+            {
+                case SectionType.ACTION:
+                    psaMovesetHandler.ActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
+                    break;
+                case SectionType.SUBACTION:
+                    psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
+                    break;
+            }
+
+            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            //int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+            LoadCodeBlockCommands();
+            codeBlockCommandsScintilla.LineScroll(codeBlockCommandsScintilla.Lines.Count, 0);
+            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            StyleDocument();
         }
 
         public void ReplaceCommand(PsaCommandConfig psaCommandConfig)
