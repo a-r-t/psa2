@@ -340,7 +340,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void InsertCommandAbove(PsaCommandConfig psaCommandConfig)
         {
             List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
-            Console.WriteLine(string.Join(", ", currentSelectedLines));
 
             int currentLineIndex = currentSelectedLines.Min();
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
@@ -371,7 +370,9 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void InsertCommandBelow(PsaCommandConfig psaCommandConfig)
         {
-            int currentLineIndex = codeBlockCommandsScintilla.CurrentLine;
+            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+
+            int currentLineIndex = currentSelectedLines.Max();
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
             switch (SectionSelectionInfo.SectionType)
             {
@@ -382,7 +383,20 @@ namespace PSA2.src.Views.MovesetEditorViews
                     psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex + 1, psaCommand);
                     break;
             }
+
             LoadCodeBlockCommands();
+
+            for (int i = 0; i < currentSelectedLines.Count; i++)
+            {
+                if (currentSelectedLines[i] > currentLineIndex)
+                {
+                    currentSelectedLines[i]++;
+                }
+            }
+
+            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            StyleDocument();
         }
 
         public void AppendCommand(PsaCommandConfig psaCommandConfig)
