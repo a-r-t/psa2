@@ -19,13 +19,46 @@ namespace PSA2.src.Views.CustomControls
         public ScintillaExt() : base()
         {
         }
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SetCursor(IntPtr hCursor);
+        const int WM_SETCURSOR = 0x0020;
+        const int WM_MOUSEMOVE = 0x0200;
+        const int WM_LBUTTONUP = 0x202;
+        bool mouseDown;
 
-        const int WM_SETCURSOR = 0x20;
-        protected override void WndProc(ref Message m)
+        protected override void OnMouseDown(MouseEventArgs e)
         {
-            base.WndProc(ref m);
+            base.OnMouseDown(e);
+            mouseDown = true;
         }
 
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            mouseDown = false;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            
+            if (m.Msg == WM_SETCURSOR || m.Msg == WM_MOUSEMOVE)
+            {
+                if (!mouseDown)
+                {
+                    SetCursor(Cursors.Arrow.Handle);
+                    return;
+                }
+            }
+
+            base.WndProc(ref m);
+            SetCursor(Cursors.Arrow.Handle);
+        }
+
+        public void UpdateCursor()
+        {
+            SetCursor(Cursors.Arrow.Handle);
+
+        }
 
         protected override void OnUpdateUI(UpdateUIEventArgs e)
         {

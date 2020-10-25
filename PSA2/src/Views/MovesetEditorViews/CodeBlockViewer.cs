@@ -15,6 +15,8 @@ using PSA2.src.ExtentionMethods;
 using ScintillaNET;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.VisualBasic.Devices;
+using System.Runtime.InteropServices;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -33,6 +35,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.psaCommandsConfig = psaCommandsConfig;
             SectionSelectionInfo = sectionSelectionInfo;
             InitializeComponent();
+
+            this.DoubleBuffered(true);
+            codeBlockCommandsScintilla.DoubleBuffered(true);
         }
 
         public void LoadCodeBlockCommands()
@@ -120,9 +125,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
-            
-            this.DoubleBuffered(true);
-
             codeBlockCommandsScintilla.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
             codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.White;
             codeBlockCommandsScintilla.CaretForeColor = Color.Black;
@@ -366,7 +368,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
             codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
-
+         
             StyleDocument();
         }
 
@@ -453,6 +455,24 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void codeBlockCommandsScintilla_MouseCaptureChanged(object sender, EventArgs e)
         {
             //Cursor.Current = Cursors.Arrow;
+
+        }
+
+        private void codeBlockCommandsScintilla_MouseDown(object sender, MouseEventArgs e)
+        {
+            //codeBlockCommandsScintilla.Enabled = true;
+
+        }
+
+        private void codeBlockCommandsScintilla_MouseUp(object sender, MouseEventArgs e)
+        {
+            //codeBlockCommandsScintilla.Enabled = false;
+
+        }
+
+        private void CodeBlockViewer_MouseDown(object sender, MouseEventArgs e)
+        {
+            //codeBlockCommandsScintilla.Enabled = true;
 
         }
 

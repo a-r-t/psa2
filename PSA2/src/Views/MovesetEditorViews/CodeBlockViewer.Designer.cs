@@ -47,7 +47,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.codeBlockCommandsScintilla.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.codeBlockCommandsScintilla_UpdateUI);
             this.codeBlockCommandsScintilla.TextChanged += new System.EventHandler(this.codeBlockCommandsScintilla_TextChanged);
             this.codeBlockCommandsScintilla.MouseCaptureChanged += new System.EventHandler(this.codeBlockCommandsScintilla_MouseCaptureChanged);
+            this.codeBlockCommandsScintilla.MouseDown += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsScintilla_MouseDown);
             this.codeBlockCommandsScintilla.MouseMove += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsScintilla_MouseMove);
+            this.codeBlockCommandsScintilla.MouseUp += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsScintilla_MouseUp);
             // 
             // CodeBlockViewer
             // 
@@ -57,6 +59,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.Name = "CodeBlockViewer";
             this.Size = new System.Drawing.Size(790, 449);
             this.Load += new System.EventHandler(this.CodeBlockViewer_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CodeBlockViewer_MouseDown);
             this.ResumeLayout(false);
 
         }
