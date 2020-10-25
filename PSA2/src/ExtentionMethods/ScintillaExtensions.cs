@@ -10,6 +10,7 @@ namespace PSA2.src.ExtentionMethods
 {
     public static class ScintillaExtensions
     {
+        /*
         public static (int, int, List<int>) GetSelectedLinesByPositionRange(this ScintillaNET.Scintilla scintilla)
         {
             HashSet<int> selectedLines = new HashSet<int>();
@@ -62,5 +63,6 @@ namespace PSA2.src.ExtentionMethods
 
             return selectedLines.ToList<int>();
         }
+        */
     }
 }

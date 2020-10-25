@@ -178,7 +178,7 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
-    <Compile Include="src\Views\CustomControls\CustomScintilla.cs">
+    <Compile Include="src\Views\CustomControls\ScintillaExt.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\ListBoxHailMary.cs">

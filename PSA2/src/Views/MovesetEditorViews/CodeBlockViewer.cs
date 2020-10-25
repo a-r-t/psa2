@@ -25,7 +25,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaCommandsConfig psaCommandsConfig;
         private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
-        private SelectedLines selectedLines = new SelectedLines();
+        private List<int> selectedLines = new List<int>();
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, SectionSelectionInfo sectionSelectionInfo)
         {
@@ -152,6 +152,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             codeBlockCommandsScintilla.Styles[Style.LineNumber].ForeColor = Color.Black;
             codeBlockCommandsScintilla.MultipleSelection = true;
             codeBlockCommandsScintilla.CaretStyle = CaretStyle.Line;
+
             // Turns wrap mode on
             //codeBlockCommandsScintilla.WrapStartIndent = 4;
             //codeBlockCommandsScintilla.WrapMode = WrapMode.Whitespace;
@@ -259,7 +260,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void HighlightSelectedLines()
         {
-            selectedLines.ClearAll();
+            selectedLines.Clear();
             for (int i = 0; i < codeBlockCommandsScintilla.Selections.Count; i++)
             {
                 for (int j = codeBlockCommandsScintilla.Selections[i].Start; j <= codeBlockCommandsScintilla.Selections[i].End; j++)
@@ -271,7 +272,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void StyleDocument()
         {
-            //List<int> selectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            List<int> selectedLines = codeBlockCommandsScintilla.GetSelectedLines();
             codeBlockCommandsScintilla.StartStyling(0);
             for (int i = 0; i < codeBlockCommandsScintilla.Lines.Count; i++)
             {
@@ -338,7 +339,10 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void InsertCommandAbove(PsaCommandConfig psaCommandConfig)
         {
-            int currentLineIndex = codeBlockCommandsScintilla.CurrentLine;
+            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            Console.WriteLine(string.Join(", ", currentSelectedLines));
+
+            int currentLineIndex = currentSelectedLines.Min();
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
             switch (SectionSelectionInfo.SectionType)
             {
@@ -349,7 +353,20 @@ namespace PSA2.src.Views.MovesetEditorViews
                     psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex, psaCommand);
                     break;
             }
+
             LoadCodeBlockCommands();
+
+            for (int i = 0; i < currentSelectedLines.Count; i++)
+            {
+                if (currentSelectedLines[i] >= currentLineIndex)
+                {
+                    currentSelectedLines[i]++;
+                }
+            }
+
+            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            StyleDocument();
         }
 
         public void InsertCommandBelow(PsaCommandConfig psaCommandConfig)
@@ -392,6 +409,18 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             throw new NotImplementedException();
         }
+
+        private void codeBlockCommandsScintilla_MouseMove(object sender, MouseEventArgs e)
+        {
+            //codeBlockCommandsScintilla.UpdateCursor();
+        }
+
+        private void codeBlockCommandsScintilla_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            //Cursor.Current = Cursors.Arrow;
+
+        }
+
     }
 
     class SelectedLines

@@ -1,4 +1,6 @@
 ﻿
+using PSA2.src.Views.CustomControls;
+
 namespace PSA2.src.Views.MovesetEditorViews
 {
     partial class CodeBlockViewer
@@ -29,12 +31,13 @@ namespace PSA2.src.Views.MovesetEditorViews
         /// </summary>
         private void InitializeComponent()
         {
-            this.codeBlockCommandsScintilla = new ScintillaNET.Scintilla();
+            this.codeBlockCommandsScintilla = new PSA2.src.Views.CustomControls.ScintillaExt();
             this.SuspendLayout();
             // 
             // codeBlockCommandsScintilla
             // 
             this.codeBlockCommandsScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeBlockCommandsScintilla.FullLineSelect = true;
             this.codeBlockCommandsScintilla.Location = new System.Drawing.Point(0, 0);
             this.codeBlockCommandsScintilla.Name = "codeBlockCommandsScintilla";
             this.codeBlockCommandsScintilla.Size = new System.Drawing.Size(790, 449);
@@ -43,6 +46,8 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.codeBlockCommandsScintilla.WrapStartIndent = 4;
             this.codeBlockCommandsScintilla.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.codeBlockCommandsScintilla_UpdateUI);
             this.codeBlockCommandsScintilla.TextChanged += new System.EventHandler(this.codeBlockCommandsScintilla_TextChanged);
+            this.codeBlockCommandsScintilla.MouseCaptureChanged += new System.EventHandler(this.codeBlockCommandsScintilla_MouseCaptureChanged);
+            this.codeBlockCommandsScintilla.MouseMove += new System.Windows.Forms.MouseEventHandler(this.codeBlockCommandsScintilla_MouseMove);
             // 
             // CodeBlockViewer
             // 
@@ -57,6 +62,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         }
 
         #endregion
-        private ScintillaNET.Scintilla codeBlockCommandsScintilla;
+        private ScintillaExt codeBlockCommandsScintilla;
     }
 }
