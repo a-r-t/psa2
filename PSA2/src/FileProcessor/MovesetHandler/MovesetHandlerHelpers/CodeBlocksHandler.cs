@@ -112,6 +112,5 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             int oldPsaCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
             PsaCommandHandler.ModifyCommand(oldPsaCommandLocation, oldPsaCommand, newPsaCommand);
         }
-
     }
 }

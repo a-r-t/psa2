@@ -16,15 +16,17 @@ namespace PSA2.src.Views.CustomControls
         public bool FullLineSelect { get; set; }
         private int[] originalLineIndexesSelected = new int[0]; // sometimes you gotta do what you gotta do to get winform controls to behave a certain way :(
 
-        public ScintillaExt() : base()
-        {
-        }
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr SetCursor(IntPtr hCursor);
+
         const int WM_SETCURSOR = 0x0020;
         const int WM_MOUSEMOVE = 0x0200;
         const int WM_LBUTTONUP = 0x202;
         bool mouseDown;
+
+        public ScintillaExt() : base()
+        {
+        }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -40,7 +42,6 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void WndProc(ref Message m)
         {
-            
             if (m.Msg == WM_SETCURSOR || m.Msg == WM_MOUSEMOVE)
             {
                 if (!mouseDown)

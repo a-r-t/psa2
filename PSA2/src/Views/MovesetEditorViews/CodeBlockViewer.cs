@@ -406,7 +406,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void AppendCommand(PsaCommandConfig psaCommandConfig)
         {
-
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
             switch (SectionSelectionInfo.SectionType)
             {
@@ -419,7 +418,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
 
             List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
-            //int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+
             LoadCodeBlockCommands();
             codeBlockCommandsScintilla.LineScroll(codeBlockCommandsScintilla.Lines.Count, 0);
             codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
@@ -429,7 +428,30 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void ReplaceCommand(PsaCommandConfig psaCommandConfig)
         {
-            throw new NotImplementedException();
+            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+
+            PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
+
+            foreach (int lineIndex in currentSelectedLines)
+            {
+                switch (SectionSelectionInfo.SectionType)
+                {
+                    case SectionType.ACTION:
+                        psaMovesetHandler.ActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                        break;
+                    case SectionType.SUBACTION:
+                        psaMovesetHandler.SubActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                        break;
+                }
+            } 
+
+            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+            LoadCodeBlockCommands();
+
+            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            StyleDocument();
         }
 
         public void MoveCommandUp()
