@@ -13,7 +13,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandUpwards()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 1, MoveDirection.UP);
+            psaMovesetParser.ActionsHandler.MoveCommandUp(0, 0, 1);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-BothCommandsHaveParameters.pac"));
         }
@@ -23,7 +23,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandUpwardsThatHasNoParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 10, MoveDirection.UP);
+            psaMovesetParser.ActionsHandler.MoveCommandUp(0, 0, 10);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-CommandWithNoParametersSwapWithCommandWithParameters.pac"));
         }
@@ -33,7 +33,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandUpwardsThatHasParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 11, MoveDirection.UP);
+            psaMovesetParser.ActionsHandler.MoveCommandUp(0, 0, 11);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandUpwards-CommandWithParametersSwapWithCommandWithNoParameters.pac"));
         }
@@ -43,7 +43,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandDownwards()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 0, MoveDirection.DOWN);
+            psaMovesetParser.ActionsHandler.MoveCommandDown(0, 0, 0);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-BothCommandsHaveParameters.pac"));
         }
@@ -53,7 +53,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandDownwardsThatHasNoParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 10, MoveDirection.DOWN);
+            psaMovesetParser.ActionsHandler.MoveCommandDown(0, 0, 10);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-CommandWithNoParametersSwapWithCommandWithParameters.pac"));
         }
@@ -63,7 +63,7 @@ namespace PSA2Tests.Tests.ActionsTests
         public void MoveCommandDownwardsThatHasParameters()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.ActionsHandler.MoveCommand(0, 0, 9, MoveDirection.DOWN);
+            psaMovesetParser.ActionsHandler.MoveCommandDown(0, 0, 9);
             psaMovesetParser.PsaFile.SaveFile("./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-CommandWithParametersSwapWithCommandWithNoParameters.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical("./Tests/ActionsTests/ComparisonData/Move/FitMarioMoveCommandDownwards-CommandWithParametersSwapWithCommandWithNoParameters.pac", "./Tests/ActionsTests/Out/Move/FitMarioMoveCommandDownwards-CommandWithParametersSwapWithCommandWithNoParameters.pac"));
         }

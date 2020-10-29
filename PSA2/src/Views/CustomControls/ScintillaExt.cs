@@ -158,7 +158,9 @@ namespace PSA2.src.Views.CustomControls
         {
             ClearSelections();
             lines.Sort();
-           
+
+            Console.WriteLine("SELECTED LINES: " + string.Join(", ", lines));
+
             int currentSelectionIndex = 0;
             int currentStart = 0;
             int currentEnd = 0;
@@ -171,16 +173,25 @@ namespace PSA2.src.Views.CustomControls
                 else if (lines[i - 1] == lines[i] - 1)
                 {
                     (int lineStart, int lineEnd) = GetLineStartAndEndPositions(lines[i]);
-                    currentEnd += (lineEnd - lineStart);
+                    currentEnd += ((lineEnd - lineStart) + 1);
                 }
                 else
                 {
                     currentSelectionIndex++;
                     (currentStart, currentEnd) = GetLineStartAndEndPositions(lines[i]);
-                    AddSelection(0, 0);
+                    AddSelection(currentEnd, currentStart);
                 }
+
                 Selections[currentSelectionIndex].Anchor = currentStart;
                 Selections[currentSelectionIndex].Caret = currentEnd;
+            }
+
+            this.originalLineIndexesSelected = new int[Selections.Count];
+            for (int i = 0; i < Selections.Count; i++)
+            {
+                this.originalLineIndexesSelected[i] = LineFromPosition(Selections[i].Start);
+                Console.WriteLine("SELECTION START AFTER: " + Selections[i].Anchor);
+                Console.WriteLine("SELECTION END AFTER: " + Selections[i].Caret);
             }
         }
 

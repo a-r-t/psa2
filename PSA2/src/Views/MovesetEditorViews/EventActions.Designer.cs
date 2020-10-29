@@ -196,6 +196,7 @@
             this.moveCommandDownBtn.TabIndex = 7;
             this.moveCommandDownBtn.Text = "▼ Move Down";
             this.moveCommandDownBtn.UseVisualStyleBackColor = true;
+            this.moveCommandDownBtn.Click += new System.EventHandler(this.moveCommandDownBtn_Click);
             // 
             // moveCommandUpBtn
             // 
@@ -208,6 +209,7 @@
             this.moveCommandUpBtn.TabIndex = 6;
             this.moveCommandUpBtn.Text = "▲ Move Up";
             this.moveCommandUpBtn.UseVisualStyleBackColor = true;
+            this.moveCommandUpBtn.Click += new System.EventHandler(this.moveCommandUpBtn_Click);
             // 
             // EventActions
             // 

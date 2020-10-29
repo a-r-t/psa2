@@ -84,12 +84,26 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
             PsaCommandHandler.RemoveCommand(codeBlock, codeBlockCommandLocation, removedPsaCommand);
         }
 
-        public void MoveCommand(int codeBlockLocation, int commandIndex, MoveDirection moveDirection)
+        public void MoveCommandUp(int codeBlockLocation, int commandIndex)
         {
-            int codeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, commandIndex);
-            PsaCommand psaCommandToMove = GetPsaCommandForCodeBlock(codeBlockLocation, commandIndex);
+            if (commandIndex > 0)
+            {
+                int codeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, commandIndex);
+                PsaCommand psaCommandToMove = GetPsaCommandForCodeBlock(codeBlockLocation, commandIndex);
+                CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
+                PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, codeBlockCommandLocation, MoveDirection.UP);
+            }
+        }
+
+        public void MoveCommandDown(int codeBlockLocation, int commandIndex)
+        {
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
-            PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, codeBlockCommandLocation, moveDirection);
+            if (commandIndex < codeBlock.NumberOfCommands - 1)
+            {
+                int codeBlockCommandLocation = GetCodeBlockCommandLocation(codeBlockLocation, commandIndex);
+                PsaCommand psaCommandToMove = GetPsaCommandForCodeBlock(codeBlockLocation, commandIndex);
+                PsaCommandHandler.MoveCommand(codeBlock, psaCommandToMove, codeBlockCommandLocation, MoveDirection.DOWN);
+            }
         }
 
         public void InsertCommand(int codeBlockLocation, int commandIndex, PsaCommand newPsaCommand)
