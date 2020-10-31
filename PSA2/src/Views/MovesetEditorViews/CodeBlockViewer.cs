@@ -192,25 +192,24 @@ namespace PSA2.src.Views.MovesetEditorViews
             return commandTextBuilder.ToString();
         }
 
-        private int maxLineNumberCharLength;
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
+            // If commands exist in code block, display line numbers properly
             if (psaCommands.Count > 0)
             {
                 codeBlockCommandsScintilla.Margins[0].Type = MarginType.Number;
 
                 // Did the number of characters in the line number display change?
                 // i.e. nnn VS nn, or nnnn VS nn, etc...
-                var maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
+                int maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
 
                 // Calculate the width required to display the last line number
                 // and include some padding for good measure.
                 const int padding = 2;
                 codeBlockCommandsScintilla.Margins[0].Width = codeBlockCommandsScintilla.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
-                this.maxLineNumberCharLength = maxLineNumberCharLength;
-
                 codeBlockCommandsScintilla.Margins[1].Width = codeBlockCommandsScintilla.Margins[0].Width - (8 * (maxLineNumberCharLength + 1));
             }
+            // if no commands exist in code block, remove line number display
             else
             {
                 codeBlockCommandsScintilla.Margins[0].Width = 0;
@@ -225,22 +224,8 @@ namespace PSA2.src.Views.MovesetEditorViews
             if (e.Change == UpdateChange.Selection)
             {
                 UpdateSelectedCommand();
-
-                //HighlightSelectedLines();
                 StyleDocument();
             }
-
-            // if selection changes
-            if ((e.Change & UpdateChange.Selection) > 0)
-            {
-            }
-
-            if ((e.Change & UpdateChange.VScroll) > 0 || (e.Change & UpdateChange.HScroll) > 0)
-            {
-                //HighlightSelectedLines();
-                StyleDocument();
-            }
-
         }
 
         private void UpdateSelectedCommand()
