@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PrettyBin" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
