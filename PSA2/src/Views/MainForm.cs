@@ -1,5 +1,5 @@
-﻿using PSA2.src.FileProcessor;
-using PSA2.src.FileProcessor.MovesetHandler;
+﻿using PSA2MovesetLogic.src.FileProcessor;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2.src.Views.MovesetEditorViews;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using System;

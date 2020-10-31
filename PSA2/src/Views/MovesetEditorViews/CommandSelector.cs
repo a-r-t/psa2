@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PSA2.src.FileProcessor.MovesetHandler;
-using PSA2.src.FileProcessor.MovesetHandler.Configs;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 
 namespace PSA2.src.Views.MovesetEditorViews

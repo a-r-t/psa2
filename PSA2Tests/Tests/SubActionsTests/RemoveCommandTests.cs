@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using PSA2.src.FileProcessor.MovesetHandler;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using System;
 
 namespace PSA2Tests.Tests.SubActionsTests

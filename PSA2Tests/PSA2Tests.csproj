@@ -21,16 +21,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PSA2\PSA2.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Add\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PSAMovesetLogic\PSA2MovesetLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

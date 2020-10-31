@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PSA2.src.FileProcessor.MovesetHandler;
-using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 
 namespace PSA2Tests.Tests.ActionsTests
 {

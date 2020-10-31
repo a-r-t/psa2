@@ -1,4 +1,4 @@
-﻿using PSA2.src.FileProcessor.MovesetHandler.Configs;
+﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

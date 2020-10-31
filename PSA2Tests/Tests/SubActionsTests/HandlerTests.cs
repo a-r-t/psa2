@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using PSA2.src.FileProcessor.MovesetHandler;
-using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
-using PSA2.src.Models.Fighter;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2MovesetLogic.src.Models.Fighter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

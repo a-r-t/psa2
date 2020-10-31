@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSA2", "PSA2\PSA2.csproj", "{AEE94162-308E-4738-B05F-2E927C17D118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSA2Tests", "PSA2Tests\PSA2Tests.csproj", "{801CDA27-98FF-4313-8B6E-F038FD339666}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSA2Tests", "PSA2Tests\PSA2Tests.csproj", "{801CDA27-98FF-4313-8B6E-F038FD339666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSA2MovesetLogic", "PSAMovesetLogic\PSA2MovesetLogic.csproj", "{71115EC6-83E5-4BD8-A9CD-DA2C0BA440E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{801CDA27-98FF-4313-8B6E-F038FD339666}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{801CDA27-98FF-4313-8B6E-F038FD339666}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{801CDA27-98FF-4313-8B6E-F038FD339666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71115EC6-83E5-4BD8-A9CD-DA2C0BA440E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71115EC6-83E5-4BD8-A9CD-DA2C0BA440E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71115EC6-83E5-4BD8-A9CD-DA2C0BA440E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71115EC6-83E5-4BD8-A9CD-DA2C0BA440E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

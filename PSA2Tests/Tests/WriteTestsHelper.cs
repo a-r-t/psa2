@@ -1,6 +1,6 @@
-﻿using PSA2.src.FileProcessor;
-using PSA2.src.FileProcessor.MovesetHandler;
-using PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
+﻿using PSA2MovesetLogic.src.FileProcessor;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
