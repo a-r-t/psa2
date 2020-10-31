@@ -73,14 +73,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             eventActions.AddListener(this);
         }
 
-        public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockCommandSelection)
+        public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
         {
-            TabPage existingTabPage = FindExistingTabPage(codeBlockCommandSelection);
+            TabPage existingTabPage = FindExistingTabPage(codeBlockSelection);
 
             if (existingTabPage == null) 
             {
                 TabPage codeBlockCommandsTab = new TabPage(sectionText);
-                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockCommandSelection);
+                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockSelection);
                 codeBlockViewer.Name = "codeBlockViewer";
                 codeBlockViewer.Dock = DockStyle.Fill;
                 codeBlockViewer.AddListener(parametersEditor);
@@ -99,14 +99,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public TabPage FindExistingTabPage(CodeBlockSelection codeBlockCommandSelection)
+        public TabPage FindExistingTabPage(CodeBlockSelection codeBlockSelection)
         {
             foreach (TabPage tabPage in eventsTabControl.TabPages)
             {
                 CodeBlockViewer codeBlockViewer = (CodeBlockViewer)tabPage.Controls["codeBlockViewer"];
-                if (codeBlockViewer.CodeBlockCommandSelection.SectionType == codeBlockCommandSelection.SectionType
-                    && codeBlockViewer.CodeBlockCommandSelection.SectionIndex == codeBlockCommandSelection.SectionIndex
-                    && codeBlockViewer.CodeBlockCommandSelection.CodeBlockIndex == codeBlockCommandSelection.CodeBlockIndex)
+                if (codeBlockViewer.CodeBlockSelection.SectionType == codeBlockSelection.SectionType
+                    && codeBlockViewer.CodeBlockSelection.SectionIndex == codeBlockSelection.SectionIndex
+                    && codeBlockViewer.CodeBlockSelection.CodeBlockIndex == codeBlockSelection.CodeBlockIndex)
                 {
                     return tabPage;
                 }
