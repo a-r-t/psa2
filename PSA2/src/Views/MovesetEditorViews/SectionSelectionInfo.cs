@@ -40,6 +40,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
+        public int NumberOfCommands
+        {
+            get
+            {
+                return GetNumberOfPsaCommands();
+            }
+        }
+
         private List<PsaCommand> GetPsaCommands()
         {
             switch (SectionType)
@@ -66,14 +74,17 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public SectionSelectionInfo Clone()
+        private int GetNumberOfPsaCommands()
         {
-            SectionSelectionInfo clone = new SectionSelectionInfo(psaMovesetHandler);
-            clone.SectionType = SectionType;
-            clone.SectionIndex = SectionIndex;
-            clone.CodeBlockIndex = CodeBlockIndex;
-            clone.CommandIndex = CommandIndex;
-            return clone;
+            switch (SectionType)
+            {
+                case SectionType.ACTION:
+                    return psaMovesetHandler.ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
+                case SectionType.SUBACTION:
+                    return psaMovesetHandler.SubActionsHandler.GetNumberOfPsaCommandsInSubActionCodeBlock(SectionIndex, CodeBlockIndex);
+                default:
+                    return 0;
+            }
         }
     }
 }

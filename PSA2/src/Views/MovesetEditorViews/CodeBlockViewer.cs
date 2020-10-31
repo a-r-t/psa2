@@ -27,7 +27,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaCommandsConfig psaCommandsConfig;
         private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
-        private List<int> selectedLines = new List<int>();
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, SectionSelectionInfo sectionSelectionInfo)
         {
@@ -43,7 +42,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void LoadCodeBlockCommands()
         {
             codeBlockCommandsScintilla.ReadOnly = false;
-            codeBlockCommandsScintilla.ClearAll();
 
             switch (SectionSelectionInfo.SectionType)
             {
@@ -55,16 +53,26 @@ namespace PSA2.src.Views.MovesetEditorViews
                     break;
             }
 
+            codeBlockCommandsScintilla.ClearAll();
             commandTexts.Clear();
-            foreach (PsaCommand psaCommand in psaCommands) {
-                string commandText = GetCommandText(psaCommand);
-                commandTexts.Add(commandText);
+
+            if (psaCommands.Count > 0)
+            {
+                foreach (PsaCommand psaCommand in psaCommands)
+                {
+                    string commandText = GetCommandText(psaCommand);
+                    commandTexts.Add(commandText);
+                }
+
+                codeBlockCommandsScintilla.Text = string.Join("\n", commandTexts);
+                codeBlockCommandsScintilla.Enabled = true;
+                codeBlockCommandsScintilla.ReadOnly = true;
             }
-
-            codeBlockCommandsScintilla.Text = string.Join("\n", commandTexts);
-
-            codeBlockCommandsScintilla.ReadOnly = true;
-
+            else
+            {
+                codeBlockCommandsScintilla.ClearSelections();
+                codeBlockCommandsScintilla.Enabled = false;
+            }
 
         }
 
@@ -175,6 +183,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             //codeBlockCommandsListBox.DoubleBuffered(true);
 
             LoadCodeBlockCommands();
+
+            UpdateSelectedCommand();
+
             codeBlockCommandsScintilla.Lexer = Lexer.Container;
             StyleDocument();
 
@@ -194,22 +205,32 @@ namespace PSA2.src.Views.MovesetEditorViews
         private int maxLineNumberCharLength;
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
-            //Console.WriteLine("HI");
-            //StyleVisibleLines();
-
-            // Did the number of characters in the line number display change?
-            // i.e. nnn VS nn, or nnnn VS nn, etc...
-            var maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
-            if (maxLineNumberCharLength == this.maxLineNumberCharLength)
+            if (psaCommands.Count > 0)
             {
-                return;
-            }
+                codeBlockCommandsScintilla.Margins[0].Type = MarginType.Number;
 
-            // Calculate the width required to display the last line number
-            // and include some padding for good measure.
-            const int padding = 2;
-            codeBlockCommandsScintilla.Margins[0].Width = codeBlockCommandsScintilla.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
-            this.maxLineNumberCharLength = maxLineNumberCharLength;
+                // Did the number of characters in the line number display change?
+                // i.e. nnn VS nn, or nnnn VS nn, etc...
+                var maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
+                if (maxLineNumberCharLength == this.maxLineNumberCharLength)
+                {
+                    return;
+                }
+
+                // Calculate the width required to display the last line number
+                // and include some padding for good measure.
+                const int padding = 2;
+                codeBlockCommandsScintilla.Margins[0].Width = codeBlockCommandsScintilla.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
+                this.maxLineNumberCharLength = maxLineNumberCharLength;
+
+                codeBlockCommandsScintilla.Margins[1].Width = codeBlockCommandsScintilla.Margins[0].Width - (8 * (maxLineNumberCharLength + 1));
+            }
+            else
+            {
+                codeBlockCommandsScintilla.Margins[0].Width = 0;
+                codeBlockCommandsScintilla.Margins[0].Type = MarginType.Text;
+                codeBlockCommandsScintilla.Margins[1].Width = 0;
+            }
         }
 
         private void codeBlockCommandsScintilla_UpdateUI(object sender, UpdateUIEventArgs e)
@@ -217,31 +238,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             // when caret changes
             if (e.Change == UpdateChange.Selection)
             {
-                int selectedCommandIndex = codeBlockCommandsScintilla.CurrentLine;
-                if (selectedCommandIndex != SectionSelectionInfo.CommandIndex)
-                {
-                    PsaCommand psaCommand;
-                    switch (SectionSelectionInfo.SectionType)
-                    {
-                        case SectionType.ACTION:
-                            psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
-                            break;
-                        case SectionType.SUBACTION:
-                            psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
-                            break;
-                        default:
-                            throw new ArgumentException("Invalid section type");
-                    }
-
-                    PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-                    SectionSelectionInfo.CommandIndex = selectedCommandIndex;
-                    foreach (ICodeBlockViewerListener listener in listeners)
-                    {
-                        listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
-                    }
-
-                    codeBlockCommandsScintilla.Focus();
-                }
+                UpdateSelectedCommand();
 
                 //HighlightSelectedLines();
                 StyleDocument();
@@ -258,6 +255,35 @@ namespace PSA2.src.Views.MovesetEditorViews
                 StyleDocument();
             }
 
+        }
+
+        private void UpdateSelectedCommand()
+        {
+            int selectedCommandIndex = codeBlockCommandsScintilla.CurrentLine;
+            if (selectedCommandIndex != SectionSelectionInfo.CommandIndex && commandTexts.Count > 0)
+            {
+                PsaCommand psaCommand;
+                switch (SectionSelectionInfo.SectionType)
+                {
+                    case SectionType.ACTION:
+                        psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
+                        break;
+                    case SectionType.SUBACTION:
+                        psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid section type");
+                }
+
+                PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
+                SectionSelectionInfo.CommandIndex = selectedCommandIndex;
+                foreach (ICodeBlockViewerListener listener in listeners)
+                {
+                    listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
+                }
+
+                codeBlockCommandsScintilla.Focus();
+            }
         }
 
         private void StyleDocument()
@@ -416,126 +442,137 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void ReplaceCommand(PsaCommandConfig psaCommandConfig)
         {
-            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
-
-            PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
-
-            foreach (int lineIndex in currentSelectedLines)
+            if (psaCommands.Count > 0)
             {
-                switch (SectionSelectionInfo.SectionType)
+                List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+
+                PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
+
+                foreach (int lineIndex in currentSelectedLines)
                 {
-                    case SectionType.ACTION:
-                        psaMovesetHandler.ActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
-                        break;
-                    case SectionType.SUBACTION:
-                        psaMovesetHandler.SubActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
-                        break;
+                    switch (SectionSelectionInfo.SectionType)
+                    {
+                        case SectionType.ACTION:
+                            psaMovesetHandler.ActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                            break;
+                        case SectionType.SUBACTION:
+                            psaMovesetHandler.SubActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                            break;
+                    }
                 }
-            } 
 
-            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
-            LoadCodeBlockCommands();
+                int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+                LoadCodeBlockCommands();
 
-            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
-            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+                codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+                codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
 
-            StyleDocument();
+                StyleDocument();
+            }
         }
 
         public void MoveCommandUp()
         {
-            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
-            currentSelectedLines.Sort();
-
-            for (int i = 0; i < codeBlockCommandsScintilla.Selections.Count; i++)
+            if (psaCommands.Count > 0)
             {
-                Console.WriteLine("SELECTION START BEFORE: " + codeBlockCommandsScintilla.Selections[i].Anchor);
-                Console.WriteLine("SELECTION END BEFORE: " + codeBlockCommandsScintilla.Selections[i].Caret);
-            }
+                List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+                currentSelectedLines.Sort();
 
-            for (int i = 0; i < codeBlockCommandsScintilla.Lines.Count; i++)
-            {
-                if (currentSelectedLines.Contains(i))
+                for (int i = 0; i < currentSelectedLines.Count; i++)
                 {
-                    (int s, int e) = codeBlockCommandsScintilla.GetLineStartAndEndPositions(i);
-                    Console.WriteLine("LENGTH OF LINE " + i + " BEFORE: " + codeBlockCommandsScintilla.Lines[i].Length + ", start: " + s + ", end: " + e);
-                }
-            }
-
-            for (int i = 0; i < currentSelectedLines.Count; i++)
-            {
-                if (currentSelectedLines[i] - i > 0)
-                {
-                    int lineIndex = currentSelectedLines[i];
-                    switch (SectionSelectionInfo.SectionType)
+                    if (currentSelectedLines[i] - i > 0)
                     {
-                        case SectionType.ACTION:
-                            psaMovesetHandler.ActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
-                            break;
-                        case SectionType.SUBACTION:
-                            psaMovesetHandler.SubActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
-                            break;
+                        int lineIndex = currentSelectedLines[i];
+                        switch (SectionSelectionInfo.SectionType)
+                        {
+                            case SectionType.ACTION:
+                                psaMovesetHandler.ActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                break;
+                            case SectionType.SUBACTION:
+                                psaMovesetHandler.SubActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                break;
+                        }
+                        currentSelectedLines[i]--;
                     }
-                    currentSelectedLines[i]--;
                 }
-            }
 
-            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
-            LoadCodeBlockCommands();
+                int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+                LoadCodeBlockCommands();
 
-            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+                codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
 
-            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+                codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
 
-            StyleDocument();
-
-            for (int i = 0; i < codeBlockCommandsScintilla.Lines.Count; i++)
-            {
-                if (currentSelectedLines.Contains(i))
-                {
-                    (int s, int e) = codeBlockCommandsScintilla.GetLineStartAndEndPositions(i);
-                    Console.WriteLine("LENGTH OF LINE " + i + " AFTER: " + codeBlockCommandsScintilla.Lines[i].Length + ", start: " + s + ", end: " + e);
-                }
+                StyleDocument();
             }
         }
 
         public void MoveCommandDown()
         {
-            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
-            currentSelectedLines.Sort();
-
-            int offset = 0;
-            for (int i = currentSelectedLines.Count - 1; i >= 0; i--)
+            if (psaCommands.Count > 0)
             {
-                if (currentSelectedLines[i] + offset < codeBlockCommandsScintilla.Lines.Count - 1)
+                List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+                currentSelectedLines.Sort();
+
+                int offset = 0;
+                for (int i = currentSelectedLines.Count - 1; i >= 0; i--)
+                {
+                    if (currentSelectedLines[i] + offset < codeBlockCommandsScintilla.Lines.Count - 1)
+                    {
+                        int lineIndex = currentSelectedLines[i];
+                        switch (SectionSelectionInfo.SectionType)
+                        {
+                            case SectionType.ACTION:
+                                psaMovesetHandler.ActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                break;
+                            case SectionType.SUBACTION:
+                                psaMovesetHandler.SubActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                break;
+                        }
+                        currentSelectedLines[i]++;
+                    }
+                    offset++;
+                }
+
+                int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+                LoadCodeBlockCommands();
+
+                codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+                codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+                StyleDocument();
+            }
+        }
+
+        public void RemoveCommand()
+        {
+            if (psaCommands.Count > 0)
+            {
+                List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+
+                currentSelectedLines.Sort();
+
+                for (int i = currentSelectedLines.Count - 1; i >= 0; i--)
                 {
                     int lineIndex = currentSelectedLines[i];
                     switch (SectionSelectionInfo.SectionType)
                     {
                         case SectionType.ACTION:
-                            psaMovesetHandler.ActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                            psaMovesetHandler.ActionsHandler.RemoveCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
                             break;
                         case SectionType.SUBACTION:
-                            psaMovesetHandler.SubActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                            psaMovesetHandler.SubActionsHandler.RemoveCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
                             break;
                     }
-                    currentSelectedLines[i]++;
                 }
-                offset++;
+
+                int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+                LoadCodeBlockCommands();
+
+                codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+
+                StyleDocument();
             }
-
-            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
-            LoadCodeBlockCommands();
-
-            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
-            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
-
-            StyleDocument();
-        }
-
-        public void RemoveCommand()
-        {
-            throw new NotImplementedException();
         }
 
         private void codeBlockCommandsScintilla_MouseMove(object sender, MouseEventArgs e)

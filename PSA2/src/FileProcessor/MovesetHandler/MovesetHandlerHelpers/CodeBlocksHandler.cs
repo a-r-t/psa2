@@ -113,6 +113,12 @@ namespace PSA2.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
 
+            // if command index is greater than the total number of commands, set it equal to the last command index (which is where a new command was just added in the line above)
+            // this allows for inserting below the last command of a code block (e.g. if there are 5 commands, a command can be "inserted" as command 6)
+            commandIndex = commandIndex > codeBlock.NumberOfCommands - 1
+                ? codeBlock.NumberOfCommands - 1
+                : commandIndex;
+
             // move command upwards to desired index
             for (int i = codeBlock.NumberOfCommands - 1; i > commandIndex; i--)
             {

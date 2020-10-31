@@ -22,7 +22,7 @@ namespace PSA2.src.Views.CustomControls
         const int WM_SETCURSOR = 0x0020;
         const int WM_MOUSEMOVE = 0x0200;
         const int WM_LBUTTONUP = 0x202;
-        bool mouseDown;
+        private bool mouseDown;
 
         public ScintillaExt() : base()
         {
@@ -159,8 +159,6 @@ namespace PSA2.src.Views.CustomControls
             ClearSelections();
             lines.Sort();
 
-            Console.WriteLine("SELECTED LINES: " + string.Join(", ", lines));
-
             int currentSelectionIndex = 0;
             int currentStart = 0;
             int currentEnd = 0;
@@ -190,8 +188,6 @@ namespace PSA2.src.Views.CustomControls
             for (int i = 0; i < Selections.Count; i++)
             {
                 this.originalLineIndexesSelected[i] = LineFromPosition(Selections[i].Start);
-                Console.WriteLine("SELECTION START AFTER: " + Selections[i].Anchor);
-                Console.WriteLine("SELECTION END AFTER: " + Selections[i].Caret);
             }
         }
 
