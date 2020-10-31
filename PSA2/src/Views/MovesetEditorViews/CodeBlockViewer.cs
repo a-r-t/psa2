@@ -17,12 +17,13 @@ namespace PSA2.src.Views.MovesetEditorViews
     public partial class CodeBlockViewer : ObservableUserControl<ICodeBlockViewerListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        public CodeBlockCommandSelection CodeBlockCommandSelection { get; private set; }
+        public CodeBlockSelection CodeBlockCommandSelection { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
         private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
+        private List<int> currentCommandIndexesSelected = new List<int>();
 
-        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, CodeBlockCommandSelection codeBlockCommandSelection)
+        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, CodeBlockSelection codeBlockCommandSelection)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             this.psaCommandsConfig = psaCommandsConfig;
@@ -248,9 +249,12 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void UpdateSelectedCommand()
         {
-            int selectedCommandIndex = codeBlockCommandsScintilla.CurrentLine;
-            if (selectedCommandIndex != CodeBlockCommandSelection.CommandIndex && commandTexts.Count > 0)
+            List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
+            List<int> exclusive = selectedCommandIndexes.Except(this.currentCommandIndexesSelected).ToList();
+
+            if (selectedCommandIndexes.Count == 1 && exclusive.Count > 0 && commandTexts.Count > 0)
             {
+                int selectedCommandIndex = selectedCommandIndexes[0];
                 PsaCommand psaCommand;
                 switch (CodeBlockCommandSelection.SectionType)
                 {
@@ -265,7 +269,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
 
                 PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-                CodeBlockCommandSelection.CommandIndex = selectedCommandIndex;
                 foreach (ICodeBlockViewerListener listener in listeners)
                 {
                     listener.OnCommandSelected(psaCommandConfig, psaCommand, CodeBlockCommandSelection);
@@ -273,6 +276,8 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 codeBlockCommandsScintilla.Focus();
             }
+            this.currentCommandIndexesSelected = selectedCommandIndexes;
+
         }
 
         private void StyleDocument()

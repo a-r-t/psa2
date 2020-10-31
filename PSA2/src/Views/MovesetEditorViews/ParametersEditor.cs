@@ -20,7 +20,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
         public PsaCommand PsaCommand { get; private set; }
-        public CodeBlockCommandSelection CodeBlockCommandSelection { get; private set; }
+        public CodeBlockSelection CodeBlockCommandSelection { get; private set; }
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler)
         {
@@ -29,7 +29,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             parametersPropertyGrid.PropertySort = PropertySort.CategorizedAlphabetical;
         }
 
-        public void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, CodeBlockCommandSelection codeBlockCommandSelection)
+        public void OnCommandSelected(PsaCommandConfig psaCommandConfig, PsaCommand psaCommand, CodeBlockSelection codeBlockCommandSelection)
         {
             PsaCommandConfig = psaCommandConfig;
             CodeBlockCommandSelection = codeBlockCommandSelection;

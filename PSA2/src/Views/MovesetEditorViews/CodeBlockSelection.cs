@@ -8,47 +8,21 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public class CodeBlockCommandSelection
+    public class CodeBlockSelection
     {
         public SectionType SectionType { get; set; }
         public int SectionIndex { get; set; }
         public int CodeBlockIndex { get; set; }
-        public int CommandIndex { get; set; }
         protected PsaMovesetHandler psaMovesetHandler;
 
-        public CodeBlockCommandSelection(PsaMovesetHandler psaMovesetHandler)
+        public CodeBlockSelection(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             SectionIndex = -1;
             CodeBlockIndex = -1;
-            CommandIndex = -1;
         }
 
-        public List<PsaCommand> PsaCommands 
-        {
-            get
-            {
-                return GetPsaCommands();
-            } 
-        }
-
-        public PsaCommand PsaCommand
-        {
-            get
-            {
-                return GetPsaCommand();
-            }
-        }
-
-        public int NumberOfCommands
-        {
-            get
-            {
-                return GetNumberOfPsaCommands();
-            }
-        }
-
-        private List<PsaCommand> GetPsaCommands()
+        public List<PsaCommand> GetPsaCommandsInCodeBlock()
         {
             switch (SectionType)
             {
@@ -61,20 +35,20 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        private PsaCommand GetPsaCommand()
+        public PsaCommand GetPsaCommandInCodeBlock(int commandIndex)
         {
             switch (SectionType)
             {
                 case SectionType.ACTION:
-                    return psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, CommandIndex);
+                    return psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
                 case SectionType.SUBACTION:
-                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionIndex, CodeBlockIndex, CommandIndex);
+                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
                 default:
                     return null;
             }
         }
 
-        private int GetNumberOfPsaCommands()
+        public int GetNumberOfPsaCommandsInCodeBlock()
         {
             switch (SectionType)
             {

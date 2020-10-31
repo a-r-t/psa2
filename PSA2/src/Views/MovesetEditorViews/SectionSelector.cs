@@ -98,7 +98,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 string sectionText = string.Join(" - ", sectionsText);
 
-                CodeBlockCommandSelection codeBlockCommandSelection = new CodeBlockCommandSelection(psaMovesetHandler);
+                CodeBlockSelection codeBlockCommandSelection = new CodeBlockSelection(psaMovesetHandler);
                 codeBlockCommandSelection.SectionType = sectionType;
                 codeBlockCommandSelection.SectionIndex = sectionsTreeView.SelectedNode.Parent.Index;
                 codeBlockCommandSelection.CodeBlockIndex = sectionsTreeView.SelectedNode.Index;

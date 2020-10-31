@@ -73,7 +73,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             eventActions.AddListener(this);
         }
 
-        public void OnCodeBlockSelected(string sectionText, CodeBlockCommandSelection codeBlockCommandSelection)
+        public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockCommandSelection)
         {
             TabPage existingTabPage = FindExistingTabPage(codeBlockCommandSelection);
 
@@ -99,7 +99,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public TabPage FindExistingTabPage(CodeBlockCommandSelection codeBlockCommandSelection)
+        public TabPage FindExistingTabPage(CodeBlockSelection codeBlockCommandSelection)
         {
             foreach (TabPage tabPage in eventsTabControl.TabPages)
             {
