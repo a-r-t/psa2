@@ -17,16 +17,17 @@ namespace PSA2.src.Views.MovesetEditorViews
     public partial class CodeBlockViewer : ObservableUserControl<ICodeBlockViewerListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        public SectionSelectionInfo SectionSelectionInfo { get; private set; }
+        public CodeBlockCommandSelection CodeBlockCommandSelection { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
         private List<PsaCommand> psaCommands = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
 
-        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, SectionSelectionInfo sectionSelectionInfo)
+        public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, CodeBlockCommandSelection codeBlockCommandSelection)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             this.psaCommandsConfig = psaCommandsConfig;
-            SectionSelectionInfo = sectionSelectionInfo;
+            CodeBlockCommandSelection = codeBlockCommandSelection;
+
             InitializeComponent();
 
             this.DoubleBuffered(true);
@@ -102,13 +103,13 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             codeBlockCommandsScintilla.ReadOnly = false;
 
-            switch (SectionSelectionInfo.SectionType)
+            switch (CodeBlockCommandSelection.SectionType)
             {
                 case SectionType.ACTION:
-                    psaCommands = psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex);
+                    psaCommands = psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex);
                     break;
                 case SectionType.SUBACTION:
-                    psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex);
+                    psaCommands = psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex);
                     break;
             }
 
@@ -248,26 +249,26 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void UpdateSelectedCommand()
         {
             int selectedCommandIndex = codeBlockCommandsScintilla.CurrentLine;
-            if (selectedCommandIndex != SectionSelectionInfo.CommandIndex && commandTexts.Count > 0)
+            if (selectedCommandIndex != CodeBlockCommandSelection.CommandIndex && commandTexts.Count > 0)
             {
                 PsaCommand psaCommand;
-                switch (SectionSelectionInfo.SectionType)
+                switch (CodeBlockCommandSelection.SectionType)
                 {
                     case SectionType.ACTION:
-                        psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
+                        psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, selectedCommandIndex);
                         break;
                     case SectionType.SUBACTION:
-                        psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, selectedCommandIndex);
+                        psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, selectedCommandIndex);
                         break;
                     default:
                         throw new ArgumentException("Invalid section type");
                 }
 
                 PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-                SectionSelectionInfo.CommandIndex = selectedCommandIndex;
+                CodeBlockCommandSelection.CommandIndex = selectedCommandIndex;
                 foreach (ICodeBlockViewerListener listener in listeners)
                 {
-                    listener.OnCommandSelected(psaCommandConfig, psaCommand, SectionSelectionInfo);
+                    listener.OnCommandSelected(psaCommandConfig, psaCommand, CodeBlockCommandSelection);
                 }
 
                 codeBlockCommandsScintilla.Focus();
@@ -347,13 +348,13 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             int currentLineIndex = currentSelectedLines.Min();
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
-            switch (SectionSelectionInfo.SectionType)
+            switch (CodeBlockCommandSelection.SectionType)
             {
                 case SectionType.ACTION:
-                    psaMovesetHandler.ActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex, psaCommand);
+                    psaMovesetHandler.ActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, currentLineIndex, psaCommand);
                     break;
                 case SectionType.SUBACTION:
-                    psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex, psaCommand);
+                    psaMovesetHandler.SubActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, currentLineIndex, psaCommand);
                     break;
             }
 
@@ -380,13 +381,13 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             int currentLineIndex = currentSelectedLines.Max();
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
-            switch (SectionSelectionInfo.SectionType)
+            switch (CodeBlockCommandSelection.SectionType)
             {
                 case SectionType.ACTION:
-                    psaMovesetHandler.ActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex + 1, psaCommand);
+                    psaMovesetHandler.ActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, currentLineIndex + 1, psaCommand);
                     break;
                 case SectionType.SUBACTION:
-                    psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, currentLineIndex + 1, psaCommand);
+                    psaMovesetHandler.SubActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, currentLineIndex + 1, psaCommand);
                     break;
             }
 
@@ -409,13 +410,13 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void AppendCommand(PsaCommandConfig psaCommandConfig)
         {
             PsaCommand psaCommand = psaCommandConfig.ToPsaCommand();
-            switch (SectionSelectionInfo.SectionType)
+            switch (CodeBlockCommandSelection.SectionType)
             {
                 case SectionType.ACTION:
-                    psaMovesetHandler.ActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
+                    psaMovesetHandler.ActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
                     break;
                 case SectionType.SUBACTION:
-                    psaMovesetHandler.SubActionsHandler.InsertCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
+                    psaMovesetHandler.SubActionsHandler.InsertCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, codeBlockCommandsScintilla.Lines.Count, psaCommand);
                     break;
             }
 
@@ -438,13 +439,13 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 foreach (int lineIndex in currentSelectedLines)
                 {
-                    switch (SectionSelectionInfo.SectionType)
+                    switch (CodeBlockCommandSelection.SectionType)
                     {
                         case SectionType.ACTION:
-                            psaMovesetHandler.ActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                            psaMovesetHandler.ActionsHandler.ModifyCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex, psaCommand);
                             break;
                         case SectionType.SUBACTION:
-                            psaMovesetHandler.SubActionsHandler.ModifyCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex, psaCommand);
+                            psaMovesetHandler.SubActionsHandler.ModifyCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex, psaCommand);
                             break;
                     }
                 }
@@ -471,13 +472,13 @@ namespace PSA2.src.Views.MovesetEditorViews
                     if (currentSelectedLines[i] - i > 0)
                     {
                         int lineIndex = currentSelectedLines[i];
-                        switch (SectionSelectionInfo.SectionType)
+                        switch (CodeBlockCommandSelection.SectionType)
                         {
                             case SectionType.ACTION:
-                                psaMovesetHandler.ActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                psaMovesetHandler.ActionsHandler.MoveCommandUp(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                                 break;
                             case SectionType.SUBACTION:
-                                psaMovesetHandler.SubActionsHandler.MoveCommandUp(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                psaMovesetHandler.SubActionsHandler.MoveCommandUp(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                                 break;
                         }
                         currentSelectedLines[i]--;
@@ -508,13 +509,13 @@ namespace PSA2.src.Views.MovesetEditorViews
                     if (currentSelectedLines[i] + offset < codeBlockCommandsScintilla.Lines.Count - 1)
                     {
                         int lineIndex = currentSelectedLines[i];
-                        switch (SectionSelectionInfo.SectionType)
+                        switch (CodeBlockCommandSelection.SectionType)
                         {
                             case SectionType.ACTION:
-                                psaMovesetHandler.ActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                psaMovesetHandler.ActionsHandler.MoveCommandDown(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                                 break;
                             case SectionType.SUBACTION:
-                                psaMovesetHandler.SubActionsHandler.MoveCommandDown(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                                psaMovesetHandler.SubActionsHandler.MoveCommandDown(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                                 break;
                         }
                         currentSelectedLines[i]++;
@@ -543,13 +544,13 @@ namespace PSA2.src.Views.MovesetEditorViews
                 for (int i = currentSelectedLines.Count - 1; i >= 0; i--)
                 {
                     int lineIndex = currentSelectedLines[i];
-                    switch (SectionSelectionInfo.SectionType)
+                    switch (CodeBlockCommandSelection.SectionType)
                     {
                         case SectionType.ACTION:
-                            psaMovesetHandler.ActionsHandler.RemoveCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                            psaMovesetHandler.ActionsHandler.RemoveCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                             break;
                         case SectionType.SUBACTION:
-                            psaMovesetHandler.SubActionsHandler.RemoveCommand(SectionSelectionInfo.SectionIndex, SectionSelectionInfo.CodeBlockIndex, lineIndex);
+                            psaMovesetHandler.SubActionsHandler.RemoveCommand(CodeBlockCommandSelection.SectionIndex, CodeBlockCommandSelection.CodeBlockIndex, lineIndex);
                             break;
                     }
                 }

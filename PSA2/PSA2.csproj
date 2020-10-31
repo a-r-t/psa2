@@ -124,7 +124,7 @@
     <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.Designer.cs">
       <DependentUpon>ParametersEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\SectionSelectionInfo.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\CodeBlockCommandSelection.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionType.cs" />
     <Compile Include="src\Views\MovesetEditorViews\MovesetEditor.cs">
       <SubType>UserControl</SubType>

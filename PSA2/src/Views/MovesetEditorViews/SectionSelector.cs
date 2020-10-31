@@ -98,16 +98,16 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 string sectionText = string.Join(" - ", sectionsText);
 
-                SectionSelectionInfo sectionSelectionInfo = new SectionSelectionInfo(psaMovesetHandler);
-                sectionSelectionInfo.SectionType = sectionType;
-                sectionSelectionInfo.SectionIndex = sectionsTreeView.SelectedNode.Parent.Index;
-                sectionSelectionInfo.CodeBlockIndex = sectionsTreeView.SelectedNode.Index;
+                CodeBlockCommandSelection codeBlockCommandSelection = new CodeBlockCommandSelection(psaMovesetHandler);
+                codeBlockCommandSelection.SectionType = sectionType;
+                codeBlockCommandSelection.SectionIndex = sectionsTreeView.SelectedNode.Parent.Index;
+                codeBlockCommandSelection.CodeBlockIndex = sectionsTreeView.SelectedNode.Index;
 
                 foreach (ISectionSelectorListener listener in listeners)
                 {
                     listener.OnCodeBlockSelected(
                         sectionText,
-                        sectionSelectionInfo
+                        codeBlockCommandSelection
                     );
                 }
             }
