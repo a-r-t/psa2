@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
-using PSA2MovesetLogic.src.Utility;
 using PSA2.src.ExtentionMethods;
 using ScintillaNET;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.VisualBasic.Devices;
-using System.Runtime.InteropServices;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -37,6 +31,71 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             this.DoubleBuffered(true);
             codeBlockCommandsScintilla.DoubleBuffered(true);
+        }
+
+
+        private void CodeBlockViewer_Load(object sender, EventArgs e)
+        {
+            codeBlockCommandsScintilla.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
+            codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.White;
+            codeBlockCommandsScintilla.CaretForeColor = Color.Black;
+            codeBlockCommandsScintilla.Styles[Style.Default].Font = "Consolas";
+            codeBlockCommandsScintilla.Styles[Style.Default].SizeF = 12;
+            codeBlockCommandsScintilla.StyleClearAll();
+
+            codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
+            codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
+
+            codeBlockCommandsScintilla.Styles[3].ForeColor = Color.Green;
+
+            codeBlockCommandsScintilla.Styles[4].FillLine = true;
+            codeBlockCommandsScintilla.Styles[4].ForeColor = Color.FromArgb(68, 156, 214);
+            codeBlockCommandsScintilla.Styles[4].BackColor = Color.FromArgb(38, 79, 120);
+
+            codeBlockCommandsScintilla.Styles[5].FillLine = true;
+            codeBlockCommandsScintilla.Styles[5].ForeColor = Color.White;
+            codeBlockCommandsScintilla.Styles[5].BackColor = Color.FromArgb(38, 79, 120);
+
+            codeBlockCommandsScintilla.Styles[6].FillLine = true;
+            codeBlockCommandsScintilla.Styles[6].ForeColor = Color.Green;
+            codeBlockCommandsScintilla.Styles[6].BackColor = Color.FromArgb(38, 79, 120);
+
+            // sets margin colors
+            codeBlockCommandsScintilla.Styles[Style.LineNumber].BackColor = Color.FromArgb(240, 240, 240);
+            codeBlockCommandsScintilla.Styles[Style.LineNumber].ForeColor = Color.Black;
+            codeBlockCommandsScintilla.MultipleSelection = true;
+            codeBlockCommandsScintilla.CaretStyle = CaretStyle.Line;
+
+            // Turns wrap mode on
+            //codeBlockCommandsScintilla.WrapStartIndent = 4;
+            //codeBlockCommandsScintilla.WrapMode = WrapMode.Whitespace;
+            //codeBlockCommandsScintilla.WrapIndentMode = WrapIndentMode.Indent;
+
+            codeBlockCommandsScintilla.ReadOnly = true;
+
+            /*
+             For dark mode:
+                codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
+                codeBlockCommandsScintilla.CaretForeColor = Color.White;
+                codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
+                codeBlockCommandsScintilla.Styles[2].ForeColor = Color.White;
+                codeBlockCommandsScintilla.Styles[3].ForeColor = Color.FromArgb(220, 210, 127);
+                codeBlockCommandsScintilla.Styles[4].ForeColor = Color.Black;
+
+             */
+            //codeBlockCommandsListBox.DoubleBuffered(true);
+
+            LoadCodeBlockCommands();
+
+            UpdateSelectedCommand();
+
+            codeBlockCommandsScintilla.Lexer = Lexer.Container;
+            StyleDocument();
+
+            //codeBlockCommandsScintilla.Margins[0].Width = 0;
+            //codeBlockCommandsScintilla.Margins[1].Width = 0;
+
+            //codeBlockCommandsScintilla.Refresh();
         }
 
         public void LoadCodeBlockCommands()
@@ -129,77 +188,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
             return commandTextBuilder.ToString();
-        }
-
-        private void CodeBlockViewer_Load(object sender, EventArgs e)
-        {
-            codeBlockCommandsScintilla.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
-            codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.White;
-            codeBlockCommandsScintilla.CaretForeColor = Color.Black;
-            codeBlockCommandsScintilla.Styles[Style.Default].Font = "Consolas";
-            codeBlockCommandsScintilla.Styles[Style.Default].SizeF = 12;
-            codeBlockCommandsScintilla.StyleClearAll();
-
-            codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
-            codeBlockCommandsScintilla.Styles[2].ForeColor = Color.Black;
-
-            codeBlockCommandsScintilla.Styles[3].ForeColor = Color.Green;
-
-            codeBlockCommandsScintilla.Styles[4].FillLine = true;
-            codeBlockCommandsScintilla.Styles[4].ForeColor = Color.FromArgb(68, 156, 214);
-            codeBlockCommandsScintilla.Styles[4].BackColor = Color.FromArgb(38, 79, 120);
-
-            codeBlockCommandsScintilla.Styles[5].FillLine = true;
-            codeBlockCommandsScintilla.Styles[5].ForeColor = Color.White;
-            codeBlockCommandsScintilla.Styles[5].BackColor = Color.FromArgb(38, 79, 120);
-
-            codeBlockCommandsScintilla.Styles[6].FillLine = true;
-            codeBlockCommandsScintilla.Styles[6].ForeColor = Color.Green;
-            codeBlockCommandsScintilla.Styles[6].BackColor = Color.FromArgb(38, 79, 120);
-
-            // sets margin colors
-            codeBlockCommandsScintilla.Styles[Style.LineNumber].BackColor = Color.FromArgb(240, 240, 240);
-            codeBlockCommandsScintilla.Styles[Style.LineNumber].ForeColor = Color.Black;
-            codeBlockCommandsScintilla.MultipleSelection = true;
-            codeBlockCommandsScintilla.CaretStyle = CaretStyle.Line;
-
-            // Turns wrap mode on
-            //codeBlockCommandsScintilla.WrapStartIndent = 4;
-            //codeBlockCommandsScintilla.WrapMode = WrapMode.Whitespace;
-            //codeBlockCommandsScintilla.WrapIndentMode = WrapIndentMode.Indent;
-
-            codeBlockCommandsScintilla.ReadOnly = true;
-
-            /*
-             For dark mode:
-                codeBlockCommandsScintilla.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
-                codeBlockCommandsScintilla.CaretForeColor = Color.White;
-                codeBlockCommandsScintilla.Styles[1].ForeColor = Color.FromArgb(68, 156, 214);
-                codeBlockCommandsScintilla.Styles[2].ForeColor = Color.White;
-                codeBlockCommandsScintilla.Styles[3].ForeColor = Color.FromArgb(220, 210, 127);
-                codeBlockCommandsScintilla.Styles[4].ForeColor = Color.Black;
-
-             */
-            //codeBlockCommandsListBox.DoubleBuffered(true);
-
-            LoadCodeBlockCommands();
-
-            UpdateSelectedCommand();
-
-            codeBlockCommandsScintilla.Lexer = Lexer.Container;
-            StyleDocument();
-
-            //codeBlockCommandsScintilla.Margins[0].Width = 0;
-            //codeBlockCommandsScintilla.Margins[1].Width = 0;
-
-            //codeBlockCommandsScintilla.Refresh();
-            /*
-            if (codeBlockCommandsListBox.Items.Count > 0)
-            {
-                codeBlockCommandsListBox.SelectedIndex = 0;
-            }
-            */
-
         }
 
         private int maxLineNumberCharLength;
@@ -574,35 +562,5 @@ namespace PSA2.src.Views.MovesetEditorViews
                 StyleDocument();
             }
         }
-
-        private void codeBlockCommandsScintilla_MouseMove(object sender, MouseEventArgs e)
-        {
-            //codeBlockCommandsScintilla.UpdateCursor();
-        }
-
-        private void codeBlockCommandsScintilla_MouseCaptureChanged(object sender, EventArgs e)
-        {
-            //Cursor.Current = Cursors.Arrow;
-
-        }
-
-        private void codeBlockCommandsScintilla_MouseDown(object sender, MouseEventArgs e)
-        {
-            //codeBlockCommandsScintilla.Enabled = true;
-
-        }
-
-        private void codeBlockCommandsScintilla_MouseUp(object sender, MouseEventArgs e)
-        {
-            //codeBlockCommandsScintilla.Enabled = false;
-
-        }
-
-        private void CodeBlockViewer_MouseDown(object sender, MouseEventArgs e)
-        {
-            //codeBlockCommandsScintilla.Enabled = true;
-
-        }
-
     }
 }
