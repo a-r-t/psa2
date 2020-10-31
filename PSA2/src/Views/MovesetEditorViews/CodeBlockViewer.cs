@@ -231,43 +231,27 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void UpdateSelectedCommand()
         {
             List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
-            List<int> exclusive = selectedCommandIndexes.Except(this.currentCommandIndexesSelected).ToList();
 
-            if (exclusive.Count > 0)
+            List<int> newIndexesSelected = selectedCommandIndexes.Except(this.currentCommandIndexesSelected).ToList();
+
+            if (selectedCommandIndexes.Count != this.currentCommandIndexesSelected.Count || newIndexesSelected.Count > 0)
             {
-                if (selectedCommandIndexes.Count == 1 && commandTexts.Count > 0)
+                List<PsaCommand> psaCommands = new List<PsaCommand>();
+                for (int i = 0; i < selectedCommandIndexes.Count; i++)
                 {
-                    int selectedCommandIndex = selectedCommandIndexes[0];
-                    PsaCommand psaCommand;
-                    switch (CodeBlockSelection.SectionType)
-                    {
-                        case SectionType.ACTION:
-                            psaCommand = psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(CodeBlockSelection.SectionIndex, CodeBlockSelection.CodeBlockIndex, selectedCommandIndex);
-                            break;
-                        case SectionType.SUBACTION:
-                            psaCommand = psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(CodeBlockSelection.SectionIndex, CodeBlockSelection.CodeBlockIndex, selectedCommandIndex);
-                            break;
-                        default:
-                            throw new ArgumentException("Invalid section type");
-                    }
-
-                    PsaCommandConfig psaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
-                    foreach (ICodeBlockViewerListener listener in listeners)
-                    {
-                        listener.OnCommandSelected(psaCommandConfig, psaCommand, CodeBlockSelection);
-                    }
-
-                    codeBlockCommandsScintilla.Focus();
+                    PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
+                    psaCommands.Add(psaCommand);
                 }
 
-                // mutliple commands selected
-                else if (selectedCommandIndexes.Count > 1)
+                foreach (ICodeBlockViewerListener listener in listeners)
                 {
-                    // TODO: send new listener command when multiple commands selected
+                    listener.OnCommandSelected(psaCommands, CodeBlockSelection);
                 }
 
-                this.currentCommandIndexesSelected = selectedCommandIndexes;
+                codeBlockCommandsScintilla.Focus();
             }
+
+            this.currentCommandIndexesSelected = selectedCommandIndexes;
         }
 
         private void StyleDocument()

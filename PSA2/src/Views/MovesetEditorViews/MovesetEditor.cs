@@ -58,7 +58,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             sectionSelector.AddListener(this);
             selectorView.Controls.Add(sectionSelector);
 
-            this.parametersEditor = new ParametersEditor(psaMovesetHandler);
+            this.parametersEditor = new ParametersEditor(psaMovesetHandler, psaCommandsConfig);
             parametersEditor.Dock = DockStyle.Fill;
             parametersEditorViewer.Controls.Add(parametersEditor);
 
