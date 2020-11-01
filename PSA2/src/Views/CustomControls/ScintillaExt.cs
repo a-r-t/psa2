@@ -23,7 +23,7 @@ namespace PSA2.src.Views.CustomControls
             set
             {
                 showLineNumbers = value;
-                ToggleLineNumberVisibility();
+                ToggleLineNumberVisibility(showLineNumbers);
             } 
         }
         public bool FullLineSelect { get; set; }
@@ -216,9 +216,9 @@ namespace PSA2.src.Views.CustomControls
             return (startPosition, startPosition + (Lines[lineIndex].Length - 1));
         }
 
-        public void ToggleLineNumberVisibility()
+        public void ToggleLineNumberVisibility(bool isVisible)
         {
-            if (showLineNumbers)
+            if (isVisible)
             {
                 Margins[0].Type = MarginType.Number;
 

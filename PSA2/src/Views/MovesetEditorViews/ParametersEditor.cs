@@ -22,6 +22,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         public PsaCommand PsaCommand { get; private set; }
         public CodeBlockSelection codeBlockSelection { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
+        private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
         {
@@ -53,37 +54,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 //parametersPropertyGrid.DocComment.Controls.Clear();
                 //parametersPropertyGrid.DocComment.Controls.Add(new RichTextBox() { Dock = DockStyle.Fill, Text = "HI" });
 
-                parametersPropertyGrid.Item.Clear();
-
-                if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
-                {
-                    for (int i = 0; i < PsaCommandConfig.CommandParams.Count; i++)
-                    {
-                        PsaCommandParamConfig psaCommandParamConfig = PsaCommandConfig.CommandParams[i];
-                        parametersPropertyGrid.Item.Add(
-                            psaCommandParamConfig.ParamName,
-                            psaCommand.Parameters[i].Value,
-                            false,
-                            "Parameter",
-                            psaCommandParamConfig.Description,
-                            true
-                        );
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < psaCommand.Parameters.Count; i++)
-                    {
-                        parametersPropertyGrid.Item.Add(
-                            $"arg{i}",
-                            psaCommand.Parameters[i].Value,
-                            false,
-                            "Parameter",
-                            "N/A",
-                            true
-                        );
-                    }
-                }
+                PopulatePropertyGrid(psaCommand);
 
                 /*
                  * How to add a drop down to the property grid
@@ -107,6 +78,63 @@ namespace PSA2.src.Views.MovesetEditorViews
                 parametersPropertyGrid.Refresh();
                 parametersPropertyGrid.Enabled = false;
                 parametersPropertyGrid.Enabled = true;
+            }
+        }
+
+        private void PopulatePropertyGrid(PsaCommand psaCommand)
+        {
+            parametersPropertyGrid.Item.Clear();
+
+            if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
+            {
+                HashSet<string> usedCategoryNames = new HashSet<string>();
+
+                for (int i = 0; i < PsaCommandConfig.CommandParams.Count; i++)
+                {
+                    PsaCommandParamConfig psaCommandParamConfig = PsaCommandConfig.CommandParams[i];
+
+                    string categoryName = psaCommandParamConfig.ParamName;
+                    int index = 1;
+                    while (usedCategoryNames.Contains(categoryName))
+                    {
+                        categoryName = $"psaCommandParamConfig.ParamName {index}";
+                    }
+                    usedCategoryNames.Add(categoryName);
+
+                    parametersPropertyGrid.Item.Add(
+                        "Type",
+                        parameterTypes[psaCommand.Parameters[i].Type],
+                        false,
+                        categoryName,
+                        psaCommandParamConfig.Description,
+                        true
+                    );
+
+                    parametersPropertyGrid.Item[parametersPropertyGrid.Item.Count - 1].Choices = new CustomChoices(parameterTypes);
+
+                    parametersPropertyGrid.Item.Add(
+                        "Value",
+                        psaCommand.Parameters[i].Value,
+                        false,
+                        categoryName,
+                        psaCommandParamConfig.Description,
+                        true
+                    );
+                }
+            }
+            else
+            {
+                for (int i = 0; i < psaCommand.Parameters.Count; i++)
+                {
+                    parametersPropertyGrid.Item.Add(
+                        $"arg{i}",
+                        psaCommand.Parameters[i].Value,
+                        false,
+                        "Parameter",
+                        "N/A",
+                        true
+                    );
+                }
             }
         }
 

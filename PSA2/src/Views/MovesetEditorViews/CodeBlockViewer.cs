@@ -72,6 +72,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 codeBlockCommandsScintilla.ClearSelections();
                 codeBlockCommandsScintilla.Enabled = false;
+                codeBlockCommandsScintilla.ShowLineNumbers = false;
             }
 
         }
@@ -84,8 +85,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             if (psaCommandConfig != null)
             {
-                commandTextBuilder
-                    .Append(psaCommandConfig.CommandName);
+                commandTextBuilder.Append(psaCommandConfig.CommandName.Replace(' ', '\u2800')); // replace space with braille space to ignore scintilla word wrap
 
                 if (psaCommand.Parameters.Count > 0)
                 {
@@ -107,8 +107,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
             else
             {
-                commandTextBuilder
-                    .Append(psaCommand.Instruction);
+                commandTextBuilder.Append(psaCommand.Instruction);
 
                 if (psaCommand.Parameters.Count > 0)
                 {
@@ -143,9 +142,10 @@ namespace PSA2.src.Views.MovesetEditorViews
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
             {
                 UpdateSelectedCommand();
-                codeBlockCommandsScintilla.StyleDocument();
             }
-            if ((e.Change & UpdateChange.HScroll) == UpdateChange.HScroll
+
+            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection
+                || (e.Change & UpdateChange.HScroll) == UpdateChange.HScroll
                 || (e.Change & UpdateChange.VScroll) == UpdateChange.VScroll)
             {
                 codeBlockCommandsScintilla.StyleDocument();
