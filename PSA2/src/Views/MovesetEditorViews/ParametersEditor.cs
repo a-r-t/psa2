@@ -33,8 +33,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, CodeBlockSelection codeBlockSelection)
         {
-            Console.WriteLine(psaCommands.Count);
-            if (psaCommands.Count == 1)
+            if (psaCommands != null && psaCommands.Count == 1)
             {
                 PsaCommand psaCommand = psaCommands[0];
 

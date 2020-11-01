@@ -43,9 +43,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs
             int instructionInt = int.Parse(Instruction, System.Globalization.NumberStyles.HexNumber);
 
             List<PsaCommandParameter> parameters = new List<PsaCommandParameter>();
-            foreach (PsaCommandParamConfig psaCommandParamConfig in CommandParams)
+            if (CommandParams != null)
             {
-                parameters.Add(psaCommandParamConfig.ToPsaCommandParameter());
+                foreach (PsaCommandParamConfig psaCommandParamConfig in CommandParams)
+                {
+                    parameters.Add(psaCommandParamConfig.ToPsaCommandParameter());
+                }
             }
 
             return new PsaCommand(instructionInt, 0, parameters);

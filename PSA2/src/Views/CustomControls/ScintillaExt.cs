@@ -13,6 +13,19 @@ namespace PSA2.src.Views.CustomControls
 {
     public partial class ScintillaExt : ScintillaNET.Scintilla
     {
+        private bool showLineNumbers;
+        public bool ShowLineNumbers 
+        { 
+            get
+            {
+                return showLineNumbers;
+            }
+            set
+            {
+                showLineNumbers = value;
+                ToggleLineNumberVisibility();
+            } 
+        }
         public bool FullLineSelect { get; set; }
         private int[] originalLineIndexesSelected = new int[0]; // sometimes you gotta do what you gotta do to get winform controls to behave a certain way :(
 
@@ -200,6 +213,30 @@ namespace PSA2.src.Views.CustomControls
             }
 
             return (startPosition, startPosition + (Lines[lineIndex].Length - 1));
+        }
+
+        public void ToggleLineNumberVisibility()
+        {
+            if (showLineNumbers)
+            {
+                Margins[0].Type = MarginType.Number;
+
+                // Did the number of characters in the line number display change?
+                // i.e. nnn VS nn, or nnnn VS nn, etc...
+                int maxLineNumberCharLength = Lines.Count.ToString().Length;
+
+                // Calculate the width required to display the last line number
+                // and include some padding for good measure.
+                const int padding = 2;
+                Margins[0].Width = TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
+                Margins[1].Width = Margins[0].Width - (8 * (maxLineNumberCharLength + 1));
+            }
+            else
+            {
+                Margins[0].Width = 0;
+                Margins[0].Type = MarginType.Text;
+                Margins[1].Width = 0;
+            }
         }
     }
 }

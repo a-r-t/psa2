@@ -194,64 +194,61 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
-            // If commands exist in code block, display line numbers properly
-            if (psaCommands.Count > 0)
-            {
-                codeBlockCommandsScintilla.Margins[0].Type = MarginType.Number;
-
-                // Did the number of characters in the line number display change?
-                // i.e. nnn VS nn, or nnnn VS nn, etc...
-                int maxLineNumberCharLength = codeBlockCommandsScintilla.Lines.Count.ToString().Length;
-
-                // Calculate the width required to display the last line number
-                // and include some padding for good measure.
-                const int padding = 2;
-                codeBlockCommandsScintilla.Margins[0].Width = codeBlockCommandsScintilla.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
-                codeBlockCommandsScintilla.Margins[1].Width = codeBlockCommandsScintilla.Margins[0].Width - (8 * (maxLineNumberCharLength + 1));
-            }
-            // if no commands exist in code block, remove line number display
-            else
-            {
-                codeBlockCommandsScintilla.Margins[0].Width = 0;
-                codeBlockCommandsScintilla.Margins[0].Type = MarginType.Text;
-                codeBlockCommandsScintilla.Margins[1].Width = 0;
-            }
+            // if no commands exist in code block, don't show line numbers
+            codeBlockCommandsScintilla.ShowLineNumbers = psaCommands.Count > 0;
         }
 
         private void codeBlockCommandsScintilla_UpdateUI(object sender, UpdateUIEventArgs e)
         {
             // when caret changes
-            if (e.Change == UpdateChange.Selection)
+            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
             {
                 UpdateSelectedCommand();
+                StyleDocument();
+            }
+            if ((e.Change & UpdateChange.HScroll) == UpdateChange.HScroll
+                || (e.Change & UpdateChange.VScroll) == UpdateChange.VScroll)
+            {
                 StyleDocument();
             }
         }
 
         private void UpdateSelectedCommand()
         {
-            List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
-
-            List<int> newIndexesSelected = selectedCommandIndexes.Except(this.currentCommandIndexesSelected).ToList();
-
-            if (selectedCommandIndexes.Count != this.currentCommandIndexesSelected.Count || newIndexesSelected.Count > 0)
+            if (psaCommands.Count > 0)
             {
-                List<PsaCommand> psaCommands = new List<PsaCommand>();
-                for (int i = 0; i < selectedCommandIndexes.Count; i++)
+                List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
+
+                List<int> newIndexesSelected = selectedCommandIndexes.Except(this.currentCommandIndexesSelected).ToList();
+
+                if (selectedCommandIndexes.Count != this.currentCommandIndexesSelected.Count || newIndexesSelected.Count > 0)
                 {
-                    PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
-                    psaCommands.Add(psaCommand);
+                    List<PsaCommand> psaCommands = new List<PsaCommand>();
+                    for (int i = 0; i < selectedCommandIndexes.Count; i++)
+                    {
+                        PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
+                        psaCommands.Add(psaCommand);
+                    }
+
+                    foreach (ICodeBlockViewerListener listener in listeners)
+                    {
+                        listener.OnCommandSelected(psaCommands, CodeBlockSelection);
+                    }
+
+                    codeBlockCommandsScintilla.Focus();
                 }
+
+                this.currentCommandIndexesSelected = selectedCommandIndexes;
+            }
+            else
+            {
+                this.currentCommandIndexesSelected.Clear();
 
                 foreach (ICodeBlockViewerListener listener in listeners)
                 {
-                    listener.OnCommandSelected(psaCommands, CodeBlockSelection);
+                    listener.OnCommandSelected(null, CodeBlockSelection);
                 }
-
-                codeBlockCommandsScintilla.Focus();
             }
-
-            this.currentCommandIndexesSelected = selectedCommandIndexes;
         }
 
         private void StyleDocument()
