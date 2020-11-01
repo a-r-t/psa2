@@ -31,7 +31,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         /// </summary>
         private void InitializeComponent()
         {
-            this.codeBlockCommandsScintilla = new PSA2.src.Views.CustomControls.ScintillaExt();
+            this.codeBlockCommandsScintilla = new PSA2.src.Views.CustomControls.ScintillaCodeBlock();
             this.SuspendLayout();
             // 
             // codeBlockCommandsScintilla
@@ -60,6 +60,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         }
 
         #endregion
-        private ScintillaExt codeBlockCommandsScintilla;
+        private ScintillaCodeBlock codeBlockCommandsScintilla;
     }
 }
