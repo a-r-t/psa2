@@ -74,6 +74,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             //codeBlockCommandsScintilla.WrapIndentMode = WrapIndentMode.Indent;
 
             codeBlockCommandsScintilla.ReadOnly = true;
+            codeBlockCommandsScintilla.CurrentCursor = Cursors.Arrow;
 
             /*
              For dark mode:
@@ -259,7 +260,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 StyleLineIndex(i, selectedLines.Contains(i));
             }
-
         }
 
         private void StyleLineIndex(int lineIndex, bool isSelected)

@@ -27,15 +27,15 @@ namespace PSA2.src.Views.CustomControls
             } 
         }
         public bool FullLineSelect { get; set; }
+        public Cursor CurrentCursor { get; set; }
         private int[] originalLineIndexesSelected = new int[0]; // sometimes you gotta do what you gotta do to get winform controls to behave a certain way :(
+        private bool mouseDown;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr SetCursor(IntPtr hCursor);
 
-        const int WM_SETCURSOR = 0x0020;
-        const int WM_MOUSEMOVE = 0x0200;
-        const int WM_LBUTTONUP = 0x202;
-        private bool mouseDown;
+        private const int WM_SETCURSOR = 0x0020;
+        private const int WM_MOUSEMOVE = 0x0200;
 
         public ScintillaExt() : base()
         {
@@ -55,23 +55,24 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_SETCURSOR || m.Msg == WM_MOUSEMOVE)
+            if (CurrentCursor != null)
             {
-                if (!mouseDown)
+                if (m.Msg == WM_SETCURSOR || m.Msg == WM_MOUSEMOVE)
                 {
-                    SetCursor(Cursors.Arrow.Handle);
-                    return;
+                    if (!mouseDown)
+                    {
+                        SetCursor(CurrentCursor.Handle);
+                        return;
+                    }
                 }
             }
 
             base.WndProc(ref m);
-            SetCursor(Cursors.Arrow.Handle);
-        }
 
-        public void UpdateCursor()
-        {
-            SetCursor(Cursors.Arrow.Handle);
-
+            if (CurrentCursor != null)
+            {
+                SetCursor(CurrentCursor.Handle);
+            }
         }
 
         protected override void OnUpdateUI(UpdateUIEventArgs e)
