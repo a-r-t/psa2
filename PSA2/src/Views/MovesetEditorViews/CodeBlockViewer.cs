@@ -19,7 +19,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaMovesetHandler psaMovesetHandler;
         public CodeBlockSelection CodeBlockSelection { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
-        private List<PsaCommand> psaCommands = new List<PsaCommand>();
+        public List<PsaCommand> PsaCommands { get; set; }  = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
         private List<int> currentCommandIndexesSelected = new List<int>();
 
@@ -49,16 +49,16 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             codeBlockCommandsScintilla.ReadOnly = false;
 
-            psaCommands = CodeBlockSelection.GetPsaCommandsInCodeBlock();
+            PsaCommands = CodeBlockSelection.GetPsaCommandsInCodeBlock();
 
-            codeBlockCommandsScintilla.PsaCommands = psaCommands;
+            codeBlockCommandsScintilla.PsaCommands = PsaCommands;
 
             codeBlockCommandsScintilla.ClearAll();
             commandTexts.Clear();
 
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
-                foreach (PsaCommand psaCommand in psaCommands)
+                foreach (PsaCommand psaCommand in PsaCommands)
                 {
                     string commandText = GetCommandText(psaCommand);
                     commandTexts.Add(commandText);
@@ -133,7 +133,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void codeBlockCommandsScintilla_TextChanged(object sender, EventArgs e)
         {
             // if no commands exist in code block, don't show line numbers
-            codeBlockCommandsScintilla.ShowLineNumbers = psaCommands.Count > 0;
+            codeBlockCommandsScintilla.ShowLineNumbers = PsaCommands.Count > 0;
         }
 
         private void codeBlockCommandsScintilla_UpdateUI(object sender, UpdateUIEventArgs e)
@@ -154,7 +154,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void UpdateSelectedCommand()
         {
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
                 List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
 
@@ -258,7 +258,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void ReplaceCommand(PsaCommandConfig psaCommandConfig)
         {
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
                 List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
 
@@ -281,7 +281,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void MoveCommandUp()
         {
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
                 List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
                 currentSelectedLines.Sort();
@@ -311,7 +311,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void MoveCommandDown()
         {
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
                 List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
                 currentSelectedLines.Sort();
@@ -342,7 +342,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void RemoveCommand()
         {
-            if (psaCommands.Count > 0)
+            if (PsaCommands.Count > 0)
             {
                 List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
 

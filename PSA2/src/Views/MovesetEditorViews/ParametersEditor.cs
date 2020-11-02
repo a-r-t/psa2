@@ -12,28 +12,33 @@ using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PropertyGridEx;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
+using PSA2.src.Views.CustomControls;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
-    public partial class ParametersEditor : ObservableUserControl<IParametersEditorListener>, ICodeBlockViewerListener
+    public partial class ParametersEditor : ObservableUserControl<IParametersEditorListener>, 
+        ICodeBlockViewerListener,
+        IMovesetEditorListener,
+        IParameterEntryUserControlListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
         public PsaCommand PsaCommand { get; private set; }
         public CodeBlockSelection codeBlockSelection { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
-        private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             this.psaCommandsConfig = psaCommandsConfig;
             InitializeComponent();
-            parametersPropertyGrid.PropertySort = PropertySort.CategorizedAlphabetical;
+            parametersPanel.AddOnChangeListener(this);
         }
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, CodeBlockSelection codeBlockSelection)
         {
+            parametersPanel.ClearParameterEntries();
+
             if (psaCommands != null && psaCommands.Count == 1)
             {
                 PsaCommand psaCommand = psaCommands[0];
@@ -43,48 +48,17 @@ namespace PSA2.src.Views.MovesetEditorViews
                 this.codeBlockSelection = codeBlockSelection;
                 PsaCommand = psaCommand;
 
-                parametersPropertyGrid.MoveSplitterTo((int)(parametersPropertyGrid.Width * .5));
-
-                // This code allows you to put a rich text box inside the property grid - holding on to this for later
-                //foreach (Control control in parametersPropertyGrid.DocComment.Controls)
-                //{
-                //    Console.WriteLine(control.ToString());
-                //}
-                //parametersPropertyGrid.DocComment.Controls.ToString();
-                //parametersPropertyGrid.DocComment.Controls.Clear();
-                //parametersPropertyGrid.DocComment.Controls.Add(new RichTextBox() { Dock = DockStyle.Fill, Text = "HI" });
-
+                parametersPanel.ClearParameterEntries();
                 PopulatePropertyGrid(psaCommand);
-
-                /*
-                 * How to add a drop down to the property grid
-
-                parametersPropertyGrid.Item.Add("Language", "", false, "Misc", "", true);
-                string[] choices = new string[80];
-                for (int i = 0; i < 80; i++)
-                {
-                    choices[i] = $"{i}";
-                }
-                parametersPropertyGrid.Item[parametersPropertyGrid.Item.Count - 1].Choices = new CustomChoices(choices);
-                */
-
-                parametersPropertyGrid.Refresh();
-                parametersPropertyGrid.Enabled = false;
-                parametersPropertyGrid.Enabled = true;
+                parametersPanel.Reload();
             }
-            else
-            {
-                parametersPropertyGrid.Item.Clear();
-                parametersPropertyGrid.Refresh();
-                parametersPropertyGrid.Enabled = false;
-                parametersPropertyGrid.Enabled = true;
-            }
+
+            parametersPanel.Reload();
+
         }
 
         private void PopulatePropertyGrid(PsaCommand psaCommand)
         {
-            parametersPropertyGrid.Item.Clear();
-
             if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
             {
                 HashSet<string> usedCategoryNames = new HashSet<string>();
@@ -101,46 +75,28 @@ namespace PSA2.src.Views.MovesetEditorViews
                     }
                     usedCategoryNames.Add(categoryName);
 
-                    parametersPropertyGrid.Item.Add(
-                        "Type",
-                        parameterTypes[psaCommand.Parameters[i].Type],
-                        false,
-                        categoryName,
-                        psaCommandParamConfig.Description,
-                        true
-                    );
-
-                    parametersPropertyGrid.Item[parametersPropertyGrid.Item.Count - 1].Choices = new CustomChoices(parameterTypes);
-
-                    parametersPropertyGrid.Item.Add(
-                        "Value",
-                        psaCommand.Parameters[i].Value,
-                        false,
-                        categoryName,
-                        psaCommandParamConfig.Description,
-                        true
-                    );
+                    ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
+                    parametersPanel.AddParameterEntry(parameterEntry);
                 }
             }
             else
             {
                 for (int i = 0; i < psaCommand.Parameters.Count; i++)
                 {
-                    parametersPropertyGrid.Item.Add(
-                        $"arg{i}",
-                        psaCommand.Parameters[i].Value,
-                        false,
-                        "Parameter",
-                        "N/A",
-                        true
-                    );
+                    ParameterEntry parameterEntry = new ParameterEntry($"arg{i}", psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
+                    parametersPanel.AddParameterEntry(parameterEntry);
                 }
             }
         }
 
-        private void parametersPropertyGrid_Resize(object sender, EventArgs e)
+        private void parametersPanel_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            parametersPropertyGrid.MoveSplitterTo((int)(parametersPropertyGrid.Width * .5));
+           
+        }
+
+        public void OnParameterChange(bool isDirty)
+        {
+            applyButton.Enabled = isDirty;
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Reflection;
 using PSA2.src.ExtentionMethods;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
