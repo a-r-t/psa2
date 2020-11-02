@@ -85,7 +85,8 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 for (int i = 0; i < psaCommand.Parameters.Count; i++)
                 {
-                    ParameterEntry parameterEntry = new ParameterEntry($"arg{i}", psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
+                    string categoryName = $"arg{i}";
+                    ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
                     parametersPanel.AddParameterEntry(parameterEntry);
                 }
             }

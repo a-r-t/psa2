@@ -35,7 +35,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             codeBlockCommandsScintilla.DoubleBuffered(true);
         }
 
-
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
             LoadCodeBlockCommands();
@@ -74,7 +73,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 codeBlockCommandsScintilla.Enabled = false;
                 codeBlockCommandsScintilla.ShowLineNumbers = false;
             }
-
         }
 
         public string GetCommandText(PsaCommand psaCommand)
