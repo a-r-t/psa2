@@ -19,12 +19,13 @@ namespace PSA2.src.Views.MovesetEditorViews
     public partial class ParametersEditor : ObservableUserControl<IParametersEditorListener>, 
         ICodeBlockViewerListener,
         IMovesetEditorListener,
-        IParameterEntryUserControlListener
+        IParameterEditorListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
         public PsaCommand PsaCommand { get; private set; }
-        public CodeBlockSelection codeBlockSelection { get; private set; }
+        public CodeBlockSelection CodeBlockSelection { get; private set; }
+        public int CommandIndex { get; private set; }
         protected PsaCommandsConfig psaCommandsConfig;
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
@@ -35,7 +36,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             parametersPanel.AddOnChangeListener(this);
         }
 
-        public void OnCommandSelected(List<PsaCommand> psaCommands, CodeBlockSelection codeBlockSelection)
+        public void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection)
         {
             parametersPanel.ClearParameterEntries();
 
@@ -45,7 +46,8 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 PsaCommandConfig = psaCommandsConfig.GetPsaCommandConfigByInstruction(psaCommand.Instruction);
 
-                this.codeBlockSelection = codeBlockSelection;
+                CodeBlockSelection = codeBlockSelection;
+                CommandIndex = commandIndexes[0];
                 PsaCommand = psaCommand;
 
                 parametersPanel.ClearParameterEntries();
@@ -97,6 +99,18 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void OnParameterChange(bool isDirty)
         {
             applyButton.Enabled = isDirty;
+        }
+
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < parametersPanel.ParameterEntries.Count; i++)
+            {
+                ParameterEntry parameterEntry = parametersPanel.ParameterEntries[i];
+                PsaCommand.Parameters[i].Type = parameterEntry.Type;
+                PsaCommand.Parameters[i].Value = parameterEntry.Value;
+            }
+            CodeBlockSelection.ModifyCommand(CommandIndex, PsaCommand);
+            applyButton.Enabled = false;
         }
     }
 }

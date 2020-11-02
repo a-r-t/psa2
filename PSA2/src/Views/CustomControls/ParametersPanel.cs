@@ -15,14 +15,14 @@ namespace PSA2.src.Views.CustomControls
         public List<ParameterEntry> ParameterEntries { get; }
         private const int startY = 5;
         private const int spacing = 10;
-        private List<ParameterEntryUserControl> parameterEntryUserControls;
+        private List<ParameterEditor> parameterEntryUserControls;
         private int virtualizationCount = 15;
-        private List<IParameterEntryUserControlListener> parameterEntryUserControlListeners = new List<IParameterEntryUserControlListener>();
+        private List<IParameterEditorListener> parameterEditorListeners = new List<IParameterEditorListener>();
 
         public ParametersPanel()
         {
             ParameterEntries = new List<ParameterEntry>();
-            parameterEntryUserControls = new List<ParameterEntryUserControl>();
+            parameterEntryUserControls = new List<ParameterEditor>();
             SetUpVirtualization();
         }
 
@@ -34,14 +34,14 @@ namespace PSA2.src.Views.CustomControls
                 int currentCount = parameterEntryUserControls.Count;
                 for (int i = currentCount; i < currentCount + difference; i++)
                 {
-                    ParameterEntryUserControl parameterEntryUserControl = new ParameterEntryUserControl();
+                    ParameterEditor parameterEntryUserControl = new ParameterEditor();
                     parameterEntryUserControl.Visible = false;
                     parameterEntryUserControl.Location = new Point(0, startY + (i * (parameterEntryUserControl.Height + spacing)));
                     parameterEntryUserControl.Anchor = (AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left);
                     parameterEntryUserControl.Width = Width - 10;
                     parameterEntryUserControls.Add(parameterEntryUserControl);
 
-                    foreach (IParameterEntryUserControlListener listener in parameterEntryUserControlListeners)
+                    foreach (IParameterEditorListener listener in parameterEditorListeners)
                     {
                         parameterEntryUserControl.AddListener(listener);
                     }
@@ -51,9 +51,9 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
-        public void AddOnChangeListener(IParameterEntryUserControlListener listener)
+        public void AddOnChangeListener(IParameterEditorListener listener)
         {
-            parameterEntryUserControlListeners.Add(listener);
+            parameterEditorListeners.Add(listener);
             for (int i = 0; i < parameterEntryUserControls.Count; i++)
             {
                 parameterEntryUserControls[i].AddListener(listener);
@@ -83,7 +83,7 @@ namespace PSA2.src.Views.CustomControls
             for (int i = 0; i < ParameterEntries.Count; i++)
             {
                 ParameterEntry parameterEntry = ParameterEntries[i];
-                ParameterEntryUserControl parameterEntryUserControl = parameterEntryUserControls[i];
+                ParameterEditor parameterEntryUserControl = parameterEntryUserControls[i];
                 parameterEntryUserControl.ParameterEntry = parameterEntry;
                 parameterEntryUserControl.Width = Width - 10;
                 parameterEntryUserControl.Visible = true;

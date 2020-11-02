@@ -42,6 +42,7 @@
             this.applyButton.TabIndex = 1;
             this.applyButton.Text = "Apply";
             this.applyButton.UseVisualStyleBackColor = true;
+            this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
             // 
             // parametersPanel
             // 

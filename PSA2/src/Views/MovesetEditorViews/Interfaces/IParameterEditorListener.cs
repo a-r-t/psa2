@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
-    public interface IParameterEntryUserControlListener
+    public interface IParameterEditorListener
     {
         void OnParameterChange(bool isDirty);
     }

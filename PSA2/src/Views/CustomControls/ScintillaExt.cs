@@ -154,18 +154,20 @@ namespace PSA2.src.Views.CustomControls
 
         public List<int> GetSelectedLines()
         {
-            HashSet<int> selectedLines = new HashSet<int>();
-            selectedLines.Add(LineFromPosition(CurrentPosition));
+            HashSet<int> uniqueSelectedLines = new HashSet<int>();
+            uniqueSelectedLines.Add(LineFromPosition(CurrentPosition));
 
             foreach (Selection selection in Selections)
             {
                 for (int i = selection.Start; i < selection.End; i++)
                 {
-                    selectedLines.Add(LineFromPosition(i));
+                    uniqueSelectedLines.Add(LineFromPosition(i));
                 }
             }
 
-            return selectedLines.ToList<int>();
+            List<int> selectedLines = uniqueSelectedLines.ToList<int>();
+            selectedLines.Sort();
+            return selectedLines;
         }
 
         public void SelectLines(List<int> lines)

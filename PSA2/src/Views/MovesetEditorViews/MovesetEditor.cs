@@ -46,6 +46,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
         }
+        private CodeBlockViewer previousActiveCodeBlockViewer;
 
         public MovesetEditor(PsaMovesetHandler psaMovesetHandler)
         {
@@ -117,7 +118,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void eventsTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            ActiveCodeBlockViewer?.EmitCommandSelected();
         }
 
         private void eventsTabControl_Click(object sender, EventArgs e)

@@ -152,7 +152,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        private void UpdateSelectedCommand()
+        public void UpdateSelectedCommand()
         {
             if (PsaCommands.Count > 0)
             {
@@ -171,7 +171,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                     foreach (ICodeBlockViewerListener listener in listeners)
                     {
-                        listener.OnCommandSelected(psaCommands, CodeBlockSelection);
+                        listener.OnCommandSelected(psaCommands, selectedCommandIndexes, CodeBlockSelection);
                     }
 
                     codeBlockCommandsScintilla.Focus();
@@ -185,8 +185,32 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 foreach (ICodeBlockViewerListener listener in listeners)
                 {
-                    listener.OnCommandSelected(null, CodeBlockSelection);
+                    listener.OnCommandSelected(null, null, CodeBlockSelection);
                 }
+            }
+        }
+
+        public void EmitCommandSelected()
+        {
+            List<int> selectedCommandIndexes = codeBlockCommandsScintilla.GetSelectedLines();
+
+            List<PsaCommand> psaCommands = new List<PsaCommand>();
+            for (int i = 0; i < selectedCommandIndexes.Count; i++)
+            {
+                PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
+                if (psaCommand != null)
+                {
+                    psaCommands.Add(psaCommand);
+                }
+            }
+            if (psaCommands.Count == 0)
+            {
+                psaCommands = null;
+            }
+
+            foreach (ICodeBlockViewerListener listener in listeners)
+            {
+                listener.OnCommandSelected(psaCommands, selectedCommandIndexes, CodeBlockSelection);
             }
         }
 

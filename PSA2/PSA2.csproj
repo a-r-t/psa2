@@ -79,11 +79,11 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
-    <Compile Include="src\Views\CustomControls\ParameterEntryUserControl.cs">
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\CustomControls\ParameterEntryUserControl.Designer.cs">
-      <DependentUpon>ParameterEntryUserControl.cs</DependentUpon>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditor.Designer.cs">
+      <DependentUpon>ParameterEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\CustomControls\ParametersPanel.cs">
       <SubType>Component</SubType>
@@ -124,7 +124,7 @@
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICodeBlockViewerListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICommandSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IEventActionsListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEntryUserControlListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
@@ -170,8 +170,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="src\Views\CustomControls\ParameterEntryUserControl.resx">
-      <DependentUpon>ParameterEntryUserControl.cs</DependentUpon>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditor.resx">
+      <DependentUpon>ParameterEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

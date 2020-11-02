@@ -1,6 +1,6 @@
 ﻿namespace PSA2.src.Views.CustomControls
 {
-    partial class ParameterEntryUserControl
+    partial class ParameterEditor
     {
         /// <summary> 
         /// Required designer variable.
@@ -84,8 +84,9 @@
             this.parameterValueTextBox.Size = new System.Drawing.Size(121, 20);
             this.parameterValueTextBox.TabIndex = 4;
             this.parameterValueTextBox.TextChanged += new System.EventHandler(this.parameterValueTextBox_TextChanged);
+            this.parameterValueTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.parameterValueTextBox_KeyPress);
             // 
-            // ParameterEntryUserControl
+            // ParameterEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -94,7 +95,7 @@
             this.Controls.Add(this.parameterTypesComboBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.categoryLabel);
-            this.Name = "ParameterEntryUserControl";
+            this.Name = "ParameterEditor";
             this.Size = new System.Drawing.Size(180, 92);
             this.ResumeLayout(false);
             this.PerformLayout();

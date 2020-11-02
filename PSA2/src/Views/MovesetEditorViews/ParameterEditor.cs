@@ -12,10 +12,10 @@ using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.CustomControls
 {
-    public partial class ParameterEntryUserControl : ObservableUserControl<IParameterEntryUserControlListener>
+    public partial class ParameterEditor : ObservableUserControl<IParameterEditorListener>
     {
         private ParameterEntry parameterEntry;
-        public ParameterEntry ParameterEntry 
+        public ParameterEntry ParameterEntry
         { 
             get
             {
@@ -24,14 +24,18 @@ namespace PSA2.src.Views.CustomControls
             set
             {
                 parameterEntry = value;
+                originalType = parameterEntry.Type;
+                originalValue = parameterEntry.Value;
                 categoryLabel.Text = parameterEntry.Category;
                 parameterTypesComboBox.SelectedIndex = parameterEntry.Type;
                 parameterValueTextBox.Text = parameterEntry.Value.ToString();
             }
         }
         private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
+        private int originalType;
+        private int originalValue;
 
-        public ParameterEntryUserControl()
+        public ParameterEditor()
         {
             InitializeComponent();
             parameterTypesComboBox.Items.AddRange(parameterTypes);
@@ -40,22 +44,32 @@ namespace PSA2.src.Views.CustomControls
         private void parameterTypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             OnChange();
+            parameterEntry.Type = parameterTypesComboBox.SelectedIndex;
         }
 
         private void parameterValueTextBox_TextChanged(object sender, EventArgs e)
         {
             OnChange();
+            if (parameterValueTextBox.Text.IsNumeric())
+            {
+                parameterEntry.Value = Int32.Parse(parameterValueTextBox.Text);
+            }
         }
 
         private void OnChange()
         {
-            bool isDirty = parameterTypesComboBox.SelectedIndex != parameterEntry.Type 
-                || (parameterValueTextBox.Text.IsNumeric() && Int32.Parse(parameterValueTextBox.Text) != parameterEntry.Value);
+            bool isDirty = parameterTypesComboBox.SelectedIndex != originalType
+                || (parameterValueTextBox.Text.IsNumeric() && Int32.Parse(parameterValueTextBox.Text) != originalValue);
 
-            foreach (IParameterEntryUserControlListener listener in listeners)
+            foreach (IParameterEditorListener listener in listeners)
             {
                 listener.OnParameterChange(isDirty);
             }
+        }
+
+        private void parameterValueTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !($"{parameterValueTextBox.Text}{e.KeyChar}".IsNumeric());
         }
     }
 }
