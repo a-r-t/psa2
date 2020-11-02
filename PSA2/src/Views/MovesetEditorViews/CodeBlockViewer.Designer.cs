@@ -36,13 +36,17 @@ namespace PSA2.src.Views.MovesetEditorViews
             // 
             // codeBlockCommandsScintilla
             // 
+            this.codeBlockCommandsScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
             this.codeBlockCommandsScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
             this.codeBlockCommandsScintilla.FullLineSelect = true;
             this.codeBlockCommandsScintilla.Location = new System.Drawing.Point(0, 0);
+            this.codeBlockCommandsScintilla.MultipleSelection = true;
             this.codeBlockCommandsScintilla.Name = "codeBlockCommandsScintilla";
+            this.codeBlockCommandsScintilla.PsaCommands = null;
+            this.codeBlockCommandsScintilla.ReadOnly = true;
+            this.codeBlockCommandsScintilla.ShowLineNumbers = false;
             this.codeBlockCommandsScintilla.Size = new System.Drawing.Size(790, 449);
             this.codeBlockCommandsScintilla.TabIndex = 8;
-            this.codeBlockCommandsScintilla.Text = "scintilla1";
             this.codeBlockCommandsScintilla.WrapStartIndent = 4;
             this.codeBlockCommandsScintilla.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.codeBlockCommandsScintilla_UpdateUI);
             this.codeBlockCommandsScintilla.TextChanged += new System.EventHandler(this.codeBlockCommandsScintilla_TextChanged);

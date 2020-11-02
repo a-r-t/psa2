@@ -46,7 +46,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
         }
-        private CodeBlockViewer previousActiveCodeBlockViewer;
 
         public MovesetEditor(PsaMovesetHandler psaMovesetHandler)
         {

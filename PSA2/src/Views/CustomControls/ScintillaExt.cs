@@ -159,7 +159,7 @@ namespace PSA2.src.Views.CustomControls
 
             foreach (Selection selection in Selections)
             {
-                for (int i = selection.Start; i < selection.End; i++)
+                for (int i = selection.Start; i <= selection.End; i++)
                 {
                     uniqueSelectedLines.Add(LineFromPosition(i));
                 }
@@ -203,7 +203,7 @@ namespace PSA2.src.Views.CustomControls
             this.originalLineIndexesSelected = new int[Selections.Count];
             for (int i = 0; i < Selections.Count; i++)
             {
-                this.originalLineIndexesSelected[i] = LineFromPosition(Selections[i].Start);
+                this.originalLineIndexesSelected[i] = LineFromPosition(Selections[i].Anchor);
             }
         }
 
