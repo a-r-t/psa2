@@ -13,6 +13,7 @@ using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.Co
 using PropertyGridEx;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.Views.CustomControls;
+using System.Net;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -26,6 +27,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         public PsaCommand PsaCommand { get; private set; }
         public CodeBlockSelection CodeBlockSelection { get; private set; }
         public int CommandIndex { get; private set; }
+        private int previousParameterSelected = -1;
         protected PsaCommandsConfig psaCommandsConfig;
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
@@ -33,12 +35,13 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.psaMovesetHandler = psaMovesetHandler;
             this.psaCommandsConfig = psaCommandsConfig;
             InitializeComponent();
-            parametersPanel.AddOnChangeListener(this);
+            parameterEditor.AddListener(this);
         }
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection)
         {
-            parametersPanel.ClearParameterEntries();
+            parameterEditor.ParameterEntry = null;
+            parameterNamesListBox.Items.Clear();
 
             if (psaCommands != null && psaCommands.Count == 1)
             {
@@ -49,72 +52,59 @@ namespace PSA2.src.Views.MovesetEditorViews
                 CodeBlockSelection = codeBlockSelection;
                 CommandIndex = commandIndexes[0];
                 PsaCommand = psaCommand;
-
-                parametersPanel.ClearParameterEntries();
-                PopulatePropertyGrid(psaCommand);
-                parametersPanel.Reload();
+                previousParameterSelected = -1;
+                PopulateParameterNames(psaCommand);
             }
-
-            parametersPanel.Reload();
-
         }
 
-        private void PopulatePropertyGrid(PsaCommand psaCommand)
+        private void PopulateParameterNames(PsaCommand psaCommand)
         {
             parameterNamesListBox.Items.Clear();
             if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
             {
-                HashSet<string> usedCategoryNames = new HashSet<string>();
-
                 for (int i = 0; i < PsaCommandConfig.CommandParams.Count; i++)
                 {
                     PsaCommandParamConfig psaCommandParamConfig = PsaCommandConfig.CommandParams[i];
-
-                    string categoryName = psaCommandParamConfig.ParamName;
-                    int index = 1;
-                    while (usedCategoryNames.Contains(categoryName))
-                    {
-                        categoryName = $"psaCommandParamConfig.ParamName {index}";
-                    }
-                    usedCategoryNames.Add(categoryName);
-
-                    ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
-                    parametersPanel.AddParameterEntry(parameterEntry);
-                    parameterNamesListBox.Items.Add(categoryName);
+                    parameterNamesListBox.Items.Add(psaCommandParamConfig.ParamName);
                 }
             }
             else
             {
                 for (int i = 0; i < psaCommand.Parameters.Count; i++)
                 {
-                    string categoryName = $"arg{i}";
-                    ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
-                    parametersPanel.AddParameterEntry(parameterEntry);
-                    parameterNamesListBox.Items.Add(categoryName);
+                    parameterNamesListBox.Items.Add($"arg{i}");
                 }
             }
-        }
 
-        private void parametersPanel_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-           
-        }
-
-        public void OnParameterChange(bool isDirty)
-        {
-            applyButton.Enabled = isDirty;
-        }
-
-        private void applyButton_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < parametersPanel.ParameterEntries.Count; i++)
+            if (parameterNamesListBox.Items.Count > 0)
             {
-                ParameterEntry parameterEntry = parametersPanel.ParameterEntries[i];
-                PsaCommand.Parameters[i].Type = parameterEntry.Type;
-                PsaCommand.Parameters[i].Value = parameterEntry.Value;
+                parameterNamesListBox.SelectedIndex = 0;
             }
-            CodeBlockSelection.ModifyCommand(CommandIndex, PsaCommand);
-            applyButton.Enabled = false;
+        }
+
+        private void parameterNamesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+            if (selectedParameterIndex != previousParameterSelected)
+            {
+                int type = PsaCommand.Parameters[selectedParameterIndex].Type;
+                int value = PsaCommand.Parameters[selectedParameterIndex].Value;
+                ParameterEntry parameterEntry = new ParameterEntry(parameterNamesListBox.SelectedItem.ToString(), type, value);
+                parameterEditor.ParameterEntry = parameterEntry;
+            }
+            previousParameterSelected = selectedParameterIndex;
+        }
+
+        public void OnParameterChange(int type, int value)
+        {
+            int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+            PsaCommand.Parameters[selectedParameterIndex].Type = type;
+            PsaCommand.Parameters[selectedParameterIndex].Value = value;
+
+            foreach (IParametersEditorListener listener in listeners)
+            {
+                listener.OnParameterChange(CommandIndex, PsaCommand);
+            }
         }
     }
 }

@@ -384,5 +384,21 @@ namespace PSA2.src.Views.MovesetEditorViews
                 codeBlockCommandsScintilla.StyleDocument();
             }
         }
+
+        public void ModifyCommand(int commandIndex, PsaCommand psaCommand)
+        {
+            CodeBlockSelection.ModifyCommand(commandIndex, psaCommand);
+
+            List<int> currentSelectedLines = codeBlockCommandsScintilla.GetSelectedLines();
+            currentSelectedLines.Sort();
+
+            int firstVisibleLine = codeBlockCommandsScintilla.FirstVisibleLine;
+            LoadCodeBlockCommands();
+
+            codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
+            codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            codeBlockCommandsScintilla.StyleDocument();
+        }
     }
 }

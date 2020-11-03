@@ -79,14 +79,15 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\ParameterEditor.cs">
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ParameterEditor.Designer.cs">
-      <DependentUpon>ParameterEditor.cs</DependentUpon>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.Designer.cs">
+      <DependentUpon>ParameterEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\CustomControls\ParametersPanel.cs">
-      <SubType>Component</SubType>
+    <Compile Include="src\Views\CustomControls\ParameterEditor.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\ScintillaCodeBlock.cs">
       <SubType>Component</SubType>
@@ -124,7 +125,7 @@
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICodeBlockViewerListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ICommandSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IEventActionsListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorListener.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorFormListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParametersEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
@@ -170,8 +171,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditor.resx">
-      <DependentUpon>ParameterEditor.cs</DependentUpon>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForm.resx">
+      <DependentUpon>ParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

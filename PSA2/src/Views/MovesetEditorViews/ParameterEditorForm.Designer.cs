@@ -1,6 +1,6 @@
 ﻿namespace PSA2.src.Views.CustomControls
 {
-    partial class ParameterEditor
+    partial class ParameterEditorForm
     {
         /// <summary> 
         /// Required designer variable.
