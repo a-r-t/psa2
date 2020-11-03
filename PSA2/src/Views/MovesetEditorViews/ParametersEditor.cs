@@ -61,6 +61,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void PopulatePropertyGrid(PsaCommand psaCommand)
         {
+            parameterNamesListBox.Items.Clear();
             if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
             {
                 HashSet<string> usedCategoryNames = new HashSet<string>();
@@ -79,6 +80,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                     ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
                     parametersPanel.AddParameterEntry(parameterEntry);
+                    parameterNamesListBox.Items.Add(categoryName);
                 }
             }
             else
@@ -88,6 +90,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     string categoryName = $"arg{i}";
                     ParameterEntry parameterEntry = new ParameterEntry(categoryName, psaCommand.Parameters[i].Type, psaCommand.Parameters[i].Value);
                     parametersPanel.AddParameterEntry(parameterEntry);
+                    parameterNamesListBox.Items.Add(categoryName);
                 }
             }
         }

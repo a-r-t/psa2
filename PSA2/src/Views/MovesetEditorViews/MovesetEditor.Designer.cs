@@ -37,14 +37,16 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.optionsTabControl = new System.Windows.Forms.TabControl();
             this.actionTabPage = new System.Windows.Forms.TabPage();
             this.commandDescriptionTabPage = new System.Windows.Forms.TabPage();
+            this.variablesTabPage = new System.Windows.Forms.TabPage();
             this.errorListTabPage = new System.Windows.Forms.TabPage();
             this.hexCalculatorTabPage = new System.Windows.Forms.TabPage();
             this.selectorView = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.commandOptionsViewer = new System.Windows.Forms.Panel();
             this.parametersEditorViewer = new System.Windows.Forms.Panel();
-            this.variablesTabPage = new System.Windows.Forms.TabPage();
+            this.commandOptionsTabControl = new System.Windows.Forms.TabControl();
+            this.commandsTabPage = new System.Windows.Forms.TabPage();
+            this.parametersTabPage = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -59,10 +61,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
+            this.commandOptionsTabControl.SuspendLayout();
+            this.commandsTabPage.SuspendLayout();
+            this.parametersTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -159,6 +160,16 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.commandDescriptionTabPage.Text = "Descriptions";
             this.commandDescriptionTabPage.UseVisualStyleBackColor = true;
             // 
+            // variablesTabPage
+            // 
+            this.variablesTabPage.Location = new System.Drawing.Point(4, 4);
+            this.variablesTabPage.Name = "variablesTabPage";
+            this.variablesTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.variablesTabPage.Size = new System.Drawing.Size(157, 116);
+            this.variablesTabPage.TabIndex = 4;
+            this.variablesTabPage.Text = "Variables";
+            this.variablesTabPage.UseVisualStyleBackColor = true;
+            // 
             // errorListTabPage
             // 
             this.errorListTabPage.Location = new System.Drawing.Point(4, 4);
@@ -196,7 +207,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer3);
+            this.splitContainer1.Panel1.Controls.Add(this.commandOptionsTabControl);
             // 
             // splitContainer1.Panel2
             // 
@@ -205,51 +216,57 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer1.SplitterDistance = 186;
             this.splitContainer1.TabIndex = 0;
             // 
-            // splitContainer3
-            // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.Controls.Add(this.commandOptionsViewer);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.parametersEditorViewer);
-            this.splitContainer3.Size = new System.Drawing.Size(186, 408);
-            this.splitContainer3.SplitterDistance = 201;
-            this.splitContainer3.TabIndex = 0;
-            // 
             // commandOptionsViewer
             // 
             this.commandOptionsViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.commandOptionsViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commandOptionsViewer.Location = new System.Drawing.Point(0, 0);
+            this.commandOptionsViewer.Location = new System.Drawing.Point(3, 3);
             this.commandOptionsViewer.Name = "commandOptionsViewer";
-            this.commandOptionsViewer.Size = new System.Drawing.Size(186, 201);
+            this.commandOptionsViewer.Size = new System.Drawing.Size(186, 68);
             this.commandOptionsViewer.TabIndex = 0;
             // 
             // parametersEditorViewer
             // 
             this.parametersEditorViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.parametersEditorViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.parametersEditorViewer.Location = new System.Drawing.Point(0, 0);
+            this.parametersEditorViewer.Location = new System.Drawing.Point(3, 3);
             this.parametersEditorViewer.Name = "parametersEditorViewer";
-            this.parametersEditorViewer.Size = new System.Drawing.Size(186, 203);
+            this.parametersEditorViewer.Size = new System.Drawing.Size(172, 376);
             this.parametersEditorViewer.TabIndex = 0;
             // 
-            // variablesTabPage
+            // commandOptionsTabControl
             // 
-            this.variablesTabPage.Location = new System.Drawing.Point(4, 4);
-            this.variablesTabPage.Name = "variablesTabPage";
-            this.variablesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.variablesTabPage.Size = new System.Drawing.Size(157, 116);
-            this.variablesTabPage.TabIndex = 4;
-            this.variablesTabPage.Text = "Variables";
-            this.variablesTabPage.UseVisualStyleBackColor = true;
+            this.commandOptionsTabControl.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.commandOptionsTabControl.Controls.Add(this.commandsTabPage);
+            this.commandOptionsTabControl.Controls.Add(this.parametersTabPage);
+            this.commandOptionsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commandOptionsTabControl.Location = new System.Drawing.Point(0, 0);
+            this.commandOptionsTabControl.Name = "commandOptionsTabControl";
+            this.commandOptionsTabControl.SelectedIndex = 0;
+            this.commandOptionsTabControl.Size = new System.Drawing.Size(186, 408);
+            this.commandOptionsTabControl.TabIndex = 0;
+            // 
+            // commandsTabPage
+            // 
+            this.commandsTabPage.Controls.Add(this.commandOptionsViewer);
+            this.commandsTabPage.Location = new System.Drawing.Point(4, 4);
+            this.commandsTabPage.Name = "commandsTabPage";
+            this.commandsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.commandsTabPage.Size = new System.Drawing.Size(192, 74);
+            this.commandsTabPage.TabIndex = 0;
+            this.commandsTabPage.Text = "Commands";
+            this.commandsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // parametersTabPage
+            // 
+            this.parametersTabPage.Controls.Add(this.parametersEditorViewer);
+            this.parametersTabPage.Location = new System.Drawing.Point(4, 4);
+            this.parametersTabPage.Name = "parametersTabPage";
+            this.parametersTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.parametersTabPage.Size = new System.Drawing.Size(178, 382);
+            this.parametersTabPage.TabIndex = 1;
+            this.parametersTabPage.Text = "Parameters";
+            this.parametersTabPage.UseVisualStyleBackColor = true;
             // 
             // MovesetEditor
             // 
@@ -273,10 +290,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
+            this.commandOptionsTabControl.ResumeLayout(false);
+            this.commandsTabPage.ResumeLayout(false);
+            this.parametersTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -287,7 +303,6 @@ namespace PSA2.src.Views.MovesetEditorViews
         private System.Windows.Forms.Panel selectorView;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl eventsTabControl;
-        private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Panel commandOptionsViewer;
         private System.Windows.Forms.Panel parametersEditorViewer;
         private System.Windows.Forms.SplitContainer splitContainer4;
@@ -297,5 +312,8 @@ namespace PSA2.src.Views.MovesetEditorViews
         private System.Windows.Forms.TabPage errorListTabPage;
         private System.Windows.Forms.TabPage hexCalculatorTabPage;
         private System.Windows.Forms.TabPage variablesTabPage;
+        private System.Windows.Forms.TabControl commandOptionsTabControl;
+        private System.Windows.Forms.TabPage commandsTabPage;
+        private System.Windows.Forms.TabPage parametersTabPage;
     }
 }
