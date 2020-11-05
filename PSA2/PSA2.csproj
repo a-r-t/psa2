@@ -79,15 +79,11 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.Designer.cs">
       <DependentUpon>ParameterEditorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Views\CustomControls\ParameterEditor.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\ScintillaCodeBlock.cs">
       <SubType>Component</SubType>

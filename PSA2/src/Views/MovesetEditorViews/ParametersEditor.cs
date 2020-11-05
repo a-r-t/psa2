@@ -14,13 +14,14 @@ using PropertyGridEx;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.Views.CustomControls;
 using System.Net;
+using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
     public partial class ParametersEditor : ObservableUserControl<IParametersEditorListener>, 
         ICodeBlockViewerListener,
         IMovesetEditorListener,
-        IParameterEditorListener
+        IParameterEditorFormListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         public PsaCommandConfig PsaCommandConfig { get; private set; }
@@ -29,21 +30,24 @@ namespace PSA2.src.Views.MovesetEditorViews
         public int CommandIndex { get; private set; }
         private int previousParameterSelected = -1;
         protected PsaCommandsConfig psaCommandsConfig;
+        private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             this.psaCommandsConfig = psaCommandsConfig;
             InitializeComponent();
-            parameterEditor.AddListener(this);
+            parameterTypesComboBox.Items.AddRange(parameterTypes);
+            parameterEditorFormView.DoubleBuffered(true);
+            this.DoubleBuffered(true);
+            parameterTypeViewer.Visible = false;
         }
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection)
         {
-            parameterEditor.ParameterEntry = null;
             parameterNamesListBox.Items.Clear();
 
-            if (psaCommands != null && psaCommands.Count == 1)
+            if (psaCommands != null && psaCommands.Count == 1 && psaCommands[0].Parameters.Count > 0)
             {
                 PsaCommand psaCommand = psaCommands[0];
 
@@ -54,6 +58,12 @@ namespace PSA2.src.Views.MovesetEditorViews
                 PsaCommand = psaCommand;
                 previousParameterSelected = -1;
                 PopulateParameterNames(psaCommand);
+                parameterTypeViewer.Visible = true;
+            }
+            else
+            {
+                parameterEditorFormView.Controls.Clear();
+                parameterTypeViewer.Visible = false;
             }
         }
 
@@ -87,23 +97,46 @@ namespace PSA2.src.Views.MovesetEditorViews
             int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
             if (selectedParameterIndex != previousParameterSelected)
             {
-                int type = PsaCommand.Parameters[selectedParameterIndex].Type;
-                int value = PsaCommand.Parameters[selectedParameterIndex].Value;
-                ParameterEntry parameterEntry = new ParameterEntry(parameterNamesListBox.SelectedItem.ToString(), type, value);
-                parameterEditor.ParameterEntry = parameterEntry;
+                parameterTypesComboBox.SelectedIndex = -1;
+                parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
             }
             previousParameterSelected = selectedParameterIndex;
         }
 
-        public void OnParameterChange(int type, int value)
+        public void OnParameterValueChange(int value)
         {
             int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
-            PsaCommand.Parameters[selectedParameterIndex].Type = type;
             PsaCommand.Parameters[selectedParameterIndex].Value = value;
 
             foreach (IParametersEditorListener listener in listeners)
             {
                 listener.OnParameterChange(CommandIndex, PsaCommand);
+            }
+        }
+
+        private void parameterTypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (parameterTypesComboBox.SelectedIndex != -1)
+            {
+                int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+                int value = PsaCommand.Parameters[selectedParameterIndex].Value;
+                parameterEditorFormView.SuspendLayout();
+                parameterEditorFormView.Controls.Clear();
+                ParameterEditorForm parameterEditorForm = new ParameterEditorForm(value);
+                parameterEditorForm.Name = "parameterEditorForm";
+                parameterEditorForm.Dock = DockStyle.Fill;
+                parameterEditorForm.AddListener(this);
+                parameterEditorFormView.Controls.Add(parameterEditorForm);
+                parameterEditorFormView.ResumeLayout();
+
+                if (PsaCommand.Parameters[selectedParameterIndex].Type != parameterTypesComboBox.SelectedIndex)
+                {
+                    PsaCommand.Parameters[selectedParameterIndex].Type = parameterTypesComboBox.SelectedIndex;
+                    foreach (IParametersEditorListener listener in listeners)
+                    {
+                        listener.OnParameterChange(CommandIndex, PsaCommand);
+                    }
+                }
             }
         }
     }

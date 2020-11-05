@@ -8,6 +8,6 @@ namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
     public interface IParameterEditorFormListener
     {
-        void OnParameterChange(int type, int value);
+        void OnParameterValueChange(int value);
     }
 }
