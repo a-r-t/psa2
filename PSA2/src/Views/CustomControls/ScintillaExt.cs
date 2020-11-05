@@ -77,19 +77,21 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnUpdateUI(UpdateUIEventArgs e)
         {
-            if (originalLineIndexesSelected.Length < Selections.Count)
+            if (FullLineSelect)
             {
-                Array.Resize(ref originalLineIndexesSelected, Selections.Count);
-            }
-
-            if (FullLineSelect && (e.Change & UpdateChange.Selection) == UpdateChange.Selection)
-            {
-                for (int i = 0; i < Selections.Count; i++)
+                if (originalLineIndexesSelected.Length < Selections.Count)
                 {
-                    SelectLine(Selections[i], i);
+                    Array.Resize(ref originalLineIndexesSelected, Selections.Count);
+                }
+
+                if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
+                {
+                    for (int i = 0; i < Selections.Count; i++)
+                    {
+                        SelectLine(Selections[i], i);
+                    }
                 }
             }
-
             base.OnUpdateUI(e);
         }
 

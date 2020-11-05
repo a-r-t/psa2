@@ -79,6 +79,9 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
+    <Compile Include="src\Views\CustomControls\ScintillaListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
