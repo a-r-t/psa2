@@ -21,6 +21,7 @@ namespace PSA2.src.Views
             InitializeComponent();
             DoubleBuffered = true;
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
+
         }
 
         private void Form1_Load(object sender, EventArgs e)

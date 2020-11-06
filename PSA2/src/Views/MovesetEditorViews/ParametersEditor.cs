@@ -15,6 +15,7 @@ using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.Views.CustomControls;
 using System.Net;
 using PSA2.src.ExtentionMethods;
+using ScintillaNET;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -41,11 +42,12 @@ namespace PSA2.src.Views.MovesetEditorViews
             parameterEditorFormView.DoubleBuffered(true);
             this.DoubleBuffered(true);
             parameterTypeViewer.Visible = false;
+            parameterNamesScintilla.Visible = false;
         }
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection)
         {
-            parameterNamesListBox.Items.Clear();
+            parameterNamesScintilla.ClearItems();
 
             if (psaCommands != null && psaCommands.Count == 1 && psaCommands[0].Parameters.Count > 0)
             {
@@ -59,42 +61,45 @@ namespace PSA2.src.Views.MovesetEditorViews
                 previousParameterSelected = -1;
                 PopulateParameterNames(psaCommand);
                 parameterTypeViewer.Visible = true;
+                parameterNamesScintilla.Visible = true;
             }
             else
             {
                 parameterEditorFormView.Controls.Clear();
                 parameterTypeViewer.Visible = false;
+                parameterNamesScintilla.Visible = false;
             }
+
+            parameterNamesScintilla.StyleDocument();
         }
 
         private void PopulateParameterNames(PsaCommand psaCommand)
         {
-            parameterNamesListBox.Items.Clear();
             if (PsaCommandConfig != null && PsaCommandConfig.CommandParams != null)
             {
                 for (int i = 0; i < PsaCommandConfig.CommandParams.Count; i++)
                 {
                     PsaCommandParamConfig psaCommandParamConfig = PsaCommandConfig.CommandParams[i];
-                    parameterNamesListBox.Items.Add(psaCommandParamConfig.ParamName);
+                    parameterNamesScintilla.AddItem(psaCommandParamConfig.ParamName);
                 }
             }
             else
             {
                 for (int i = 0; i < psaCommand.Parameters.Count; i++)
                 {
-                    parameterNamesListBox.Items.Add($"arg{i}");
+                    parameterNamesScintilla.AddItem($"arg{i}");
                 }
             }
 
-            if (parameterNamesListBox.Items.Count > 0)
+            if (parameterNamesScintilla.Items.Count > 0)
             {
-                parameterNamesListBox.SelectedIndex = 0;
+                parameterNamesScintilla.SelectedIndex = 0;
             }
         }
 
         private void parameterNamesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+            int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
             if (selectedParameterIndex != previousParameterSelected)
             {
                 parameterTypesComboBox.SelectedIndex = -1;
@@ -105,7 +110,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void OnParameterValueChange(int value)
         {
-            int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+            int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
             PsaCommand.Parameters[selectedParameterIndex].Value = value;
 
             foreach (IParametersEditorListener listener in listeners)
@@ -118,7 +123,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             if (parameterTypesComboBox.SelectedIndex != -1)
             {
-                int selectedParameterIndex = parameterNamesListBox.SelectedIndex;
+                int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
                 int value = PsaCommand.Parameters[selectedParameterIndex].Value;
                 parameterEditorFormView.SuspendLayout();
                 parameterEditorFormView.Controls.Clear();

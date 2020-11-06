@@ -30,7 +30,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             CodeBlockSelection = codeBlockSelection;
 
             InitializeComponent();
-
             this.DoubleBuffered(true);
             codeBlockCommandsScintilla.DoubleBuffered(true);
         }

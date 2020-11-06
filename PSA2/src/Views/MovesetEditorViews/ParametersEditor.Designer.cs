@@ -28,33 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.parameterNamesListBox = new System.Windows.Forms.ListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.parameterTypeViewer = new System.Windows.Forms.Panel();
             this.parameterTypesComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.categoryLabel = new System.Windows.Forms.Label();
             this.parameterEditorFormView = new System.Windows.Forms.Panel();
+            this.parameterNamesScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.parameterTypeViewer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // parameterNamesListBox
-            // 
-            this.parameterNamesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.parameterNamesListBox.FormattingEnabled = true;
-            this.parameterNamesListBox.Location = new System.Drawing.Point(3, 3);
-            this.parameterNamesListBox.Name = "parameterNamesListBox";
-            this.parameterNamesListBox.Size = new System.Drawing.Size(399, 121);
-            this.parameterNamesListBox.TabIndex = 2;
-            this.parameterNamesListBox.SelectedIndexChanged += new System.EventHandler(this.parameterNamesListBox_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
@@ -66,7 +52,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            this.splitContainer1.Panel1.Controls.Add(this.parameterNamesScintilla);
             // 
             // splitContainer1.Panel2
             // 
@@ -75,15 +61,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(405, 314);
             this.splitContainer1.SplitterDistance = 133;
             this.splitContainer1.TabIndex = 3;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.parameterNamesListBox);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(405, 133);
-            this.panel1.TabIndex = 3;
             // 
             // parameterTypeViewer
             // 
@@ -138,6 +115,26 @@
             this.parameterEditorFormView.Size = new System.Drawing.Size(399, 126);
             this.parameterEditorFormView.TabIndex = 9;
             // 
+            // parameterNamesScintilla
+            // 
+            this.parameterNamesScintilla.BackgroundColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.parameterNamesScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
+            this.parameterNamesScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
+            this.parameterNamesScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.parameterNamesScintilla.FullLineSelect = false;
+            this.parameterNamesScintilla.ItemBackColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.ItemForeColor = System.Drawing.Color.Black;
+            this.parameterNamesScintilla.Location = new System.Drawing.Point(0, 0);
+            this.parameterNamesScintilla.Name = "parameterNamesScintilla";
+            this.parameterNamesScintilla.ReadOnly = true;
+            this.parameterNamesScintilla.SelectedIndex = 0;
+            this.parameterNamesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
+            this.parameterNamesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.ShowLineNumbers = false;
+            this.parameterNamesScintilla.Size = new System.Drawing.Size(405, 133);
+            this.parameterNamesScintilla.TabIndex = 1;
+            // 
             // ParametersEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -149,7 +146,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
             this.parameterTypeViewer.ResumeLayout(false);
             this.parameterTypeViewer.PerformLayout();
             this.ResumeLayout(false);
@@ -157,14 +153,12 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox parameterNamesListBox;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox parameterTypesComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label categoryLabel;
         private System.Windows.Forms.Panel parameterEditorFormView;
         private System.Windows.Forms.Panel parameterTypeViewer;
+        private CustomControls.ScintillaListBox parameterNamesScintilla;
     }
 }
