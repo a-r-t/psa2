@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.parameterNamesScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             this.parameterTypeViewer = new System.Windows.Forms.Panel();
             this.parameterTypesComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.categoryLabel = new System.Windows.Forms.Label();
             this.parameterEditorFormView = new System.Windows.Forms.Panel();
-            this.parameterNamesScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +61,27 @@
             this.splitContainer1.Size = new System.Drawing.Size(405, 314);
             this.splitContainer1.SplitterDistance = 133;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // parameterNamesScintilla
+            // 
+            this.parameterNamesScintilla.BackgroundColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.parameterNamesScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
+            this.parameterNamesScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
+            this.parameterNamesScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.parameterNamesScintilla.FullLineSelect = false;
+            this.parameterNamesScintilla.ItemBackColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.ItemForeColor = System.Drawing.Color.Black;
+            this.parameterNamesScintilla.Location = new System.Drawing.Point(0, 0);
+            this.parameterNamesScintilla.Name = "parameterNamesScintilla";
+            this.parameterNamesScintilla.ReadOnly = true;
+            this.parameterNamesScintilla.SelectedIndex = 0;
+            this.parameterNamesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
+            this.parameterNamesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
+            this.parameterNamesScintilla.ShowLineNumbers = false;
+            this.parameterNamesScintilla.Size = new System.Drawing.Size(405, 133);
+            this.parameterNamesScintilla.TabIndex = 1;
+            this.parameterNamesScintilla.SelectedIndexChanged += new System.EventHandler(this.parameterNamesScintilla_SelectedIndexChanged);
             // 
             // parameterTypeViewer
             // 
@@ -114,26 +135,6 @@
             this.parameterEditorFormView.Name = "parameterEditorFormView";
             this.parameterEditorFormView.Size = new System.Drawing.Size(399, 126);
             this.parameterEditorFormView.TabIndex = 9;
-            // 
-            // parameterNamesScintilla
-            // 
-            this.parameterNamesScintilla.BackgroundColor = System.Drawing.Color.White;
-            this.parameterNamesScintilla.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.parameterNamesScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
-            this.parameterNamesScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
-            this.parameterNamesScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.parameterNamesScintilla.FullLineSelect = false;
-            this.parameterNamesScintilla.ItemBackColor = System.Drawing.Color.White;
-            this.parameterNamesScintilla.ItemForeColor = System.Drawing.Color.Black;
-            this.parameterNamesScintilla.Location = new System.Drawing.Point(0, 0);
-            this.parameterNamesScintilla.Name = "parameterNamesScintilla";
-            this.parameterNamesScintilla.ReadOnly = true;
-            this.parameterNamesScintilla.SelectedIndex = 0;
-            this.parameterNamesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
-            this.parameterNamesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
-            this.parameterNamesScintilla.ShowLineNumbers = false;
-            this.parameterNamesScintilla.Size = new System.Drawing.Size(405, 133);
-            this.parameterNamesScintilla.TabIndex = 1;
             // 
             // ParametersEditor
             // 

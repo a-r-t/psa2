@@ -97,7 +97,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        private void parameterNamesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void parameterNamesScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
             int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
             if (selectedParameterIndex != previousParameterSelected)
@@ -106,17 +106,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
             }
             previousParameterSelected = selectedParameterIndex;
-        }
-
-        public void OnParameterValueChange(int value)
-        {
-            int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
-            PsaCommand.Parameters[selectedParameterIndex].Value = value;
-
-            foreach (IParametersEditorListener listener in listeners)
-            {
-                listener.OnParameterChange(CommandIndex, PsaCommand);
-            }
         }
 
         private void parameterTypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -142,6 +131,17 @@ namespace PSA2.src.Views.MovesetEditorViews
                         listener.OnParameterChange(CommandIndex, PsaCommand);
                     }
                 }
+            }
+        }
+
+        public void OnParameterValueChange(int value)
+        {
+            int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
+            PsaCommand.Parameters[selectedParameterIndex].Value = value;
+
+            foreach (IParametersEditorListener listener in listeners)
+            {
+                listener.OnParameterChange(CommandIndex, PsaCommand);
             }
         }
     }
