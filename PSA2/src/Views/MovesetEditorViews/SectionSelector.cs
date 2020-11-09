@@ -15,15 +15,35 @@ namespace PSA2.src.Views.MovesetEditorViews
     public partial class SectionSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
+        private string[] sections = new string[] { "Actions", "Sub Actions" };
+        private ActionSelector actionSelector;
+        private SubActionSelector subActionSelector;
 
         public SectionSelector(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
+
+            actionSelector = new ActionSelector(psaMovesetHandler);
+            actionSelector.Dock = DockStyle.Fill;
+            actionSelector.Visible = false;
+            actionSelector.Name = "actionSelector";
+
+            subActionSelector = new SubActionSelector(psaMovesetHandler);
+            subActionSelector.Dock = DockStyle.Fill;
+            subActionSelector.Visible = false;
+            subActionSelector.Name = "subActionSelector";
+
+            sectionSelectorFormViewer.Controls.Add(actionSelector);
+            sectionSelectorFormViewer.Controls.Add(subActionSelector);
+
         }
 
         private void LocationSelector_Load(object sender, EventArgs e)
         {
+            sectionComboBox.Items.AddRange(sections);
+            sectionComboBox.SelectedIndex = 0;
+            /*
             sectionsTreeView.Nodes.Add("Actions");
             int numberOfSpecialActions = psaMovesetHandler.ActionsHandler.GetNumberOfSpecialActions();
             for (int i = 0; i < numberOfSpecialActions; i++)
@@ -51,25 +71,10 @@ namespace PSA2.src.Views.MovesetEditorViews
                 sectionsTreeView.Nodes[1].Nodes[i].Nodes.Add("Other");
             }
             sectionsTreeView.SelectedNode = sectionsTreeView.Nodes[0];
-
-        }
-
-        private void sectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            Console.WriteLine("OLD EVENT");
-            /*
-            foreach (ILocationSelectorListener listener in listeners)
-            {
-                listener.OnSelect(LocationType.ACTION, sectionsTreeView.SelectedNode.Index);
-            }
             */
         }
 
-        private void sectionsTreeView_SelectedNodeChanged(object sender, TreeViewEventArgs e)
-        {
-
-        }
-
+        /*
         private void sectionsTreeView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (sectionsTreeView.SelectedNode.Nodes.Count == 0)
@@ -112,35 +117,38 @@ namespace PSA2.src.Views.MovesetEditorViews
                 }
             }
         }
+        */
 
-        /*
-        private void sectionsTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void sectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LocationType locationType = 0;
-            int selectedIndex = -1;
-            if (sectionsTabControl.SelectedIndex == 0)
+            /*
+            sectionSelectorFormViewer.Controls.Clear();
+            switch (sectionComboBox.SelectedItem)
             {
-                locationType = LocationType.ACTION;
-                if (actionOptionsListBox.SelectedIndex == -1)
-                {
-                    actionOptionsListBox.SelectedIndex = 0;
-                }
-                selectedIndex = actionOptionsListBox.SelectedIndex;
+                case "Actions":
+                    ActionSelector actionSelector = new ActionSelector(psaMovesetHandler);
+                    actionSelector.Dock = DockStyle.Fill;
+                    sectionSelectorFormViewer.Controls.Add(actionSelector);
+                    break;
+                case "Sub Actions":
+                    SubActionSelector subActionSelector = new SubActionSelector(psaMovesetHandler);
+                    subActionSelector.Dock = DockStyle.Fill;
+                    sectionSelectorFormViewer.Controls.Add(subActionSelector);
+                    break;
             }
-            else if (sectionsTabControl.SelectedIndex == 1)
-            {
-                locationType = LocationType.SUBACTION;
-                if (subActionOptionsListBox.SelectedIndex == -1)
-                {
-                    subActionOptionsListBox.SelectedIndex = 0;
-                }
-                selectedIndex = subActionOptionsListBox.SelectedIndex;
-            }
+            */
 
-            foreach (ILocationSelectorListener listener in listeners)
+            switch (sectionComboBox.SelectedItem)
             {
-                listener.OnSelect(locationType, selectedIndex);
+                case "Actions":
+                    sectionSelectorFormViewer.Controls["actionSelector"].Visible = true;
+                    sectionSelectorFormViewer.Controls["subActionSelector"].Visible = false;
+                    break;
+                case "Sub Actions":
+                    sectionSelectorFormViewer.Controls["actionSelector"].Visible = false;
+                    sectionSelectorFormViewer.Controls["subActionSelector"].Visible = true;
+                    break;
             }
-        }*/
+        }
     }
 }

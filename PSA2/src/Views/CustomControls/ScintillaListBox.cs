@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,8 +16,8 @@ namespace PSA2.src.Views.CustomControls
         public List<string> Items { get; }
 
         private int selectedIndex;
-        public int SelectedIndex 
-        { 
+        public int SelectedIndex
+        {
             get
             {
                 return selectedIndex;
@@ -23,12 +25,12 @@ namespace PSA2.src.Views.CustomControls
             set
             {
                 selectedIndex = value;
-                SelectLine(SelectedIndex);
+                SelectLine(selectedIndex);
             }
         }
 
-        public Color ItemForeColor 
-        { 
+        public Color ItemForeColor
+        {
             get
             {
                 return Styles[1].ForeColor;
@@ -40,20 +42,20 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
-        public Color ItemBackColor 
-        { 
+        public Color ItemBackColor
+        {
             get
             {
                 return Styles[1].BackColor;
-            } 
+            }
             set
             {
                 Styles[1].BackColor = value;
             }
         }
 
-        public Color SelectedItemForeColor 
-        { 
+        public Color SelectedItemForeColor
+        {
             get
             {
                 return Styles[2].ForeColor;
@@ -64,7 +66,7 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
-        public Color SelectedItemBackColor 
+        public Color SelectedItemBackColor
         {
             get
             {
@@ -77,7 +79,7 @@ namespace PSA2.src.Views.CustomControls
         }
 
         public Color BackgroundColor
-        { 
+        {
             get
             {
                 return Styles[Style.Default].BackColor;
@@ -89,6 +91,7 @@ namespace PSA2.src.Views.CustomControls
         }
 
         public event EventHandler SelectedIndexChanged;
+        private int currentIndexClicked = 0;
 
         public ScintillaListBox() : base()
         {
@@ -118,20 +121,23 @@ namespace PSA2.src.Views.CustomControls
             CurrentCursor = Cursors.Arrow;
             CaretStyle = CaretStyle.Invisible;
 
-            UpdateUI += new EventHandler<UpdateUIEventArgs> (SelectIndexChangedEvent);
+            UpdateUI += new EventHandler<UpdateUIEventArgs>(SelectIndexChangedEvent);
+
             StyleDocument();
         }
 
         private void SelectIndexChangedEvent(object sender, UpdateUIEventArgs e)
         {
-            SelectedIndexChanged?.Invoke(sender, e);
+            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
+            {
+                SelectedIndexChanged?.Invoke(sender, e);
+            }
         }
 
         public void AddItem(string item)
         {
-            Items.Add(item);
             ReadOnly = false;
-            if (Items.Count == 1)
+            if (Items.Count == 0)
             {
                 Text = item;
             }
@@ -139,6 +145,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 Text += ($"\n{item}");
             }
+            Items.Add(item);
             ReadOnly = true;
             StyleDocument();
         }
@@ -147,7 +154,7 @@ namespace PSA2.src.Views.CustomControls
         {
             ReadOnly = false;
             string joinedItems = string.Join("\n", items);
-            if (Items.Count == 1)
+            if (Items.Count == 0)
             {
                 Text = joinedItems;
             }
@@ -155,6 +162,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 Text += ($"\n{joinedItems}");
             }
+            Items.AddRange(items);
             ReadOnly = true;
             StyleDocument();
         }
@@ -188,8 +196,7 @@ namespace PSA2.src.Views.CustomControls
         {
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
             {
-                int currentLine = LineFromPosition(CurrentPosition);
-                SelectedIndex = currentLine;
+                SelectedIndex = currentIndexClicked;
             }
 
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection
@@ -205,7 +212,8 @@ namespace PSA2.src.Views.CustomControls
         private void SelectLine(int lineIndex)
         {
             (int startPosition, int endPosition) = GetLineStartAndEndPositions(lineIndex);
-            SetSelection(endPosition + 1, startPosition);
+            SetSelection(endPosition, startPosition);
+            CurrentPosition = endPosition;
         }
 
         public void StyleDocument()
@@ -228,5 +236,34 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            int charIndex = CharPositionFromPoint(e.X, e.Y);
+            currentIndexClicked = LineFromPosition(charIndex);
+
+            base.OnMouseDown(e);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Down)
+            {
+                if (currentIndexClicked < Items.Count - 1)
+                {
+                    currentIndexClicked++;
+                    OnUpdateUI(new UpdateUIEventArgs(UpdateChange.Selection));
+                }
+            }
+            else if (e.KeyData == Keys.Up)
+            {
+                if (currentIndexClicked > 0)
+                {
+                    currentIndexClicked--;
+                    OnUpdateUI(new UpdateUIEventArgs(UpdateChange.Selection));
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
     }
 }
