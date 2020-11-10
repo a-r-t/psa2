@@ -105,8 +105,8 @@ namespace PSA2.src.Views.CustomControls
             SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
 
             Styles[Style.Default].BackColor = Color.White;
-            //Styles[Style.Default].Font = "Consolas";
-            //Styles[Style.Default].SizeF = 12;
+            Styles[Style.Default].Font = "Consolas";
+            Styles[Style.Default].SizeF = 10;
             StyleClearAll();
 
             Styles[1].ForeColor = Color.FromArgb(0, 0, 0);
