@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2MovesetLogic.src.Models.Fighter;
+using PSA2MovesetLogic.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -44,6 +45,15 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateAnimationData();
+
+            CodeBlockSelection codeBlockSelection = new CodeBlockSelection(psaMovesetHandler);
+            codeBlockSelection.SectionType = SectionType.SUBACTION;
+            codeBlockSelection.SectionIndex = subActionsListScintilla.SelectedIndex;
+
+            foreach (ISectionSelectorListener listener in listeners)
+            {
+                listener.OnCodeBlockSelected(animationNameTextBox.Text, codeBlockSelection);
+            }
         }
 
         private void UpdateAnimationData()
@@ -51,14 +61,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             Animation animation = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationData(subActionsListScintilla.SelectedIndex);
             animationNameTextBox.Text = animation.AnimationName;
             inTransitionTextBox.Text = animation.AnimationFlags.InTransition.ToString();
-            noOutTransitionCheckBox.Checked = animation.AnimationFlags.NoOutTransition != 0;
-            loopCheckBox.Checked = animation.AnimationFlags.Loop != 0;
-            movesCharacterCheckBox.Checked = animation.AnimationFlags.MovesCharacter != 0;
-            unknown3CheckBox.Checked = animation.AnimationFlags.Unknown3 != 0;
-            unknown4CheckBox.Checked = animation.AnimationFlags.Unknown4 != 0;
-            unknown5CheckBox.Checked = animation.AnimationFlags.Unknown5 != 0;
-            transitionOutFromStartCheckBox.Checked = animation.AnimationFlags.TransitionOutFromStart != 0;
-            unknown7CheckBox.Checked = animation.AnimationFlags.Unknown7 != 0;
+            noOutTransitionCheckBox.Checked = animation.AnimationFlags.NoOutTransition.ToBoolean();
+            loopCheckBox.Checked = animation.AnimationFlags.Loop.ToBoolean();
+            movesCharacterCheckBox.Checked = animation.AnimationFlags.MovesCharacter.ToBoolean();
+            unknown3CheckBox.Checked = animation.AnimationFlags.Unknown3.ToBoolean();
+            unknown4CheckBox.Checked = animation.AnimationFlags.Unknown4.ToBoolean();
+            unknown5CheckBox.Checked = animation.AnimationFlags.Unknown5.ToBoolean();
+            transitionOutFromStartCheckBox.Checked = animation.AnimationFlags.TransitionOutFromStart.ToBoolean();
+            unknown7CheckBox.Checked = animation.AnimationFlags.Unknown7.ToBoolean();
         }
     }
 }

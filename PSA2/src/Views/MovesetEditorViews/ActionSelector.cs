@@ -36,6 +36,30 @@ namespace PSA2.src.Views.MovesetEditorViews
             actionNames[3] += " - Down Special";
 
             actionsListScintilla.AddItems(actionNames);
+            UpdateSectionSelection();
+        }
+
+        private void actionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSectionSelection();
+        }
+
+        private void UpdateSectionSelection()
+        {
+            CodeBlockSelection codeBlockSelection = new CodeBlockSelection(psaMovesetHandler);
+            codeBlockSelection.SectionType = SectionType.ACTION;
+            codeBlockSelection.SectionIndex = actionsListScintilla.SelectedIndex;
+            string item = actionsListScintilla.Items[actionsListScintilla.SelectedIndex];
+            int nameStartIndex = item.IndexOf(" - ");
+     
+            string name = nameStartIndex != -1
+                ? item.Substring(nameStartIndex + 3)
+                : "";
+
+            foreach (ISectionSelectorListener listener in listeners)
+            {
+                listener.OnCodeBlockSelected(name, codeBlockSelection);
+            }
         }
     }
 }

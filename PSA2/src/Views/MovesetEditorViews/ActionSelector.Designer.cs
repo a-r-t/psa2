@@ -45,6 +45,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.actionsListScintilla.BackgroundColor = System.Drawing.Color.White;
+            this.actionsListScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
             this.actionsListScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
             this.actionsListScintilla.FullLineSelect = false;
             this.actionsListScintilla.ItemBackColor = System.Drawing.Color.White;
@@ -58,6 +59,7 @@
             this.actionsListScintilla.ShowLineNumbers = false;
             this.actionsListScintilla.Size = new System.Drawing.Size(193, 215);
             this.actionsListScintilla.TabIndex = 0;
+            this.actionsListScintilla.SelectedIndexChanged += new System.EventHandler(this.actionsListScintilla_SelectedIndexChanged);
             // 
             // label1
             // 

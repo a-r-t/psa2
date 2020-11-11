@@ -30,8 +30,7 @@
         {
             this.sectionComboBox = new System.Windows.Forms.ComboBox();
             this.sectionSelectorFormViewer = new System.Windows.Forms.Panel();
-            this.openInThisTabButton = new System.Windows.Forms.Button();
-            this.openInNewTabButton = new System.Windows.Forms.Button();
+            this.openButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // sectionComboBox
@@ -53,37 +52,26 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sectionSelectorFormViewer.Location = new System.Drawing.Point(0, 30);
             this.sectionSelectorFormViewer.Name = "sectionSelectorFormViewer";
-            this.sectionSelectorFormViewer.Size = new System.Drawing.Size(178, 361);
+            this.sectionSelectorFormViewer.Size = new System.Drawing.Size(178, 388);
             this.sectionSelectorFormViewer.TabIndex = 1;
             // 
-            // openInThisTabButton
+            // openButton
             // 
-            this.openInThisTabButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.openButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.openInThisTabButton.Location = new System.Drawing.Point(4, 398);
-            this.openInThisTabButton.Name = "openInThisTabButton";
-            this.openInThisTabButton.Size = new System.Drawing.Size(171, 23);
-            this.openInThisTabButton.TabIndex = 2;
-            this.openInThisTabButton.Text = "Open In Current Tab";
-            this.openInThisTabButton.UseVisualStyleBackColor = true;
-            // 
-            // openInNewTabButton
-            // 
-            this.openInNewTabButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.openInNewTabButton.Location = new System.Drawing.Point(3, 427);
-            this.openInNewTabButton.Name = "openInNewTabButton";
-            this.openInNewTabButton.Size = new System.Drawing.Size(171, 23);
-            this.openInNewTabButton.TabIndex = 3;
-            this.openInNewTabButton.Text = "Open In New Tab";
-            this.openInNewTabButton.UseVisualStyleBackColor = true;
+            this.openButton.Location = new System.Drawing.Point(4, 424);
+            this.openButton.Name = "openButton";
+            this.openButton.Size = new System.Drawing.Size(171, 30);
+            this.openButton.TabIndex = 2;
+            this.openButton.Text = "Open";
+            this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.openButton_Click);
             // 
             // SectionSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.openInNewTabButton);
-            this.Controls.Add(this.openInThisTabButton);
+            this.Controls.Add(this.openButton);
             this.Controls.Add(this.sectionSelectorFormViewer);
             this.Controls.Add(this.sectionComboBox);
             this.Name = "SectionSelector";
@@ -97,7 +85,6 @@
 
         private System.Windows.Forms.ComboBox sectionComboBox;
         private System.Windows.Forms.Panel sectionSelectorFormViewer;
-        private System.Windows.Forms.Button openInThisTabButton;
-        private System.Windows.Forms.Button openInNewTabButton;
+        private System.Windows.Forms.Button openButton;
     }
 }

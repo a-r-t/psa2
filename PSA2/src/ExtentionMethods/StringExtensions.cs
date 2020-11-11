@@ -14,5 +14,10 @@ namespace PSA2.src.ExtentionMethods
             bool isNum = Double.TryParse(Convert.ToString(s), System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out retNum);
             return isNum;
         }
+
+        public static string ToTitleCase(this string s)
+        {
+            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
+        }
     }
 }

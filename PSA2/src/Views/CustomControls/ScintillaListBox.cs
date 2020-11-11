@@ -24,6 +24,7 @@ namespace PSA2.src.Views.CustomControls
             }
             set
             {
+                previousSelectedIndex = selectedIndex;
                 selectedIndex = value;
                 SelectLine(selectedIndex);
             }
@@ -92,6 +93,7 @@ namespace PSA2.src.Views.CustomControls
 
         public event EventHandler SelectedIndexChanged;
         private int currentIndexClicked = 0;
+        private int previousSelectedIndex;
 
         public ScintillaListBox() : base()
         {
@@ -128,7 +130,7 @@ namespace PSA2.src.Views.CustomControls
 
         private void SelectIndexChangedEvent(object sender, UpdateUIEventArgs e)
         {
-            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
+            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection && previousSelectedIndex != SelectedIndex)
             {
                 SelectedIndexChanged?.Invoke(sender, e);
             }
