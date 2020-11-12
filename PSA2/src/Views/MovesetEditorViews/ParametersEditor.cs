@@ -110,7 +110,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void parameterTypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("Combo box changed");
             if (parameterTypesComboBox.SelectedIndex != -1)
             {
                 int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
