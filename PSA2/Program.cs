@@ -17,7 +17,8 @@ namespace PSA2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            //Application.Run(new MainForm());
+            Application.Run(new TabControlTest());
         }
     }
 }

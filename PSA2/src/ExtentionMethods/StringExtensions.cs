@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PSA2.src.ExtentionMethods
 {
@@ -18,6 +20,11 @@ namespace PSA2.src.ExtentionMethods
         public static string ToTitleCase(this string s)
         {
             return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
+        }
+
+        public static Size Measure(this string s, Font f)
+        {
+            return TextRenderer.MeasureText(s, f);
         }
     }
 }
