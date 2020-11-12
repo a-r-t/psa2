@@ -15,7 +15,7 @@ namespace PSA2.src.Views.CustomControls
     {
         public List<string> Items { get; }
 
-        private int selectedIndex;
+        private int selectedIndex = -1;
         public int SelectedIndex
         {
             get
@@ -24,9 +24,14 @@ namespace PSA2.src.Views.CustomControls
             }
             set
             {
-                previousSelectedIndex = selectedIndex;
-                selectedIndex = value;
-                SelectLine(selectedIndex);
+                int oldIndex = selectedIndex;
+                if (oldIndex != value)
+                {
+                    selectedIndex = value;
+                    SelectLine(selectedIndex);
+                    SelectIndexChangedEvent(this, new EventArgs());
+                    previousSelectedIndex = oldIndex;
+                }
             }
         }
 
@@ -92,8 +97,8 @@ namespace PSA2.src.Views.CustomControls
         }
 
         public event EventHandler SelectedIndexChanged;
-        private int currentIndexClicked = 0;
-        private int previousSelectedIndex;
+        private int currentIndexClicked = -1;
+        private int previousSelectedIndex = -1;
 
         public ScintillaListBox() : base()
         {
@@ -123,17 +128,12 @@ namespace PSA2.src.Views.CustomControls
             CurrentCursor = Cursors.Arrow;
             CaretStyle = CaretStyle.Invisible;
 
-            UpdateUI += new EventHandler<UpdateUIEventArgs>(SelectIndexChangedEvent);
-
             StyleDocument();
         }
 
-        private void SelectIndexChangedEvent(object sender, UpdateUIEventArgs e)
+        private void SelectIndexChangedEvent(object sender, EventArgs e)
         {
-            if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection && previousSelectedIndex != SelectedIndex)
-            {
-                SelectedIndexChanged?.Invoke(sender, e);
-            }
+            SelectedIndexChanged?.Invoke(sender, e);
         }
 
         public void AddItem(string item)
@@ -149,6 +149,12 @@ namespace PSA2.src.Views.CustomControls
             }
             Items.Add(item);
             ReadOnly = true;
+
+            if (SelectedIndex == -1)
+            {
+                SelectedIndex = 0;
+            }
+
             StyleDocument();
         }
 
@@ -166,6 +172,12 @@ namespace PSA2.src.Views.CustomControls
             }
             Items.AddRange(items);
             ReadOnly = true;
+
+            if (SelectedIndex == -1)
+            {
+                SelectedIndex = 0;
+            }
+
             StyleDocument();
         }
 
@@ -175,6 +187,7 @@ namespace PSA2.src.Views.CustomControls
             ReadOnly = false;
             Text = "";
             ReadOnly = true;
+            SelectedIndex = -1;
         }
 
         public void InsertItem(int index, string item)
@@ -183,6 +196,12 @@ namespace PSA2.src.Views.CustomControls
             ReadOnly = false;
             Text = string.Join("\n", Items);
             ReadOnly = true;
+
+            if (SelectedIndex == -1)
+            {
+                SelectedIndex = 0;
+            }
+
             StyleDocument();
         }
 
@@ -192,13 +211,21 @@ namespace PSA2.src.Views.CustomControls
             ReadOnly = false;
             Text = string.Join("\n", Items);
             ReadOnly = true;
+
+            if (Items.Count == 0)
+            {
+                SelectedIndex = -1;
+            }
         }
 
         protected override void OnUpdateUI(UpdateUIEventArgs e)
         {
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
             {
-                SelectedIndex = currentIndexClicked;
+                if (currentIndexClicked >= 0)
+                {
+                    SelectedIndex = currentIndexClicked;
+                }
             }
 
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection

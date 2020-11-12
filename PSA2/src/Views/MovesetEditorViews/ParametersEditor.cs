@@ -47,6 +47,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection)
         {
+            // TODO: Find out why this activates twice because it really shouldn't
             parameterNamesScintilla.ClearItems();
 
             if (psaCommands != null && psaCommands.Count == 1 && psaCommands[0].Parameters.Count > 0)
@@ -71,6 +72,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
 
             parameterNamesScintilla.StyleDocument();
+            
         }
 
         private void PopulateParameterNames(PsaCommand psaCommand)
@@ -90,26 +92,25 @@ namespace PSA2.src.Views.MovesetEditorViews
                     parameterNamesScintilla.AddItem($"arg{i}");
                 }
             }
-
-            if (parameterNamesScintilla.Items.Count > 0)
-            {
-                parameterNamesScintilla.SelectedIndex = 0;
-            }
         }
 
         private void parameterNamesScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
             int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
-            if (selectedParameterIndex != previousParameterSelected)
+            if (selectedParameterIndex >= 0)
             {
-                parameterTypesComboBox.SelectedIndex = -1;
-                parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
+                if (selectedParameterIndex != previousParameterSelected)
+                {
+                    parameterTypesComboBox.SelectedIndex = -1;
+                    parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
+                }
+                previousParameterSelected = selectedParameterIndex;
             }
-            previousParameterSelected = selectedParameterIndex;
         }
 
         private void parameterTypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("Combo box changed");
             if (parameterTypesComboBox.SelectedIndex != -1)
             {
                 int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;

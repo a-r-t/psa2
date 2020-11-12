@@ -53,7 +53,6 @@
             this.actionsListScintilla.Location = new System.Drawing.Point(4, 5);
             this.actionsListScintilla.Name = "actionsListScintilla";
             this.actionsListScintilla.ReadOnly = true;
-            this.actionsListScintilla.SelectedIndex = 0;
             this.actionsListScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
             this.actionsListScintilla.SelectedItemForeColor = System.Drawing.Color.White;
             this.actionsListScintilla.ShowLineNumbers = false;

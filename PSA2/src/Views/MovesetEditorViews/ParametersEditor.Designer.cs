@@ -75,7 +75,6 @@
             this.parameterNamesScintilla.Location = new System.Drawing.Point(0, 0);
             this.parameterNamesScintilla.Name = "parameterNamesScintilla";
             this.parameterNamesScintilla.ReadOnly = true;
-            this.parameterNamesScintilla.SelectedIndex = 0;
             this.parameterNamesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
             this.parameterNamesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
             this.parameterNamesScintilla.ShowLineNumbers = false;

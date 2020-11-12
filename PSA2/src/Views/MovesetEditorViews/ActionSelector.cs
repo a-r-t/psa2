@@ -36,7 +36,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             actionNames[3] += " - Down Special";
 
             actionsListScintilla.AddItems(actionNames);
-            UpdateSectionSelection();
+            //UpdateSectionSelection();
         }
 
         private void actionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)

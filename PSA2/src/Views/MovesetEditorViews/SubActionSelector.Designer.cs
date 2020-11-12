@@ -256,7 +256,6 @@
             this.subActionsListScintilla.Location = new System.Drawing.Point(4, 31);
             this.subActionsListScintilla.Name = "subActionsListScintilla";
             this.subActionsListScintilla.ReadOnly = true;
-            this.subActionsListScintilla.SelectedIndex = 0;
             this.subActionsListScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
             this.subActionsListScintilla.SelectedItemForeColor = System.Drawing.Color.White;
             this.subActionsListScintilla.ShowLineNumbers = false;

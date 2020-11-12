@@ -38,7 +38,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             if (subActionsListScintilla.Items.Count > 0)
             {
                 subActionsListScintilla.SelectedIndex = 0;
-                UpdateAnimationData();
+                //UpdateAnimationData();
             }
         }
 
