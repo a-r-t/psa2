@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -137,5 +138,19 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
+        public override string ToString()
+        {
+            string sectionIndexHex = "";
+            switch(SectionType)
+            {
+                case SectionType.ACTION:
+                    sectionIndexHex = (SectionIndex + 274).ToString("X");
+                    break;
+                case SectionType.SUBACTION:
+                    sectionIndexHex = SectionIndex.ToString("X");
+                    break;
+            }
+            return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex}";
+        }
     }
 }

@@ -14,13 +14,16 @@ using System.Reflection;
 using PSA2.src.ExtentionMethods;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using System.Runtime.InteropServices;
+using System.Net;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
     public partial class MovesetEditor: ObservableUserControl<IMovesetEditorListener>, 
         ISectionSelectorListener, 
         IEventActionsListener,
-        ICommandSelectorListener
+        ICommandSelectorListener,
+        IParametersEditorListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
         protected PsaCommandsConfig psaCommandsConfig;
@@ -61,6 +64,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.parametersEditor = new ParametersEditor(psaMovesetHandler, psaCommandsConfig);
             parametersEditor.Dock = DockStyle.Fill;
             parametersEditorViewer.Controls.Add(parametersEditor);
+            parametersEditor.AddListener(this);
 
             this.commandSelector = new CommandSelector(psaMovesetHandler, psaCommandsConfig);
             commandSelector.Dock = DockStyle.Fill;
@@ -116,7 +120,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void eventsTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            ActiveCodeBlockViewer?.EmitCommandSelected();
         }
 
         private void eventsTabControl_Click(object sender, EventArgs e)
@@ -168,6 +172,11 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void OnCommandSelected(PsaCommandConfig psaCommandConfig)
         {
             this.currentlySelectedCommandOption = psaCommandConfig;
+        }
+
+        public void OnParameterChange(int commandIndex, PsaCommand psaCommand)
+        {
+            ActiveCodeBlockViewer?.ModifyCommand(commandIndex, psaCommand);
         }
     }
 }

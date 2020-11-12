@@ -10,6 +10,6 @@ namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
     public interface ICodeBlockViewerListener
     {
-        void OnCommandSelected(List<PsaCommand> psaCommands, CodeBlockSelection codeBlockSelection);
+        void OnCommandSelected(List<PsaCommand> psaCommands, List<int> commandIndexes, CodeBlockSelection codeBlockSelection);
     }
 }
