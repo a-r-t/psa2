@@ -11,6 +11,7 @@ namespace PSA2.src.Views.CustomControls
 {
     public partial class TabCustom: Panel
     {
+        public int Index { get; set; }
         private Color textColor;
         public Color TextColor 
         {
@@ -103,21 +104,6 @@ namespace PSA2.src.Views.CustomControls
         }
 
         public Color HoverBackgroundColor { get; set; }
-
-        /*
-        private Color hoverTextColor;
-        public Color HoverTextColor
-        {
-            get
-            {
-                return hoverTextColor;
-            }
-            set
-            {
-                hoverTextColor = value;
-            }
-        }
-        */
         public Color HoverTextColor { get; set; }
 
         public TabCustom(string text) : base()

@@ -77,15 +77,80 @@ namespace PSA2.src.Views.CustomControls
             }
             tab.Location = new Point(xLocation, 0);
             tab.Height = tabsHolder.Height;
-            tab.Click += (sender, EventArgs) => { OnTabClicked(sender, EventArgs, tabIndex); };
+            tab.Index = tabIndex;
+            tab.MouseDown += (sender, EventArgs) => { OnTabClicked(sender, EventArgs); };
+            tab.MouseMove += (sender, MouseEventArgs) => { OnTabDragged(sender, MouseEventArgs); };
             return tab;
         }
 
-        private void OnTabClicked(object sender, EventArgs e, int tabIndex)
+        private void OnTabClicked(object sender, EventArgs e)
         {
+            int tabIndex = (sender as TabCustom).Index;
             if (CurrentTabIndex != tabIndex)
             {
                 CurrentTabIndex = tabIndex;
+            }
+        }
+
+        private void OnTabDragged(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int tabIndex = (sender as TabCustom).Index;
+
+                TabCustom currentTab = tabs[tabIndex];
+                int mouseLocationX = e.Location.X + currentTab.Location.X;
+                if (tabIndex > 0)
+                {
+                    TabCustom leftTab = tabs[tabIndex - 1];
+                    int offset = leftTab.Width > currentTab.Width
+                        ? leftTab.Width - currentTab.Width
+                        : 0;
+                    if (mouseLocationX < leftTab.Location.X + leftTab.Size.Width - offset)
+                    {
+                        currentTab.Location = leftTab.Location;
+                        leftTab.Location = new Point(currentTab.Location.X + currentTab.Width + 1, currentTab.Location.Y);
+                        currentTab.Index--;
+                        leftTab.Index++;
+
+                        TabCustom tempTab = tabs[tabIndex - 1];
+                        tabs[tabIndex - 1] = tabs[tabIndex];
+                        tabs[tabIndex] = tempTab;
+
+                        TabPageCustom tempTabPage = TabPages[tabIndex - 1];
+                        TabPages[tabIndex - 1] = TabPages[tabIndex];
+                        TabPages[tabIndex] = tempTabPage;
+
+                        CurrentTabIndex = currentTab.Index;
+                        return;
+                    }
+                }
+                if (tabIndex < tabs.Count - 1)
+                {
+                    TabCustom rightTab = tabs[tabIndex + 1];
+                    int offset = rightTab.Width > currentTab.Width
+                        ? rightTab.Width - currentTab.Width
+                        : 0;
+                    if (mouseLocationX > rightTab.Location.X + offset)
+                    {
+                        Point temp = currentTab.Location;
+                        rightTab.Location = currentTab.Location;
+                        currentTab.Location = new Point(temp.X + rightTab.Width + 1, temp.Y);
+                        currentTab.Index++;
+                        rightTab.Index--;
+
+                        TabCustom tempTab = tabs[tabIndex + 1];
+                        tabs[tabIndex + 1] = tabs[tabIndex];
+                        tabs[tabIndex] = tempTab;
+
+                        TabPageCustom tempTabPage = TabPages[tabIndex + 1];
+                        TabPages[tabIndex + 1] = TabPages[tabIndex];
+                        TabPages[tabIndex] = tempTabPage;
+
+                        CurrentTabIndex = currentTab.Index;
+                        return;
+                    }
+                }
             }
         }
 
