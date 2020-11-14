@@ -16,6 +16,8 @@ namespace PSA2.src.Views.CustomControls
         public ObservableCollection<TabPageCustom> TabPages { get; }
         private Panel tabsHolder;
         private Panel tabViewer;
+        private TabList tabList;
+        
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
         public int CurrentTabIndex
@@ -78,6 +80,7 @@ namespace PSA2.src.Views.CustomControls
             tab.Location = new Point(xLocation, 0);
             tab.Height = tabsHolder.Height;
             tab.Index = tabIndex;
+            tab.Width += 20;
             tab.MouseDown += (sender, EventArgs) => { OnTabClicked(sender, EventArgs); };
             tab.MouseMove += (sender, MouseEventArgs) => { OnTabDragged(sender, MouseEventArgs); };
             return tab;
@@ -195,6 +198,12 @@ namespace PSA2.src.Views.CustomControls
             tabPage3.BackColor = Color.Purple;
             tabPage3.TabText = "My Nightmare, I don't know";
             TabPages.Add(tabPage3);
+
+            tabList = new TabList();
+            tabList.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            tabList.Location = new Point(tabsHolder.Right - tabList.Width, 0);
+            tabList.Height = tabsHolder.Height;
+            tabsHolder.Controls.Add(tabList);
         }
 
         protected override void OnPaint(PaintEventArgs e)

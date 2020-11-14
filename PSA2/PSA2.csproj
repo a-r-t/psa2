@@ -78,6 +78,9 @@
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
+    <Compile Include="src\Views\CustomControls\PanelButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
     <Compile Include="src\Views\CustomControls\ScintillaListBox.cs">
       <SubType>Component</SubType>
@@ -86,6 +89,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\TabCustom.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Views\CustomControls\TabList.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\TabPageCustom.cs">

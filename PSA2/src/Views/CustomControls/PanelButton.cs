@@ -9,11 +9,12 @@ using System.Windows.Forms;
 
 namespace PSA2.src.Views.CustomControls
 {
-    public partial class TabCustom: Panel
+    public partial class PanelButton : Panel
     {
-        public int Index { get; set; }
+        private bool mouseDown;
+        public override string Text { get; set; }
         private Color textColor;
-        public Color TextColor 
+        public Color TextColor
         {
             get
             {
@@ -30,7 +31,7 @@ namespace PSA2.src.Views.CustomControls
         }
 
         private Color selectedTextColor;
-        public Color SelectedTextColor 
+        public Color SelectedTextColor
         {
             get
             {
@@ -47,8 +48,8 @@ namespace PSA2.src.Views.CustomControls
         }
 
         private Color backgroundColor;
-        public Color BackgroundColor 
-        { 
+        public Color BackgroundColor
+        {
             get
             {
                 return backgroundColor;
@@ -60,12 +61,12 @@ namespace PSA2.src.Views.CustomControls
                 {
                     BackColor = value;
                 }
-            } 
+            }
         }
 
         private Color selectedBackColor;
-        public Color SelectedBackgroundColor 
-        { 
+        public Color SelectedBackgroundColor
+        {
             get
             {
                 return selectedBackColor;
@@ -83,8 +84,8 @@ namespace PSA2.src.Views.CustomControls
         private Color currentTextColor;
 
         public bool isSelected;
-        public bool IsSelected 
-        { 
+        public bool IsSelected
+        {
             get
             {
                 return isSelected;
@@ -100,24 +101,35 @@ namespace PSA2.src.Views.CustomControls
                 {
                     StyleUnselected();
                 }
-            } 
+                SelectionStatusChangeEvent(this, new EventArgs());
+            }
         }
 
         public Color HoverBackgroundColor { get; set; }
         public Color HoverTextColor { get; set; }
 
-        public TabCustom(string text) : base()
+        public event EventHandler SelectedStatusChanged;
+
+        public PanelButton(): base()
         {
             Font = new Font("Times New Roman", 10, FontStyle.Regular);
-            Text = text;
-            Width = text.Measure(Font).Width;
-            Height = text.Measure(Font).Height;
             TextColor = Color.Black;
             BackgroundColor = Color.White;
             SelectedTextColor = Color.White;
             SelectedBackgroundColor = Color.Black;
             HoverBackgroundColor = Color.Gray;
             HoverTextColor = TextColor;
+        }
+
+        private void SelectionStatusChangeEvent(object sender, EventArgs e)
+        {
+            OnSelectionStatusChanged();
+            SelectedStatusChanged?.Invoke(sender, e);
+        }
+
+        protected virtual void OnSelectionStatusChanged()
+        {
+
         }
 
         public virtual void StyleUnselected()
@@ -135,7 +147,7 @@ namespace PSA2.src.Views.CustomControls
         protected override void OnPaint(PaintEventArgs e)
         {
             Size textSize = Text.Measure(Font);
-            e.Graphics.DrawString(Text, Font, new SolidBrush(currentTextColor), new Point(((Width - textSize.Width) / 2) + 3, (Height - textSize.Height) / 2));
+            e.Graphics.DrawString(Text, Font, new SolidBrush(currentTextColor), new Point(((Width - textSize.Width) / 2), (Height - textSize.Height) / 2));
             base.OnPaint(e);
         }
 
@@ -158,5 +170,35 @@ namespace PSA2.src.Views.CustomControls
             }
             base.OnMouseLeave(e);
         }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDown = false;
+                if (ContainsPoint(e.Location))
+                {
+                    IsSelected = !IsSelected;
+                }
+            }
+
+            base.OnMouseUp(e);
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDown = true;
+            }
+            base.OnMouseDown(e);
+        }
+
+        public bool ContainsPoint(Point p)
+        {
+            return p.X > 0 && p.X < Width && p.Y > 0 && p.Y < Height;
+        }
     }
+
+
 }
