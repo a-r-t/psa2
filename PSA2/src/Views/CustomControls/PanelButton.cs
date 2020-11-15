@@ -12,6 +12,7 @@ namespace PSA2.src.Views.CustomControls
     public partial class PanelButton : Panel
     {
         private bool mouseDown;
+        private bool mouseHover;
         public override string Text { get; set; }
         private Color textColor;
         public Color TextColor
@@ -134,8 +135,16 @@ namespace PSA2.src.Views.CustomControls
 
         public virtual void StyleUnselected()
         {
-            BackColor = BackgroundColor;
-            currentTextColor = TextColor;
+            if (!mouseHover)
+            {
+                BackColor = BackgroundColor;
+                currentTextColor = TextColor;
+            }
+            else
+            {
+                currentTextColor = HoverTextColor;
+                BackColor = HoverBackgroundColor;
+            }
         }
 
         public virtual void StyleSelected()
@@ -153,6 +162,7 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            mouseHover = true;
             if (!IsSelected)
             {
                 currentTextColor = HoverTextColor;
@@ -163,12 +173,18 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            mouseHover = false;
             if (!IsSelected)
             {
-                currentTextColor = TextColor;
-                BackColor = BackgroundColor;
+                StyleUnselected();
             }
             base.OnMouseLeave(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            mouseHover = true;
+            base.OnMouseMove(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)

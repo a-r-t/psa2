@@ -91,7 +91,7 @@
     <Compile Include="src\Views\CustomControls\TabCustom.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Views\CustomControls\TabList.cs">
+    <Compile Include="src\Views\CustomControls\TabListButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\TabPageCustom.cs">

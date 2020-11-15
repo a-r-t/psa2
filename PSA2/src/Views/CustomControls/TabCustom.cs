@@ -11,6 +11,7 @@ namespace PSA2.src.Views.CustomControls
 {
     public partial class TabCustom: Panel
     {
+        public override string Text { get; set; }
         public int Index { get; set; }
         private Color textColor;
         public Color TextColor 

@@ -16,7 +16,10 @@ namespace PSA2.src.Views.CustomControls
         public ObservableCollection<TabPageCustom> TabPages { get; }
         private Panel tabsHolder;
         private Panel tabViewer;
-        private TabList tabList;
+        private TabListButton tabListButton;
+        private ScintillaListBox tabListScintilla;
+        private Size currentControlSize;
+        private int currentLastTabIndex;
         
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
@@ -177,6 +180,7 @@ namespace PSA2.src.Views.CustomControls
             tabsHolder.Location = new Point(0, 0);
             tabsHolder.Height = 40;
             tabsHolder.BackColor = Color.Blue;
+            tabsHolder.Resize += TabsHolder_Resize;
             Controls.Add(tabsHolder);
 
             tabViewer = new Panel();
@@ -199,17 +203,97 @@ namespace PSA2.src.Views.CustomControls
             tabPage3.TabText = "My Nightmare, I don't know";
             TabPages.Add(tabPage3);
 
-            tabList = new TabList();
-            tabList.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            tabList.Location = new Point(tabsHolder.Right - tabList.Width, 0);
-            tabList.Height = tabsHolder.Height;
-            tabsHolder.Controls.Add(tabList);
+            tabListButton = new TabListButton();
+            tabListButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            tabListButton.Location = new Point(tabsHolder.Right - tabListButton.Width, 0);
+            tabListButton.Height = tabsHolder.Height;
+            tabListButton.Visible = false;
+            tabsHolder.Controls.Add(tabListButton);
+
+            tabListScintilla = new ScintillaListBox();
+            tabListScintilla.Size = new Size(100, 100);
+            tabListScintilla.Visible = false;
+            //tabListScintilla.AddItem("Extra Tab 1");
+            //tabListScintilla.AddItem("Extra Tab 2");
+            tabListScintilla.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            tabListScintilla.Location = new Point(tabListButton.Location.X + tabListButton.Width - tabListScintilla.Width, tabListButton.Location.Y + tabListButton.Size.Height);
+            tabListScintilla.BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(tabListScintilla);
+            tabListScintilla.BringToFront();
+            tabListButton.SelectedStatusChanged += (sender, EventArgs) => { tabListScintilla.Visible = !tabListScintilla.Visible; };
+            currentLastTabIndex = tabs.Count - 1;
+        }
+
+        private void TabsHolder_Resize(object sender, EventArgs e)
+        {
+            ChangeTabsDisplayed();
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            //e.Graphics.DrawString("HELLO", new Font(new FontFamily("Times New Roman"), 12, FontStyle.Regular), new SolidBrush(Color.DarkBlue), new Point(0, 0));
             base.OnPaint(e);
+        }
+
+        private void ChangeTabsDisplayed()
+        {
+            Size newSize = Size;
+            if (newSize.Width != currentControlSize.Width)
+            {
+                int totalTabWidth = getTotalTabWidth();
+                int lastTabIndex = tabs.Count - 1;
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width)
+                {
+                    TabCustom tab = tabs[lastTabIndex];
+                    totalTabWidth -= tab.Width;
+                    tab.Visible = false;
+                    lastTabIndex--;
+                }
+                for (int i = 0; i <= lastTabIndex; i++)
+                {
+                    tabs[i].Visible = true;
+                }
+                if (lastTabIndex != tabs.Count - 1)
+                {
+                    if (lastTabIndex != currentLastTabIndex)
+                    {
+                        tabListScintilla.ClearItems();
+                        tabListButton.Visible = true;
+                        int tabDifference = (tabs.Count - 1) - lastTabIndex;
+                        if (tabDifference > tabListScintilla.Items.Count)
+                        {
+                            for (int i = lastTabIndex + 1; i < tabs.Count; i++)
+                            {
+                                tabListScintilla.AddItem(tabs[i].Text);
+                            }
+                        }
+                        else if (tabDifference < 0)
+                        {
+                            for (int i = 0; i < tabDifference; i++)
+                            {
+                                tabListScintilla.RemoveItem(tabListScintilla.Items.Count - 1);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    tabListButton.Visible = false;
+                    tabListScintilla.ClearItems();
+                    tabListScintilla.Visible = false;
+                }
+                currentLastTabIndex = lastTabIndex;
+            }
+            currentControlSize = newSize;
+        }
+
+        private int getTotalTabWidth()
+        {
+            int totalWidth = 0;
+            foreach (TabCustom tab in tabs)
+            {
+                totalWidth += tab.Width;
+            }
+            return totalWidth;
         }
     }
 }

@@ -8,11 +8,9 @@ using System.Windows.Forms;
 
 namespace PSA2.src.Views.CustomControls
 {
-    public partial class TabList : PanelButton
+    public partial class TabListButton : PanelButton
     {
-        private Panel list;
-
-        public TabList(): base()
+        public TabListButton(): base()
         {
             SetupControls();
         }
@@ -26,6 +24,7 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnSelectionStatusChanged()
         {
+
             base.OnSelectionStatusChanged();
         }
 
