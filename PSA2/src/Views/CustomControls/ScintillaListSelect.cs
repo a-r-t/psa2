@@ -250,6 +250,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 StyleDocument();
             }
+
             base.OnMouseMove(e);
         }
 

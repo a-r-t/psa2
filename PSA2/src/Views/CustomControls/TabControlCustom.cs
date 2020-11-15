@@ -194,8 +194,17 @@ namespace PSA2.src.Views.CustomControls
             tabListScintilla.MouseDown += TabListItemClicked;
             Controls.Add(tabListScintilla);
             tabListScintilla.BringToFront();
-            tabListButton.SelectedStatusChanged += (sender, EventArgs) => { tabListScintilla.Visible = !tabListScintilla.Visible; };
+            tabListButton.SelectedStatusChanged += (sender, EventArgs) => { TabListButtonSelectedStatusChanged();  };
             currentLastTabIndex = tabs.Count - 1;
+        }
+
+        private void TabListButtonSelectedStatusChanged()
+        {
+            tabListScintilla.Visible = tabListButton.IsSelected;
+            if (tabListScintilla.Visible)
+            {
+                tabListScintilla.CurrentHoveredIndex = -1;
+            }
         }
 
         private void TabListItemClicked(object sender, MouseEventArgs e)
@@ -216,6 +225,10 @@ namespace PSA2.src.Views.CustomControls
                 SwapTabs(tabIndex, currentLastTabIndex);
                 tabListScintilla.ModifyItem(tabListScintilla.CurrentHoveredIndex, tabs[tabIndex].Text);
                 ChangeTabsDisplayed();
+                tabListButton.IsSelected = false;
+                tabListScintilla.Visible = false;
+                currentTabIndex = currentLastTabIndex;
+                SelectTab(currentLastTabIndex);
             }
         }
 
