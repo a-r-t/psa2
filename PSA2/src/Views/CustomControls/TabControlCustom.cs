@@ -209,7 +209,7 @@ namespace PSA2.src.Views.CustomControls
 
         private void TabListItemClicked(object sender, MouseEventArgs e)
         {
-            if (tabListScintilla.CurrentHoveredIndex != -1)
+            if (tabListScintilla.CurrentHoveredIndex != -1 && currentLastTabIndex >= 0)
             {
                 string selectedItem = tabListScintilla.Items[tabListScintilla.CurrentHoveredIndex];
                 int tabIndex = 0;
@@ -227,8 +227,10 @@ namespace PSA2.src.Views.CustomControls
                 ChangeTabsDisplayed();
                 tabListButton.IsSelected = false;
                 tabListScintilla.Visible = false;
+
+                // TODO: Find a way to make the CurrentTabIndex set method handle this
                 currentTabIndex = currentLastTabIndex;
-                SelectTab(currentLastTabIndex);
+                SelectTab(currentTabIndex);
             }
         }
 
@@ -304,7 +306,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 tabs[i].Visible = true;
             }
-            if (lastTabIndex != tabs.Count - 1)
+            if (lastTabIndex != tabs.Count - 1 && lastTabIndex > -1)
             {
                 if (lastTabIndex != currentLastTabIndex)
                 {
@@ -333,6 +335,10 @@ namespace PSA2.src.Views.CustomControls
                 tabListButton.IsSelected = false;
                 tabListScintilla.ClearItems();
                 tabListScintilla.Visible = false;
+                if (tabs.Count > 0)
+                {
+                    tabs[0].Visible = true;
+                }
             }
             currentLastTabIndex = lastTabIndex;
         }
