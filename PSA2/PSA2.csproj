@@ -85,6 +85,9 @@
     <Compile Include="src\Views\CustomControls\ScintillaListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Views\CustomControls\ScintillaListSelect.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\TabControlCustom.cs">
       <SubType>Component</SubType>
     </Compile>
