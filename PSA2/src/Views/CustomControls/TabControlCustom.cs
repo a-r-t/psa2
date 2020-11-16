@@ -186,9 +186,9 @@ namespace PSA2.src.Views.CustomControls
             tabsHolder.Controls.Add(tabListButton);
 
             tabListScintilla = new ScintillaListSelect();
-            tabListScintilla.Size = new Size(100, 100);
+            tabListScintilla.Size = new Size(200, 100);
             tabListScintilla.Visible = false;
-            tabListScintilla.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            tabListScintilla.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             tabListScintilla.Location = new Point(tabListButton.Location.X + tabListButton.Width - tabListScintilla.Width, tabListButton.Location.Y + tabListButton.Size.Height);
             tabListScintilla.BorderStyle = BorderStyle.FixedSingle;
             tabListScintilla.MouseDown += TabListItemClicked;
@@ -293,8 +293,17 @@ namespace PSA2.src.Views.CustomControls
 
         private void ChangeTabsDisplayed()
         {
-            int totalTabWidth = getTotalTabWidth();
+            int totalTabWidth = GetTotalTabWidth();
             int lastTabIndex = tabs.Count - 1;
+
+            // if current selected tab is off screen, swap it with first tab index
+            TabCustom currentTab = tabs[CurrentTabIndex];
+            if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width)
+            {
+                SwapTabs(CurrentTabIndex, 0);
+                CurrentTabIndex = 0;
+            }
+
             while (totalTabWidth > tabsHolder.Width - tabListButton.Width)
             {
                 TabCustom tab = tabs[lastTabIndex];
@@ -302,10 +311,12 @@ namespace PSA2.src.Views.CustomControls
                 tab.Visible = false;
                 lastTabIndex--;
             }
+
             for (int i = 0; i <= lastTabIndex; i++)
             {
                 tabs[i].Visible = true;
             }
+
             if (lastTabIndex != tabs.Count - 1 && lastTabIndex > -1)
             {
                 if (lastTabIndex != currentLastTabIndex)
@@ -340,10 +351,11 @@ namespace PSA2.src.Views.CustomControls
                     tabs[0].Visible = true;
                 }
             }
+
             currentLastTabIndex = lastTabIndex;
         }
 
-        private int getTotalTabWidth()
+        private int GetTotalTabWidth()
         {
             int totalWidth = 0;
             foreach (TabCustom tab in tabs)
