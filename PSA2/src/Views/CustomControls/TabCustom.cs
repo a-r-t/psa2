@@ -222,7 +222,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 currentTextColor = HoverTextColor;
                 BackColor = HoverBackgroundColor;
-                if (IsPointInXButton(PointToClient(Cursor.Position)))
+                if (IsMouseOverXButton())
                 {
                     currentXButtonColor = XButtonXHoveredColor;
                     currentXButtonBackColor = XButtonHoveredBackColor;
@@ -240,7 +240,7 @@ namespace PSA2.src.Views.CustomControls
         {
             if (!IsSelected)
             {
-                if (IsPointInXButton(PointToClient(Cursor.Position)))
+                if (IsMouseOverXButton())
                 {
                     currentXButtonColor = XButtonXHoveredColor;
                     currentXButtonBackColor = XButtonHoveredBackColor;
@@ -253,7 +253,7 @@ namespace PSA2.src.Views.CustomControls
             }
             else
             {
-                if (IsPointInXButton(PointToClient(Cursor.Position)))
+                if (IsMouseOverXButton())
                 {
                     currentXButtonColor = TabSelectedXButtonSelectedXColor;
                     currentXButtonBackColor = TabSelectedXButtonSelectedBackColor;
@@ -290,6 +290,11 @@ namespace PSA2.src.Views.CustomControls
         {
             XButtonLocation = GetXButtonLocation();
             base.OnResize(eventargs);
+        }
+
+        public bool IsMouseOverXButton()
+        {
+            return IsPointInXButton(PointToClient(Cursor.Position));
         }
     }
 }

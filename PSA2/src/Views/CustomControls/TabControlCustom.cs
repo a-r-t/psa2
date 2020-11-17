@@ -31,10 +31,14 @@ namespace PSA2.src.Views.CustomControls
             }
             set
             {
-                if (value != currentTabIndex && value < TabPages.Count)
+                if (value != currentTabIndex && value >= 0 && value < TabPages.Count)
                 {
                     SelectTab(value);
                     currentTabIndex = value;
+                }
+                else if (value == -1)
+                {
+                    tabViewer.Controls.Clear();
                 }
             }
         }
@@ -86,15 +90,45 @@ namespace PSA2.src.Views.CustomControls
             tab.Width += 20;
             tab.MouseDown += (sender, EventArgs) => { OnTabClicked(sender, EventArgs); };
             tab.MouseMove += (sender, MouseEventArgs) => { OnTabDragged(sender, MouseEventArgs); };
+            tab.Name = tab.Text;
             return tab;
         }
 
         private void OnTabClicked(object sender, EventArgs e)
         {
-            int tabIndex = (sender as TabCustom).Index;
-            if (CurrentTabIndex != tabIndex)
+            TabCustom clickedTab = (TabCustom)sender;
+            if (clickedTab.IsMouseOverXButton())
             {
-                CurrentTabIndex = tabIndex;
+                tabs.RemoveAt(clickedTab.Index);
+                TabPages.RemoveAt(clickedTab.Index);
+                tabsHolder.Controls.Remove(clickedTab);
+                for (int i = clickedTab.Index; i < tabs.Count; i++)
+                {
+                    TabCustom tab = tabs[i];
+                    tab.Index--;
+                    tab.Location = new Point(tab.Location.X - clickedTab.Width, tab.Location.Y);
+                }
+                if (CurrentTabIndex == clickedTab.Index)
+                {
+                    if (currentTabIndex - 1 == -1 && tabs.Count > 0)
+                    {
+                        currentTabIndex = 0;
+                        SelectTab(currentTabIndex);
+                    }
+                    else
+                    {
+                        CurrentTabIndex = -1;
+                    }
+                }
+                ChangeTabsDisplayed();
+            }
+            else
+            {
+                int tabIndex = (sender as TabCustom).Index;
+                if (CurrentTabIndex != tabIndex)
+                {
+                    CurrentTabIndex = tabIndex;
+                }
             }
         }
 
@@ -103,33 +137,35 @@ namespace PSA2.src.Views.CustomControls
             if (e.Button == MouseButtons.Left)
             {
                 int tabIndex = (sender as TabCustom).Index;
-
-                TabCustom currentTab = tabs[tabIndex];
-                int mouseLocationX = e.Location.X + currentTab.Location.X;
-                if (tabIndex > 0)
+                if (tabIndex < tabs.Count)
                 {
-                    TabCustom leftTab = tabs[tabIndex - 1];
-                    int offset = leftTab.Width > currentTab.Width
-                        ? leftTab.Width - currentTab.Width
-                        : 0;
-                    if (mouseLocationX < leftTab.Location.X + leftTab.Size.Width - offset)
+                    TabCustom currentTab = tabs[tabIndex];
+                    int mouseLocationX = e.Location.X + currentTab.Location.X;
+                    if (tabIndex > 0)
                     {
-                        SwapTabs(tabIndex, tabIndex - 1);
-                        CurrentTabIndex = currentTab.Index;
-                        return;
+                        TabCustom leftTab = tabs[tabIndex - 1];
+                        int offset = leftTab.Width > currentTab.Width
+                            ? leftTab.Width - currentTab.Width
+                            : 0;
+                        if (mouseLocationX < leftTab.Location.X + leftTab.Size.Width - offset)
+                        {
+                            SwapTabs(tabIndex, tabIndex - 1);
+                            CurrentTabIndex = currentTab.Index;
+                            return;
+                        }
                     }
-                }
-                if (tabIndex < tabs.Count - 1)
-                {
-                    TabCustom rightTab = tabs[tabIndex + 1];
-                    int offset = rightTab.Width > currentTab.Width
-                        ? rightTab.Width - currentTab.Width
-                        : 0;
-                    if (mouseLocationX > rightTab.Location.X + offset)
+                    if (tabIndex < tabs.Count - 1)
                     {
-                        SwapTabs(tabIndex, tabIndex + 1);
-                        CurrentTabIndex = currentTab.Index;
-                        return;
+                        TabCustom rightTab = tabs[tabIndex + 1];
+                        int offset = rightTab.Width > currentTab.Width
+                            ? rightTab.Width - currentTab.Width
+                            : 0;
+                        if (mouseLocationX > rightTab.Location.X + offset)
+                        {
+                            SwapTabs(tabIndex, tabIndex + 1);
+                            CurrentTabIndex = currentTab.Index;
+                            return;
+                        }
                     }
                 }
             }
@@ -293,66 +329,69 @@ namespace PSA2.src.Views.CustomControls
 
         private void ChangeTabsDisplayed()
         {
-            int totalTabWidth = GetTotalTabWidth();
-            int lastTabIndex = tabs.Count - 1;
-
-            // if current selected tab is off screen, swap it with first tab index
-            TabCustom currentTab = tabs[CurrentTabIndex];
-            if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width)
+            if (tabs.Count > 0)
             {
-                SwapTabs(CurrentTabIndex, 0);
-                CurrentTabIndex = 0;
-            }
+                int totalTabWidth = GetTotalTabWidth();
+                int lastTabIndex = tabs.Count - 1;
 
-            while (totalTabWidth > tabsHolder.Width - tabListButton.Width)
-            {
-                TabCustom tab = tabs[lastTabIndex];
-                totalTabWidth -= tab.Width;
-                tab.Visible = false;
-                lastTabIndex--;
-            }
-
-            for (int i = 0; i <= lastTabIndex; i++)
-            {
-                tabs[i].Visible = true;
-            }
-
-            if (lastTabIndex != tabs.Count - 1 && lastTabIndex > -1)
-            {
-                if (lastTabIndex != currentLastTabIndex)
+                // if current selected tab is off screen, swap it with first tab index
+                TabCustom currentTab = tabs[CurrentTabIndex];
+                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width)
                 {
+                    SwapTabs(CurrentTabIndex, 0);
+                    CurrentTabIndex = 0;
+                }
+
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width)
+                {
+                    TabCustom tab = tabs[lastTabIndex];
+                    totalTabWidth -= tab.Width;
+                    tab.Visible = false;
+                    lastTabIndex--;
+                }
+
+                for (int i = 0; i <= lastTabIndex; i++)
+                {
+                    tabs[i].Visible = true;
+                }
+
+                if (lastTabIndex != tabs.Count - 1 && lastTabIndex > -1)
+                {
+                    if (lastTabIndex != currentLastTabIndex)
+                    {
+                        tabListScintilla.ClearItems();
+                        tabListButton.Visible = true;
+                        int tabDifference = (tabs.Count - 1) - lastTabIndex;
+                        if (tabDifference > tabListScintilla.Items.Count)
+                        {
+                            for (int i = lastTabIndex + 1; i < tabs.Count; i++)
+                            {
+                                tabListScintilla.AddItem(tabs[i].Text);
+                            }
+                        }
+                        else if (tabDifference < 0)
+                        {
+                            for (int i = 0; i < tabDifference; i++)
+                            {
+                                tabListScintilla.RemoveItem(tabListScintilla.Items.Count - 1);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    tabListButton.Visible = false;
+                    tabListButton.IsSelected = false;
                     tabListScintilla.ClearItems();
-                    tabListButton.Visible = true;
-                    int tabDifference = (tabs.Count - 1) - lastTabIndex;
-                    if (tabDifference > tabListScintilla.Items.Count)
+                    tabListScintilla.Visible = false;
+                    if (tabs.Count > 0)
                     {
-                        for (int i = lastTabIndex + 1; i < tabs.Count; i++)
-                        {
-                            tabListScintilla.AddItem(tabs[i].Text);
-                        }
-                    }
-                    else if (tabDifference < 0)
-                    {
-                        for (int i = 0; i < tabDifference; i++)
-                        {
-                            tabListScintilla.RemoveItem(tabListScintilla.Items.Count - 1);
-                        }
+                        tabs[0].Visible = true;
                     }
                 }
-            }
-            else
-            {
-                tabListButton.Visible = false;
-                tabListButton.IsSelected = false;
-                tabListScintilla.ClearItems();
-                tabListScintilla.Visible = false;
-                if (tabs.Count > 0)
-                {
-                    tabs[0].Visible = true;
-                }
-            }
 
-            currentLastTabIndex = lastTabIndex;
+                currentLastTabIndex = lastTabIndex;
+            }
         }
 
         private int GetTotalTabWidth()
