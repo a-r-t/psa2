@@ -82,7 +82,7 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
-        private Color currentTextColor;
+        protected Color currentTextColor;
 
         public bool isSelected;
         public bool IsSelected
@@ -108,6 +108,7 @@ namespace PSA2.src.Views.CustomControls
 
         public Color HoverBackgroundColor { get; set; }
         public Color HoverTextColor { get; set; }
+        public bool IsHovered { get; private set; }
 
         public event EventHandler SelectedStatusChanged;
 
@@ -155,7 +156,7 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Size textSize = Text.Measure(Font);
+            Size textSize = Text.MeasureTextRenderer(Font);
             e.Graphics.DrawString(Text, Font, new SolidBrush(currentTextColor), new Point(((Width - textSize.Width) / 2), (Height - textSize.Height) / 2));
             base.OnPaint(e);
         }
@@ -163,6 +164,7 @@ namespace PSA2.src.Views.CustomControls
         protected override void OnMouseEnter(EventArgs e)
         {
             mouseHover = true;
+            IsHovered = true;
             if (!IsSelected)
             {
                 currentTextColor = HoverTextColor;
@@ -174,6 +176,7 @@ namespace PSA2.src.Views.CustomControls
         protected override void OnMouseLeave(EventArgs e)
         {
             mouseHover = false;
+            IsHovered = false;
             if (!IsSelected)
             {
                 StyleUnselected();

@@ -229,7 +229,7 @@ namespace PSA2.src.Views.CustomControls
                 tabListScintilla.Visible = false;
 
                 // TODO: Find a way to make the CurrentTabIndex set method handle this
-                currentTabIndex = currentLastTabIndex;
+                currentTabIndex = currentLastTabIndex != -1 ? currentLastTabIndex : 0;
                 SelectTab(currentTabIndex);
             }
         }

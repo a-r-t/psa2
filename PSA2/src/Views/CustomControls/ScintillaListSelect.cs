@@ -241,6 +241,7 @@ namespace PSA2.src.Views.CustomControls
 
         protected void MouseMoved(MouseEventArgs e)
         {
+            // TODO: manually check mouse position to determine if it is on a line or not
             int charIndex = CharPositionFromPointClose(e.X, e.Y);
             int lineIndex = charIndex != -1 ? LineFromPosition(charIndex) : -1;
 

@@ -22,9 +22,17 @@ namespace PSA2.src.ExtentionMethods
             return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
         }
 
-        public static Size Measure(this string s, Font f)
+        public static Size MeasureTextRenderer(this string s, Font f)
         {
             return TextRenderer.MeasureText(s, f);
+        }
+
+        public static Size MeasureGraphics(this string s, Font f, Control c)
+        {
+            using (Graphics g = c.CreateGraphics())
+            {
+                return g.MeasureString(s, f).ToSize();
+            }
         }
     }
 }
