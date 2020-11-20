@@ -17,20 +17,15 @@ namespace PSA2Scripts
         static void Main(string[] args)
         {
             Console.WriteLine("Enter file path of file being ported: ");
-            // string originalFilePath = Console.ReadLine();
-            string originalFilePath = "E:/Documents/port/FitMaskedMan.pac";
+            string originalFilePath = Console.ReadLine();
             Console.WriteLine("Enter file path of new file to be ported to: ");
-            // string newFilePath = Console.ReadLine();
-            string newFilePath = "E:/Documents/port/FitMario.pac";
+            string newFilePath = Console.ReadLine();
             Console.WriteLine("Enter an output path for new file: ");
-            // string outputPath = Console.ReadLine();
-            string outputPath = "E:/Documents/port";
+            string outputPath = Console.ReadLine();
 
             PsaMovesetHandler originalFile = new PsaFileParser(originalFilePath).ParseMovesetFile();
             PsaMovesetHandler newFile = new PsaFileParser(newFilePath).ParseMovesetFile();
 
-            int oldNumberOfSpecialActions = originalFile.ActionsHandler.GetNumberOfSpecialActions();
-            int oldNumberOfSubActions = originalFile.SubActionsHandler.GetNumberOfSubActions();
             int newNumberOfSpecialActions = newFile.ActionsHandler.GetNumberOfSpecialActions();
             int newNumberOfSubActions = newFile.SubActionsHandler.GetNumberOfSubActions();
 

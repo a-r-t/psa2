@@ -26,9 +26,6 @@
     <None Update="data\char_specific\FitLucario.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="data\char_specific\FitLucas.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="data\char_specific\FitMario.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
