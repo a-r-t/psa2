@@ -3,6 +3,7 @@ using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace PSA2Scripts
 {
@@ -16,53 +17,169 @@ namespace PSA2Scripts
         static void Main(string[] args)
         {
             Console.WriteLine("Enter file path of file being ported: ");
-            string originalFilePath = Console.ReadLine();
+            // string originalFilePath = Console.ReadLine();
+            string originalFilePath = "E:/Documents/port/FitMaskedMan.pac";
             Console.WriteLine("Enter file path of new file to be ported to: ");
-            string newFilePath = Console.ReadLine();
+            // string newFilePath = Console.ReadLine();
+            string newFilePath = "E:/Documents/port/FitMario.pac";
             Console.WriteLine("Enter an output path for new file: ");
-            string outputPath = Console.ReadLine();
+            // string outputPath = Console.ReadLine();
+            string outputPath = "E:/Documents/port";
 
             PsaMovesetHandler originalFile = new PsaFileParser(originalFilePath).ParseMovesetFile();
             PsaMovesetHandler newFile = new PsaFileParser(newFilePath).ParseMovesetFile();
 
             int oldNumberOfSpecialActions = originalFile.ActionsHandler.GetNumberOfSpecialActions();
             int oldNumberOfSubActions = originalFile.SubActionsHandler.GetNumberOfSubActions();
+            int newNumberOfSpecialActions = newFile.ActionsHandler.GetNumberOfSpecialActions();
+            int newNumberOfSubActions = newFile.SubActionsHandler.GetNumberOfSubActions();
 
-            for (int i = 0; i < oldNumberOfSpecialActions; i++)
+            Console.WriteLine("ACTIONS");
+            HashSet<(int, int)> actionsWithPointers = new HashSet<(int, int)>();
+
+            // port actions
+            for (int i = 0; i < newNumberOfSpecialActions; i++)
             {
+                Console.WriteLine("ACTION " + i);
                 for (int j = 0; j < 2; j++)
                 {
-                    int numberOfPsaCommands = newFile.ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(i, j);
-                    for (int k = numberOfPsaCommands; i >= 0; k--)
+                    Console.WriteLine("CODE BLOCK " + j);
+
+                    List<PsaCommand> oldPsaCommands = newFile.ActionsHandler.GetPsaCommandsInCodeBlock(i, j);
+                    for (int k = oldPsaCommands.Count - 1; k >= 0; k--)
                     {
-                        newFile.ActionsHandler.RemoveCommand(i, j, k);
+                        Console.WriteLine("REMOVE COMMAND " + k);
+                        bool isExternal = false;
+                        for (int l = 0; l < oldPsaCommands[k].Parameters.Count; l++)
+                        {
+                            if (oldPsaCommands[k].Parameters[l].Type == 2 && oldPsaCommands[k].Parameters[l].Value == -1)
+                            {
+                                actionsWithPointers.Add((i, j));
+                                isExternal = true;
+                            }
+                        }
+                        if (!isExternal)
+                        {
+                            newFile.ActionsHandler.RemoveCommand(i, j, k);
+                        }
                     }
-                    List<PsaCommand> psaCommands = originalFile.ActionsHandler.GetPsaCommandsInCodeBlock(i, j);
-                    for (int k = 0; k < psaCommands.Count; k++)
+                    List<PsaCommand> newPsaCommands = originalFile.ActionsHandler.GetPsaCommandsInCodeBlock(i, j);
+                    for (int k = 0; k < newPsaCommands.Count; k++)
                     {
-                        newFile.ActionsHandler.InsertCommand(i, j, k, psaCommands[k]);
+                        Console.WriteLine("INSERT COMMAND " + k);
+                        for (int l = 0; l < newPsaCommands[k].Parameters.Count; l++)
+                        {
+                            if (newPsaCommands[k].Parameters[l].Type == 2)
+                            {
+                                actionsWithPointers.Add((i, j));
+                            }
+                        }
+                        newFile.ActionsHandler.InsertCommand(i, j, k, newPsaCommands[k]);
                     }
 
                 }
             }
+            Console.WriteLine("SUBACTIONS");
+            HashSet<(int, int)> subActionsWithPointers = new HashSet<(int, int)>();
 
-            for (int i = 0; i < oldNumberOfSubActions; i++)
+            // port subactions
+            for (int i = 0; i < newNumberOfSubActions; i++)
             {
+                Console.WriteLine("SUB ACTION " + i);
                 for (int j = 0; j < 4; j++)
                 {
-                    int numberOfPsaCommands = newFile.SubActionsHandler.GetNumberOfPsaCommandsInSubActionCodeBlock(i, j);
-                    for (int k = numberOfPsaCommands; i >= 0; k--)
+                    Console.WriteLine("CODE BLOCK " + j);
+                    List<PsaCommand> oldPsaCommands = newFile.SubActionsHandler.GetPsaCommandsForSubAction(i, j);
+                    for (int k = oldPsaCommands.Count - 1; k >= 0; k--)
                     {
-                        newFile.SubActionsHandler.RemoveCommand(i, j, k);
+                        Console.WriteLine("REMOVE COMMAND " + k);
+                        bool isExternal = false;
+                        for (int l = 0; l < oldPsaCommands[k].Parameters.Count; l++)
+                        {
+                            if (oldPsaCommands[k].Parameters[l].Type == 2 && oldPsaCommands[k].Parameters[l].Value == -1)
+                            {
+                                subActionsWithPointers.Add((i, j));
+                                isExternal = true;
+                            }
+                        }
+                        if (!isExternal)
+                        {
+                            newFile.SubActionsHandler.RemoveCommand(i, j, k);
+                        }
                     }
-                    List<PsaCommand> psaCommands = originalFile.SubActionsHandler.GetPsaCommandsForSubAction(i, j);
-                    for (int k = 0; k < psaCommands.Count; k++)
+                    List<PsaCommand> newPsaCommands = originalFile.SubActionsHandler.GetPsaCommandsForSubAction(i, j);
+                    for (int k = 0; k < newPsaCommands.Count; k++)
                     {
-                        newFile.SubActionsHandler.InsertCommand(i, j, k, psaCommands[k]);
+                        Console.WriteLine("INSERT COMMAND " + k);
+                        for (int l = 0; l < newPsaCommands[k].Parameters.Count; l++)
+                        {
+                            if (newPsaCommands[k].Parameters[l].Type == 2)
+                            {
+                                subActionsWithPointers.Add((i, j));
+                            }
+                        }
+                        newFile.SubActionsHandler.InsertCommand(i, j, k, newPsaCommands[k]);
                     }
                 }
             }
-            newFile.PsaFile.SaveFile(outputPath);
+            Console.WriteLine("Writing to file " + outputPath + "...");
+            newFile.PsaFile.SaveFile(outputPath + "/FitNew.pac");
+
+            StringBuilder actionsToCheckFormatted = new StringBuilder();
+            foreach ((int, int) item in actionsWithPointers)
+            {
+                actionsToCheckFormatted
+                    .Append((item.Item1 + 274).ToString("X"));
+
+                string codeBlockName = "";
+                switch(item.Item2)
+                {
+                    case 0:
+                        codeBlockName = "Entry";
+                        break;
+                    case 1:
+                        codeBlockName = "Exit";
+                        break;
+                }
+
+                actionsToCheckFormatted
+                    .Append(" - ")
+                    .Append(codeBlockName)
+                    .Append("\n");
+            }
+
+            StringBuilder subActionsToCheckFormatted = new StringBuilder();
+            foreach ((int, int) item in subActionsWithPointers)
+            {
+                subActionsToCheckFormatted
+                    .Append(item.Item1.ToString("X"));
+
+                string codeBlockName = "";
+                switch (item.Item2)
+                {
+                    case 0:
+                        codeBlockName = "Main";
+                        break;
+                    case 1:
+                        codeBlockName = "Gfx";
+                        break;
+                    case 2:
+                        codeBlockName = "Sfx";
+                        break;
+                    case 3:
+                        codeBlockName = "Other";
+                        break;
+                }
+
+                subActionsToCheckFormatted
+                    .Append(" - ")
+                    .Append(codeBlockName)
+                    .Append("\n");
+            }
+
+            System.IO.File.WriteAllText(outputPath + "/actionsWithPointers.txt", actionsToCheckFormatted.ToString());
+            System.IO.File.WriteAllText(outputPath + "/subActionsWithPointers.txt", subActionsToCheckFormatted.ToString());
+            Console.WriteLine("Done!");
         }
     }
 }

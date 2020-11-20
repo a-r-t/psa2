@@ -228,7 +228,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                     // find if anything was pointing to the command itself that had the pointer
                     int commandParamValueLocation = 2025;
                     offsetFound = false;
-                    for (int i = 0; i < PsaFile.DataSectionSizeBytes; i++)
+                    for (int i = 0; i < PsaFile.OffsetSection.Count; i++)
                     {
                         if (PsaFile.OffsetSection[i] == fileContentPointerLocation)
                         {
