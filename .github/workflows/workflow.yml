@@ -12,6 +12,7 @@ jobs:
     env:
       SOLUTION_PATH: PSA2.sln
       TEST_PROJECT_PATH: PSA2Tests/PSA2Tests.csproj
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     
     steps:
     - uses: actions/checkout@v2
