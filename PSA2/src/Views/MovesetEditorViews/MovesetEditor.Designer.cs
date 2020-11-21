@@ -1,4 +1,5 @@
-﻿using PSA2.src.Views.MovesetEditorViews.Interfaces;
+﻿using PSA2.src.Views.CustomControls;
+using PSA2.src.Views.MovesetEditorViews.Interfaces;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -33,7 +34,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.codeBlockView = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.eventsTabControl = new System.Windows.Forms.TabControl();
+            this.eventsTabControl = new TabControlCustom();
             this.optionsTabControl = new System.Windows.Forms.TabControl();
             this.actionTabPage = new System.Windows.Forms.TabPage();
             this.commandDescriptionTabPage = new System.Windows.Forms.TabPage();
@@ -116,10 +117,8 @@ namespace PSA2.src.Views.MovesetEditorViews
             // eventsTabControl
             // 
             this.eventsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eventsTabControl.HotTrack = true;
             this.eventsTabControl.Location = new System.Drawing.Point(0, 0);
             this.eventsTabControl.Name = "eventsTabControl";
-            this.eventsTabControl.SelectedIndex = 0;
             this.eventsTabControl.Size = new System.Drawing.Size(165, 260);
             this.eventsTabControl.TabIndex = 0;
             this.eventsTabControl.SelectedIndexChanged += new System.EventHandler(this.eventsTabControl_SelectedIndexChanged);
@@ -302,7 +301,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         private System.Windows.Forms.Panel codeBlockView;
         private System.Windows.Forms.Panel selectorView;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TabControl eventsTabControl;
+        private TabControlCustom eventsTabControl;
         private System.Windows.Forms.Panel commandOptionsViewer;
         private System.Windows.Forms.Panel parametersEditorViewer;
         private System.Windows.Forms.SplitContainer splitContainer4;

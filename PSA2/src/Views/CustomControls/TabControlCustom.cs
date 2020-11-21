@@ -24,7 +24,20 @@ namespace PSA2.src.Views.CustomControls
         private Size currentControlSize;
         private int currentLastTabIndex;
         private AddTabButton addTabButton;
-
+        public int TabCount
+        {
+            get
+            {
+                return TabPages.Count;
+            }
+        }
+        public int SelectedIndex
+        {
+            get
+            {
+                return CurrentTabIndex;
+            }
+        }
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
         public int CurrentTabIndex
@@ -47,6 +60,8 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
+        public event EventHandler SelectedIndexChanged;
+
         public TabControlCustom(): base()
         {
             TabPages = new ObservableCollection<TabPageCustom>();
@@ -54,6 +69,12 @@ namespace PSA2.src.Views.CustomControls
             tabs = new List<TabCustom>();
             SetUpControls();
             tabViewer.DoubleBuffered(true);
+        }
+
+        // TODO: Set this up to be called when current tab index is changed
+        private void SelectTabIndexChangedEvent(object sender, EventArgs e)
+        {
+            SelectedIndexChanged?.Invoke(sender, e);
         }
 
         private void OnTabPageChange(object sender, NotifyCollectionChangedEventArgs e)
@@ -135,9 +156,13 @@ namespace PSA2.src.Views.CustomControls
                 {
                     CurrentTabIndex--;
                 }
-                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex != clickedTab.Index)
+                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex > clickedTab.Index)
                 {
                     currentTabIndex--;
+                    SelectTab(CurrentTabIndex);
+                }
+                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex < clickedTab.Index)
+                {
                     SelectTab(CurrentTabIndex);
                 }
                 else if (CurrentTabIndex - 1 == -1 && tabs.Count > 0)
@@ -182,7 +207,7 @@ namespace PSA2.src.Views.CustomControls
                             return;
                         }
                     }
-                    if (tabIndex < tabs.Count - 1)
+                    if (tabIndex < currentLastTabIndex)
                     {
                         TabCustom rightTab = tabs[tabIndex + 1];
                         int offset = rightTab.Width > currentTab.Width
@@ -408,7 +433,7 @@ namespace PSA2.src.Views.CustomControls
                     CurrentTabIndex = 0;
                 }
 
-                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3) && totalTabWidth > 0)
                 {
                     TabCustom tab = tabs[lastTabIndex];
                     totalTabWidth -= tab.Width;
