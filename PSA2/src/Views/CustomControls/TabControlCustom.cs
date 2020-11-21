@@ -354,11 +354,6 @@ namespace PSA2.src.Views.CustomControls
             currentControlSize = newSize;
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-        }
-
         private void ChangeTabsDisplayed()
         {
             if (tabs.Count > 0)

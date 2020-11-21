@@ -270,6 +270,7 @@ namespace PSA2.src.Views.CustomControls
                     }
                 }
             }
+            Refresh();
             base.OnMouseEnter(e);
         }
 
@@ -328,8 +329,9 @@ namespace PSA2.src.Views.CustomControls
             else
             {
                 currentXButtonColor = XButtonXSelectedColor;
-                currentXButtonBackColor = XButtonBackColor;
+                currentXButtonBackColor = XButtonSelectedBackColor;
             }
+            Refresh();
             base.OnMouseLeave(e);
         }
 
@@ -337,6 +339,7 @@ namespace PSA2.src.Views.CustomControls
         {
             XButtonLocation = GetXButtonLocation();
             base.OnResize(eventargs);
+            Refresh();
         }
 
         public bool IsMouseOverXButton()
