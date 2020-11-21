@@ -294,13 +294,12 @@ namespace PSA2.src.Views.CustomControls
 
                 SwapTabs(tabIndex, currentLastTabIndex);
                 tabListScintilla.ModifyItem(tabListScintilla.CurrentHoveredIndex, tabs[tabIndex].Text);
-                ChangeTabsDisplayed();
                 tabListButton.IsSelected = false;
                 tabListScintilla.Visible = false;
 
-                // TODO: Find a way to make the CurrentTabIndex set method handle this
-                currentTabIndex = currentLastTabIndex != -1 ? currentLastTabIndex : 0;
+                currentTabIndex = currentLastTabIndex;
                 SelectTab(currentTabIndex);
+                ChangeTabsDisplayed();
             }
         }
 
