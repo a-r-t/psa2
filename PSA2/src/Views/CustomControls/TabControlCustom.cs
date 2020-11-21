@@ -20,6 +20,7 @@ namespace PSA2.src.Views.CustomControls
         private ScintillaListSelect tabListScintilla;
         private Size currentControlSize;
         private int currentLastTabIndex;
+        private AddTabButton addTabButton;
         
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
@@ -108,17 +109,19 @@ namespace PSA2.src.Views.CustomControls
                     tab.Index--;
                     tab.Location = new Point(tab.Location.X - clickedTab.Width, tab.Location.Y);
                 }
-                if (CurrentTabIndex == clickedTab.Index)
+
+                if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0)
                 {
-                    if (currentTabIndex - 1 == -1 && tabs.Count > 0)
-                    {
-                        currentTabIndex = 0;
-                        SelectTab(currentTabIndex);
-                    }
-                    else
-                    {
-                        CurrentTabIndex = -1;
-                    }
+                    CurrentTabIndex--;
+                }
+                else if (CurrentTabIndex - 1 == -1 && tabs.Count > 0)
+                {
+                    currentTabIndex = 0;
+                    SelectTab(CurrentTabIndex);//rice
+                }
+                else
+                {
+                    CurrentTabIndex = -1;
                 }
                 ChangeTabsDisplayed();
             }
@@ -232,6 +235,15 @@ namespace PSA2.src.Views.CustomControls
             tabListScintilla.BringToFront();
             tabListButton.SelectedStatusChanged += (sender, EventArgs) => { TabListButtonSelectedStatusChanged();  };
             currentLastTabIndex = tabs.Count - 1;
+
+            addTabButton = new AddTabButton();
+            addTabButton.Width = 30;
+            addTabButton.PlusSignThickness = 2;
+            addTabButton.PlusSignPadding = 6;
+            addTabButton.Location = new Point(0, (tabsHolder.Height / 2) - (addTabButton.Width / 2));
+            tabsHolder.Controls.Add(addTabButton);
+            addTabButton.BringToFront();
+
         }
 
         private void TabListButtonSelectedStatusChanged()
@@ -308,8 +320,6 @@ namespace PSA2.src.Views.CustomControls
                     }
                 }
             }
-
-
         }
 
         private void TabsHolder_Resize(object sender, EventArgs e)

@@ -63,6 +63,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ExtentionMethods\StringExtensions.cs" />
+    <Compile Include="src\Views\CustomControls\AddTabButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\BrowsableTypeConverter.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomChoices.cs" />
     <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomColorScheme.cs" />
