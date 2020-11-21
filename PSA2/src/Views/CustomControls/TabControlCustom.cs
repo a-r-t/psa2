@@ -11,6 +11,9 @@ using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.CustomControls
 {
+    /// <summary>
+    /// I will comment up this class soon as well as all the other classes involved with this custom tab control
+    /// </summary>
     public partial class TabControlCustom : Panel
     {
         public ObservableCollection<TabPageCustom> TabPages { get; }
