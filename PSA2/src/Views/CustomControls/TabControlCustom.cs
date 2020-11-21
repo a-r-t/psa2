@@ -259,13 +259,24 @@ namespace PSA2.src.Views.CustomControls
             currentLastTabIndex = tabs.Count - 1;
 
             addTabButton = new AddTabButton();
-            addTabButton.Width = 30;
+            addTabButton.Width = 40;
             addTabButton.PlusSignThickness = 2;
             addTabButton.PlusSignPadding = 6;
-            addTabButton.Location = new Point(0, (tabsHolder.Height / 2) - (addTabButton.Width / 2));
-            //tabsHolder.Controls.Add(addTabButton);
+            tabsHolder.Controls.Add(addTabButton);
             addTabButton.BringToFront();
+            SetAddTabButtonLocation();
+        }
 
+        private void SetAddTabButtonLocation()
+        {
+            int xLocation = 0;
+            if (tabs.Count > 0 && currentLastTabIndex > -1)
+            {
+                TabCustom lastItem = tabs[currentLastTabIndex];
+                xLocation = lastItem.Location.X + lastItem.Width + 1;
+            }
+            int yLocation = (tabsHolder.Height / 2) - (addTabButton.Width / 2);
+            addTabButton.Location = new Point(xLocation, yLocation);
         }
 
         private void TabListButtonSelectedStatusChanged()
@@ -312,7 +323,6 @@ namespace PSA2.src.Views.CustomControls
 
             int frontTabWidth = frontTab.Width;
             int backTabWidth = backTab.Width;
-
 
             Point temp = frontTab.Location;
             frontTab.Location = backTab.Location;
@@ -362,13 +372,13 @@ namespace PSA2.src.Views.CustomControls
 
                 // if current selected tab is off screen, swap it with first tab index
                 TabCustom currentTab = tabs[CurrentTabIndex];
-                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width)
+                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 2))
                 {
                     SwapTabs(CurrentTabIndex, 0);
                     CurrentTabIndex = 0;
                 }
 
-                while (totalTabWidth > tabsHolder.Width - tabListButton.Width)
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 2))
                 {
                     TabCustom tab = tabs[lastTabIndex];
                     totalTabWidth -= tab.Width;
@@ -415,6 +425,9 @@ namespace PSA2.src.Views.CustomControls
                         tabs[0].Visible = true;
                     }
                 }
+
+                addTabButton.Visible = lastTabIndex > -1;
+                SetAddTabButtonLocation();
 
                 currentLastTabIndex = lastTabIndex;
             }
