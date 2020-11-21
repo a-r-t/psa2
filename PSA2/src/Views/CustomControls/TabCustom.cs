@@ -160,16 +160,6 @@ namespace PSA2.src.Views.CustomControls
             base.OnMouseUp(e);
         }
 
-        const int WM_LBUTTONUP = 0x202;
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_LBUTTONUP)
-            {
-
-            }
-            base.WndProc(ref m);
-        }
-
         public TabCustom(string text) : base()
         {
             Font = new Font("Times New Roman", 10, FontStyle.Regular);

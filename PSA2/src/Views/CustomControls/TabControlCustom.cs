@@ -262,9 +262,36 @@ namespace PSA2.src.Views.CustomControls
             addTabButton.Width = 40;
             addTabButton.PlusSignThickness = 2;
             addTabButton.PlusSignPadding = 6;
+            addTabButton.MouseDown += (sender, MouseEventArgs) => { AddTabButtonMouseDown(sender, MouseEventArgs); };
+            addTabButton.MouseUp += (sender, MouseEventArgs) => { AddTabButtonMouseUp(sender, MouseEventArgs); };
             tabsHolder.Controls.Add(addTabButton);
             addTabButton.BringToFront();
             SetAddTabButtonLocation();
+        }
+
+        private void AddTabButtonMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                addTabButton.IsMouseDown = true;
+                addTabButton.IsSelected = true;
+            }
+        }
+
+        private void AddTabButtonMouseUp(object sender, MouseEventArgs e)
+        {
+            if (addTabButton.IsMouseDown && addTabButton.IsPointOverButton(e.Location))
+            {
+                TabPageCustom newTabPage = new TabPageCustom();
+                newTabPage.TabText = "New Tab";
+                TabPages.Add(newTabPage);
+                TabCustom newTab = tabs[tabs.Count - 1];
+                currentTabIndex = newTab.Index;
+                SelectTab(currentTabIndex);
+                ChangeTabsDisplayed();
+            }
+            addTabButton.IsMouseDown = false;
+            addTabButton.IsSelected = false;
         }
 
         private void SetAddTabButtonLocation()
@@ -294,7 +321,7 @@ namespace PSA2.src.Views.CustomControls
             {
                 string selectedItem = tabListScintilla.Items[tabListScintilla.CurrentHoveredIndex];
                 int tabIndex = 0;
-                for (int i = 0; i < tabs.Count; i++)
+                for (int i = currentLastTabIndex + 1; i < tabs.Count; i++)
                 {
                     if (tabs[i].Text == selectedItem)
                     {
@@ -372,13 +399,13 @@ namespace PSA2.src.Views.CustomControls
 
                 // if current selected tab is off screen, swap it with first tab index
                 TabCustom currentTab = tabs[CurrentTabIndex];
-                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 2))
+                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
                 {
                     SwapTabs(CurrentTabIndex, 0);
                     CurrentTabIndex = 0;
                 }
 
-                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 2))
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
                 {
                     TabCustom tab = tabs[lastTabIndex];
                     totalTabWidth -= tab.Width;
@@ -427,9 +454,10 @@ namespace PSA2.src.Views.CustomControls
                 }
 
                 addTabButton.Visible = lastTabIndex > -1;
-                SetAddTabButtonLocation();
 
                 currentLastTabIndex = lastTabIndex;
+
+                SetAddTabButtonLocation();
             }
         }
 

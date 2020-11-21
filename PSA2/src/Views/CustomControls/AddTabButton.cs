@@ -12,6 +12,7 @@ namespace PSA2.src.Views.CustomControls
     {
         public int PlusSignThickness { get; set; }
         public int PlusSignPadding { get; set; }
+        public bool IsMouseDown { get; set; }
 
         public AddTabButton(): base()
         {
@@ -43,6 +44,11 @@ namespace PSA2.src.Views.CustomControls
         {
             Height = Width;
             base.OnResize(eventargs);
+        }
+
+        public bool IsPointOverButton(Point p)
+        {
+            return p.X >= 0 && p.X < Width && p.Y >= 0 && p.Y < Height;
         }
     }
 }
