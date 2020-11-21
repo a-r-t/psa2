@@ -21,7 +21,7 @@ namespace PSA2.src.Views.CustomControls
         private Size currentControlSize;
         private int currentLastTabIndex;
         private AddTabButton addTabButton;
-        
+
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
         public int CurrentTabIndex
@@ -89,16 +89,34 @@ namespace PSA2.src.Views.CustomControls
             tab.Height = tabsHolder.Height;
             tab.Index = tabIndex;
             tab.Width += 20;
-            tab.MouseDown += (sender, EventArgs) => { OnTabClicked(sender, EventArgs); };
+            tab.MouseDown += (sender, EventArgs) => { OnTabMouseDown(sender, EventArgs); };
             tab.MouseMove += (sender, MouseEventArgs) => { OnTabDragged(sender, MouseEventArgs); };
+            tab.MouseUp += (sender, MouseEventArgs) => { OnTabMouseUp(sender, MouseEventArgs); };
             tab.Name = tab.Text;
             return tab;
         }
 
-        private void OnTabClicked(object sender, EventArgs e)
+        private void OnTabMouseDown(object sender, EventArgs e)
         {
             TabCustom clickedTab = (TabCustom)sender;
             if (clickedTab.IsMouseOverXButton())
+            {
+                clickedTab.XButtonMouseDown = true;
+            }
+            else
+            {
+                int tabIndex = clickedTab.Index;
+                if (CurrentTabIndex != tabIndex)
+                {
+                    CurrentTabIndex = tabIndex;
+                }
+            }
+        }
+
+        private void OnTabMouseUp(object sender, MouseEventArgs e)
+        {
+            TabCustom clickedTab = (TabCustom)sender;
+            if (clickedTab.IsMouseOverXButton() && clickedTab.XButtonMouseDown)
             {
                 tabs.RemoveAt(clickedTab.Index);
                 TabPages.RemoveAt(clickedTab.Index);
@@ -107,39 +125,43 @@ namespace PSA2.src.Views.CustomControls
                 {
                     TabCustom tab = tabs[i];
                     tab.Index--;
-                    tab.Location = new Point(tab.Location.X - clickedTab.Width, tab.Location.Y);
+                    tab.Location = new Point(tab.Location.X - clickedTab.Width - 1, tab.Location.Y);
                 }
 
-                if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0)
+                if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex == clickedTab.Index)
                 {
                     CurrentTabIndex--;
+                }
+                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex != clickedTab.Index)
+                {
+                    currentTabIndex--;
+                    SelectTab(CurrentTabIndex);
                 }
                 else if (CurrentTabIndex - 1 == -1 && tabs.Count > 0)
                 {
                     currentTabIndex = 0;
-                    SelectTab(CurrentTabIndex);//rice
+                    SelectTab(CurrentTabIndex);
                 }
                 else
                 {
                     CurrentTabIndex = -1;
                 }
+
                 ChangeTabsDisplayed();
             }
             else
             {
-                int tabIndex = (sender as TabCustom).Index;
-                if (CurrentTabIndex != tabIndex)
-                {
-                    CurrentTabIndex = tabIndex;
-                }
+                clickedTab.XButtonMouseDown = false;
             }
         }
 
         private void OnTabDragged(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
+        {                
+            TabCustom tab = (TabCustom)sender;
+            if (e.Button == MouseButtons.Left && !tab.IsMouseOverXButton() && !tab.XButtonMouseDown)
             {
-                int tabIndex = (sender as TabCustom).Index;
+                tab.XButtonDisabled = true;
+                int tabIndex = tab.Index;
                 if (tabIndex < tabs.Count)
                 {
                     TabCustom currentTab = tabs[tabIndex];
@@ -241,7 +263,7 @@ namespace PSA2.src.Views.CustomControls
             addTabButton.PlusSignThickness = 2;
             addTabButton.PlusSignPadding = 6;
             addTabButton.Location = new Point(0, (tabsHolder.Height / 2) - (addTabButton.Width / 2));
-            tabsHolder.Controls.Add(addTabButton);
+            //tabsHolder.Controls.Add(addTabButton);
             addTabButton.BringToFront();
 
         }

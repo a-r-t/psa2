@@ -135,6 +135,40 @@ namespace PSA2.src.Views.CustomControls
         public Color TabSelectedXButtonSelectedBackColor { get; set; }
         private Color currentXButtonColor;
         private Color currentXButtonBackColor;
+        private bool xButtonDisabled;
+        public bool XButtonDisabled
+        { 
+            get
+            {
+                return xButtonDisabled;
+            } 
+            set
+            {
+                xButtonDisabled = value;
+                if (xButtonDisabled)
+                {
+                    currentXButtonColor = XButtonXColor;
+                    currentXButtonBackColor = XButtonBackColor;
+                }
+            } 
+        }
+        public bool XButtonMouseDown { get; set; }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            xButtonDisabled = false;
+            base.OnMouseUp(e);
+        }
+
+        const int WM_LBUTTONUP = 0x202;
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_LBUTTONUP)
+            {
+
+            }
+            base.WndProc(ref m);
+        }
 
         public TabCustom(string text) : base()
         {
@@ -222,15 +256,18 @@ namespace PSA2.src.Views.CustomControls
             {
                 currentTextColor = HoverTextColor;
                 BackColor = HoverBackgroundColor;
-                if (IsMouseOverXButton())
+                if (!XButtonDisabled)
                 {
-                    currentXButtonColor = XButtonXHoveredColor;
-                    currentXButtonBackColor = XButtonHoveredBackColor;
-                }
-                else
-                {
-                    currentXButtonColor = XButtonXHoveredColor;
-                    currentXButtonBackColor = HoverBackgroundColor;
+                    if (IsMouseOverXButton())
+                    {
+                        currentXButtonColor = XButtonXHoveredColor;
+                        currentXButtonBackColor = XButtonHoveredBackColor;
+                    }
+                    else
+                    {
+                        currentXButtonColor = XButtonXHoveredColor;
+                        currentXButtonBackColor = HoverBackgroundColor;
+                    }
                 }
             }
             base.OnMouseEnter(e);
@@ -238,33 +275,36 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!IsSelected)
+            if (!XButtonDisabled)
             {
-                if (IsMouseOverXButton())
+                if (!IsSelected)
                 {
-                    currentXButtonColor = XButtonXHoveredColor;
-                    currentXButtonBackColor = XButtonHoveredBackColor;
+                    if (IsMouseOverXButton())
+                    {
+                        currentXButtonColor = XButtonXHoveredColor;
+                        currentXButtonBackColor = XButtonHoveredBackColor;
+                    }
+                    else
+                    {
+                        currentXButtonColor = XButtonXHoveredColor;
+                        currentXButtonBackColor = HoverBackgroundColor;
+                    }
                 }
                 else
                 {
-                    currentXButtonColor = XButtonXHoveredColor;
-                    currentXButtonBackColor = HoverBackgroundColor;
+                    if (IsMouseOverXButton())
+                    {
+                        currentXButtonColor = TabSelectedXButtonSelectedXColor;
+                        currentXButtonBackColor = TabSelectedXButtonSelectedBackColor;
+                    }
+                    else
+                    {
+                        currentXButtonColor = XButtonXSelectedColor;
+                        currentXButtonBackColor = SelectedBackgroundColor;
+                    }
                 }
+                Refresh();
             }
-            else
-            {
-                if (IsMouseOverXButton())
-                {
-                    currentXButtonColor = TabSelectedXButtonSelectedXColor;
-                    currentXButtonBackColor = TabSelectedXButtonSelectedBackColor;
-                }
-                else
-                {
-                    currentXButtonColor = XButtonXSelectedColor;
-                    currentXButtonBackColor = SelectedBackgroundColor;
-                }
-            }
-            Refresh();
             base.OnMouseMove(e);
         }
 
@@ -279,10 +319,17 @@ namespace PSA2.src.Views.CustomControls
             {
                 currentTextColor = TextColor;
                 BackColor = BackgroundColor;
-                currentXButtonColor = XButtonXColor;
+                if (!XButtonDisabled)
+                {
+                    currentXButtonColor = XButtonXColor;
+                    currentXButtonBackColor = XButtonBackColor;
+                }
+            }
+            else
+            {
+                currentXButtonColor = XButtonXSelectedColor;
                 currentXButtonBackColor = XButtonBackColor;
             }
-
             base.OnMouseLeave(e);
         }
 
