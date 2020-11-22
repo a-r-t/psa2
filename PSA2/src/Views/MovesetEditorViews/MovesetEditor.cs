@@ -81,6 +81,24 @@ namespace PSA2.src.Views.MovesetEditorViews
         public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
         {
             // TODO: Fix this up based on new tab control
+
+            TabPageCustom existingTabPage = FindExistingTabPage(codeBlockSelection);
+            if (existingTabPage == null)
+            {
+                TabPageCustom currentTabPage = eventsTabControl.TabPages[eventsTabControl.CurrentTabIndex];
+                currentTabPage.TabText = sectionText;
+                currentTabPage.Controls.Clear();
+                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockSelection);
+                codeBlockViewer.Name = "codeBlockViewer";
+                codeBlockViewer.Dock = DockStyle.Fill;
+                codeBlockViewer.AddListener(parametersEditor);
+                currentTabPage.Controls.Add(codeBlockViewer);
+            }
+            else
+            {
+
+            }
+
             /*             
             TabPage existingTabPage = FindExistingTabPage(codeBlockSelection);
 
@@ -113,7 +131,8 @@ namespace PSA2.src.Views.MovesetEditorViews
             foreach (TabPageCustom tabPage in eventsTabControl.TabPages)
             {
                 CodeBlockViewer codeBlockViewer = (CodeBlockViewer)tabPage.Controls["codeBlockViewer"];
-                if (codeBlockViewer.CodeBlockSelection.SectionType == codeBlockSelection.SectionType
+                if (codeBlockViewer != null
+                    && codeBlockViewer.CodeBlockSelection.SectionType == codeBlockSelection.SectionType
                     && codeBlockViewer.CodeBlockSelection.SectionIndex == codeBlockSelection.SectionIndex
                     && codeBlockViewer.CodeBlockSelection.CodeBlockIndex == codeBlockSelection.CodeBlockIndex)
                 {
@@ -137,6 +156,9 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             //this.DoubleBuffered(true);
             //eventsTabControl.DoubleBuffered(true);
+            TabPageCustom tabPage = new TabPageCustom();
+            tabPage.TabText = "New Tab";
+            eventsTabControl.TabPages.Add(tabPage);
         }
 
         public void OnAppendCommand()

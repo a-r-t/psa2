@@ -249,9 +249,11 @@ namespace PSA2.src.Views.CustomControls
 
             tabViewer = new Panel();
             tabViewer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+            tabViewer.Height = Height - tabsHolder.Height;
             tabViewer.Location = new Point(0, 40);
             Controls.Add(tabViewer);
 
+            /*
             TabPageCustom tabPage1 = new TabPageCustom();
             tabPage1.BackColor = Color.Red;
             tabPage1.TabText = "Hello There";
@@ -266,6 +268,7 @@ namespace PSA2.src.Views.CustomControls
             tabPage3.BackColor = Color.Purple;
             tabPage3.TabText = "My Nightmare, I don't know";
             TabPages.Add(tabPage3);
+            */
 
             tabListButton = new TabListButton();
             tabListButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
