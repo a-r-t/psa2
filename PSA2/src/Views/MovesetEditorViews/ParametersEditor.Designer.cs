@@ -28,39 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.mainContainer = new System.Windows.Forms.SplitContainer();
             this.parameterNamesScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             this.parameterTypeViewer = new System.Windows.Forms.Panel();
             this.parameterTypesComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.categoryLabel = new System.Windows.Forms.Label();
             this.parameterEditorFormView = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainContainer)).BeginInit();
+            this.mainContainer.Panel1.SuspendLayout();
+            this.mainContainer.Panel2.SuspendLayout();
+            this.mainContainer.SuspendLayout();
             this.parameterTypeViewer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer1
+            // mainContainer
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.mainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.mainContainer.Location = new System.Drawing.Point(0, 0);
+            this.mainContainer.Name = "mainContainer";
+            this.mainContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel1
+            // mainContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.parameterNamesScintilla);
+            this.mainContainer.Panel1.Controls.Add(this.parameterNamesScintilla);
             // 
-            // splitContainer1.Panel2
+            // mainContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.parameterTypeViewer);
-            this.splitContainer1.Panel2.Controls.Add(this.parameterEditorFormView);
-            this.splitContainer1.Size = new System.Drawing.Size(405, 314);
-            this.splitContainer1.SplitterDistance = 133;
-            this.splitContainer1.TabIndex = 3;
+            this.mainContainer.Panel2.Controls.Add(this.parameterTypeViewer);
+            this.mainContainer.Panel2.Controls.Add(this.parameterEditorFormView);
+            this.mainContainer.Size = new System.Drawing.Size(405, 314);
+            this.mainContainer.SplitterDistance = 133;
+            this.mainContainer.TabIndex = 3;
             // 
             // parameterNamesScintilla
             // 
@@ -75,6 +75,7 @@
             this.parameterNamesScintilla.Location = new System.Drawing.Point(0, 0);
             this.parameterNamesScintilla.Name = "parameterNamesScintilla";
             this.parameterNamesScintilla.ReadOnly = true;
+            this.parameterNamesScintilla.SelectedIndex = -1;
             this.parameterNamesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
             this.parameterNamesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
             this.parameterNamesScintilla.ShowLineNumbers = false;
@@ -139,13 +140,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.mainContainer);
             this.Name = "ParametersEditor";
             this.Size = new System.Drawing.Size(405, 314);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.EnabledChanged += new System.EventHandler(this.ParametersEditor_EnabledChanged);
+            this.mainContainer.Panel1.ResumeLayout(false);
+            this.mainContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainContainer)).EndInit();
+            this.mainContainer.ResumeLayout(false);
             this.parameterTypeViewer.ResumeLayout(false);
             this.parameterTypeViewer.PerformLayout();
             this.ResumeLayout(false);
@@ -153,7 +155,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer mainContainer;
         private System.Windows.Forms.ComboBox parameterTypesComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label categoryLabel;

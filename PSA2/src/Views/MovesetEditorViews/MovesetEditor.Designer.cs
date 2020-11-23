@@ -121,7 +121,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.eventsTabControl.Name = "eventsTabControl";
             this.eventsTabControl.Size = new System.Drawing.Size(165, 260);
             this.eventsTabControl.TabIndex = 0;
-            this.eventsTabControl.SelectedIndexChanged += new System.EventHandler(this.eventsTabControl_SelectedIndexChanged);
+            this.eventsTabControl.SelectedTabIndexChanged += new System.EventHandler(this.eventsTabControl_SelectedTabIndexChanged);
             this.eventsTabControl.Click += new System.EventHandler(this.eventsTabControl_Click);
             // 
             // optionsTabControl

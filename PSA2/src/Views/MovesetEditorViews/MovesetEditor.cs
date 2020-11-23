@@ -80,8 +80,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
         {
-            // TODO: Fix this up based on new tab control
-
             TabPageCustom existingTabPage = FindExistingTabPage(codeBlockSelection);
             if (existingTabPage == null)
             {
@@ -96,34 +94,9 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
             else
             {
-
+                eventsTabControl.CurrentTabIndex = existingTabPage.TabIndex;
             }
-
-            /*             
-            TabPage existingTabPage = FindExistingTabPage(codeBlockSelection);
-
-            if (existingTabPage == null) 
-            {
-                TabPageCustom codeBlockCommandsTab = new TabPageCustom();
-                codeBlockCommandsTab.TabText = sectionText;
-                CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockSelection);
-                codeBlockViewer.Name = "codeBlockViewer";
-                codeBlockViewer.Dock = DockStyle.Fill;
-                codeBlockViewer.AddListener(parametersEditor);
-                codeBlockCommandsTab.Controls.Add(codeBlockViewer);
-                eventsTabControl.TabPages.Insert(0, codeBlockCommandsTab);
-                eventsTabControl.SelectedTab = codeBlockCommandsTab;
-            }
-            else
-            {
-                if (eventsTabControl.SelectedTab != existingTabPage)
-                {
-                    eventsTabControl.TabPages.Remove(existingTabPage);
-                    eventsTabControl.TabPages.Insert(0, existingTabPage);
-                    eventsTabControl.SelectedTab = existingTabPage;
-                }
-            }
-            */
+            parametersEditor.Enabled = true;
         }
 
         public TabPageCustom FindExistingTabPage(CodeBlockSelection codeBlockSelection)
@@ -142,9 +115,18 @@ namespace PSA2.src.Views.MovesetEditorViews
             return null;
         }
 
-        private void eventsTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void eventsTabControl_SelectedTabIndexChanged(object sender, EventArgs e)
         {
-            ActiveCodeBlockViewer?.EmitCommandSelected();
+            CodeBlockViewer activeCodeBlockViewer = ActiveCodeBlockViewer;
+            if (activeCodeBlockViewer != null)
+            {
+                activeCodeBlockViewer.EmitCommandSelected();
+                parametersEditor.Enabled = true;
+            }
+            else
+            {
+                parametersEditor.Enabled = false;
+            }
         }
 
         private void eventsTabControl_Click(object sender, EventArgs e)

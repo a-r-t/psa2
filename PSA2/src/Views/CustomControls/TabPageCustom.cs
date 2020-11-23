@@ -10,8 +10,22 @@ namespace PSA2.src.Views.CustomControls
 {
     public partial class TabPageCustom : Panel
     {
-        public string TabText { get; set; }
+        private string tabText;
+        public string TabText 
+        { 
+            get
+            {
+                return tabText;
+            }
+            set
+            {
+                tabText = value;
+                OnTabTextChanged(this, new EventArgs());
+            }
+        }
         public Font TabFont { get; set; }
+
+        public event EventHandler TabTextChanged;
 
         public TabPageCustom(): base()
         {
@@ -19,5 +33,9 @@ namespace PSA2.src.Views.CustomControls
             TabFont = new Font("Times New Roman", 12, FontStyle.Regular);
         }
 
+        private void OnTabTextChanged(object sender, EventArgs e)
+        {
+            TabTextChanged?.Invoke(sender, e);
+        }
     }
 }

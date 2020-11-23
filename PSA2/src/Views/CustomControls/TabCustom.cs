@@ -9,13 +9,25 @@ using System.Windows.Forms;
 
 namespace PSA2.src.Views.CustomControls
 {
-    public partial class TabCustom: Panel
+    public partial class TabCustom : Panel
     {
-        public override string Text { get; set; }
+        private string text;
+        public override string Text
+        {
+            get
+            {
+                return text;
+            }
+            set
+            {
+                text = value;
+                Width = text.MeasureTextRenderer(Font).Width + TabAdditionalWidth;
+            }
+        }
         public int Index { get; set; }
 
         private Color textColor;
-        public Color TextColor 
+        public Color TextColor
         {
             get
             {
@@ -32,7 +44,7 @@ namespace PSA2.src.Views.CustomControls
         }
 
         private Color selectedTextColor;
-        public Color SelectedTextColor 
+        public Color SelectedTextColor
         {
             get
             {
@@ -49,8 +61,8 @@ namespace PSA2.src.Views.CustomControls
         }
 
         private Color backgroundColor;
-        public Color BackgroundColor 
-        { 
+        public Color BackgroundColor
+        {
             get
             {
                 return backgroundColor;
@@ -62,12 +74,12 @@ namespace PSA2.src.Views.CustomControls
                 {
                     BackColor = value;
                 }
-            } 
+            }
         }
 
         private Color selectedBackColor;
-        public Color SelectedBackgroundColor 
-        { 
+        public Color SelectedBackgroundColor
+        {
             get
             {
                 return selectedBackColor;
@@ -85,8 +97,8 @@ namespace PSA2.src.Views.CustomControls
         private Color currentTextColor;
 
         public bool isSelected;
-        public bool IsSelected 
-        { 
+        public bool IsSelected
+        {
             get
             {
                 return isSelected;
@@ -102,12 +114,12 @@ namespace PSA2.src.Views.CustomControls
                 {
                     StyleUnselected();
                 }
-            } 
+            }
         }
 
         private Size xButtonSize;
-        public Size XButtonSize 
-        { 
+        public Size XButtonSize
+        {
             get
             {
                 return xButtonSize;
@@ -118,6 +130,8 @@ namespace PSA2.src.Views.CustomControls
                 XButtonLocation = GetXButtonLocation();
             }
         }
+
+        public int TabAdditionalWidth { get; set; }
         public Point XButtonLocation { get; set; }
         public Color HoverBackgroundColor { get; set; }
         public Color HoverTextColor { get; set; }
@@ -163,9 +177,10 @@ namespace PSA2.src.Views.CustomControls
         public TabCustom(string text) : base()
         {
             Font = new Font("Times New Roman", 10, FontStyle.Regular);
+            TabAdditionalWidth = 20;
             Text = text;
-            Width = text.MeasureTextRenderer(Font).Width;
-            Height = text.MeasureTextRenderer(Font).Height;
+            //Width = text.MeasureTextRenderer(Font).Width + TabAdditionalWidth;
+            //Height = text.MeasureTextRenderer(Font).Height;
 
             TextColor = Color.Black;
             BackgroundColor = Color.White;
