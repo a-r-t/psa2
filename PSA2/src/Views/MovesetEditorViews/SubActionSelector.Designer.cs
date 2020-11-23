@@ -30,6 +30,7 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.subActionsListScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             this.animationDetailsViewer = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -45,7 +46,6 @@
             this.inTransitionTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.animationNameTextBox = new System.Windows.Forms.TextBox();
-            this.subActionsListScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -84,6 +84,28 @@
             this.searchTextBox.Size = new System.Drawing.Size(191, 20);
             this.searchTextBox.TabIndex = 1;
             this.searchTextBox.Text = "🔍";
+            // 
+            // subActionsListScintilla
+            // 
+            this.subActionsListScintilla.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subActionsListScintilla.BackgroundColor = System.Drawing.Color.White;
+            this.subActionsListScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
+            this.subActionsListScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
+            this.subActionsListScintilla.FullLineSelect = false;
+            this.subActionsListScintilla.ItemBackColor = System.Drawing.Color.White;
+            this.subActionsListScintilla.ItemForeColor = System.Drawing.Color.Black;
+            this.subActionsListScintilla.Location = new System.Drawing.Point(4, 31);
+            this.subActionsListScintilla.Name = "subActionsListScintilla";
+            this.subActionsListScintilla.ReadOnly = true;
+            this.subActionsListScintilla.SelectedIndex = -1;
+            this.subActionsListScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
+            this.subActionsListScintilla.SelectedItemForeColor = System.Drawing.Color.White;
+            this.subActionsListScintilla.ShowLineNumbers = false;
+            this.subActionsListScintilla.Size = new System.Drawing.Size(193, 266);
+            this.subActionsListScintilla.TabIndex = 0;
+            this.subActionsListScintilla.SelectedIndexChanged += new System.EventHandler(this.subActionsListScintilla_SelectedIndexChanged);
             // 
             // animationDetailsViewer
             // 
@@ -242,27 +264,6 @@
             this.animationNameTextBox.Size = new System.Drawing.Size(104, 20);
             this.animationNameTextBox.TabIndex = 0;
             // 
-            // subActionsListScintilla
-            // 
-            this.subActionsListScintilla.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.subActionsListScintilla.BackgroundColor = System.Drawing.Color.White;
-            this.subActionsListScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
-            this.subActionsListScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
-            this.subActionsListScintilla.FullLineSelect = false;
-            this.subActionsListScintilla.ItemBackColor = System.Drawing.Color.White;
-            this.subActionsListScintilla.ItemForeColor = System.Drawing.Color.Black;
-            this.subActionsListScintilla.Location = new System.Drawing.Point(4, 31);
-            this.subActionsListScintilla.Name = "subActionsListScintilla";
-            this.subActionsListScintilla.ReadOnly = true;
-            this.subActionsListScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
-            this.subActionsListScintilla.SelectedItemForeColor = System.Drawing.Color.White;
-            this.subActionsListScintilla.ShowLineNumbers = false;
-            this.subActionsListScintilla.Size = new System.Drawing.Size(193, 266);
-            this.subActionsListScintilla.TabIndex = 0;
-            this.subActionsListScintilla.SelectedIndexChanged += new System.EventHandler(this.subActionsListScintilla_SelectedIndexChanged);
-            // 
             // SubActionSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,6 +272,7 @@
             this.Name = "SubActionSelector";
             this.Size = new System.Drawing.Size(200, 453);
             this.Load += new System.EventHandler(this.SubActionSelector_Load);
+            this.VisibleChanged += new System.EventHandler(this.SubActionSelector_VisibleChanged);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);

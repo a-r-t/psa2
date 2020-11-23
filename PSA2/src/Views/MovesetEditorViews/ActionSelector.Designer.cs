@@ -53,6 +53,7 @@
             this.actionsListScintilla.Location = new System.Drawing.Point(4, 5);
             this.actionsListScintilla.Name = "actionsListScintilla";
             this.actionsListScintilla.ReadOnly = true;
+            this.actionsListScintilla.SelectedIndex = -1;
             this.actionsListScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
             this.actionsListScintilla.SelectedItemForeColor = System.Drawing.Color.White;
             this.actionsListScintilla.ShowLineNumbers = false;
@@ -123,6 +124,7 @@
             this.Name = "ActionSelector";
             this.Size = new System.Drawing.Size(200, 408);
             this.Load += new System.EventHandler(this.ActionSelector_Load);
+            this.VisibleChanged += new System.EventHandler(this.ActionSelector_VisibleChanged);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

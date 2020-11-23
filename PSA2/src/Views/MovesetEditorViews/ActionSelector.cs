@@ -61,5 +61,13 @@ namespace PSA2.src.Views.MovesetEditorViews
                 listener.OnCodeBlockSelected(name, codeBlockSelection);
             }
         }
+
+        private void ActionSelector_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+            {
+                UpdateSectionSelection();
+            }
+        }
     }
 }
