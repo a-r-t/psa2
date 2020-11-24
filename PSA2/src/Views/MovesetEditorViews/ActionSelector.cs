@@ -20,6 +20,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
+            actionsListScintilla.FontFamily = "Tahoma";
         }
 
         private void ActionSelector_Load(object sender, EventArgs e)

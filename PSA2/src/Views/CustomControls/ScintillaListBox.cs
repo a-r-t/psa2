@@ -35,64 +35,108 @@ namespace PSA2.src.Views.CustomControls
             }
         }
 
+        private Color itemForeColor;
         public Color ItemForeColor
         {
             get
             {
-                return Styles[1].ForeColor;
+                return itemForeColor;
             }
             set
             {
-                Styles[1].ForeColor = value;
-
+                itemForeColor = value;
+                SetupStyles();
+                StyleDocument();
             }
         }
 
+        private Color itemBackColor;
         public Color ItemBackColor
         {
             get
             {
-                return Styles[1].BackColor;
+                return itemBackColor;
             }
             set
             {
-                Styles[1].BackColor = value;
+                itemBackColor = value;
+                SetupStyles();
+                StyleDocument();
             }
         }
 
+        private Color selectedItemForeColor;
         public Color SelectedItemForeColor
         {
             get
             {
-                return Styles[2].ForeColor;
+                return selectedItemForeColor;
             }
             set
             {
-                Styles[2].ForeColor = value;
+                selectedItemForeColor = value;
+                SetupStyles();
+                StyleDocument();
             }
         }
 
+        private Color selectedItemBackColor;
         public Color SelectedItemBackColor
         {
             get
             {
-                return Styles[2].BackColor;
+                return selectedItemBackColor;
             }
             set
             {
-                Styles[2].BackColor = value;
+                selectedItemBackColor = value;
+                SetupStyles();
+                StyleDocument();
             }
         }
 
+        private Color backgroundColor;
         public Color BackgroundColor
         {
             get
             {
-                return Styles[Style.Default].BackColor;
+                return backgroundColor;
             }
             set
             {
-                Styles[Style.Default].BackColor = value;
+                backgroundColor = value;
+                SetupStyles();
+                StyleDocument();
+            }
+        }
+
+        private string fontFamily;
+        public string FontFamily
+        {
+            get
+            {
+                return fontFamily;
+            }
+            set
+            {
+                fontFamily = value;
+                SetupStyles();
+                StyleDocument();
+            }
+        }
+
+        private float fontSize;
+        public float FontSize
+        {
+            get
+            {
+                return fontSize;
+            }
+            set
+            {
+                fontSize = value;
+                SetupStyles();
+                StyleDocument();
             }
         }
 
@@ -109,19 +153,18 @@ namespace PSA2.src.Views.CustomControls
             {
                 Margins[i].Width = 0;
             }
-            SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
 
-            Styles[Style.Default].BackColor = Color.White;
-            Styles[Style.Default].Font = "Consolas";
-            Styles[Style.Default].SizeF = 10;
-            StyleClearAll();
+            BackgroundColor = Color.White;
+            FontFamily = "Consolas";
+            FontSize = 10;
 
-            Styles[1].ForeColor = Color.FromArgb(0, 0, 0);
-            Styles[1].BackColor = Styles[Style.Default].BackColor;
+            ItemForeColor = Color.FromArgb(0, 0, 0);
+            ItemBackColor = BackgroundColor;
+            SelectedItemForeColor = Color.White;
+            SelectedItemBackColor = Color.FromArgb(38, 79, 120);
 
-            Styles[2].FillLine = true;
-            Styles[2].ForeColor = Color.White;
-            Styles[2].BackColor = Color.FromArgb(38, 79, 120);
+            SetupStyles();
+
             Lexer = Lexer.Container;
 
             ReadOnly = true;
@@ -129,6 +172,22 @@ namespace PSA2.src.Views.CustomControls
             CaretStyle = CaretStyle.Invisible;
 
             StyleDocument();
+        }
+
+        private void SetupStyles()
+        {
+            SetSelectionBackColor(false, Color.Transparent);
+            Styles[Style.Default].BackColor = BackgroundColor;
+            Styles[Style.Default].Font = FontFamily;
+            Styles[Style.Default].SizeF = FontSize;
+            StyleClearAll();
+
+            Styles[1].ForeColor = ItemForeColor;
+            Styles[1].BackColor = ItemBackColor;
+
+            Styles[2].FillLine = true;
+            Styles[2].ForeColor = SelectedItemForeColor;
+            Styles[2].BackColor = SelectedItemBackColor;
         }
 
         private void SelectIndexChangedEvent(object sender, EventArgs e)
