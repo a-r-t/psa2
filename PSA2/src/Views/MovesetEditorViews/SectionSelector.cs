@@ -72,20 +72,16 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
+        public void OnCodeBlockSelected(CodeBlockSelection codeBlockSelection)
         {
-            this.sectionText = sectionText;
-            this.codeBlockSelection = codeBlockSelection;   
+            this.codeBlockSelection = codeBlockSelection;
         }
 
         private void openButton_Click(object sender, EventArgs e)
         {
             foreach (ISectionSelectorListener listener in listeners)
             {
-                listener.OnCodeBlockSelected(
-                    codeBlockSelection.ToString() + " - " + sectionText,
-                    codeBlockSelection
-                );
+                listener.OnCodeBlockSelected(codeBlockSelection);
             }
         }
     }

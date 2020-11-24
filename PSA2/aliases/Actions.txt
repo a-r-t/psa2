@@ -1,0 +1,6 @@
+{
+	"0": "Neutral Special",
+	"1": "Side Special",
+	"2": "Up Special",
+	"3": "Down Special"
+}

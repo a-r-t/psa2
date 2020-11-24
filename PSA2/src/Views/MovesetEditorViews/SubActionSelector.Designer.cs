@@ -84,6 +84,8 @@
             this.searchTextBox.Size = new System.Drawing.Size(191, 20);
             this.searchTextBox.TabIndex = 1;
             this.searchTextBox.Text = "🔍";
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            this.searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyDown);
             // 
             // subActionsListScintilla
             // 
@@ -93,6 +95,8 @@
             this.subActionsListScintilla.BackgroundColor = System.Drawing.Color.White;
             this.subActionsListScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
             this.subActionsListScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
+            this.subActionsListScintilla.FontFamily = "Consolas";
+            this.subActionsListScintilla.FontSize = 10F;
             this.subActionsListScintilla.FullLineSelect = false;
             this.subActionsListScintilla.ItemBackColor = System.Drawing.Color.White;
             this.subActionsListScintilla.ItemForeColor = System.Drawing.Color.Black;

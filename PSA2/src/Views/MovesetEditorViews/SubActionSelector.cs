@@ -11,12 +11,15 @@ using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2MovesetLogic.src.Models.Fighter;
 using PSA2MovesetLogic.src.ExtentionMethods;
+using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
     public partial class SubActionSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
+        protected List<SubActionOption> subActionOptions;
+        protected List<SubActionOption> filteredSubActionOptions;
 
         public SubActionSelector(PsaMovesetHandler psaMovesetHandler)
         {
@@ -29,11 +32,14 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             int numberOfSubActions = psaMovesetHandler.SubActionsHandler.GetNumberOfSubActions();
             List<string> subActionsNames = new List<string>();
+            subActionOptions = new List<SubActionOption>();
             for (int i = 0; i < numberOfSubActions; i++)
             {
                 string animationName = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(i);
                 subActionsNames.Add(i.ToString("X") + " - " + animationName);
+                subActionOptions.Add(new SubActionOption(animationName, i));
             }
+            filteredSubActionOptions = subActionOptions;
             subActionsListScintilla.AddItems(subActionsNames);
 
             if (subActionsListScintilla.Items.Count > 0)
@@ -49,17 +55,20 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             CodeBlockSelection codeBlockSelection = new CodeBlockSelection(psaMovesetHandler);
             codeBlockSelection.SectionType = SectionType.SUBACTION;
-            codeBlockSelection.SectionIndex = subActionsListScintilla.SelectedIndex;
+            codeBlockSelection.SectionIndex = filteredSubActionOptions[subActionsListScintilla.SelectedIndex].Index;
 
             foreach (ISectionSelectorListener listener in listeners)
             {
-                listener.OnCodeBlockSelected(animationNameTextBox.Text, codeBlockSelection);
+                listener.OnCodeBlockSelected(codeBlockSelection);
             }
         }
 
         private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateSectionSelection();
+            if (subActionsListScintilla.Items.Count > 0)
+            {
+                UpdateSectionSelection();
+            }
         }
 
         private void UpdateAnimationData()
@@ -82,6 +91,51 @@ namespace PSA2.src.Views.MovesetEditorViews
             if (Visible)
             {
                 UpdateSectionSelection();
+            }
+        }
+
+        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = searchTextBox.Text.Length > 2
+                ? searchTextBox.Text.Substring(2)
+                : "";
+
+            if (searchText != "")
+            {
+                filteredSubActionOptions = subActionOptions.FindAll(option => option.Name.ContainsIgnoreCase(searchText) || option.Index.ToString("X").ContainsIgnoreCase(searchText));
+            }
+            else
+            {
+                filteredSubActionOptions = subActionOptions;
+            }
+            subActionsListScintilla.ClearItems();
+            subActionsListScintilla.AddItems(filteredSubActionOptions.Select(option => option.Index.ToString("X") + " - " + option.Name).ToList());
+        }
+
+        protected class SubActionOption
+        {
+            public string Name { get; set; }
+            public int Index { get; set; }
+
+            public SubActionOption(string name, int index)
+            {
+                Name = name;
+                Index = index;
+            }
+        }
+
+        private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete))
+            {
+                if (searchTextBox.SelectionStart < 2)
+                {
+                    searchTextBox.SelectionStart = 2;
+                }
+                if (searchTextBox.SelectionStart == 2 && searchTextBox.SelectionLength == 0) {
+                    e.SuppressKeyPress = true;
+                }
+
             }
         }
     }

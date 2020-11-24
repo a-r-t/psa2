@@ -1,0 +1,20 @@
+{
+	"ActionAliases": [
+		{
+			"Index": 0,
+			"Alias": "Neutral B"
+		},
+		{
+			"Index": 1,
+			"Alias": "Side B"
+		},
+		{
+			"Index": 2,
+			"Alias": "Up B"
+		},
+		{
+			"Index": 3,
+			"Alias": "Down B"
+		}
+	]
+}

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
+using PSA2.src.Configuration;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -30,11 +31,12 @@ namespace PSA2.src.Views.MovesetEditorViews
             for (int i = 0; i < numberOfSpecialActions; i++)
             {
                 actionNames.Add((i + 274).ToString("X"));
+                string actionAlias = Config.ActionAliasesConfig.GetActionAlias(i);
+                if (actionAlias != "")
+                {
+                    actionNames[i] += $" - {actionAlias}";
+                }
             }
-            actionNames[0] += " - Neutral Special";
-            actionNames[1] += " - Side Special";
-            actionNames[2] += " - Up Special";
-            actionNames[3] += " - Down Special";
 
             actionsListScintilla.AddItems(actionNames);
             //UpdateSectionSelection();
@@ -59,7 +61,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             foreach (ISectionSelectorListener listener in listeners)
             {
-                listener.OnCodeBlockSelected(name, codeBlockSelection);
+                listener.OnCodeBlockSelected(codeBlockSelection);
             }
         }
 

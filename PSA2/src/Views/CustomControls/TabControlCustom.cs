@@ -100,6 +100,7 @@ namespace PSA2.src.Views.CustomControls
         {
             TabPageCustom tabPage = (TabPageCustom)sender;
             tabs[tabPage.TabIndex].Text = tabPage.TabText;
+            tabs[tabPage.TabIndex].Refresh();
         }
 
         private void OnTabResized(object sender, EventArgs e)

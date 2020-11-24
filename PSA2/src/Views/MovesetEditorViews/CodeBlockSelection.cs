@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using PSA2.src.ExtentionMethods;
+using PSA2.src.Configuration;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -138,7 +139,32 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public override string ToString()
+        public string ToSectionString()
+        {
+            string sectionIndexHex = "";
+            string alias = "";
+            switch (SectionType)
+            {
+                case SectionType.ACTION:
+                    sectionIndexHex = (SectionIndex + 274).ToString("X");
+                    alias = Config.ActionAliasesConfig.GetActionAlias(SectionIndex);
+                    break;
+                case SectionType.SUBACTION:
+                    sectionIndexHex = SectionIndex.ToString("X");
+                    alias = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(SectionIndex);
+                    break;
+            }
+            return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex}{FormatAlias(alias)}";
+        }
+
+        private string FormatAlias(string alias)
+        {
+            return alias != ""
+                ? $" - {alias}"
+                : "";
+        }
+
+        public string ToCodeBlockString()
         {
             string sectionIndexHex = "";
             switch(SectionType)
@@ -150,7 +176,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     sectionIndexHex = SectionIndex.ToString("X");
                     break;
             }
-            return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex}";
+            return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex} - {CodeBlockIndex}";
         }
     }
 }

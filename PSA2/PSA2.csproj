@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Configuration\ActionAliasesConfig.cs" />
+    <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\ExtentionMethods\ControlExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ListExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ScintillaExtensions.cs" />
@@ -265,6 +267,12 @@
       <Project>{71115ec6-83e5-4bd8-a9cd-da2c0ba440e4}</Project>
       <Name>PSA2MovesetLogic</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="aliases\Actions.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

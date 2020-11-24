@@ -34,5 +34,10 @@ namespace PSA2.src.ExtentionMethods
                 return g.MeasureString(s, f).ToSize();
             }
         }
+
+        public static bool ContainsIgnoreCase(this string s, string other)
+        {
+            return s.ToLower().Contains(other.ToLower());
+        }
     }
 }

@@ -433,7 +433,10 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             LoadCodeBlockCommands();
 
-            LoadCodeBlockSelectedPsaCommands(new List<int>() { 0 });
+            if (PsaCommands.Count > 0)
+            {
+                LoadCodeBlockSelectedPsaCommands(new List<int>() { 0 });
+            }
 
             codeBlockCommandsScintilla.StyleDocument();
         }

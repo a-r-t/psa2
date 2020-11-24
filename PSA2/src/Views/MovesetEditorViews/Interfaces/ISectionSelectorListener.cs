@@ -8,6 +8,6 @@ namespace PSA2.src.Views.MovesetEditorViews.Interfaces
 {
     public interface ISectionSelectorListener
     {
-        void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection);
+        void OnCodeBlockSelected(CodeBlockSelection codeBlockSelection);
     }
 }

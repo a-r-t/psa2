@@ -78,13 +78,13 @@ namespace PSA2.src.Views.MovesetEditorViews
             eventActions.AddListener(this);
         }
 
-        public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
+        public void OnCodeBlockSelected(CodeBlockSelection codeBlockSelection)
         {
             TabPageCustom existingTabPage = FindExistingTabPage(codeBlockSelection);
             if (existingTabPage == null)
             {
                 TabPageCustom currentTabPage = eventsTabControl.TabPages[eventsTabControl.CurrentTabIndex];
-                currentTabPage.TabText = sectionText;
+                currentTabPage.TabText = codeBlockSelection.ToSectionString();
                 currentTabPage.Controls.Clear();
                 CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockSelection);
                 codeBlockViewer.Name = "codeBlockViewer";
