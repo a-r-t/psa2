@@ -16,6 +16,7 @@ using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using System.Runtime.InteropServices;
 using System.Net;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Views.CustomControls;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -39,7 +40,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 if (eventsTabControl.TabCount > 0)
                 {
-                    TabPage selectedTabPage = eventsTabControl.TabPages[eventsTabControl.SelectedIndex];
+                    TabPageCustom selectedTabPage = eventsTabControl.TabPages[eventsTabControl.SelectedIndex];
                     return (CodeBlockViewer)selectedTabPage.Controls["codeBlockViewer"];
                 }
                 else
@@ -79,36 +80,32 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         public void OnCodeBlockSelected(string sectionText, CodeBlockSelection codeBlockSelection)
         {
-            TabPage existingTabPage = FindExistingTabPage(codeBlockSelection);
-
-            if (existingTabPage == null) 
+            TabPageCustom existingTabPage = FindExistingTabPage(codeBlockSelection);
+            if (existingTabPage == null)
             {
-                TabPage codeBlockCommandsTab = new TabPage(sectionText);
+                TabPageCustom currentTabPage = eventsTabControl.TabPages[eventsTabControl.CurrentTabIndex];
+                currentTabPage.TabText = sectionText;
+                currentTabPage.Controls.Clear();
                 CodeBlockViewer codeBlockViewer = new CodeBlockViewer(psaMovesetHandler, psaCommandsConfig, codeBlockSelection);
                 codeBlockViewer.Name = "codeBlockViewer";
                 codeBlockViewer.Dock = DockStyle.Fill;
                 codeBlockViewer.AddListener(parametersEditor);
-                codeBlockCommandsTab.Controls.Add(codeBlockViewer);
-                eventsTabControl.TabPages.Insert(0, codeBlockCommandsTab);
-                eventsTabControl.SelectedTab = codeBlockCommandsTab;
+                currentTabPage.Controls.Add(codeBlockViewer);
             }
             else
             {
-                if (eventsTabControl.SelectedTab != existingTabPage)
-                {
-                    eventsTabControl.TabPages.Remove(existingTabPage);
-                    eventsTabControl.TabPages.Insert(0, existingTabPage);
-                    eventsTabControl.SelectedTab = existingTabPage;
-                }
+                eventsTabControl.CurrentTabIndex = existingTabPage.TabIndex;
             }
+            parametersEditor.Enabled = true;
         }
 
-        public TabPage FindExistingTabPage(CodeBlockSelection codeBlockSelection)
+        public TabPageCustom FindExistingTabPage(CodeBlockSelection codeBlockSelection)
         {
-            foreach (TabPage tabPage in eventsTabControl.TabPages)
+            foreach (TabPageCustom tabPage in eventsTabControl.TabPages)
             {
                 CodeBlockViewer codeBlockViewer = (CodeBlockViewer)tabPage.Controls["codeBlockViewer"];
-                if (codeBlockViewer.CodeBlockSelection.SectionType == codeBlockSelection.SectionType
+                if (codeBlockViewer != null
+                    && codeBlockViewer.CodeBlockSelection.SectionType == codeBlockSelection.SectionType
                     && codeBlockViewer.CodeBlockSelection.SectionIndex == codeBlockSelection.SectionIndex
                     && codeBlockViewer.CodeBlockSelection.CodeBlockIndex == codeBlockSelection.CodeBlockIndex)
                 {
@@ -118,9 +115,18 @@ namespace PSA2.src.Views.MovesetEditorViews
             return null;
         }
 
-        private void eventsTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void eventsTabControl_SelectedTabIndexChanged(object sender, EventArgs e)
         {
-            ActiveCodeBlockViewer?.EmitCommandSelected();
+            CodeBlockViewer activeCodeBlockViewer = ActiveCodeBlockViewer;
+            if (activeCodeBlockViewer != null)
+            {
+                activeCodeBlockViewer.EmitCommandSelected();
+                parametersEditor.Enabled = true;
+            }
+            else
+            {
+                parametersEditor.Enabled = false;
+            }
         }
 
         private void eventsTabControl_Click(object sender, EventArgs e)
@@ -132,6 +138,9 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             //this.DoubleBuffered(true);
             //eventsTabControl.DoubleBuffered(true);
+            TabPageCustom tabPage = new TabPageCustom();
+            tabPage.TabText = "New Tab";
+            eventsTabControl.TabPages.Add(tabPage);
         }
 
         public void OnAppendCommand()

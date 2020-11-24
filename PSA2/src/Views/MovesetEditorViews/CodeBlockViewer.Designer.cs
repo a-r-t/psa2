@@ -66,11 +66,13 @@ namespace PSA2.src.Views.MovesetEditorViews
             // 
             // codeBlockComboBox
             // 
+            this.codeBlockComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.codeBlockComboBox.FormattingEnabled = true;
             this.codeBlockComboBox.Location = new System.Drawing.Point(74, 4);
             this.codeBlockComboBox.Name = "codeBlockComboBox";
             this.codeBlockComboBox.Size = new System.Drawing.Size(121, 21);
             this.codeBlockComboBox.TabIndex = 10;
+            this.codeBlockComboBox.SelectedIndexChanged += new System.EventHandler(this.codeBlockComboBox_SelectedIndexChanged);
             // 
             // CodeBlockViewer
             // 

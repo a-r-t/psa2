@@ -80,8 +80,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            codeBlockSelection.CodeBlockIndex = 0;
-
             foreach (ISectionSelectorListener listener in listeners)
             {
                 listener.OnCodeBlockSelected(

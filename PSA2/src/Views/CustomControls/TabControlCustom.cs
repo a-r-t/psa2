@@ -24,7 +24,20 @@ namespace PSA2.src.Views.CustomControls
         private Size currentControlSize;
         private int currentLastTabIndex;
         private AddTabButton addTabButton;
-
+        public int TabCount
+        {
+            get
+            {
+                return TabPages.Count;
+            }
+        }
+        public int SelectedIndex
+        {
+            get
+            {
+                return CurrentTabIndex;
+            }
+        }
         private List<TabCustom> tabs;
         private int currentTabIndex = -1;
         public int CurrentTabIndex
@@ -35,17 +48,24 @@ namespace PSA2.src.Views.CustomControls
             }
             set
             {
-                if (value != currentTabIndex && value >= 0 && value < TabPages.Count)
+                if (value >= 0 && value < TabPages.Count)
                 {
                     SelectTab(value);
-                    currentTabIndex = value;
                 }
-                else if (value == -1)
+                else
                 {
+                    for (int i = 0; i < tabs.Count; i++)
+                    {
+                        tabs[i].IsSelected = false;
+                    }
                     tabViewer.Controls.Clear();
                 }
+                currentTabIndex = value;
+                SelectedTabIndexChanged(this, new EventArgs());
             }
         }
+
+        public event EventHandler SelectedTabIndexChanged;
 
         public TabControlCustom(): base()
         {
@@ -56,6 +76,12 @@ namespace PSA2.src.Views.CustomControls
             tabViewer.DoubleBuffered(true);
         }
 
+        // TODO: Set this up to be called when current tab index is changed
+        private void SelectTabIndexChangedEvent(object sender, EventArgs e)
+        {
+            SelectedTabIndexChanged?.Invoke(sender, e);
+        }
+
         private void OnTabPageChange(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -63,10 +89,31 @@ namespace PSA2.src.Views.CustomControls
                 if (e.NewStartingIndex == TabPages.Count - 1)
                 {
                     TabPageCustom newTabPage = (TabPageCustom)e.NewItems[0];
-                    AppendTab(newTabPage, e.NewStartingIndex);
+                    newTabPage.TabTextChanged += (s, EventArgs) => { OnTabPageTextChanged(s, EventArgs); };
+                    newTabPage.TabIndex = TabPages.Count - 1;
+                    AppendTab(newTabPage, newTabPage.TabIndex);
                 }
             }
         }
+
+        private void OnTabPageTextChanged(object sender, EventArgs e)
+        {
+            TabPageCustom tabPage = (TabPageCustom)sender;
+            tabs[tabPage.TabIndex].Text = tabPage.TabText;
+        }
+
+        private void OnTabResized(object sender, EventArgs e)
+        {
+            TabCustom resizedTab = (TabCustom)sender;
+            for (int i = resizedTab.Index + 1; i < tabs.Count; i++)
+            {
+                TabCustom tab = tabs[i];
+                TabCustom tabBefore = tabs[i - 1];
+                tabs[i].Location = new Point(tabBefore.Location.X + tabBefore.Width + 1, tab.Location.Y);
+            }
+            ChangeTabsDisplayed();
+        }
+
 
         private void AppendTab(TabPageCustom tabPage, int tabIndex)
         {
@@ -91,10 +138,11 @@ namespace PSA2.src.Views.CustomControls
             tab.Location = new Point(xLocation, 0);
             tab.Height = tabsHolder.Height;
             tab.Index = tabIndex;
-            tab.Width += 20;
+            //tab.Width += 20;
             tab.MouseDown += (sender, EventArgs) => { OnTabMouseDown(sender, EventArgs); };
             tab.MouseMove += (sender, MouseEventArgs) => { OnTabDragged(sender, MouseEventArgs); };
             tab.MouseUp += (sender, MouseEventArgs) => { OnTabMouseUp(sender, MouseEventArgs); };
+            tab.Resize += (sender, EventArgs) => { OnTabResized(sender, EventArgs); };
             tab.Name = tab.Text;
             return tab;
         }
@@ -135,15 +183,19 @@ namespace PSA2.src.Views.CustomControls
                 {
                     CurrentTabIndex--;
                 }
-                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex != clickedTab.Index)
+                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex > clickedTab.Index)
                 {
-                    currentTabIndex--;
+                    CurrentTabIndex--;
+                    //SelectTab(CurrentTabIndex);
+                }
+                else if (CurrentTabIndex - 1 >= 0 && tabs.Count > 0 && CurrentTabIndex < clickedTab.Index)
+                {
                     SelectTab(CurrentTabIndex);
                 }
                 else if (CurrentTabIndex - 1 == -1 && tabs.Count > 0)
                 {
-                    currentTabIndex = 0;
-                    SelectTab(CurrentTabIndex);
+                    CurrentTabIndex = 0;
+                    //SelectTab(CurrentTabIndex);
                 }
                 else
                 {
@@ -182,7 +234,7 @@ namespace PSA2.src.Views.CustomControls
                             return;
                         }
                     }
-                    if (tabIndex < tabs.Count - 1)
+                    if (tabIndex < currentLastTabIndex)
                     {
                         TabCustom rightTab = tabs[tabIndex + 1];
                         int offset = rightTab.Width > currentTab.Width
@@ -224,9 +276,11 @@ namespace PSA2.src.Views.CustomControls
 
             tabViewer = new Panel();
             tabViewer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+            tabViewer.Height = Height - tabsHolder.Height;
             tabViewer.Location = new Point(0, 40);
             Controls.Add(tabViewer);
 
+            /*
             TabPageCustom tabPage1 = new TabPageCustom();
             tabPage1.BackColor = Color.Red;
             tabPage1.TabText = "Hello There";
@@ -241,6 +295,7 @@ namespace PSA2.src.Views.CustomControls
             tabPage3.BackColor = Color.Purple;
             tabPage3.TabText = "My Nightmare, I don't know";
             TabPages.Add(tabPage3);
+            */
 
             tabListButton = new TabListButton();
             tabListButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -289,8 +344,7 @@ namespace PSA2.src.Views.CustomControls
                 newTabPage.TabText = "New Tab";
                 TabPages.Add(newTabPage);
                 TabCustom newTab = tabs[tabs.Count - 1];
-                currentTabIndex = newTab.Index;
-                SelectTab(currentTabIndex);
+                CurrentTabIndex = newTab.Index;
                 ChangeTabsDisplayed();
             }
             addTabButton.IsMouseDown = false;
@@ -338,8 +392,8 @@ namespace PSA2.src.Views.CustomControls
                 tabListButton.IsSelected = false;
                 tabListScintilla.Visible = false;
 
-                currentTabIndex = currentLastTabIndex;
-                SelectTab(currentTabIndex);
+                CurrentTabIndex = currentLastTabIndex;
+                //SelectTab(currentTabIndex);
                 ChangeTabsDisplayed();
             }
         }
@@ -401,14 +455,18 @@ namespace PSA2.src.Views.CustomControls
                 int lastTabIndex = tabs.Count - 1;
 
                 // if current selected tab is off screen, swap it with first tab index
-                TabCustom currentTab = tabs[CurrentTabIndex];
-                if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
+
+                if (CurrentTabIndex >= 0)
                 {
-                    SwapTabs(CurrentTabIndex, 0);
-                    CurrentTabIndex = 0;
+                    TabCustom currentTab = tabs[CurrentTabIndex];
+                    if (currentTab.Location.X + currentTab.Width > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
+                    {
+                        SwapTabs(CurrentTabIndex, 0);
+                        CurrentTabIndex = 0;
+                    }
                 }
 
-                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3))
+                while (totalTabWidth > tabsHolder.Width - tabListButton.Width - (addTabButton.Width + 3) && totalTabWidth > 0)
                 {
                     TabCustom tab = tabs[lastTabIndex];
                     totalTabWidth -= tab.Width;

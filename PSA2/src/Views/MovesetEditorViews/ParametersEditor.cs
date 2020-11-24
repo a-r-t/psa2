@@ -33,6 +33,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         protected PsaCommandsConfig psaCommandsConfig;
         private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
 
+
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
         {
             this.psaMovesetHandler = psaMovesetHandler;
@@ -143,6 +144,11 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 listener.OnParameterChange(CommandIndex, PsaCommand);
             }
+        }
+
+        private void ParametersEditor_EnabledChanged(object sender, EventArgs e)
+        {
+            mainContainer.Visible = Enabled;
         }
     }
 }

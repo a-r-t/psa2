@@ -22,6 +22,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
+            subActionsListScintilla.FontFamily = "Tahoma";
         }
 
         private void SubActionSelector_Load(object sender, EventArgs e)
@@ -42,7 +43,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateSectionSelection()
         {
             UpdateAnimationData();
 
@@ -54,6 +55,11 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 listener.OnCodeBlockSelected(animationNameTextBox.Text, codeBlockSelection);
             }
+        }
+
+        private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSectionSelection();
         }
 
         private void UpdateAnimationData()
@@ -69,6 +75,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             unknown5CheckBox.Checked = animation.AnimationFlags.Unknown5.ToBoolean();
             transitionOutFromStartCheckBox.Checked = animation.AnimationFlags.TransitionOutFromStart.ToBoolean();
             unknown7CheckBox.Checked = animation.AnimationFlags.Unknown7.ToBoolean();
+        }
+
+        private void SubActionSelector_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+            {
+                UpdateSectionSelection();
+            }
         }
     }
 }
