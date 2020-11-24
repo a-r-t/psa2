@@ -42,7 +42,7 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             LoadCodeBlockCommands();
 
-            UpdateSelectedCommand();
+            UpdateSelectedCommands();
 
             codeBlockCommandsScintilla.StyleDocument();
         }
@@ -160,7 +160,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             // when caret changes
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection)
             {
-                UpdateSelectedCommand();
+                UpdateSelectedCommands();
             }
 
             if ((e.Change & UpdateChange.Selection) == UpdateChange.Selection
@@ -171,7 +171,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             }
         }
 
-        public void UpdateSelectedCommand()
+        public void UpdateSelectedCommands()
         {
             if (PsaCommands.Count > 0)
             {
@@ -201,16 +201,16 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void LoadCodeBlockSelectedPsaCommands(List<int> selectedCommandIndexes)
         {
-            List<PsaCommand> psaCommands = new List<PsaCommand>();
+            List<PsaCommand> selectedPsaCommands = new List<PsaCommand>();
             for (int i = 0; i < selectedCommandIndexes.Count; i++)
             {
                 PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
-                psaCommands.Add(psaCommand);
+                selectedPsaCommands.Add(psaCommand);
             }
 
             foreach (ICodeBlockViewerListener listener in listeners)
             {
-                listener.OnCommandSelected(psaCommands, selectedCommandIndexes, CodeBlockSelection);
+                listener.OnCommandSelected(selectedPsaCommands, selectedCommandIndexes, CodeBlockSelection);
             }
         }
 
