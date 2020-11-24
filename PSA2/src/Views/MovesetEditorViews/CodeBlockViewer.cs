@@ -22,6 +22,8 @@ namespace PSA2.src.Views.MovesetEditorViews
         public List<PsaCommand> PsaCommands { get; set; }  = new List<PsaCommand>();
         private List<string> commandTexts = new List<string>();
         private List<int> currentCommandIndexesSelected = new List<int>();
+        private string[] actionCodeBlockEntries = { "Entry", "Exit" };
+        private string[] subActionCodeBlockEntries = { "Main", "GFX", "SFX", "Other" };
 
         public CodeBlockViewer(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig, CodeBlockSelection codeBlockSelection)
         {
@@ -36,11 +38,31 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void CodeBlockViewer_Load(object sender, EventArgs e)
         {
+            SetUpCodeBlock();
+
             LoadCodeBlockCommands();
 
             UpdateSelectedCommand();
 
             codeBlockCommandsScintilla.StyleDocument();
+        }
+
+        private void SetUpCodeBlock()
+        {
+            CodeBlockSelection.CodeBlockIndex = 0;
+            switch (CodeBlockSelection.SectionType)
+            {
+                case SectionType.ACTION:
+                    codeBlockComboBox.Visible = true;
+                    codeBlockComboBox.Items.AddRange(actionCodeBlockEntries);
+                    codeBlockComboBox.SelectedIndex = 0;
+                    break;
+                case SectionType.SUBACTION:
+                    codeBlockComboBox.Visible = true;
+                    codeBlockComboBox.Items.AddRange(subActionCodeBlockEntries);
+                    codeBlockComboBox.SelectedIndex = 0;
+                    break;
+            }
         }
 
         public void LoadCodeBlockCommands()
@@ -159,18 +181,8 @@ namespace PSA2.src.Views.MovesetEditorViews
 
                 if (selectedCommandIndexes.Count != this.currentCommandIndexesSelected.Count || newIndexesSelected.Count > 0)
                 {
-                    List<PsaCommand> psaCommands = new List<PsaCommand>();
-                    for (int i = 0; i < selectedCommandIndexes.Count; i++)
-                    {
-                        PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
-                        psaCommands.Add(psaCommand);
-                    }
 
-                    foreach (ICodeBlockViewerListener listener in listeners)
-                    {
-                        listener.OnCommandSelected(psaCommands, selectedCommandIndexes, CodeBlockSelection);
-                    }
-
+                    LoadCodeBlockSelectedPsaCommands(selectedCommandIndexes);
                     codeBlockCommandsScintilla.Focus();
                 }
 
@@ -184,6 +196,21 @@ namespace PSA2.src.Views.MovesetEditorViews
                 {
                     listener.OnCommandSelected(null, null, CodeBlockSelection);
                 }
+            }
+        }
+
+        private void LoadCodeBlockSelectedPsaCommands(List<int> selectedCommandIndexes)
+        {
+            List<PsaCommand> psaCommands = new List<PsaCommand>();
+            for (int i = 0; i < selectedCommandIndexes.Count; i++)
+            {
+                PsaCommand psaCommand = CodeBlockSelection.GetPsaCommandInCodeBlock(selectedCommandIndexes[i]);
+                psaCommands.Add(psaCommand);
+            }
+
+            foreach (ICodeBlockViewerListener listener in listeners)
+            {
+                listener.OnCommandSelected(psaCommands, selectedCommandIndexes, CodeBlockSelection);
             }
         }
 
@@ -396,6 +423,17 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             codeBlockCommandsScintilla.LineScroll(firstVisibleLine, 0);
             codeBlockCommandsScintilla.SelectLines(currentSelectedLines);
+
+            codeBlockCommandsScintilla.StyleDocument();
+        }
+
+        private void codeBlockComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CodeBlockSelection.CodeBlockIndex = codeBlockComboBox.SelectedIndex;
+
+            LoadCodeBlockCommands();
+
+            LoadCodeBlockSelectedPsaCommands(new List<int>() { 0 });
 
             codeBlockCommandsScintilla.StyleDocument();
         }
