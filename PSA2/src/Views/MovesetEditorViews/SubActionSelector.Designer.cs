@@ -163,6 +163,7 @@
             this.unknown7CheckBox.TabIndex = 9;
             this.unknown7CheckBox.Text = "Unknown7";
             this.unknown7CheckBox.UseVisualStyleBackColor = true;
+            this.unknown7CheckBox.CheckedChanged += new System.EventHandler(this.unknown7CheckBox_CheckedChanged);
             // 
             // transitionOutFromStartCheckBox
             // 
@@ -173,6 +174,7 @@
             this.transitionOutFromStartCheckBox.TabIndex = 8;
             this.transitionOutFromStartCheckBox.Text = "Transition Out From Start";
             this.transitionOutFromStartCheckBox.UseVisualStyleBackColor = true;
+            this.transitionOutFromStartCheckBox.CheckedChanged += new System.EventHandler(this.transitionOutFromStartCheckBox_CheckedChanged);
             // 
             // unknown5CheckBox
             // 
@@ -183,6 +185,7 @@
             this.unknown5CheckBox.TabIndex = 7;
             this.unknown5CheckBox.Text = "Unknown5";
             this.unknown5CheckBox.UseVisualStyleBackColor = true;
+            this.unknown5CheckBox.CheckedChanged += new System.EventHandler(this.unknown5CheckBox_CheckedChanged);
             // 
             // unknown4CheckBox
             // 
@@ -193,6 +196,7 @@
             this.unknown4CheckBox.TabIndex = 6;
             this.unknown4CheckBox.Text = "Unknown4";
             this.unknown4CheckBox.UseVisualStyleBackColor = true;
+            this.unknown4CheckBox.CheckedChanged += new System.EventHandler(this.unknown4CheckBox_CheckedChanged);
             // 
             // unknown3CheckBox
             // 
@@ -203,6 +207,7 @@
             this.unknown3CheckBox.TabIndex = 5;
             this.unknown3CheckBox.Text = "Unknown3";
             this.unknown3CheckBox.UseVisualStyleBackColor = true;
+            this.unknown3CheckBox.CheckedChanged += new System.EventHandler(this.unknown3CheckBox_CheckedChanged);
             // 
             // movesCharacterCheckBox
             // 
@@ -213,6 +218,7 @@
             this.movesCharacterCheckBox.TabIndex = 4;
             this.movesCharacterCheckBox.Text = "Moves Character";
             this.movesCharacterCheckBox.UseVisualStyleBackColor = true;
+            this.movesCharacterCheckBox.CheckedChanged += new System.EventHandler(this.movesCharacterCheckBox_CheckedChanged);
             // 
             // loopCheckBox
             // 
@@ -223,6 +229,7 @@
             this.loopCheckBox.TabIndex = 3;
             this.loopCheckBox.Text = "Loop";
             this.loopCheckBox.UseVisualStyleBackColor = true;
+            this.loopCheckBox.CheckedChanged += new System.EventHandler(this.loopCheckBox_CheckedChanged);
             // 
             // noOutTransitionCheckBox
             // 
@@ -233,6 +240,7 @@
             this.noOutTransitionCheckBox.TabIndex = 2;
             this.noOutTransitionCheckBox.Text = "No Out Transition";
             this.noOutTransitionCheckBox.UseVisualStyleBackColor = true;
+            this.noOutTransitionCheckBox.CheckedChanged += new System.EventHandler(this.noOutTransitionCheckBox_CheckedChanged);
             // 
             // label2
             // 
@@ -249,6 +257,7 @@
             this.inTransitionTextBox.Name = "inTransitionTextBox";
             this.inTransitionTextBox.Size = new System.Drawing.Size(38, 20);
             this.inTransitionTextBox.TabIndex = 0;
+            this.inTransitionTextBox.TextChanged += new System.EventHandler(this.inTransitionTextBox_TextChanged);
             // 
             // label1
             // 
@@ -267,6 +276,7 @@
             this.animationNameTextBox.Name = "animationNameTextBox";
             this.animationNameTextBox.Size = new System.Drawing.Size(104, 20);
             this.animationNameTextBox.TabIndex = 0;
+            this.animationNameTextBox.TextChanged += new System.EventHandler(this.animationNameTextBox_TextChanged);
             // 
             // SubActionSelector
             // 

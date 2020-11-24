@@ -138,5 +138,55 @@ namespace PSA2.src.Views.MovesetEditorViews
 
             }
         }
+
+        private void animationNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void inTransitionTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void noOutTransitionCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void loopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void movesCharacterCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void unknown3CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void unknown4CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void unknown5CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void transitionOutFromStartCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void unknown7CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
