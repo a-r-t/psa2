@@ -33,7 +33,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         [TestCase(0, "TEST1", "FitMarioChangedAnimationNameIdenticalLength.pac")]
         [TestCase(1, "TEST2", "FitMarioChangedAnimationNameIdenticalLength2.pac")]
         [Description("Modify animation name for subaction with identical length")]
-        public void ModifyAnimationName(int subActionId, string animationName, string comparisonFile)
+        public void ModifyAnimationNameWithIdenticalLength(int subActionId, string animationName, string comparisonFile)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
             psaMovesetParser.SubActionsHandler.SetAnimationName(subActionId, animationName);
