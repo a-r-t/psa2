@@ -159,10 +159,25 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioAddNewAnimationName.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameIdenticalLength.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameIdenticalLength2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameLargerLength.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameLargerLength2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameSmallerLength.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameSmallerLength2.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted.pac">
