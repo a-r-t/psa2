@@ -30,13 +30,15 @@ namespace PSA2Tests.Tests.SubActionsTests
         }
 
         [Test]
+        [TestCase(0, "TEST1", "FitMarioChangedAnimationNameIdenticalLength.pac")]
+        [TestCase(1, "TEST2", "FitMarioChangedAnimationNameIdenticalLength2.pac")]
         [Description("Modify animation name for subaction with identical length")]
-        public void ModifyAnimationName()
+        public void ModifyAnimationName(int subActionId, string animationName, string comparisonFile)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(0, "TEST1");
-            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameIdenticalLength.pac");
-            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioChangedAnimationNameIdenticalLength.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameIdenticalLength.pac"));
+            psaMovesetParser.SubActionsHandler.SetAnimationName(subActionId, animationName);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/{comparisonFile}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/{comparisonFile}", $"./Tests/SubActionsTests/Out/Animation/{comparisonFile}"));
         }
     }
 }
