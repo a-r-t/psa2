@@ -203,7 +203,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public void SetAnimationName(int subActionId, string newAnimationName)
         {
             // int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
-
+            
+            // apparently there's a 31 char limit according to psa-c, not sure if there's actual reason for that or not yet
+            if (newAnimationName.Length > 31)
+            {
+                newAnimationName = newAnimationName.Substring(0, 32);
+            }
             int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2 --- total guess
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
 
