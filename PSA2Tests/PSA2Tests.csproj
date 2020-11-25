@@ -27,6 +27,7 @@
     <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Animation\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
   </ItemGroup>
 
@@ -156,6 +157,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameIdenticalLength.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted.pac">
