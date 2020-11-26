@@ -82,6 +82,37 @@ namespace PSA2MovesetLogic.src.Utility
             return Encoding.UTF8.GetString(letters.ToArray());
         }
 
+
+        public static int[] ConvertStringToDoubleWords(string s)
+        {
+            // length of array is number of bytes required to hold all characters in animation name
+            // each double word (4 bytes) can hold 4 characters max (1 char per byte)
+            // there always has to be at least "null" byte to end a string, so a 1 is added to the length to ensure the "null" byte will always exist
+            // if there's overflow (like the name has 5 letters), the added extra double word will have 1 letter and then 3 "null" bytes...so it always works
+            int[] doubleWords = new int[(s.Length / 4) + 1];
+            byte[] bytes = Encoding.UTF8.GetBytes(s);
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (i % 4 == 0)
+                {
+                    doubleWords[i / 4] = bytes[i] * 16777216;
+                }
+                else if (i % 4 == 1)
+                {
+                    doubleWords[i / 4] += bytes[i] * 65536;
+                }
+                else if (i % 4 == 2)
+                {
+                    doubleWords[i / 4] += bytes[i] * 256;
+                }
+                else
+                {
+                    doubleWords[i / 4] += bytes[i];
+                }
+            }
+            return doubleWords;
+        }
+
         public static T LoadJson<T>(string filePath)
         {
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));

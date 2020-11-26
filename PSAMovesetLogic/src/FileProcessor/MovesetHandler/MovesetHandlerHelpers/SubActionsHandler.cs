@@ -202,8 +202,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public void SetAnimationName(int subActionId, string newAnimationName)
         {
-            // int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
-            
             // apparently there's a 31 char limit according to psa-c, not sure if there's actual reason for that or not yet
             if (newAnimationName.Length > 31)
             {
@@ -211,8 +209,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
             int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2 --- total guess
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
-
-            // rd1 = newAnimationName
 
             // SubaRename
             int animationNamePointerLocation = PsaFile.DataSection[animationLocation + 1]; // n
@@ -223,55 +219,9 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             Console.WriteLine("I: " + animationNameLocation);
             Console.WriteLine("AN2: " + animationSectionEndLocation);
 
-            /*
-            // if no animation exists
-            if (animationNamePointerLocation == 0)
-            {
-                
-            }
+            int[] animationNameDoubleWords = Utils.ConvertStringToDoubleWords(newAnimationName);
+            int numberOfDoubleWords = animationNameDoubleWords.Length;
 
-            // animation data exists
-            else
-            {
-            */
-
-            byte[] animationNameBytes = Encoding.UTF8.GetBytes(newAnimationName); // bytes
-            int animationNameLength = newAnimationName.Length; // m
-
-            // if animation string length doesn't match byte length, throw exception...
-            // I THINK this is from like if you were to try to insert an emoji as a character since they represent more bytes, but unsure
-            // leaving this for now in case I eventually figure it out
-            if (animationNameLength != animationNameBytes.Length)
-            {
-                throw new ArgumentException("Typing error???");
-            }
-
-            int animationNameByteLength = animationNameLength / 4;
-
-            // length of array is number of bytes required to hold all characters in animation name
-            // each byte can hold 4 characters max
-
-            int numberOfDoubleWords = (animationNameLength / 4) + 1;
-            int[] animationNameDoubleWords = new int[numberOfDoubleWords];
-            for (int i = 0; i < animationNameLength; i++) // i == g
-            {
-                if (i % 4 == 0)
-                {
-                    animationNameDoubleWords[i / 4] = animationNameBytes[i] * 16777216;
-                }
-                else if (i % 4 == 1)
-                {
-                    animationNameDoubleWords[i / 4] += animationNameBytes[i] * 65536;
-                }
-                else if (i % 4 == 2)
-                {
-                    animationNameDoubleWords[i / 4] += animationNameBytes[i] * 256;
-                }
-                else
-                {
-                    animationNameDoubleWords[i / 4] += animationNameBytes[i];
-                }
-            }
             
             // Console.WriteLine(string.Join(", ", animationNameDoubleWords));
             Console.WriteLine("AN1: " + numberOfDoubleWords);
@@ -473,8 +423,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 psaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
             }
             Console.WriteLine("ANIMATION SECTION LOCATION 5: " + animationSectionLocation);
-
-            
         }
     }
 }
