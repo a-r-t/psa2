@@ -1,4 +1,5 @@
-﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+﻿using PSA2MovesetLogic.src.ExtentionMethods;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.Models.Fighter;
 using PSA2MovesetLogic.src.Utility;
 using System;
@@ -207,6 +208,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 newAnimationName = newAnimationName.Substring(0, 32);
             }
+
             int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2 --- total guess
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
 
@@ -222,36 +224,26 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             int[] animationNameDoubleWords = Utils.ConvertStringToDoubleWords(newAnimationName);
             int numberOfDoubleWords = animationNameDoubleWords.Length;
 
-            
-            // Console.WriteLine(string.Join(", ", animationNameDoubleWords));
             Console.WriteLine("AN1: " + numberOfDoubleWords);
 
-            // This part looks through the strings section of the file to see if there's an existing string that already exists
-            int animationSectionLocation; // g
-            for (animationSectionLocation = AnimationSectionStartLocation; animationSectionLocation < animationSectionEndLocation; animationSectionLocation++) // the naming of this for loop is all guess work
+            // This part looks through the strings section of the file to see if there's a string that already exists of the same name
+            // if so, it can just point to that existing string instead of having to add it in again
+            int newAnimationNameLocation; // g
+            for (newAnimationNameLocation = AnimationSectionStartLocation; newAnimationNameLocation < animationSectionEndLocation; newAnimationNameLocation++)
             {
-                if (PsaFile.DataSection[animationSectionLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[animationSectionLocation - 1] & 0xFF) < 15)
+                // if matching first doubleword is found and is a valid string
+                if (PsaFile.DataSection[newAnimationNameLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
                 {
-                    int currentWord;
-                    for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
+                    // check if character sequence is identical to new animation name
+                    if (PsaFile.DataSection.Slice(newAnimationNameLocation, numberOfDoubleWords).SequenceEqual(animationNameDoubleWords))
                     {
-                        if (PsaFile.DataSection[animationSectionLocation + currentWord] != animationNameDoubleWords[currentWord])
-                        {
-                            animationSectionLocation += currentWord;
-                            break;
-                        }
-                    }
-                    if (numberOfDoubleWords == currentWord)
-                    {
-                        if (animationSectionLocation != animationNameLocation)
-                        {
-                            PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
-                        }
+                        // if identical, set the pointer for the animation name to the existing string
+                        PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                         break;
                     }
                 }
             }
-            Console.WriteLine("ANIMATION SECTION LOCATION 1: " + animationSectionLocation);
+            Console.WriteLine("ANIMATION SECTION LOCATION 1: " + newAnimationNameLocation);
 
             // if there previously was no animation name offset, add one here to the offset section
             if (animationNamePointerLocation == 0)
@@ -263,7 +255,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             else
             {
                 // if animation section found is greater than animation section end, it doesn't exist yet
-                if (animationSectionLocation >= animationSectionEndLocation)
+                if (newAnimationNameLocation >= animationSectionEndLocation)
                 {
                     PsaFile.DataSection[animationLocation + 1] = 0;
                 }
@@ -299,18 +291,18 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
 
-            if (animationSectionLocation >= animationSectionEndLocation)
+            if (newAnimationNameLocation >= animationSectionEndLocation)
             {
-                for (animationSectionLocation = AnimationSectionStartLocation; animationSectionLocation < animationSectionEndLocation; animationSectionLocation++)
+                for (newAnimationNameLocation = AnimationSectionStartLocation; newAnimationNameLocation < animationSectionEndLocation; newAnimationNameLocation++)
                 {
-                    if ((PsaFile.DataSection[animationSectionLocation] == 0 || PsaFile.DataSection[animationSectionLocation] == Constants.FADEF00D) && (PsaFile.DataSection[animationSectionLocation - 1] & 0xFF) < 15)
+                    if ((PsaFile.DataSection[newAnimationNameLocation] == 0 || PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D) && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
                     {
                         int currentWord;
                         for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
                         {
-                            if (PsaFile.DataSection[animationSectionLocation + currentWord] != 0 && PsaFile.DataSection[animationSectionLocation + currentWord] != Constants.FADEF00D)
+                            if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != 0 && PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
                             {
-                                animationSectionLocation += currentWord;
+                                newAnimationNameLocation += currentWord;
                                 break;
                             }
                         }
@@ -318,29 +310,29 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                         {
                             for (int i = 0; i < numberOfDoubleWords; i++)
                             {
-                                PsaFile.DataSection[animationSectionLocation + i] = animationNameDoubleWords[i];
+                                PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
                             }
-                            PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
+                            PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                             break;
                         }
                     }
                 }
 
-                Console.WriteLine("ANIMATION SECTION LOCATION 2: " + animationSectionLocation);
+                Console.WriteLine("ANIMATION SECTION LOCATION 2: " + newAnimationNameLocation);
 
 
-                if (animationSectionLocation >= animationSectionEndLocation)
+                if (newAnimationNameLocation >= animationSectionEndLocation)
                 {
-                    for (animationSectionLocation = CodeBlockDataStartLocation; animationSectionLocation < AnimationSectionStartLocation; animationSectionLocation++)
+                    for (newAnimationNameLocation = CodeBlockDataStartLocation; newAnimationNameLocation < AnimationSectionStartLocation; newAnimationNameLocation++)
                     {
-                        if (PsaFile.DataSection[animationSectionLocation] == Constants.FADEF00D)
+                        if (PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D)
                         {
                             int currentWord;
                             for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
                             {
-                                if (PsaFile.DataSection[animationSectionLocation + currentWord] != Constants.FADEF00D)
+                                if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
                                 {
-                                    animationSectionLocation += currentWord;
+                                    newAnimationNameLocation += currentWord;
                                     break;
                                 }
                             }
@@ -348,29 +340,29 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                             {
                                 for (int i = 0; i < numberOfDoubleWords; i++)
                                 {
-                                    PsaFile.DataSection[animationSectionLocation + i] = animationNameDoubleWords[i];
+                                    PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
                                 }
-                                PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
+                                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                                 break;
                             }
                         }
                     }
 
-                    Console.WriteLine("ANIMATION SECTION LOCATION 3: " + animationSectionLocation);
+                    Console.WriteLine("ANIMATION SECTION LOCATION 3: " + newAnimationNameLocation);
 
 
-                    if (animationSectionLocation >= AnimationSectionStartLocation)
+                    if (newAnimationNameLocation >= AnimationSectionStartLocation)
                     {
-                        for (animationSectionLocation = PsaFile.DataSection[DataSectionLocation] / 4 + GetNumberOfSubActions() * 2; animationSectionLocation < PsaFile.DataSectionSizeBytes; animationSectionLocation++)
+                        for (newAnimationNameLocation = PsaFile.DataSection[DataSectionLocation] / 4 + GetNumberOfSubActions() * 2; newAnimationNameLocation < PsaFile.DataSectionSizeBytes; newAnimationNameLocation++)
                         {
-                            if (PsaFile.DataSection[animationSectionLocation] == Constants.FADEF00D)
+                            if (PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D)
                             {
                                 int currentWord;
                                 for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
                                 {
-                                    if (PsaFile.DataSection[animationSectionLocation + currentWord] != Constants.FADEF00D)
+                                    if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
                                     {
-                                        animationSectionLocation += currentWord;
+                                        newAnimationNameLocation += currentWord;
                                         break;
                                     }
                                 }
@@ -378,51 +370,55 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                                 {
                                     for (int i = 0; i < numberOfDoubleWords; i++)
                                     {
-                                        PsaFile.DataSection[animationSectionLocation + i] = animationNameDoubleWords[i];
+                                        PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
                                     }
-                                    PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
+                                    PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                                     break;
                                 }
                             }
-                            else if (PsaFile.DataSection[animationSectionLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[animationSectionLocation - 1] & 0xFF) < 15)
+                            else if (PsaFile.DataSection[newAnimationNameLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
                             {
                                 int currentWord;
                                 for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
                                 {
-                                    if (PsaFile.DataSection[animationSectionLocation + currentWord] != Constants.FADEF00D)
+                                    if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
                                     {
-                                        animationSectionLocation += currentWord;
+                                        newAnimationNameLocation += currentWord;
                                         break;
                                     }
                                 }
                                 if (numberOfDoubleWords == currentWord)
                                 {
-                                    PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
+                                    PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                                     break;
                                 }
                             }
                         }
 
-                        Console.WriteLine("ANIMATION SECTION LOCATION 4: " + animationSectionLocation);
+                        Console.WriteLine("ANIMATION SECTION LOCATION 4: " + newAnimationNameLocation);
 
                     }
                 }
             }
-            if (animationSectionLocation >= PsaFile.DataSectionSizeBytes)
+
+            // if animation is beyond data section, add it to the end
+            if (newAnimationNameLocation >= PsaFile.DataSectionSizeBytes)
             {
-                animationSectionLocation = PsaFile.DataSectionSizeBytes;
-                PsaFile.DataSection[animationLocation + 1] = animationSectionLocation * 4;
+                newAnimationNameLocation = PsaFile.DataSectionSizeBytes;
+                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                 for (int i = 0; i < numberOfDoubleWords; i++)
                 {
                     PsaFile.DataSection.Add(animationNameDoubleWords[i]);
                 }
                 psaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
             }
+
+            // if new animation name was added to strings section
             else if (animationNamePointerLocation == 0)
             {
                 psaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
             }
-            Console.WriteLine("ANIMATION SECTION LOCATION 5: " + animationSectionLocation);
+            Console.WriteLine("ANIMATION SECTION LOCATION 5: " + newAnimationNameLocation);
         }
     }
 }

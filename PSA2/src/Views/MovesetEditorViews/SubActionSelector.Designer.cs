@@ -273,6 +273,7 @@
             this.animationNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.animationNameTextBox.Location = new System.Drawing.Point(90, 7);
+            this.animationNameTextBox.MaxLength = 31;
             this.animationNameTextBox.Name = "animationNameTextBox";
             this.animationNameTextBox.Size = new System.Drawing.Size(104, 20);
             this.animationNameTextBox.TabIndex = 0;
