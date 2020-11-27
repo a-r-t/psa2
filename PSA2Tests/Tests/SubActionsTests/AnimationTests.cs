@@ -94,5 +94,25 @@ namespace PSA2Tests.Tests.SubActionsTests
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac"));
         }
+
+        [Test]
+        [Description("Remove animation name data from a subaction where no other subactions are using the same animation name")]
+        public void RemoveAnimationNameUnique()
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
+            psaMovesetParser.SubActionsHandler.RemoveAnimationName(0);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameUnique.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioRemoveAnimationNameUnique.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameUnique.pac"));
+        }
+
+        [Test]
+        [Description("Remove animation name data from a subaction where other subactions are using the same animation name")]
+        public void RemoveAnimationNameShared()
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
+            psaMovesetParser.SubActionsHandler.RemoveAnimationName(21);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameShared.pac");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioRemoveAnimationNameShared.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameShared.pac"));
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
             else
             {
-                int animationNameLocation = PsaFile.DataSection[animationNamePointerLocation] / 4; // j
+                int animationNameLocation = PsaFile.DataSection[animationNamePointerLocation] / 4;
 
                 // TODO: Double check this, I think it should be PsaFile.DataSection.Count
                 if (animationNameLocation > CodeBlockDataStartLocation && animationNameLocation < PsaFile.DataSectionSize)
@@ -156,6 +156,45 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             if (newAnimationNameLocation == -1)
             {
                 InsertAnimationNameIntoFreeSpace(animationLocation, animationNameDoubleWords);
+            }
+
+            psaFileHelperMethods.UpdateMovesetHeaders();
+        }
+
+        public void RemoveAnimationName(int animationLocation)
+        {
+            // animationLocation == k
+            int animationSectionLocation = GetAnimationSectionLocation();
+            int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2
+            int animationNamePointerLocation = PsaFile.DataSection[animationLocation + 1]; // n
+            int animationNameLocation = animationNamePointerLocation / 4; // i
+
+            // if animationNamePointerLocation, animation name data already does not exist
+            if (animationNamePointerLocation > 0)
+            {
+                PsaFile.DataSection[animationLocation] = 0;
+                PsaFile.DataSection[animationLocation + 1] = 0;
+                psaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(animationLocation * 4 + 4);
+
+                int h = CodeBlockDataStartLocation;
+                while (h < PsaFile.DataSection.Count && PsaFile.DataSection[h] != animationNamePointerLocation)
+                {
+                    h++;
+                }
+
+                // if animationNamePointerLocation was not found in data section (nothing else is pointing to the same animation name)
+                if (h == PsaFile.DataSection.Count)
+                {
+                    // replace animation name with free space
+                    if (animationNameLocation >= animationSectionLocation && animationNameLocation < animationSectionEndLocation)
+                    {
+                        ReplaceAnimationNameWithFreeSpace(animationNameLocation, 0, 13);
+                    }
+                    else
+                    {
+                        ReplaceAnimationNameWithFreeSpace(animationNameLocation, Constants.FADEF00D, 15);
+                    }
+                }
             }
 
             psaFileHelperMethods.UpdateMovesetHeaders();

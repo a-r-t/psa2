@@ -189,6 +189,12 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioRemoveAnimationNameShared.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioRemoveAnimationNameUnique.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
