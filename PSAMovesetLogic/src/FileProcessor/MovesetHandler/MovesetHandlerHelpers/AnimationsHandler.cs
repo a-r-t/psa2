@@ -163,7 +163,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public void RemoveAnimationName(int animationLocation)
         {
-            // animationLocation == k
             int animationSectionLocation = GetAnimationSectionLocation();
             int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2
             int animationNamePointerLocation = PsaFile.DataSection[animationLocation + 1]; // n
@@ -176,14 +175,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 PsaFile.DataSection[animationLocation + 1] = 0;
                 psaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(animationLocation * 4 + 4);
 
-                int h = CodeBlockDataStartLocation;
-                while (h < PsaFile.DataSection.Count && PsaFile.DataSection[h] != animationNamePointerLocation)
-                {
-                    h++;
-                }
+                bool isStillInUse = IsAnimationNameInUse(animationNamePointerLocation);
 
                 // if animationNamePointerLocation was not found in data section (nothing else is pointing to the same animation name)
-                if (h == PsaFile.DataSection.Count)
+                // replace name with free space
+                if (!isStillInUse)
                 {
                     // replace animation name with free space
                     if (animationNameLocation >= animationSectionLocation && animationNameLocation < animationSectionEndLocation)
