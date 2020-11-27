@@ -84,7 +84,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
 
-            PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+            PsaFileHelperMethods.UpdateMovesetHeaders();
         }
 
         /// <summary>

@@ -38,11 +38,16 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             string movesetBaseName = GetMovesetBaseName();
 
             int numberOfSpecialActions = (PsaFile.DataSection[dataSectionLocation + 10] - PsaFile.DataSection[dataSectionLocation + 9]) / 4;
+            int numberOfSubActions = (PsaFile.DataSection[dataSectionLocation + 13] - PsaFile.DataSection[dataSectionLocation + 12]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
             CodeBlocksHandler codeBlocksHandler = new CodeBlocksHandler(psaFile, dataSectionLocation, psaCommandHandler);
             ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler);
-            SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, numberOfSpecialActions, codeBlockDataStartLocation);
+            
+            PsaFileHelperMethods psaFileHelperMethods = new PsaFileHelperMethods(psaFile, dataSectionLocation);
+            AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions, psaFileHelperMethods);
+            
+            SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, animationsHandler, codeBlockDataStartLocation);
             SubRoutinesHandler = new SubRoutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
             ActionOverridesHandler = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsHandler, psaCommandHandler);
             ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);

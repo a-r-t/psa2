@@ -84,7 +84,7 @@ namespace PSA2Scripts
                 for (int j = 0; j < 4; j++)
                 {
                     Console.WriteLine("CODE BLOCK " + j);
-                    List<PsaCommand> oldPsaCommands = newFile.SubActionsHandler.GetPsaCommandsForSubAction(i, j);
+                    List<PsaCommand> oldPsaCommands = newFile.SubActionsHandler.GetPsaCommandsInCodeBlock(i, j);
                     for (int k = oldPsaCommands.Count - 1; k >= 0; k--)
                     {
                         Console.WriteLine("REMOVE COMMAND " + k);
@@ -102,7 +102,7 @@ namespace PSA2Scripts
                             newFile.SubActionsHandler.RemoveCommand(i, j, k);
                         }
                     }
-                    List<PsaCommand> newPsaCommands = originalFile.SubActionsHandler.GetPsaCommandsForSubAction(i, j);
+                    List<PsaCommand> newPsaCommands = originalFile.SubActionsHandler.GetPsaCommandsInCodeBlock(i, j);
                     for (int k = 0; k < newPsaCommands.Count; k++)
                     {
                         Console.WriteLine("INSERT COMMAND " + k);

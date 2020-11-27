@@ -35,7 +35,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             subActionOptions = new List<SubActionOption>();
             for (int i = 0; i < numberOfSubActions; i++)
             {
-                string animationName = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(i);
+                string animationName = psaMovesetHandler.SubActionsHandler.GetAnimationName(i);
                 subActionsNames.Add(i.ToString("X") + " - " + animationName);
                 subActionOptions.Add(new SubActionOption(animationName, i));
             }

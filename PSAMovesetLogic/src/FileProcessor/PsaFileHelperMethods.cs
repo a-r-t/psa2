@@ -24,11 +24,11 @@ namespace PSA2MovesetLogic.src.FileProcessor
         }
 
         /// <summary>
-        /// This basically rewrites the PSA File to account for data section size changes, offset interlock changes, and external subroutine changes after PSA commands are manipulated in a code block
-        /// <para>Some header values are updated as well to reflect the current size of the data section, etc</para>
+        /// This updates header "constant" values and organization in the PSA File to account for data section size changes, offset interlock changes, and external subroutine changes after PSA commands or other things are manipulated in a code block
+        /// <para>Things done here include updating the current size of the moveset, sorting the offsets in the offset section, etc.</para>
         /// <para>Fixam method in PSA-C</para>
         /// </summary>
-        public void ApplyHeaderUpdatesToAccountForPsaCommandChanges()
+        public void UpdateMovesetHeaders()
         {
             // remove any free space (FADEF00D) trailing at the end of the data section to save some space
             for (int i = PsaFile.DataSection.Count - 1; i >= DataSectionLocation; i--)

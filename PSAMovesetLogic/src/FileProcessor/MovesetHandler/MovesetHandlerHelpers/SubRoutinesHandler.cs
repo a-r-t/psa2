@@ -63,7 +63,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    List<PsaCommand> commands = SubActionsParser.GetPsaCommandsForSubAction(i, j);
+                    List<PsaCommand> commands = SubActionsParser.GetPsaCommandsInCodeBlock(i, j);
                     foreach (PsaCommand command in commands)
                     {
                         if (command != null)

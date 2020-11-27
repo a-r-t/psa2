@@ -15,7 +15,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ReadPsaCommandsFromSubAction()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            List<PsaCommand> psaCommands = psaMovesetParser.SubActionsHandler.GetPsaCommandsForSubAction(72, 0);
+            List<PsaCommand> psaCommands = psaMovesetParser.SubActionsHandler.GetPsaCommandsInCodeBlock(72, 0);
             Assert.AreEqual(12, psaCommands.Count);
             Assert.AreEqual(131328, psaCommands[0].Instruction);
             Assert.AreEqual(1, psaCommands[0].Parameters.Count);
@@ -28,7 +28,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ReadPsaCommandsFromSubAction2()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            List<PsaCommand> psaCommands = psaMovesetParser.SubActionsHandler.GetPsaCommandsForSubAction(73, 2);
+            List<PsaCommand> psaCommands = psaMovesetParser.SubActionsHandler.GetPsaCommandsInCodeBlock(73, 2);
             Assert.AreEqual(2, psaCommands.Count);
             Assert.AreEqual(131328, psaCommands[0].Instruction);
             Assert.AreEqual(1, psaCommands[0].Parameters.Count);

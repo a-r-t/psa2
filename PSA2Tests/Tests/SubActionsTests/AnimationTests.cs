@@ -36,7 +36,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ModifyAnimationNameWithIdenticalLength(int subActionId, string animationName, string comparisonFile)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(subActionId, animationName);
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(subActionId, animationName);
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/{comparisonFile}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/{comparisonFile}", $"./Tests/SubActionsTests/Out/Animation/{comparisonFile}"));
         }
@@ -48,7 +48,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ModifyAnimationNameWithLargerLength(int subActionId, string animationName, string comparisonFile)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(subActionId, animationName);
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(subActionId, animationName);
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/{comparisonFile}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/{comparisonFile}", $"./Tests/SubActionsTests/Out/Animation/{comparisonFile}"));
         }
@@ -58,7 +58,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void AddNewAnimationName()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(3, "TEST");
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(3, "TEST");
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioAddNewAnimationName.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioAddNewAnimationName.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioAddNewAnimationName.pac"));
         }
@@ -69,7 +69,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ModifyAnimationNameFromSharedToUnique()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(21, "TEST");
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(21, "TEST");
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameFromSharedToUnique.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioChangedAnimationNameFromSharedToUnique.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameFromSharedToUnique.pac"));
         }
@@ -80,7 +80,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ModifyAnimationToAnAlreadyExistingAnimationName()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(1, "Wait1");
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(1, "Wait1");
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameFromUniqueToShared.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioChangedAnimationNameFromUniqueToShared.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameFromUniqueToShared.pac"));
         }
@@ -90,7 +90,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void ModifyAnimationWhereLocationGoesPastDataSection()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.SetAnimationName(477, "abcdefghijklmnopqrstuvwxyz");
+            psaMovesetParser.SubActionsHandler.ModifyAnimationName(477, "abcdefghijklmnopqrstuvwxyz");
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac"));
         }

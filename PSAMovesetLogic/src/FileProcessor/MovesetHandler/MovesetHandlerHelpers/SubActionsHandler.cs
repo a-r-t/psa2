@@ -16,23 +16,21 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public int DataSectionLocation { get; private set; }
         public CodeBlocksHandler CodeBlocksHandler { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
-        public int AnimationSectionStartLocation { get; private set; } // this is a guess for: snstr
+        public AnimationsHandler AnimationsHandler { get; private set; }
         public const int MAIN_CODE_BLOCK = 0;
         public const int GFX_CODE_BLOCK = 1;
         public const int SFX_CODE_BLOCK = 2;
         public const int OTHER_CODE_BLOCK = 3;
         public int CodeBlockDataStartLocation { get; private set; }
-        private PsaFileHelperMethods psaFileHelperMethods;
 
-        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler, int numberOfSpecialActions, int codeBlockDataStartLocation)
+        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler, AnimationsHandler animationsHandler, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlocksHandler = codeBlocksHandler;
             PsaCommandHandler = psaCommandHandler;
-            AnimationSectionStartLocation = PsaFile.DataSection[DataSectionLocation + 11] / 4 + 274 + numberOfSpecialActions;
+            AnimationsHandler = animationsHandler;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
-            psaFileHelperMethods = new PsaFileHelperMethods(PsaFile, DataSectionLocation);
         }
 
         public SubAction GetSubAction(int subActionId)
@@ -42,13 +40,13 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             CodeBlock sfx = GetCodeBlock(subActionId, SFX_CODE_BLOCK);
             CodeBlock other = GetCodeBlock(subActionId, OTHER_CODE_BLOCK);
             CodeBlock[] codeBlocks = new CodeBlock[] { main, gfx, sfx, other };
-            Animation animation = new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
+            Animation animation = new Animation(GetAnimationName(subActionId), GetAnimationFlags(subActionId));
             return new SubAction(subActionId, codeBlocks, animation);
         }
 
         public CodeBlock GetCodeBlock(int subActionId, int codeBlockId)
         {
-            int codeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int codeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlock(codeBlockLocation);
         }
 
@@ -59,7 +57,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         }
 
         // this is the offset where subaction code starts (displayed in PSAC)
-        public int GetSubActionCodeBlockLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockLocation(int subActionId, int codeBlockId)
         {
             int subActionsCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 12 + codeBlockId] / 4; // n
             int subActionCodeBlockLocation = subActionsCodeBlockStartingLocation + subActionId;
@@ -67,358 +65,99 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return subActionCodeBlockLocation;
         }
 
-        public int GetSubActionCodeBlockCommandsPointerLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockCommandsPointerLocation(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsPointerLocation(subActionCodeBlockLocation);
         }
 
-        public int GetSubActionCodeBlockCommandsLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockCommandsLocation(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsLocation(subActionCodeBlockLocation);
         }
 
-        public int GetSubActionCodeBlockCommandLocation(int subActionId, int codeBlockId, int commandIndex)
+        public int GetCodeBlockCommandLocation(int subActionId, int codeBlockId, int commandIndex)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandLocation(subActionCodeBlockLocation, commandIndex);
         }
 
-
-        public List<PsaCommand> GetPsaCommandsForSubAction(int subActionId, int codeBlockId)
+        public List<PsaCommand> GetPsaCommandsInCodeBlock(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandsForCodeBlock(subActionCodeBlockLocation);
         }
 
-        public PsaCommand GetPsaCommandForSubActionCodeBlock(int subActionId, int codeBlockId, int commandIndex)
+        public PsaCommand GetPsaCommandInCodeBlock(int subActionId, int codeBlockId, int commandIndex)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandForCodeBlock(subActionCodeBlockLocation, commandIndex);
         }
 
-        public int GetNumberOfPsaCommandsInSubActionCodeBlock(int subActionId, int codeBlockId)
+        public int GetNumberOfPsaCommandsInCodeBlock(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetNumberOfPsaCommandsInCodeBlock(subActionCodeBlockLocation);
-        }
-
-        public Animation GetSubActionAnimationData(int subActionId)
-        {
-            return new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
-        }
-
-        public string GetSubActionAnimationName(int subActionId)
-        {
-            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
-            if (PsaFile.DataSection[animationLocation] == 0)
-            {
-                return "NONE";
-            }
-            else
-            {
-                int animationNameLocation = PsaFile.DataSection[animationLocation] / 4; // j
-
-                // TODO: Double check this, I think it should be PsaFile.DataSection.Count
-                if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
-                {
-                    StringBuilder animationName = new StringBuilder();
-                    int nameEndByteIndex = 0;
-                    while (true) // originally i < 47 -- 48 char limit
-                    {
-                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
-                        animationName.Append(nextStringData);
-                        if (nextStringData.Length == 4)
-                        {
-                            nameEndByteIndex++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    //Console.WriteLine(animationName.ToString());
-                    return animationName.ToString();
-                }
-
-                return "ERROR";
-            }
-
-        }
-
-        public AnimationFlags GetSubActionAnimationFlags(int subActionId)
-        {
-            // will need to look at this later to figure out why it works
-            int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
-            int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
-            int animationFlagsOptions = (animationFlagsValue >> 16) & 0xFF;
-            int inTransition = (animationFlagsValue >> 24) & 0xFF;
-            int noOutTransition = animationFlagsOptions & 0x1;
-            int loop = animationFlagsOptions & 0x2;
-            int movesCharacter = animationFlagsOptions & 0x4;
-            int unknown3 = animationFlagsOptions & 0x8;
-            int unknown4 = animationFlagsOptions & 0x10;
-            int unknown5 = animationFlagsOptions & 0x20;
-            int transitionOutFromStart = animationFlagsOptions & 0x40;
-            int unknown7 = animationFlagsOptions & 0x80;
-            return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 
         public void AddCommand(int subActionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.AddCommand(actionCodeBlockLocation);
         }
 
         public void ModifyCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.ModifyCommand(actionCodeBlockLocation, commandIndex, newPsaCommand);
         }
 
         public void RemoveCommand(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.RemoveCommand(actionCodeBlockLocation, commandIndex);
         }
 
         public void MoveCommandUp(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.MoveCommandUp(actionCodeBlockLocation, commandIndex);
         }
 
         public void MoveCommandDown(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.MoveCommandDown(actionCodeBlockLocation, commandIndex);
         }
 
         public void InsertCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.InsertCommand(subActionCodeBlockLocation, commandIndex, newPsaCommand);
         }
 
-        public void SetAnimationName(int subActionId, string newAnimationName)
+        public Animation GetSubActionAnimationData(int subActionId)
         {
-            // apparently there's a 31 char limit according to psa-c, not sure if there's actual reason for that or not yet
-            if (newAnimationName.Length > 31)
-            {
-                newAnimationName = newAnimationName.Substring(0, 32);
-            }
+            return new Animation(GetAnimationName(subActionId), GetAnimationFlags(subActionId));
+        }
 
-            int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2 --- total guess
+        public string GetAnimationName(int subActionId)
+        {
+            int animationNamePointerLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
+            return AnimationsHandler.GetAnimationName(animationNamePointerLocation);
+        }
+
+        public AnimationFlags GetAnimationFlags(int subActionId)
+        {
+            int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            return AnimationsHandler.GetAnimationFlags(animationFlagsLocation);
+        }
+
+        public void ModifyAnimationName(int subActionId, string newAnimationName)
+        {
             int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
-
-            // SubaRename
-            int animationNamePointerLocation = PsaFile.DataSection[animationLocation + 1]; // n
-            int animationNameLocation = animationNamePointerLocation / 4; // i
-
-            Console.WriteLine("K: " + animationLocation);
-            Console.WriteLine("N: " + animationNamePointerLocation);
-            Console.WriteLine("I: " + animationNameLocation);
-            Console.WriteLine("AN2: " + animationSectionEndLocation);
-
-            int[] animationNameDoubleWords = Utils.ConvertStringToDoubleWords(newAnimationName);
-            int numberOfDoubleWords = animationNameDoubleWords.Length;
-
-            Console.WriteLine("AN1: " + numberOfDoubleWords);
-
-            // This part looks through the strings section of the file to see if there's a string that already exists of the same name
-            // if so, it can just point to that existing string instead of having to add it in again
-            int newAnimationNameLocation; // g
-            for (newAnimationNameLocation = AnimationSectionStartLocation; newAnimationNameLocation < animationSectionEndLocation; newAnimationNameLocation++)
-            {
-                // if matching first doubleword is found and is a valid string
-                if (PsaFile.DataSection[newAnimationNameLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
-                {
-                    // check if character sequence is identical to new animation name
-                    if (PsaFile.DataSection.Slice(newAnimationNameLocation, numberOfDoubleWords).SequenceEqual(animationNameDoubleWords))
-                    {
-                        // if identical, set the pointer for the animation name to the existing string
-                        PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                        break;
-                    }
-                }
-            }
-            Console.WriteLine("ANIMATION SECTION LOCATION 1: " + newAnimationNameLocation);
-
-            // if there previously was no animation name offset, add one here to the offset section
-            if (animationNamePointerLocation == 0)
-            {
-                PsaFile.OffsetSection.Add(animationLocation * 4 + 4);
-            }
-
-            // there was previously animation data
-            else
-            {
-                // if animation section found is greater than animation section end, it doesn't exist yet
-                if (newAnimationNameLocation >= animationSectionEndLocation)
-                {
-                    PsaFile.DataSection[animationLocation + 1] = 0;
-                }
-
-                // if pointer for animation already exists
-                int chosenLocation = CodeBlockDataStartLocation;
-                while (chosenLocation < PsaFile.DataSectionSizeBytes && PsaFile.DataSection[chosenLocation] != animationNamePointerLocation)
-                {
-                    chosenLocation++;
-                }
-
-                // I think this means the pointer was not found
-                if (chosenLocation == PsaFile.DataSectionSizeBytes)
-                {
-                    if (animationNameLocation >= AnimationSectionStartLocation && animationNameLocation < animationSectionEndLocation)
-                    {
-                        while((PsaFile.DataSection[animationNameLocation] & 0xFF) > 13)
-                        {
-                            PsaFile.DataSection[animationNameLocation] = 0;
-                            animationNameLocation++;
-                        }
-                        PsaFile.DataSection[animationNameLocation] = 0;
-                    }
-                    else
-                    {
-                        while((PsaFile.DataSection[animationNameLocation] & 0xFF) > 15)
-                        {
-                            PsaFile.DataSection[animationNameLocation] = Constants.FADEF00D;
-                            animationNameLocation++;
-                        }
-                        PsaFile.DataSection[animationNameLocation] = Constants.FADEF00D;
-                    }
-                }
-            }
-
-            if (newAnimationNameLocation >= animationSectionEndLocation)
-            {
-                for (newAnimationNameLocation = AnimationSectionStartLocation; newAnimationNameLocation < animationSectionEndLocation; newAnimationNameLocation++)
-                {
-                    if ((PsaFile.DataSection[newAnimationNameLocation] == 0 || PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D) && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
-                    {
-                        int currentWord;
-                        for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
-                        {
-                            if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != 0 && PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
-                            {
-                                newAnimationNameLocation += currentWord;
-                                break;
-                            }
-                        }
-                        if (currentWord == numberOfDoubleWords && currentWord < animationSectionEndLocation)
-                        {
-                            for (int i = 0; i < numberOfDoubleWords; i++)
-                            {
-                                PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                            }
-                            PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                            break;
-                        }
-                    }
-                }
-
-                Console.WriteLine("ANIMATION SECTION LOCATION 2: " + newAnimationNameLocation);
-
-
-                if (newAnimationNameLocation >= animationSectionEndLocation)
-                {
-                    for (newAnimationNameLocation = CodeBlockDataStartLocation; newAnimationNameLocation < AnimationSectionStartLocation; newAnimationNameLocation++)
-                    {
-                        if (PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D)
-                        {
-                            int currentWord;
-                            for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
-                            {
-                                if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
-                                {
-                                    newAnimationNameLocation += currentWord;
-                                    break;
-                                }
-                            }
-                            if (numberOfDoubleWords == currentWord)
-                            {
-                                for (int i = 0; i < numberOfDoubleWords; i++)
-                                {
-                                    PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                                }
-                                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                                break;
-                            }
-                        }
-                    }
-
-                    Console.WriteLine("ANIMATION SECTION LOCATION 3: " + newAnimationNameLocation);
-
-
-                    if (newAnimationNameLocation >= AnimationSectionStartLocation)
-                    {
-                        for (newAnimationNameLocation = PsaFile.DataSection[DataSectionLocation] / 4 + GetNumberOfSubActions() * 2; newAnimationNameLocation < PsaFile.DataSectionSizeBytes; newAnimationNameLocation++)
-                        {
-                            if (PsaFile.DataSection[newAnimationNameLocation] == Constants.FADEF00D)
-                            {
-                                int currentWord;
-                                for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
-                                {
-                                    if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
-                                    {
-                                        newAnimationNameLocation += currentWord;
-                                        break;
-                                    }
-                                }
-                                if (numberOfDoubleWords == currentWord)
-                                {
-                                    for (int i = 0; i < numberOfDoubleWords; i++)
-                                    {
-                                        PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                                    }
-                                    PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                                    break;
-                                }
-                            }
-                            else if (PsaFile.DataSection[newAnimationNameLocation] == animationNameDoubleWords[0] && (PsaFile.DataSection[newAnimationNameLocation - 1] & 0xFF) < 15)
-                            {
-                                int currentWord;
-                                for (currentWord = 1; currentWord < numberOfDoubleWords; currentWord++)
-                                {
-                                    if (PsaFile.DataSection[newAnimationNameLocation + currentWord] != Constants.FADEF00D)
-                                    {
-                                        newAnimationNameLocation += currentWord;
-                                        break;
-                                    }
-                                }
-                                if (numberOfDoubleWords == currentWord)
-                                {
-                                    PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                                    break;
-                                }
-                            }
-                        }
-
-                        Console.WriteLine("ANIMATION SECTION LOCATION 4: " + newAnimationNameLocation);
-
-                    }
-                }
-            }
-
-            // if animation is beyond data section, add it to the end
-            if (newAnimationNameLocation >= PsaFile.DataSectionSizeBytes)
-            {
-                newAnimationNameLocation = PsaFile.DataSectionSizeBytes;
-                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                for (int i = 0; i < numberOfDoubleWords; i++)
-                {
-                    PsaFile.DataSection.Add(animationNameDoubleWords[i]);
-                }
-                psaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
-            }
-
-            // if new animation name was added to strings section
-            else if (animationNamePointerLocation == 0)
-            {
-                psaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
-            }
-            Console.WriteLine("ANIMATION SECTION LOCATION 5: " + newAnimationNameLocation);
+            AnimationsHandler.ModifyAnimationName(animationLocation, newAnimationName);
         }
     }
 }
