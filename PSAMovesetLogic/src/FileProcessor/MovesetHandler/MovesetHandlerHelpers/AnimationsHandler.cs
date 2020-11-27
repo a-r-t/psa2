@@ -37,14 +37,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         {
             if (PsaFile.DataSection[animationNamePointerLocation] == 0)
             {
-                return "NONE";
+                return "";
             }
             else
             {
                 int animationNameLocation = PsaFile.DataSection[animationNamePointerLocation] / 4; // j
 
                 // TODO: Double check this, I think it should be PsaFile.DataSection.Count
-                if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
+                if (animationNameLocation > CodeBlockDataStartLocation && animationNameLocation < PsaFile.DataSectionSize)
                 {
                     StringBuilder animationName = new StringBuilder();
                     int nameEndByteIndex = 0;
@@ -61,11 +61,13 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                             break;
                         }
                     }
-                    //Console.WriteLine(animationName.ToString());
+
                     return animationName.ToString();
                 }
-
-                return "ERROR";
+                else
+                {
+                    throw new ArgumentException("Invalid animation name pointer location");
+                }
             }
         }
 
@@ -88,6 +90,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public void ModifyAnimationName(int animationLocation, string newAnimationName)
         {
+            if (newAnimationName.Length == 0)
+            {
+                throw new ArgumentException("Cannot change animation name to an empty string");
+            }
+
             int animationSectionLocation = GetAnimationSectionLocation();
 
             // apparently there's a 31 char limit according to psa-c, not sure if there's actual reason for that or not yet
