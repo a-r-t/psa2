@@ -126,7 +126,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                     PsaFile.DataSection[animationLocation + 1] = 0;
                 }
 
-                // check in file if there's another animation that uses the name of the name being replaced
+                // check in file if there's another animation that uses the old animation name (the one being replaced)
                 bool animationNameStillInUse = IsAnimationNameInUse(animationNamePointerLocation);
 
                 // if no other animation is using the replaced animation name, replace the string itself with freespace
@@ -148,80 +148,10 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             // if the animation name doesn't already exist (it would exist if another animation is using the same name)
             if (newAnimationNameLocation == -1)
             {
-                // check if there is enough free space in the animation section to place the new animation name
-                newAnimationNameLocation = FindFreeSpaceInAnimationSection(animationNameDoubleWords.Length);
-
-                if (newAnimationNameLocation != -1)
-                {
-                    for (int i = 0; i < animationNameDoubleWords.Length; i++)
-                    {
-                        PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                    }
-                    PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                }
-
-                // if there is not enough existing free space in the animation name section to place the new animation name
-                if (newAnimationNameLocation == -1)
-                {
-                    // look in the entire code block data section to see if there's enough free space for the animation name to be placed
-                    newAnimationNameLocation = FindFreeSpaceInCodeBlockDataSection(animationNameDoubleWords.Length);
-
-                    if (newAnimationNameLocation != -1)
-                    {
-                        for (int i = 0; i < animationNameDoubleWords.Length; i++)
-                        {
-                            PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                        }
-                        PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                    }
-
-                    // if there is not enough existing free space in the entire code block data section to place the new animation name
-                    if (newAnimationNameLocation == -1)
-                    {
-                        // this checks from after the animation section to the end of the data section for FADEF00Ds
-                        newAnimationNameLocation = FindExistingAnimationNameInDataSection(animationNameDoubleWords);
-                        
-                        if (newAnimationNameLocation != -1)
-                        {
-                            PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                        }
-
-                        if (newAnimationNameLocation == -1)
-                        {
-                            newAnimationNameLocation = FindFreeSpaceInDataSection(animationNameDoubleWords.Length);
-
-                            if (newAnimationNameLocation != -1)
-                            {
-                                for (int i = 0; i < animationNameDoubleWords.Length; i++)
-                                {
-                                    PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
-                                }
-                                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                            }
-                        }
-                    }
-                }
+                InsertAnimationNameIntoFreeSpace(animationLocation, animationNameDoubleWords);
             }
 
-            // if new animation name location is beyond data section (meaning space wasn't found for it in all the above checks), append the animation name to the end of the data section
-            if (newAnimationNameLocation == -1)
-            {
-                newAnimationNameLocation = PsaFile.DataSectionSizeBytes;
-                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
-                for (int i = 0; i < animationNameDoubleWords.Length; i++)
-                {
-                    PsaFile.DataSection.Add(animationNameDoubleWords[i]);
-                }
-                psaFileHelperMethods.UpdateMovesetHeaders();
-            }
-
-            // if there was previously no animation name offset for this animation (it didn't have animation data before)
-            else if (animationNamePointerLocation == 0)
-            {
-                psaFileHelperMethods.UpdateMovesetHeaders();
-            }
-
-            Console.WriteLine("ANIMATION SECTION LOCATION 5: " + newAnimationNameLocation);
+            psaFileHelperMethods.UpdateMovesetHeaders();
         }
 
         private int FindExistingAnimationNameInAnimationSection(int[] animationNameDoubleWords)
@@ -265,6 +195,65 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 animationNameLocation++;
             }
             PsaFile.DataSection[animationNameLocation] = freeSpaceIndicator;
+        }
+
+        private void InsertAnimationNameIntoFreeSpace(int animationLocation, int[] animationNameDoubleWords)
+        {
+            int newAnimationNameLocation;
+
+            // check if there is enough free space in the animation section to place the new animation name
+            newAnimationNameLocation = FindFreeSpaceInAnimationSection(animationNameDoubleWords.Length);
+
+            if (newAnimationNameLocation != -1)
+            {
+                ReplaceDataWithAnimationName(animationLocation, newAnimationNameLocation, animationNameDoubleWords);
+            }
+
+            // if there is not enough existing free space in the animation name section to place the new animation name
+            else
+            {
+                // look in the entire code block data section to see if there's enough free space for the animation name to be placed
+                newAnimationNameLocation = FindFreeSpaceInCodeBlockDataSection(animationNameDoubleWords.Length);
+
+                if (newAnimationNameLocation != -1)
+                {
+                    ReplaceDataWithAnimationName(animationLocation, newAnimationNameLocation, animationNameDoubleWords);
+                }
+
+                // if there is not enough existing free space in the entire code block data section to place the new animation name
+                else
+                {
+                    // this checks from after the animation section to the end of the data section for FADEF00Ds
+                    newAnimationNameLocation = FindExistingAnimationNameInDataSection(animationNameDoubleWords);
+
+                    if (newAnimationNameLocation != -1)
+                    {
+                        PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
+                    }
+
+                    if (newAnimationNameLocation == -1)
+                    {
+                        newAnimationNameLocation = FindFreeSpaceInDataSection(animationNameDoubleWords.Length);
+
+                        if (newAnimationNameLocation != -1)
+                        {
+                            ReplaceDataWithAnimationName(animationLocation, newAnimationNameLocation, animationNameDoubleWords);
+                        }
+                    }
+                }
+            }
+
+            // if free space for animation name STILL cannot be found after all of that checking,
+            // just append the animation name to the end of the data section and call it a day
+            if (newAnimationNameLocation == -1)
+            {
+                newAnimationNameLocation = PsaFile.DataSection.Count;
+                PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
+                for (int i = 0; i < animationNameDoubleWords.Length; i++)
+                {
+                    PsaFile.DataSection.Add(animationNameDoubleWords[i]);
+                }
+            }
         }
 
         private int FindFreeSpaceInAnimationSection(int freeSpaceNeeded)
@@ -345,6 +334,15 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
             return -1;
+        }
+
+        private void ReplaceDataWithAnimationName(int animationLocation, int newAnimationNameLocation, int[] animationNameDoubleWords)
+        {
+            for (int i = 0; i < animationNameDoubleWords.Length; i++)
+            {
+                PsaFile.DataSection[newAnimationNameLocation + i] = animationNameDoubleWords[i];
+            }
+            PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
         }
     }
 }
