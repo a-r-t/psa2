@@ -1,4 +1,5 @@
-﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+﻿using PSA2MovesetLogic.src.ExtentionMethods;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.Models.Fighter;
 using PSA2MovesetLogic.src.Utility;
 using System;
@@ -15,17 +16,21 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public int DataSectionLocation { get; private set; }
         public CodeBlocksHandler CodeBlocksHandler { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
+        public AnimationsHandler AnimationsHandler { get; private set; }
         public const int MAIN_CODE_BLOCK = 0;
         public const int GFX_CODE_BLOCK = 1;
         public const int SFX_CODE_BLOCK = 2;
         public const int OTHER_CODE_BLOCK = 3;
+        public int CodeBlockDataStartLocation { get; private set; }
 
-        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler)
+        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler, AnimationsHandler animationsHandler, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlocksHandler = codeBlocksHandler;
             PsaCommandHandler = psaCommandHandler;
+            AnimationsHandler = animationsHandler;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
         }
 
         public SubAction GetSubAction(int subActionId)
@@ -35,13 +40,13 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             CodeBlock sfx = GetCodeBlock(subActionId, SFX_CODE_BLOCK);
             CodeBlock other = GetCodeBlock(subActionId, OTHER_CODE_BLOCK);
             CodeBlock[] codeBlocks = new CodeBlock[] { main, gfx, sfx, other };
-            Animation animation = new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
+            Animation animation = new Animation(GetAnimationName(subActionId), GetAnimationFlags(subActionId));
             return new SubAction(subActionId, codeBlocks, animation);
         }
 
         public CodeBlock GetCodeBlock(int subActionId, int codeBlockId)
         {
-            int codeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int codeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlock(codeBlockLocation);
         }
 
@@ -52,7 +57,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         }
 
         // this is the offset where subaction code starts (displayed in PSAC)
-        public int GetSubActionCodeBlockLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockLocation(int subActionId, int codeBlockId)
         {
             int subActionsCodeBlockStartingLocation = PsaFile.DataSection[DataSectionLocation + 12 + codeBlockId] / 4; // n
             int subActionCodeBlockLocation = subActionsCodeBlockStartingLocation + subActionId;
@@ -60,138 +65,111 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return subActionCodeBlockLocation;
         }
 
-        public int GetSubActionCodeBlockCommandsPointerLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockCommandsPointerLocation(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsPointerLocation(subActionCodeBlockLocation);
         }
 
-        public int GetSubActionCodeBlockCommandsLocation(int subActionId, int codeBlockId)
+        public int GetCodeBlockCommandsLocation(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandsLocation(subActionCodeBlockLocation);
         }
 
-        public int GetSubActionCodeBlockCommandLocation(int subActionId, int codeBlockId, int commandIndex)
+        public int GetCodeBlockCommandLocation(int subActionId, int codeBlockId, int commandIndex)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetCodeBlockCommandLocation(subActionCodeBlockLocation, commandIndex);
         }
 
-
-        public List<PsaCommand> GetPsaCommandsForSubAction(int subActionId, int codeBlockId)
+        public List<PsaCommand> GetPsaCommandsInCodeBlock(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandsForCodeBlock(subActionCodeBlockLocation);
         }
 
-        public PsaCommand GetPsaCommandForSubActionCodeBlock(int subActionId, int codeBlockId, int commandIndex)
+        public PsaCommand GetPsaCommandInCodeBlock(int subActionId, int codeBlockId, int commandIndex)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetPsaCommandForCodeBlock(subActionCodeBlockLocation, commandIndex);
         }
 
-        public int GetNumberOfPsaCommandsInSubActionCodeBlock(int subActionId, int codeBlockId)
+        public int GetNumberOfPsaCommandsInCodeBlock(int subActionId, int codeBlockId)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             return CodeBlocksHandler.GetNumberOfPsaCommandsInCodeBlock(subActionCodeBlockLocation);
-        }
-
-        public Animation GetSubActionAnimationData(int subActionId)
-        {
-            return new Animation(GetSubActionAnimationName(subActionId), GetSubActionAnimationFlags(subActionId));
-        }
-
-        public string GetSubActionAnimationName(int subActionId)
-        {
-            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
-            if (PsaFile.DataSection[animationLocation] == 0)
-            {
-                return "NONE";
-            }
-            else
-            {
-                int animationNameLocation = PsaFile.DataSection[animationLocation] / 4; // j
-
-                // TODO: Double check this, I think it should be PsaFile.DataSection.Count
-                if (animationNameLocation < PsaFile.DataSectionSize) // and animationNameLocation >= stf whatever that means
-                {
-                    StringBuilder animationName = new StringBuilder();
-                    int nameEndByteIndex = 0;
-                    while (true) // originally i < 47 -- 48 char limit
-                    {
-                        string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
-                        animationName.Append(nextStringData);
-                        if (nextStringData.Length == 4)
-                        {
-                            nameEndByteIndex++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    //Console.WriteLine(animationName.ToString());
-                    return animationName.ToString();
-                }
-
-                return "ERROR";
-            }
-
-        }
-
-        public AnimationFlags GetSubActionAnimationFlags(int subActionId)
-        {
-            // will need to look at this later to figure out why it works
-            int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
-            int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
-            int animationFlagsOptions = (animationFlagsValue >> 16) & 0xFF;
-            int inTransition = (animationFlagsValue >> 24) & 0xFF;
-            int noOutTransition = animationFlagsOptions & 0x1;
-            int loop = animationFlagsOptions & 0x2;
-            int movesCharacter = animationFlagsOptions & 0x4;
-            int unknown3 = animationFlagsOptions & 0x8;
-            int unknown4 = animationFlagsOptions & 0x10;
-            int unknown5 = animationFlagsOptions & 0x20;
-            int transitionOutFromStart = animationFlagsOptions & 0x40;
-            int unknown7 = animationFlagsOptions & 0x80;
-            return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 
         public void AddCommand(int subActionId, int codeBlockId)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.AddCommand(actionCodeBlockLocation);
         }
 
         public void ModifyCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.ModifyCommand(actionCodeBlockLocation, commandIndex, newPsaCommand);
         }
 
         public void RemoveCommand(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.RemoveCommand(actionCodeBlockLocation, commandIndex);
         }
 
         public void MoveCommandUp(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.MoveCommandUp(actionCodeBlockLocation, commandIndex);
         }
 
         public void MoveCommandDown(int subActionId, int codeBlockId, int commandIndex)
         {
-            int actionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int actionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.MoveCommandDown(actionCodeBlockLocation, commandIndex);
         }
 
         public void InsertCommand(int subActionId, int codeBlockId, int commandIndex, PsaCommand newPsaCommand)
         {
-            int subActionCodeBlockLocation = GetSubActionCodeBlockLocation(subActionId, codeBlockId);
+            int subActionCodeBlockLocation = GetCodeBlockLocation(subActionId, codeBlockId);
             CodeBlocksHandler.InsertCommand(subActionCodeBlockLocation, commandIndex, newPsaCommand);
+        }
+
+        public Animation GetSubActionAnimationData(int subActionId)
+        {
+            return new Animation(GetAnimationName(subActionId), GetAnimationFlags(subActionId));
+        }
+
+        public string GetAnimationName(int subActionId)
+        {
+            int animationNamePointerLocation = PsaFile.DataSection[DataSectionLocation] / 4 + 1 + subActionId * 2;
+            return AnimationsHandler.GetAnimationName(animationNamePointerLocation);
+        }
+
+        public AnimationFlags GetAnimationFlags(int subActionId)
+        {
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            return AnimationsHandler.GetAnimationFlags(animationLocation);
+        }
+
+        public void ModifyAnimationName(int subActionId, string newAnimationName)
+        {
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            AnimationsHandler.ModifyAnimationName(animationLocation, newAnimationName);
+        }
+
+        public void RemoveAnimationData(int subActionId)
+        {
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            AnimationsHandler.RemoveAnimationData(animationLocation);
+        }
+
+        public void ModifyAnimationFlags(int subActionId, AnimationFlags animationFlags)
+        {
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            AnimationsHandler.ModifyAnimationFlags(animationLocation, animationFlags);
         }
     }
 }

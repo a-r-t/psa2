@@ -32,7 +32,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 case SectionType.ACTION:
                     return psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                 case SectionType.SUBACTION:
-                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandsForSubAction(SectionIndex, CodeBlockIndex);
+                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                 default:
                     throw new ArgumentException($"Section Type not yet implemented: {SectionType}");
             }
@@ -45,7 +45,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 case SectionType.ACTION:
                     return psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
                 case SectionType.SUBACTION:
-                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandForSubActionCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
+                    return psaMovesetHandler.SubActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
                 default:
                     throw new ArgumentException($"Section Type not yet implemented: {SectionType}");
             }
@@ -58,7 +58,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 case SectionType.ACTION:
                     return psaMovesetHandler.ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                 case SectionType.SUBACTION:
-                    return psaMovesetHandler.SubActionsHandler.GetNumberOfPsaCommandsInSubActionCodeBlock(SectionIndex, CodeBlockIndex);
+                    return psaMovesetHandler.SubActionsHandler.GetNumberOfPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                 default:
                     throw new ArgumentException($"Section Type not yet implemented: {SectionType}");
             }
@@ -151,7 +151,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                     break;
                 case SectionType.SUBACTION:
                     sectionIndexHex = SectionIndex.ToString("X");
-                    alias = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationName(SectionIndex);
+                    alias = psaMovesetHandler.SubActionsHandler.GetAnimationName(SectionIndex);
                     break;
             }
             return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex}{FormatAlias(alias)}";

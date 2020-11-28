@@ -23,5 +23,17 @@ namespace PSA2MovesetLogic.src.ExtentionMethods
                 ? list[index]
                 : list[list.Count + index];
         }
+
+        /// <summary>
+        /// Returns a piece of a list
+        /// <para>For example, a list [1, 2, 3, 4, 5] called with Slice(1, 3) would return [2, 3, 4]</para>
+        /// </summary>
+        /// <param name="startIndex">start index of slice</param>
+        /// <param name="endIndex">end index of slice</param>
+        /// <returns>Sliced list</returns>
+        public static List<T> Slice<T>(this List<T> list, int startIndex, int endIndex)
+        {
+            return list.Skip(startIndex).Take(endIndex).ToList();
+        }
     }
 }

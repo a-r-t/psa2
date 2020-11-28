@@ -27,6 +27,7 @@
     <Folder Include="Tests\SubActionsTests\ComparisonData\Modify\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Move\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
+    <Folder Include="Tests\SubActionsTests\ComparisonData\Animation\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
   </ItemGroup>
 
@@ -156,6 +157,51 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Add\FitMarioTwoCommandsAdded.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioAddNewAnimationName.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags3.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameFromSharedToUnique.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameFromUniqueToShared.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameIdenticalLength.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameIdenticalLength2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameLargerLength.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameLargerLength2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameSmallerLength.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameSmallerLength2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameWhereLocationGoesPastDataSection.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioRemoveAnimationNameShared.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioRemoveAnimationNameUnique.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Insert\FitMarioOneCommandInserted.pac">

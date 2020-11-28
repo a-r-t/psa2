@@ -54,7 +54,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                     else
                     {
                         CreateNewCommandParametersLocation(commandLocation, newPsaCommand);
-                        PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+                        PsaFileHelperMethods.UpdateMovesetHeaders();
                     }
                 }
 
@@ -62,7 +62,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 else
                 {
                     ModifyExistingCommandParametersLocation(commandLocation, oldPsaCommand, newPsaCommand);
-                    PsaFileHelperMethods.ApplyHeaderUpdatesToAccountForPsaCommandChanges();
+                    PsaFileHelperMethods.UpdateMovesetHeaders();
                 }
             }
             else

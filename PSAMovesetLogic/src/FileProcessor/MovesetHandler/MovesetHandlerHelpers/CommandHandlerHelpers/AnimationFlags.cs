@@ -9,16 +9,16 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
     public class AnimationFlags
     {
         public int InTransition { get; set; }
-        public int NoOutTransition { get; set; }
-        public int Loop { get; set; }
-        public int MovesCharacter { get; set; }
-        public int Unknown3 { get; set; }
-        public int Unknown4 { get; set; }
-        public int Unknown5 { get; set; }
-        public int TransitionOutFromStart { get; set; }
-        public int Unknown7 { get; set; }
+        public bool NoOutTransition { get; set; }
+        public bool Loop { get; set; }
+        public bool MovesCharacter { get; set; }
+        public bool Unknown3 { get; set; }
+        public bool Unknown4 { get; set; }
+        public bool Unknown5 { get; set; }
+        public bool TransitionOutFromStart { get; set; }
+        public bool Unknown7 { get; set; }
 
-        public AnimationFlags(int inTransition, int noOutTransition, int loop, int movesCharacter, int unknown3, int unknown4, int unknown5, int transitionOutFromStart, int unknown7)
+        public AnimationFlags(int inTransition, bool noOutTransition, bool loop, bool movesCharacter, bool unknown3, bool unknown4, bool unknown5, bool transitionOutFromStart, bool unknown7)
         {
             InTransition = inTransition;
             NoOutTransition = noOutTransition;
