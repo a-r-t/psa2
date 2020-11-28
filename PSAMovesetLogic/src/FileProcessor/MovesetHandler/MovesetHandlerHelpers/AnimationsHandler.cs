@@ -8,6 +8,10 @@ using System.Text;
 
 namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 {
+    /// <summary>
+    /// Class is for reading/writing animation data (name and flags)
+    /// <para>Intended be used for subaction animations</para>
+    /// </summary>
     public class AnimationsHandler
     {
         public PsaFile PsaFile { get; private set; }
@@ -27,7 +31,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             this.psaFileHelperMethods = psaFileHelperMethods;
         }
 
-        // snstr
+        /// <summary>
+        /// The location where the animation section starts
+        /// <para>snstr in PSA-C</para>
+        /// </summary>
+        /// <returns>location where the animation section starts</returns>
         public int GetAnimationSectionLocation()
         {
             return PsaFile.DataSection[DataSectionLocation + 11] / 4 + 274 + numberOfSpecialActions;
@@ -88,6 +96,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 
+        /// <summary>
+        /// Modifies the animation name
+        /// <para>if no animation data at the given location exists, it will be created</para>
+        /// </summary>
+        /// <param name="animationLocation">location of animation to modify</param>
+        /// <param name="newAnimationName">name to change animation to -- if no animation data exists, it will be added. animation name cannot be an empty string</param>
         public void ModifyAnimationName(int animationLocation, string newAnimationName)
         {
             if (newAnimationName.Length == 0)
@@ -109,7 +123,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
             int[] animationNameDoubleWords = Utils.ConvertStringToDoubleWords(newAnimationName);
 
-            int newAnimationNameLocation; // g
+            int newAnimationNameLocation;
 
             newAnimationNameLocation = FindExistingAnimationNameInAnimationSection(animationNameDoubleWords);
             if (newAnimationNameLocation != -1)
@@ -161,6 +175,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             psaFileHelperMethods.UpdateMovesetHeaders();
         }
 
+        /// <summary>
+        /// Removes animation data at a given location
+        /// <para>this is generally used to save room in the file, e.g. if a subaction is not in use, there's no reason for it to have animation data</para>
+        /// </summary>
+        /// <param name="animationLocation">location of animation to remove</param>
         public void RemoveAnimationData(int animationLocation)
         {
             int animationSectionLocation = GetAnimationSectionLocation();
@@ -196,6 +215,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             psaFileHelperMethods.UpdateMovesetHeaders();
         }
 
+        /// <summary>
+        /// Modify animation flags for an animation
+        /// <para>animation flags include "loop", "in transition", etc.</para>
+        /// </summary>
+        /// <param name="animationLocation">location of animation to modify the flags of</param>
+        /// <param name="animationFlags">data to change the animation flags to</param>
         public void ModifyAnimationFlags(int animationLocation, AnimationFlags animationFlags)
         {
             // in transition
@@ -244,6 +269,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             PsaFile.DataSection[animationLocation] = newAnimationFlagsValue;
         }
 
+        /// <summary>
+        /// Searches through animation section to see if a given animation name already exists
+        /// </summary>
+        /// <param name="animationNameDoubleWords">animation name to search for (in double words format)</param>
+        /// <returns>the location where the animation name was found, or -1 if not found</returns>
         private int FindExistingAnimationNameInAnimationSection(int[] animationNameDoubleWords)
         {
             // This part looks through the strings section of the file to see if there's a string that already exists of the same name
@@ -265,6 +295,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return -1;
         }
 
+        /// <summary>
+        /// Searches through file to see if a specified animation name is being used somewhere
+        /// <para>strings are shared all over the place so you never know where an animation name could be used</para>
+        /// </summary>
+        /// <param name="animationNamePointerLocation">pointer to the animation name to check for</param>
+        /// <returns>whether animation name is being used or not</returns>
         private bool IsAnimationNameInUse(int animationNamePointerLocation)
         {
             for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSection.Count; i++)
@@ -277,6 +313,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return false;
         }
 
+        /// <summary>
+        /// Given an animation name location, replace it with freespace
+        /// <para>This method is used when removing an animation name</para>
+        /// <para>I am still not 100% sure what is going on with the 0xFF mask but :shrug: I don't change things from PSA-C unless I am sure they are incorrect/unnecessary, so for now it stays</para>
+        /// </summary>
+        /// <param name="animationNameLocation">location of animation name</param>
+        /// <param name="freeSpaceIndicator">which symbol to use as a free space marker (generally either 0 or FADEF00D depending on where in file animation name is located)</param>
+        /// <param name="byteLimit">has to do with the weird 0xFF mask, not really sure if this is necessary or not but leaving it in for now to stay consistent with PSA-C -- this number is generally 13 if animation is in animation section and 15 if outside animation section</param>
         private void ReplaceAnimationNameWithFreeSpace(int animationNameLocation, int freeSpaceIndicator, int byteLimit)
         {
             while ((PsaFile.DataSection[animationNameLocation] & 0xFF) > byteLimit)
@@ -287,6 +331,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             PsaFile.DataSection[animationNameLocation] = freeSpaceIndicator;
         }
 
+        /// <summary>
+        /// Searches through file several times to find free space to add animation name to
+        /// <para>It looks through the animation section, code block data section, and then the entire data section for free space</para>
+        /// <para>It also does a check to see if animation name exists in data section already...after first looking through other free space...not quite sure why this is but I kept it from PSA-C to keep consistency until I am sure it is unnecessary/out of order like I think it is</para>
+        /// <para>If there is no free space available after doing all of this checking, the animation name will just be appended on to the end of the data section</para>
+        /// </summary>
+        /// <param name="animationLocation">location of animation which will have its name inserted somewhere in the moveset file</param>
+        /// <param name="animationNameDoubleWords">animation name (in double words format)</param>
         private void InsertAnimationNameIntoFreeSpace(int animationLocation, int[] animationNameDoubleWords)
         {
             int newAnimationNameLocation;
@@ -346,6 +398,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
         }
 
+        /// <summary>
+        /// Searches animation section for a specific amount of free space
+        /// <para>free space can be either 0 or FADEF00D</para>
+        /// </summary>
+        /// <param name="freeSpaceNeeded">amount of free space needed</param>
+        /// <returns>location where enough free space was found, or -1 if not found</returns>
         private int FindFreeSpaceInAnimationSection(int freeSpaceNeeded)
         {
             int animationSectionLocation = GetAnimationSectionLocation();
@@ -370,6 +428,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return -1;
         }
 
+        /// <summary>
+        /// Searches code block data section for a specific amount of free space
+        /// <para>free space is FADEF00D</para>
+        /// </summary>
+        /// <param name="freeSpaceNeeded">amount of free space needed</param>
+        /// <returns>location where enough free space was found, or -1 if not found</returns>
         public int FindFreeSpaceInCodeBlockDataSection(int freeSpaceNeeded)
         {
             int animationSectionLocation = GetAnimationSectionLocation();
@@ -391,6 +455,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return -1;
         }
 
+        /// <summary>
+        /// Searches through data section to see if a given animation name already exists
+        /// </summary>
+        /// <param name="animationNameDoubleWords">animation name to search for (in double words format)</param>
+        /// <returns>the location where the animation name was found, or -1 if not found</returns>
         public int FindExistingAnimationNameInDataSection(int[] animationNameDoubleWords)
         {
             for (int i = PsaFile.DataSection[DataSectionLocation] / 4 + numberOfSubActions * 2; i < PsaFile.DataSectionSizeBytes; i++)
@@ -407,6 +476,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return -1;
         }
 
+        /// <summary>
+        /// Searches data section for a specific amount of free space
+        /// <para>free space is FADEF00D</para>
+        /// </summary>
+        /// <param name="freeSpaceNeeded">amount of free space needed</param>
+        /// <returns>location where enough free space was found, or -1 if not found</returns>
         public int FindFreeSpaceInDataSection(int freeSpaceNeeded)
         {
             for (int i = PsaFile.DataSection[DataSectionLocation] / 4 + numberOfSubActions * 2; i < PsaFile.DataSection.Count - freeSpaceNeeded; i++)
@@ -426,6 +501,13 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return -1;
         }
 
+        /// <summary>
+        /// Places animation name in the file at the specified location
+        /// <para>also sets animation name pointer to the animation name</para>
+        /// </summary>
+        /// <param name="animationLocation">location of animation which will point to the animation name</param>
+        /// <param name="newAnimationNameLocation">location to place the animation name in the file</param>
+        /// <param name="animationNameDoubleWords">animation name (in double words format)</param>
         private void ReplaceDataWithAnimationName(int animationLocation, int newAnimationNameLocation, int[] animationNameDoubleWords)
         {
             for (int i = 0; i < animationNameDoubleWords.Length; i++)

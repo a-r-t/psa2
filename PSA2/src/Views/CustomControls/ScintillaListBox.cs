@@ -271,7 +271,7 @@ namespace PSA2.src.Views.CustomControls
             Text = string.Join("\n", Items);
             ReadOnly = true;
 
-            if (Items.Count == 0)
+            if (Items.Count == 0 || SelectedIndex > Items.Count - 1)
             {
                 SelectedIndex = -1;
             }
