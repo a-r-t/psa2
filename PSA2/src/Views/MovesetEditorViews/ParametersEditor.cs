@@ -15,6 +15,7 @@ using PSA2.src.Views.CustomControls;
 using System.Net;
 using PSA2.src.ExtentionMethods;
 using ScintillaNET;
+using PSA2.src.Views.MovesetEditorViews.ParameterEditorForms;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
@@ -116,7 +117,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 int value = PsaCommand.Parameters[selectedParameterIndex].Value;
                 parameterEditorFormView.SuspendLayout();
                 parameterEditorFormView.Controls.Clear();
-                ParameterEditorForm parameterEditorForm = new ParameterEditorForm(value);
+                HexValueParameterEditorForm parameterEditorForm = new HexValueParameterEditorForm(value);
                 parameterEditorForm.Name = "parameterEditorForm";
                 parameterEditorForm.Dock = DockStyle.Fill;
                 parameterEditorForm.AddListener(this);

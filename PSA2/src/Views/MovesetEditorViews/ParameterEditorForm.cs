@@ -15,7 +15,6 @@ namespace PSA2.src.Views.CustomControls
     public partial class ParameterEditorForm : ObservableUserControl<IParameterEditorFormListener>
     {
         public int Value { get; set; }
-        
 
         public ParameterEditorForm(int value)
         {

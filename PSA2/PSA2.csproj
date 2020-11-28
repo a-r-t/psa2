@@ -89,6 +89,12 @@
     <Compile Include="src\Views\CustomControls\TabPageCustom.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.Designer.cs">
+      <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\SubActionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -188,6 +194,9 @@
     <EmbeddedResource Include="src\Views\CustomControls\ScintillaListBox.resx">
       <DependentUpon>ScintillaListBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.resx">
+      <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\SubActionSelector.resx">
       <DependentUpon>SubActionSelector.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,7 +251,14 @@
       <Name>PSA2MovesetLogic</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="images\green_check_mark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\red_x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <None Include="aliases\Actions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
