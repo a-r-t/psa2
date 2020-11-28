@@ -321,7 +321,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                         PsaFile.DataSection[animationLocation + 1] = newAnimationNameLocation * 4;
                     }
 
-                    if (newAnimationNameLocation == -1)
+                    else
                     {
                         newAnimationNameLocation = FindFreeSpaceInDataSection(animationNameDoubleWords.Length);
 
@@ -409,7 +409,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public int FindFreeSpaceInDataSection(int freeSpaceNeeded)
         {
-            for (int i = PsaFile.DataSection[DataSectionLocation] / 4 + numberOfSubActions * 2; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = PsaFile.DataSection[DataSectionLocation] / 4 + numberOfSubActions * 2; i < PsaFile.DataSection.Count - freeSpaceNeeded; i++)
             {
                 if (PsaFile.DataSection[i] == Constants.FADEF00D)
                 {

@@ -275,6 +275,21 @@ namespace PSA2.src.Views.CustomControls
             {
                 SelectedIndex = -1;
             }
+            StyleDocument();
+        }
+
+        public void ModifyItem(int index, string text)
+        {
+            Items[index] = text;
+            ReadOnly = false;
+            Text = string.Join("\n", Items);
+            ReadOnly = true;
+
+            if (Items.Count == 0)
+            {
+                SelectedIndex = -1;
+            }
+            StyleDocument();
         }
 
         protected override void OnUpdateUI(UpdateUIEventArgs e)

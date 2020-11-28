@@ -39,5 +39,10 @@ namespace PSA2.src.ExtentionMethods
         {
             return s.ToLower().Contains(other.ToLower());
         }
+
+        public static int ToInt(this string s)
+        {
+            return int.Parse(s);
+        }
     }
 }
