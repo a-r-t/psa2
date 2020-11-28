@@ -190,9 +190,6 @@
     <Compile Include="src\Views\ObservableUserControl.Designer.cs">
       <DependentUpon>ObservableUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\CustomControls\ResizablePanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="src\Views\CustomControls\SectionsTreeView.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -78,10 +78,12 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ignoreAnimationChanges = true;
             if (subActionsListScintilla.Items.Count > 0)
             {
                 UpdateSectionSelection();
             }
+            ignoreAnimationChanges = false;
         }
 
         private void UpdateAnimationData()
