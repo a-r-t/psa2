@@ -60,6 +60,7 @@
     <Compile Include="src\Configuration\ActionAliasesConfig.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\ExtentionMethods\ControlExtensions.cs" />
+    <Compile Include="src\ExtentionMethods\IntExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ListExtensions.cs" />
     <Compile Include="src\ExtentionMethods\ScintillaExtensions.cs" />
     <Compile Include="Program.cs" />
@@ -89,11 +90,29 @@
     <Compile Include="src\Views\CustomControls\TabPageCustom.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.Designer.cs">
+      <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ScalarValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ScalarValueParameterEditorForm.Designer.cs">
+      <DependentUpon>ScalarValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.Designer.cs">
       <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ParameterEditorFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ParameterEditorFormBase.Designer.cs">
+      <DependentUpon>ParameterEditorFormBase.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\SubActionSelector.cs">
       <SubType>UserControl</SubType>
@@ -193,6 +212,12 @@
     </Compile>
     <EmbeddedResource Include="src\Views\CustomControls\ScintillaListBox.resx">
       <DependentUpon>ScintillaListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.resx">
+      <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\ScalarValueParameterEditorForm.resx">
+      <DependentUpon>ScalarValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.resx">
       <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>

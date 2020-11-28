@@ -31,6 +31,13 @@ namespace PSA2.src.Views.MovesetEditorViews
         public int CommandIndex { get; private set; }
         private int previousParameterSelected = -1;
         protected PsaCommandsConfig psaCommandsConfig;
+        private const int Hex = 0;
+        private const int Scalar = 1;
+        private const int Pointer = 2;
+        private const int Boolean = 3;
+        private const int Unknown4 = 4;
+        private const int Variable = 5;
+        private const int Requirement = 6;
         private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
 
 
@@ -117,7 +124,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 int value = PsaCommand.Parameters[selectedParameterIndex].Value;
                 parameterEditorFormView.SuspendLayout();
                 parameterEditorFormView.Controls.Clear();
-                HexValueParameterEditorForm parameterEditorForm = new HexValueParameterEditorForm(value);
+                ParameterEditorFormBase parameterEditorForm = GetParameterForm(parameterTypesComboBox.SelectedIndex, value);
                 parameterEditorForm.Name = "parameterEditorForm";
                 parameterEditorForm.Dock = DockStyle.Fill;
                 parameterEditorForm.AddListener(this);
@@ -132,6 +139,29 @@ namespace PSA2.src.Views.MovesetEditorViews
                         listener.OnParameterChange(CommandIndex, PsaCommand);
                     }
                 }
+            }
+        }
+
+        private ParameterEditorFormBase GetParameterForm(int parameterType, int value)
+        {
+            switch (parameterType)
+            {
+                case Hex:
+                    return new HexValueParameterEditorForm(value);
+                case Scalar:
+                    return new ScalarValueParameterEditorForm(value);
+                case Pointer:
+                    return new HexValueParameterEditorForm(value);
+                case Boolean:
+                    return new BooleanValueParameterEditorForm(value);
+                case Unknown4:
+                    return new HexValueParameterEditorForm(value);
+                case Variable:
+                    return new HexValueParameterEditorForm(value);
+                case Requirement:
+                    return new HexValueParameterEditorForm(value);
+                default:
+                    throw new ArgumentException("Unrecognized parameter type");
             }
         }
 

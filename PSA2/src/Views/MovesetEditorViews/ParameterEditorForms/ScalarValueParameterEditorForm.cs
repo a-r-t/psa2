@@ -12,16 +12,18 @@ using PSA2.src.ExtentionMethods;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
-    public partial class HexValueParameterEditorForm : ParameterEditorFormBase
+    public partial class ScalarValueParameterEditorForm : ParameterEditorFormBase
     {
         private bool ignoreTextChanged;
 
-        public HexValueParameterEditorForm(int value): base(value)
+        public ScalarValueParameterEditorForm(int value): base(value)
         {
             InitializeComponent();
             ignoreTextChanged = true;
-            parameterValueTextBox.Text = Value.ToString("X8");
+            parameterValueTextBox.Text = $"{(decimal)Value / 60000m:0.#######}";
             ignoreTextChanged = false;
+            maxLabel.Text = $"Max Value: {int.MaxValue / 60000m:0.##}";
+            minLabel.Text = $"Min Value: {int.MinValue / 60000m:0.##}";
             validationPictureBox.ImageLocation = "./images/green_check_mark.png";
         }
 
@@ -31,11 +33,12 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             {
                 try
                 {
-                    Value = Convert.ToInt32(parameterValueTextBox.Text, 16);
+                    int convertedIntValue = (int)(Convert.ToDecimal(parameterValueTextBox.Text) * 60000m);
+                    Value = convertedIntValue;
                     EmitParameterChange();
                     validationPictureBox.ImageLocation = "./images/green_check_mark.png";
                 }
-                catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException)
+                catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException || ex is OverflowException)
                 {
                     validationPictureBox.ImageLocation = "./images/red_x.png";
                 }
