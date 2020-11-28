@@ -157,7 +157,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 case Unknown4:
                     return new HexValueParameterEditorForm(value);
                 case Variable:
-                    return new HexValueParameterEditorForm(value);
+                    return new VariableValueParameterEditorForm(value);
                 case Requirement:
                     return new HexValueParameterEditorForm(value);
                 default:

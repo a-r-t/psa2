@@ -19,6 +19,33 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             Id = id;
         }
 
+        public int ToIntValue()
+        {
+            int value = Id;
+
+            switch (MemoryType)
+            {
+                case 1:
+                    value += 268435456;
+                    break;
+                case 2:
+                    value += 536870912;
+                    break;
+            }
+
+            switch (DataType)
+            {
+                case 1:
+                    value += 16777216;
+                    break;
+                case 2:
+                    value += 33554432;
+                    break;
+            }
+
+            return value;
+        }
+
         public override string ToString()
         {
             return $"{GetMemoryTypeAsString()}-{GetDataTypeAsString()}[{Id}]";

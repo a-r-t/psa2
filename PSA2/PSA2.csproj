@@ -96,6 +96,12 @@
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.Designer.cs">
       <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.Designer.cs">
+      <DependentUpon>VariableValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ScalarValueParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -215,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.resx">
       <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.resx">
+      <DependentUpon>VariableValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\ScalarValueParameterEditorForm.resx">
       <DependentUpon>ScalarValueParameterEditorForm.cs</DependentUpon>
