@@ -41,8 +41,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return PsaFile.DataSection[DataSectionLocation + 11] / 4 + 274 + numberOfSpecialActions;
         }
 
+        /// <summary>
+        /// Reads in animation name at a specified location and converts it to a string
+        /// </summary>
+        /// <param name="animationNamePointerLocation">location of the pointer to an animation name</param>
+        /// <returns>animation name as string</returns>
         public string GetAnimationName(int animationNamePointerLocation)
         {
+            // if animation name pointer location doesn't point to anything, no animation data exists for animation
             if (PsaFile.DataSection[animationNamePointerLocation] == 0)
             {
                 return "";
@@ -56,8 +62,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 {
                     StringBuilder animationName = new StringBuilder();
                     int nameEndByteIndex = 0;
-                    while (true) // originally i < 47 -- 48 char limit (which is weird because PSA-C has a 31 char limit on animation names...)
+
+                    // originally i < 47 -- 48 char limit (which is weird because PSA-C has a 31 char limit on animation names...)
+                    // for now it'll read in the entire animation name regardless of length until I look further into why there's an inconsistency and if there really is a length limit or not
+                    while (true) 
                     {
+                        // read in string chars one double word at a time (1 double word = 4 chars max)
                         string nextStringData = Utils.ConvertDoubleWordToString(PsaFile.DataSection[animationNameLocation + nameEndByteIndex]);
                         animationName.Append(nextStringData);
                         if (nextStringData.Length == 4)
@@ -79,9 +89,13 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
         }
 
+        /// <summary>
+        /// Gets animation flags for a specified animation
+        /// </summary>
+        /// <param name="animationLocation">location of animation to get flags of</param>
+        /// <returns>animation flags of animation</returns>
         public AnimationFlags GetAnimationFlags(int animationLocation)
         {
-            // will need to look at this later to figure out why it works
             int animationFlagsValue = PsaFile.DataSection[animationLocation];
             int animationFlagsOptions = (animationFlagsValue >> 16) & 0xFF;
             int inTransition = (animationFlagsValue >> 24) & 0xFF;
