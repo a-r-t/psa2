@@ -68,25 +68,9 @@
     <Compile Include="src\Views\CustomControls\AddTabButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\BrowsableTypeConverter.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomChoices.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomColorScheme.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomProperty.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomPropertyCollection.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\CustomPropertyCollectionSet.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\PropertyGridEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\PropertyGridEx.Designer.cs">
-      <DependentUpon>PropertyGridEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UICustomEventEditor.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIFilenameEditor.cs" />
-    <Compile Include="src\Views\CustomControls\CustomPropertyGrid\UIListboxEditor.cs" />
     <Compile Include="src\Views\CustomControls\PanelButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Views\CustomControls\ParameterEntry.cs" />
     <Compile Include="src\Views\CustomControls\ScintillaListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -127,9 +111,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\ScintillaExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Views\CustomControls\ListBoxHailMary.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\MainForm.cs">
@@ -183,15 +164,11 @@
       <DependentUpon>MovesetEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IMovesetEditorListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\StyleNeededForSelectedLinesEventArgs.cs" />
     <Compile Include="src\Views\ObservableUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="src\Views\ObservableUserControl.Designer.cs">
       <DependentUpon>ObservableUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Views\CustomControls\SectionsTreeView.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\TabControlTest.cs">
       <SubType>Form</SubType>

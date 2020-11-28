@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
-using PropertyGridEx;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.Views.CustomControls;
 using System.Net;
