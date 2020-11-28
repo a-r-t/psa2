@@ -76,14 +76,14 @@ namespace PSA2.src.Views.MovesetEditorViews
             Animation animation = psaMovesetHandler.SubActionsHandler.GetSubActionAnimationData(subActionsListScintilla.SelectedIndex);
             animationNameTextBox.Text = animation.AnimationName;
             inTransitionTextBox.Text = animation.AnimationFlags.InTransition.ToString();
-            noOutTransitionCheckBox.Checked = animation.AnimationFlags.NoOutTransition.ToBoolean();
-            loopCheckBox.Checked = animation.AnimationFlags.Loop.ToBoolean();
-            movesCharacterCheckBox.Checked = animation.AnimationFlags.MovesCharacter.ToBoolean();
-            unknown3CheckBox.Checked = animation.AnimationFlags.Unknown3.ToBoolean();
-            unknown4CheckBox.Checked = animation.AnimationFlags.Unknown4.ToBoolean();
-            unknown5CheckBox.Checked = animation.AnimationFlags.Unknown5.ToBoolean();
-            transitionOutFromStartCheckBox.Checked = animation.AnimationFlags.TransitionOutFromStart.ToBoolean();
-            unknown7CheckBox.Checked = animation.AnimationFlags.Unknown7.ToBoolean();
+            noOutTransitionCheckBox.Checked = animation.AnimationFlags.NoOutTransition;
+            loopCheckBox.Checked = animation.AnimationFlags.Loop;
+            movesCharacterCheckBox.Checked = animation.AnimationFlags.MovesCharacter;
+            unknown3CheckBox.Checked = animation.AnimationFlags.Unknown3;
+            unknown4CheckBox.Checked = animation.AnimationFlags.Unknown4;
+            unknown5CheckBox.Checked = animation.AnimationFlags.Unknown5;
+            transitionOutFromStartCheckBox.Checked = animation.AnimationFlags.TransitionOutFromStart;
+            unknown7CheckBox.Checked = animation.AnimationFlags.Unknown7;
         }
 
         private void SubActionSelector_VisibleChanged(object sender, EventArgs e)

@@ -71,20 +71,20 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
         }
 
-        public AnimationFlags GetAnimationFlags(int animationFlagsLocation)
+        public AnimationFlags GetAnimationFlags(int animationLocation)
         {
             // will need to look at this later to figure out why it works
-            int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
+            int animationFlagsValue = PsaFile.DataSection[animationLocation];
             int animationFlagsOptions = (animationFlagsValue >> 16) & 0xFF;
             int inTransition = (animationFlagsValue >> 24) & 0xFF;
-            int noOutTransition = animationFlagsOptions & 0x1;
-            int loop = animationFlagsOptions & 0x2;
-            int movesCharacter = animationFlagsOptions & 0x4;
-            int unknown3 = animationFlagsOptions & 0x8;
-            int unknown4 = animationFlagsOptions & 0x10;
-            int unknown5 = animationFlagsOptions & 0x20;
-            int transitionOutFromStart = animationFlagsOptions & 0x40;
-            int unknown7 = animationFlagsOptions & 0x80;
+            bool noOutTransition = (animationFlagsOptions & 0x1).ToBoolean();
+            bool loop = (animationFlagsOptions & 0x2).ToBoolean();
+            bool movesCharacter = (animationFlagsOptions & 0x4).ToBoolean();
+            bool unknown3 = (animationFlagsOptions & 0x8).ToBoolean();
+            bool unknown4 = (animationFlagsOptions & 0x10).ToBoolean();
+            bool unknown5 = (animationFlagsOptions & 0x20).ToBoolean();
+            bool transitionOutFromStart = (animationFlagsOptions & 0x40).ToBoolean();
+            bool unknown7 = (animationFlagsOptions & 0x80).ToBoolean();
             return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 
@@ -161,7 +161,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             psaFileHelperMethods.UpdateMovesetHeaders();
         }
 
-        public void RemoveAnimationName(int animationLocation)
+        public void RemoveAnimationData(int animationLocation)
         {
             int animationSectionLocation = GetAnimationSectionLocation();
             int animationSectionEndLocation = PsaFile.DataSection[DataSectionLocation] / 4; // an2
@@ -194,6 +194,54 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
 
             psaFileHelperMethods.UpdateMovesetHeaders();
+        }
+
+        public void ModifyAnimationFlags(int animationLocation, AnimationFlags animationFlags)
+        {
+            // in transition
+            int newAnimationFlagsValue = animationFlags.InTransition * 16777216;
+
+            // no out transition
+            if (animationFlags.NoOutTransition)
+            {
+                newAnimationFlagsValue += 65536;
+            }
+            // loop
+            if (animationFlags.Loop)
+            {
+                newAnimationFlagsValue += 131072;
+            }
+            // moves character
+            if (animationFlags.MovesCharacter)
+            {
+                newAnimationFlagsValue += 262144;
+            }
+            // unknown 3
+            if (animationFlags.Unknown3)
+            {
+                newAnimationFlagsValue += 524288;
+            }
+            // unknown 4
+            if (animationFlags.Unknown4)
+            {
+                newAnimationFlagsValue += 1048576;
+            }
+            // unknown 5
+            if (animationFlags.Unknown5)
+            {
+                newAnimationFlagsValue += 2097152;
+            }
+            // transition out from start
+            if (animationFlags.TransitionOutFromStart)
+            {
+                newAnimationFlagsValue += 4194304;
+            }
+            // unknown 7
+            if (animationFlags.Unknown7)
+            {
+                newAnimationFlagsValue += 8388608;
+            }
+            PsaFile.DataSection[animationLocation] = newAnimationFlagsValue;
         }
 
         private int FindExistingAnimationNameInAnimationSection(int[] animationNameDoubleWords)

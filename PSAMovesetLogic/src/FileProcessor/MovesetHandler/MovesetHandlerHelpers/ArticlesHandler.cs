@@ -1,4 +1,5 @@
-﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
+﻿using PSA2MovesetLogic.src.ExtentionMethods;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.Configs;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.Utility;
 using System;
@@ -243,14 +244,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             int animationFlagsLocation = PsaFile.DataSection[articleDataLocation + 4] / 4 + subActionId * 2;
             int animationFlagsValue = PsaFile.DataSection[animationFlagsLocation];
             int inTransition = animationFlagsValue >> 24 & 0xFF;
-            int noOutTransition = animationFlagsValue & 0x1;
-            int loop = animationFlagsValue >> 16 & 0xFF & 0x2;
-            int movesCharacter = animationFlagsValue >> 16 & 0xFF & 0x4;
-            int unknown3 = animationFlagsValue >> 16 & 0xFF & 0x8;
-            int unknown4 = animationFlagsValue >> 16 & 0xFF & 0x10;
-            int unknown5 = animationFlagsValue >> 16 & 0xFF & 0x20;
-            int transitionOutFromStart = animationFlagsValue >> 16 & 0xFF & 0x40;
-            int unknown7 = animationFlagsValue >> 16 & 0xFF & 0x80;
+            bool noOutTransition = (animationFlagsValue & 0x1).ToBoolean();
+            bool loop = (animationFlagsValue >> 16 & 0xFF & 0x2).ToBoolean();
+            bool movesCharacter = (animationFlagsValue >> 16 & 0xFF & 0x4).ToBoolean();
+            bool unknown3 = (animationFlagsValue >> 16 & 0xFF & 0x8).ToBoolean();
+            bool unknown4 = (animationFlagsValue >> 16 & 0xFF & 0x10).ToBoolean();
+            bool unknown5 = (animationFlagsValue >> 16 & 0xFF & 0x20).ToBoolean();
+            bool transitionOutFromStart = (animationFlagsValue >> 16 & 0xFF & 0x40).ToBoolean();
+            bool unknown7 = (animationFlagsValue >> 16 & 0xFF & 0x80).ToBoolean();
             return new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
         }
 

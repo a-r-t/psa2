@@ -162,6 +162,15 @@
     <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioAddNewAnimationName.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationFlags3.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Animation\FitMarioChangedAnimationNameFromSharedToUnique.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

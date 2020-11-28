@@ -19,14 +19,14 @@ namespace PSA2Tests.Tests.SubActionsTests
             Animation animation = psaMovesetParser.SubActionsHandler.GetSubActionAnimationData(80);
             Assert.AreEqual("AttackS3S", animation.AnimationName);
             Assert.AreEqual(0, animation.AnimationFlags.InTransition);
-            Assert.AreEqual(0, animation.AnimationFlags.NoOutTransition);
-            Assert.AreEqual(0, animation.AnimationFlags.Loop);
-            Assert.AreEqual(4, animation.AnimationFlags.MovesCharacter);
-            Assert.AreEqual(0, animation.AnimationFlags.Unknown3);
-            Assert.AreEqual(0, animation.AnimationFlags.Unknown4);
-            Assert.AreEqual(0, animation.AnimationFlags.Unknown5);
-            Assert.AreEqual(0, animation.AnimationFlags.TransitionOutFromStart);
-            Assert.AreEqual(0, animation.AnimationFlags.Unknown7);
+            Assert.AreEqual(false, animation.AnimationFlags.NoOutTransition);
+            Assert.AreEqual(false, animation.AnimationFlags.Loop);
+            Assert.AreEqual(true, animation.AnimationFlags.MovesCharacter);
+            Assert.AreEqual(false, animation.AnimationFlags.Unknown3);
+            Assert.AreEqual(false, animation.AnimationFlags.Unknown4);
+            Assert.AreEqual(false, animation.AnimationFlags.Unknown5);
+            Assert.AreEqual(false, animation.AnimationFlags.TransitionOutFromStart);
+            Assert.AreEqual(false, animation.AnimationFlags.Unknown7);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void RemoveAnimationNameUnique()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.RemoveAnimationName(0);
+            psaMovesetParser.SubActionsHandler.RemoveAnimationData(0);
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameUnique.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioRemoveAnimationNameUnique.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameUnique.pac"));
         }
@@ -110,9 +110,23 @@ namespace PSA2Tests.Tests.SubActionsTests
         public void RemoveAnimationNameShared()
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubActionsHandler.RemoveAnimationName(21);
+            psaMovesetParser.SubActionsHandler.RemoveAnimationData(21);
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameShared.pac");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/FitMarioRemoveAnimationNameShared.pac", $"./Tests/SubActionsTests/Out/Animation/FitMarioRemoveAnimationNameShared.pac"));
+        }
+
+        [Test]
+        [TestCase(0, 10, true, true, true, true, true, true, true, true, "FitMarioChangedAnimationFlags.pac")]
+        [TestCase(1, 5, false, true, false, true, false, true, false, true, "FitMarioChangedAnimationFlags2.pac")]
+        [TestCase(80, 0, false, false, false, false, false, false, false, false, "FitMarioChangedAnimationFlags3.pac")]
+        [Description("Modify animation flag values")]
+        public void ModifyAnimationFlags(int subActionId, int inTransition, bool noOutTransition, bool loop, bool movesCharacter, bool unknown3, bool unknown4, bool unknown5, bool transitionOutFromStart, bool unknown7, string comparisonFile)
+        {
+            PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
+            AnimationFlags animationFlags = new AnimationFlags(inTransition, noOutTransition, loop, movesCharacter, unknown3, unknown4, unknown5, transitionOutFromStart, unknown7);
+            psaMovesetParser.SubActionsHandler.ModifyAnimationFlags(subActionId, animationFlags);
+            psaMovesetParser.PsaFile.SaveFile($"./Tests/SubActionsTests/Out/Animation/{comparisonFile}");
+            Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubActionsTests/ComparisonData/Animation/{comparisonFile}", $"./Tests/SubActionsTests/Out/Animation/{comparisonFile}"));
         }
     }
 }

@@ -150,20 +150,26 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public AnimationFlags GetAnimationFlags(int subActionId)
         {
-            int animationFlagsLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
-            return AnimationsHandler.GetAnimationFlags(animationFlagsLocation);
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            return AnimationsHandler.GetAnimationFlags(animationLocation);
         }
 
         public void ModifyAnimationName(int subActionId, string newAnimationName)
         {
-            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
             AnimationsHandler.ModifyAnimationName(animationLocation, newAnimationName);
         }
 
-        public void RemoveAnimationName(int subActionId)
+        public void RemoveAnimationData(int subActionId)
         {
-            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2; // k
-            AnimationsHandler.RemoveAnimationName(animationLocation);
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            AnimationsHandler.RemoveAnimationData(animationLocation);
+        }
+
+        public void ModifyAnimationFlags(int subActionId, AnimationFlags animationFlags)
+        {
+            int animationLocation = PsaFile.DataSection[DataSectionLocation] / 4 + subActionId * 2;
+            AnimationsHandler.ModifyAnimationFlags(animationLocation, animationFlags);
         }
     }
 }
