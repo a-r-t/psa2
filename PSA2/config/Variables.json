@@ -1,0 +1,200 @@
+﻿{
+  "variables": [
+    {
+      "memoryType": "IC",
+      "dataTypes": [
+        {
+          "dataType": "Basic",
+          "ids": [
+            {
+              "name": "Get Current Animation Frame",
+              "id": 0
+            },
+            {
+              "name": "Get Current Damage",
+              "id": 2
+            },
+            {
+              "name": "Get Current X Position",
+              "id": 3
+            },
+            {
+              "name": "Get Current Y Position",
+              "id": 4
+            },
+            {
+              "name": "Get Facing Direction",
+              "id": 8
+            },
+            {
+              "name": "Get Facing Direction (Opposite)",
+              "id": 9
+            },
+            {
+              "name": "Get Vertical Velocity",
+              "id": 23
+            },
+            {
+              "name": "Get Horizontal Velocity",
+              "id": 28
+            },
+            {
+              "name": "Get Velocity Right",
+              "id": 1006
+            },
+            {
+              "name": "Get Velocity Left",
+              "id": 1007
+            },
+            {
+              "name": "Get Velocity Up",
+              "id": 1008
+            },
+            {
+              "name": "Get Velocity Down",
+              "id": 1009
+            },
+            {
+              "name": "Get Current Sub Action Id",
+              "id": 20000
+            },
+            {
+              "name": "Get Current Action Id",
+              "id": 20001
+            },
+            {
+              "name": "Get Current Held Item Id",
+              "id": 20009
+            },
+            {
+              "name": "Get Max Jump Count",
+              "id": 23003
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "memoryType": "LA",
+      "dataTypes": [
+        {
+          "dataType": "Bit",
+          "ids": [
+            {
+              "name": "Is Player Dead",
+              "id": 0
+            },
+            {
+              "name": "Can Player Die",
+              "id": 1
+            },
+            {
+              "name": "Has Final Smash",
+              "id": 8
+            },
+            {
+              "name": "Has Final Smash Aura",
+              "id": 9
+            },
+            {
+              "name": "Is in Curry Item Status",
+              "id": 10
+            },
+            {
+              "name": "Is in Hammer Item Status",
+              "id": 11
+            },
+            {
+              "name": "Can be Paralyzed",
+              "id": 17
+            },
+            {
+              "name": "Is in Screw Attack Item Status",
+              "id": 19
+            },
+            {
+              "name": "Is Tag Visible",
+              "id": 27
+            },
+            {
+              "name": "Is Unable to Grab the Ledge",
+              "id": 34
+            },
+            {
+              "name": "Is Unable to Teeter",
+              "id": 36
+            }
+          ]
+        },
+        {
+          "dataType": "Basic",
+          "ids": [
+            {
+              "name": "Number of Jumps Used",
+              "id": 1
+            },
+            {
+              "name": "Number of Wall Jumps performed",
+              "id": 3
+            },
+            {
+              "name": "Wall Jump Refresh Interval",
+              "id": 4
+            },
+            {
+              "name": "Number of Footstools Performed",
+              "id": 5
+            },
+            {
+              "name": "Falling Time",
+              "id": 13
+            },
+            {
+              "name": "Swimming Time",
+              "id": 20
+            },
+            {
+              "name": "Attacks Performed",
+              "id": 53
+            },
+            {
+              "name": "Costume Id",
+              "id": 54
+            }
+          ]
+        },
+        {
+          "dataType": "Float",
+          "ids": [
+            {
+              "name": "Shield Health",
+              "id": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "memoryType": "RA",
+      "dataTypes": [
+        {
+          "dataType": "Bit",
+          "ids": [
+            {
+              "name": "Float In Place",
+              "id": 0
+            },
+            {
+              "name": "Is Allowed to Fast Fall",
+              "id": 2
+            },
+            {
+              "name": "Is Landing Lag Possible",
+              "id": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
