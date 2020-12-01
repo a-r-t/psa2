@@ -85,6 +85,9 @@
     <Compile Include="src\Views\CustomControls\SearchTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Views\CustomControls\SubActionsSearchTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\TabControlCustom.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -133,6 +136,7 @@
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ParameterEditorFormBase.Designer.cs">
       <DependentUpon>ParameterEditorFormBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\SubActionOption.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SubActionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>

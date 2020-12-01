@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.searchTextBox = new CustomControls.SubActionsSearchTextBox();
             this.subActionsListScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             this.animationDetailsViewer = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -306,7 +306,7 @@
 
         private CustomControls.ScintillaListBox subActionsListScintilla;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TextBox searchTextBox;
+        private CustomControls.SubActionsSearchTextBox searchTextBox;
         private System.Windows.Forms.Panel animationDetailsViewer;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox animationNameTextBox;

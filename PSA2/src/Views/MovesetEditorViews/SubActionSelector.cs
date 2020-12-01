@@ -19,13 +19,12 @@ namespace PSA2.src.Views.MovesetEditorViews
     public partial class SubActionSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        protected List<SubActionOption> subActionOptions;
-        protected List<SubActionOption> filteredSubActionOptions;
+
         private SubActionOption SelectedSubActionOption
         {
             get
             {
-                return filteredSubActionOptions[subActionsListScintilla.SelectedIndex];
+                return searchTextBox.FilteredItems[subActionsListScintilla.SelectedIndex];
             }
         }
         private bool ignoreAnimationChanges; // set to true when code is loading in selected subaction animation details rather than user changing them
@@ -41,7 +40,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         {
             int numberOfSubActions = psaMovesetHandler.SubActionsHandler.GetNumberOfSubActions();
             List<string> subActionsNames = new List<string>();
-            subActionOptions = new List<SubActionOption>();
+            List<SubActionOption> subActionOptions = new List<SubActionOption>();
             for (int i = 0; i < numberOfSubActions; i++)
             {
                 string animationDisplayName = i.ToString("X");
@@ -53,12 +52,24 @@ namespace PSA2.src.Views.MovesetEditorViews
                 subActionsNames.Add(animationDisplayName);
                 subActionOptions.Add(new SubActionOption(animationName, i));
             }
-            filteredSubActionOptions = subActionOptions;
+
+            searchTextBox.Items = subActionOptions;
             subActionsListScintilla.AddItems(subActionsNames);
 
             if (subActionsListScintilla.Items.Count > 0)
             {
                 subActionsListScintilla.SelectedIndex = 0;
+            }
+        }
+
+        private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (subActionsListScintilla.Items.Count > 0)
+            {
+                // ignoring animation changes means it won't count changing the animation textboxes as user changes and trigger the autosave code
+                ignoreAnimationChanges = true;
+                UpdateSectionSelection();
+                ignoreAnimationChanges = false;
             }
         }
 
@@ -74,16 +85,6 @@ namespace PSA2.src.Views.MovesetEditorViews
             {
                 listener.OnCodeBlockSelected(codeBlockSelection);
             }
-        }
-
-        private void subActionsListScintilla_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ignoreAnimationChanges = true;
-            if (subActionsListScintilla.Items.Count > 0)
-            {
-                UpdateSectionSelection();
-            }
-            ignoreAnimationChanges = false;
         }
 
         private void UpdateAnimationData()
@@ -111,42 +112,8 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            string searchText = searchTextBox.Text.Length > 2
-                ? searchTextBox.Text.Substring(2)
-                : "";
-
-            if (searchText != "")
-            {
-                filteredSubActionOptions = subActionOptions.FindAll(option => option.Name.ContainsIgnoreCase(searchText) || option.Index.ToString("X").ContainsIgnoreCase(searchText));
-            }
-            else
-            {
-                filteredSubActionOptions = subActionOptions;
-            }
             subActionsListScintilla.ClearItems();
-            subActionsListScintilla.AddItems(filteredSubActionOptions.Select(option => option.ToString()).ToList());
-        }
-
-        protected class SubActionOption
-        {
-            public string Name { get; set; }
-            public int Index { get; set; }
-
-            public SubActionOption(string name, int index)
-            {
-                Name = name;
-                Index = index;
-            }
-
-            public override string ToString()
-            {
-                string displayName = Index.ToString("X");
-                if (Name != "")
-                {
-                    displayName += $" - {Name}";
-                }
-                return displayName;
-            }
+            subActionsListScintilla.AddItems(searchTextBox.FilteredItems.Select(option => option.ToString()).ToList());
         }
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
