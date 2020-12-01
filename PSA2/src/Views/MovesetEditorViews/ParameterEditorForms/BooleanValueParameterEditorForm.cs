@@ -17,9 +17,8 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         private bool ignoreComboBoxChanged;
         private string[] booleanOptions = new string[] { "True", "False" };
 
-        public BooleanValueParameterEditorForm(int value): base(value)
+        public BooleanValueParameterEditorForm(int value): base()
         {
-            Console.WriteLine(value);
             InitializeComponent();
             ignoreComboBoxChanged = true;
             valueComboBox.Items.AddRange(booleanOptions);
@@ -27,7 +26,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 
             // if value is greater than 0, it is True, so selected index is 0 for "True" in the combobox
             // a bit backwards I know
-            valueComboBox.SelectedIndex = Value > 0 ? 0 : 1; 
+            valueComboBox.SelectedIndex = value > 0 ? 0 : 1; 
         }
 
         private void valueComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -36,13 +35,12 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             {
                 if (valueComboBox.SelectedIndex == 0)
                 {
-                    Value = 1;
+                    EmitParameterChange(1);
                 }
                 else
                 {
-                    Value = 0;
+                    EmitParameterChange(0);
                 }
-                EmitParameterChange();
             }
         }
     }

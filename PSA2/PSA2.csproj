@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Configuration\ActionAliasesConfig.cs" />
+    <Compile Include="src\Configuration\ConditionsConfig.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\ExtentionMethods\ControlExtensions.cs" />
     <Compile Include="src\ExtentionMethods\IntExtensions.cs" />
@@ -69,6 +70,9 @@
     <Compile Include="src\Views\CustomControls\AddTabButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Views\CustomControls\ConditionsSearchTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Views\CustomControls\PanelButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -76,6 +80,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\ScintillaListSelect.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Views\CustomControls\SearchTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Views\CustomControls\TabControlCustom.cs">
@@ -95,6 +102,12 @@
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.Designer.cs">
       <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ConditionValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ConditionValueParameterEditorForm.Designer.cs">
+      <DependentUpon>ConditionValueParameterEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.cs">
       <SubType>UserControl</SubType>
@@ -222,6 +235,9 @@
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\BooleanValueParameterEditorForm.resx">
       <DependentUpon>BooleanValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\ConditionValueParameterEditorForm.resx">
+      <DependentUpon>ConditionValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.resx">
       <DependentUpon>VariableValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,6 +281,9 @@
     <EmbeddedResource Include="src\Views\TabControlTest.resx">
       <DependentUpon>TabControlTest.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="config\Conditions.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -16,11 +16,11 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
     {
         private bool ignoreTextChanged;
 
-        public ScalarValueParameterEditorForm(int value): base(value)
+        public ScalarValueParameterEditorForm(int value): base()
         {
             InitializeComponent();
             ignoreTextChanged = true;
-            parameterValueTextBox.Text = $"{(decimal)Value / 60000m:0.#######}";
+            parameterValueTextBox.Text = $"{(decimal)value / 60000m:0.#######}";
             ignoreTextChanged = false;
             maxLabel.Text = $"Max Value: {int.MaxValue / 60000m:0.##}";
             minLabel.Text = $"Min Value: {int.MinValue / 60000m:0.##}";
@@ -34,8 +34,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                 try
                 {
                     int convertedIntValue = (int)(Convert.ToDecimal(parameterValueTextBox.Text) * 60000m);
-                    Value = convertedIntValue;
-                    EmitParameterChange();
+                    EmitParameterChange(convertedIntValue);
                     validationPictureBox.ImageLocation = "./images/green_check_mark.png";
                 }
                 catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException || ex is OverflowException)

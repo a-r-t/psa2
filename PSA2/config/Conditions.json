@@ -1,0 +1,305 @@
+﻿{
+  "conditions": [
+    {
+      "index": 0,
+      "name": "Immediate",
+      "description": "Condition is met immediately",
+      "params": []
+    },
+    {
+      "index": 1,
+      "name": "Animation End",
+      "description": "Condition is met when current sub action animation ends",
+      "params": []
+    },
+    {
+      "index": 2,
+      "name": "Animation Has Looped",
+      "description": "Condition is met when current sub action animation has looped. Animation must have animation flag \"loop\" set.",
+      "params": []
+    },
+    {
+      "index": 3,
+      "name": "On Ground",
+      "description": "Condition is met when player is on the ground.",
+      "params": []
+    },
+    {
+      "index": 4,
+      "name": "In Air",
+      "description": "Condition is met when player is in the air.",
+      "params": []
+    },
+    {
+      "index": 5,
+      "name": "Holding a Ledge",
+      "description": "Condition is met when player is holding a ledge.",
+      "params": []
+    },
+    {
+      "index": 6,
+      "name": "On a Drop Through Platform",
+      "description": "Condition is met when player is standing on a drop through platform.",
+      "params": []
+    },
+    {
+      "index": 7,
+      "name": "Compare",
+      "description": "Condition is met when an expression comparing two values together evaluates to true. This is commonly used with if statements to compare against the value of a variable.",
+      "params": [
+        {
+          "index": 0,
+          "name": "First Value",
+          "description": "First value in the expression (will be compared against the second value based on the operator).",
+          "dataType": "Any"
+        },
+        {
+          "index": 1,
+          "name": "Operator",
+          "description": "The boolean operator used to compare the first value to the second value.\n0: < (less than)\n1: <= (less than or equal to)\n2: == (equals)\n3: != (not equals)\n4: >= (greater than or equal to)\n5: > (greater than)",
+          "dataType": "Hex"
+        },
+        {
+          "index": 2,
+          "name": "Second Value",
+          "description": "Second value in the expression (will be compared against the first value based on the operator).",
+          "dataType": "Any"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Bit is Set",
+      "description": "Condition is met when a specified bit variable is set (set == true)",
+      "params": [
+        {
+          "index": 0,
+          "name": "Bit Variable",
+          "description": "The bit variable to use for the condition",
+          "dataType": "Variable"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Facing Right",
+      "description": "Condition is met when player is facing to the right",
+      "params": []
+    },
+    {
+      "index": 10,
+      "name": "Facing Left",
+      "description": "Condition is met when player is facing to the left",
+      "params": []
+    },
+    {
+      "index": 11,
+      "name": "Hitbox Connects",
+      "description": "Condition is met when an offensive collision (hitbox) connects with an opponent on the current frame. This only works in the GFX and SFX tabs of a sub action. The other related condition \"Hitbox has Connected\" can be used in any tab and is not limited to the current frame.",
+      "params": [
+        {
+          "index": 0,
+          "name": "Included Collision Type",
+          "description": "Specifies which collision types are included in the condition (i.e. what the hitbox connected with). Commonly used values include:\n1: Hitbox (when your player's offensive collision connects with an opposing player's offensive collision)\n2: Hurtbox (when your player's offensive collision hurts another player)\n4: Shield",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "name": "Surface Collision",
+      "description": "Condition is met when player touches a stage surface (floor, wall, or ceiling). Param value determines which combination of the three are included in this condition (e.g. can do just floor, floor and wall, etc).",
+      "params": [
+        {
+          "index": 0,
+          "name": "Included Surface(s)",
+          "description": "Specifies which combination of floor, wall, and ceiling the condition should include. There are 255 different possible values. The most commonly used values are:\n1: Ceiling\n2: Right Wall\n4: Left Wall\n8: Floor",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Is Throwing Another Player",
+      "description": "Condition is met when player is throwing another player",
+      "params": []
+    },
+    {
+      "index": 20,
+      "name": "Is in Hitlag",
+      "description": "Condition is met when player is in hitlag",
+      "params": []
+    },
+    {
+      "index": 21,
+      "name": "Article is Spawned",
+      "description": "Condition is met when a specified article is spawned",
+      "params": [
+        {
+          "index": 0,
+          "name": "Article ID",
+          "description": "The id value of the article",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "name": "Is Overstepping an Edge",
+      "description": "Condition is met when player's stage collision box is beyond the edge of the floor horizontally while on the ground.",
+      "params": []
+    },
+    {
+      "index": 23,
+      "name": "Distance from Floor",
+      "description": "Condition is met when player is within a specified distnace from the floor surface directly below them",
+      "params": [
+        {
+          "index": 0,
+          "name": "Distance",
+          "description": "The specified distance from the player to the floor",
+          "dataType": "Scalar"
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "name": "Change in Air/Ground State",
+      "description": "Condition is met when player changes air/ground state. For example, if player is on the ground when this condition is put in place, it will be fulfilled once the player transitions to being in air.",
+      "params": []
+    },
+    {
+      "index": 28,
+      "name": "Article can be Spawned",
+      "description": "Condition is met when an article is can be spawned. For example, Mario has a 5 instance limit on his fireball articles -- once all 5 are spawned, no more can be spawned. If only 4 are current spawned, 1 fireball can be spawned.",
+      "params": [
+        {
+          "index": 0,
+          "name": "Article ID",
+          "description": "The id value of the article",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "name": "Holding Item",
+      "description": "Condition is met when player is holding an item. Doesn't matter which item it is.",
+      "params": []
+    },
+    {
+      "index": 32,
+      "name": "Holding Item of Type",
+      "description": "Condition is met when player is holding an item of a specified type. Does not appear to allow the player to check which item is currently being held. Instead it seems to be used to check if item can be thrown using attack button vs the throw button (think Peach's turnips vs the beam sword).",
+      "params": []
+    },
+    {
+      "index": 33,
+      "name": "Item is in Grabbing Range",
+      "description": "Condition is met when player is in range to pick up an item.",
+      "params": []
+    },
+    {
+      "index": 34,
+      "name": "Heavy Item is in Grabbing Range",
+      "description": "Condition is met when player is in range to pick up a heavy item (such as a crate).",
+      "params": []
+    },
+    {
+      "index": 36,
+      "name": "Turning with Item",
+      "description": "Condition is met when player turns around while holding an item with a special turn, such as the hammer or cracker launcher",
+      "params": []
+    },
+    {
+      "index": 42,
+      "name": "In Water",
+      "description": "Condition is met when player is in water.",
+      "params": []
+    },
+    {
+      "index": 43,
+      "name": "RNG",
+      "description": "Condition is met by random chance based on a random number generator. This is often used in if statements to make it so there's a random chance of something happening, such as a particular sound effect playing when a move connects.",
+      "params": [
+        {
+          "index": 0,
+          "name": "Random Number Maximum",
+          "description": "The higher the random number maximum, the lower the chance of this condition being met. For example, specifying a \"3\" is like saying \"there is a 1 in 3 chance of this condition beign met\".",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 47,
+      "name": "Is in Magnifier (Not Damaging)",
+      "description": "Condition is met when player is in magnifier (from going off camera too far in a stage) but not far enough to be taking damage from it",
+      "params": []
+    },
+    {
+      "index": 48,
+      "name": "Button Press",
+      "description": "Condition is met when a specified button press occurs.",
+      "params": [
+        {
+          "index": 0,
+          "name": "Button Id",
+          "description": "The id value of the button.\n0: Normal attack button (A and Z by default)\n1: Special attack button (B by default)\n2: Jump button (X, Y, and Up by default)\n3: Shield button (L, R, and Z by default)\n5: Smash attack button (C-Stick by default)\n6: Dpad Up\n7: Dpad Down\n8: Dpad Right or DPad Left\n9: Dpad Left\nA: Dpad Right\nE: A and B pressed together\n\nA full list can be found here: http://opensa.dantarion.com/wiki/Buttons_(Brawl)",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "name": "Button Release",
+      "description": "Condition is met when a specified button is released (no longer pressed).",
+      "params": [
+        {
+          "index": 0,
+          "name": "Button Id",
+          "description": "The id value of the button.\n0: Normal attack button (A and Z by default)\n1: Special attack button (B by default)\n2: Jump button (X, Y, and Up by default)\n3: Shield button (L, R, and Z by default)\n5: Smash attack button (C-Stick by default)\n6: Dpad Up\n7: Dpad Down\n8: Dpad Right or DPad Left\n9: Dpad Left\nA: Dpad Right\nE: A and B pressed together\n\nA full list can be found here: http://opensa.dantarion.com/wiki/Buttons_(Brawl)",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 50,
+      "name": "Button Pressed",
+      "description": "Condition is met when a specified button is pressed. Not sure of the difference between this condition and \"Button Press\".",
+      "params": [
+        {
+          "index": 0,
+          "name": "Button Id",
+          "description": "The id value of the button.\n0: Normal attack button (A and Z by default)\n1: Special attack button (B by default)\n2: Jump button (X, Y, and Up by default)\n3: Shield button (L, R, and Z by default)\n5: Smash attack button (C-Stick by default)\n6: Dpad Up\n7: Dpad Down\n8: Dpad Right or DPad Left\n9: Dpad Left\nA: Dpad Right\nE: A and B pressed together\n\nA full list can be found here: http://opensa.dantarion.com/wiki/Buttons_(Brawl)",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "name": "Button Not Pressed",
+      "description": "Condition is met when a specified button is not pressed. Not quite sure if this does anything special compared to just using a not on \"Button Pressed\".",
+      "params": [
+        {
+          "index": 0,
+          "name": "Button Id",
+          "description": "The id value of the button.\n0: Normal attack button (A and Z by default)\n1: Special attack button (B by default)\n2: Jump button (X, Y, and Up by default)\n3: Shield button (L, R, and Z by default)\n5: Smash attack button (C-Stick by default)\n6: Dpad Up\n7: Dpad Down\n8: Dpad Right or DPad Left\n9: Dpad Left\nA: Dpad Right\nE: A and B pressed together\n\nA full list can be found here: http://opensa.dantarion.com/wiki/Buttons_(Brawl)",
+          "dataType": "Hex"
+        }
+      ]
+    },
+    {
+      "index": 61,
+      "name": "Hitbox has Connected",
+      "description": "Condition is met when an offensive collision (hitbox) connects with an opponent. Unlike the condition \"Hitbox Connects\", this condition can be used in any tab of a sub action and is not limited to the current frame.",
+      "params": [
+        {
+          "index": 0,
+          "name": "Included Collision Type",
+          "description": "Specifies which collision types are included in the condition (i.e. what the hitbox connected with). Commonly used values include:\n1: Hitbox (when your player's offensive collision connects with an opposing player's offensive collision)\n2: Hurtbox (when your player's offensive collision hurts another player)\n4: Shield",
+          "dataType": "Hex"
+        }
+      ]
+    }
+  ]
+}

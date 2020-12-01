@@ -16,11 +16,11 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
     {
         private bool ignoreTextChanged;
 
-        public HexValueParameterEditorForm(int value): base(value)
+        public HexValueParameterEditorForm(int value): base()
         {
             InitializeComponent();
             ignoreTextChanged = true;
-            parameterValueTextBox.Text = Value.ToString("X8");
+            parameterValueTextBox.Text = value.ToString("X8");
             ignoreTextChanged = false;
             validationPictureBox.ImageLocation = "./images/green_check_mark.png";
         }
@@ -31,8 +31,8 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             {
                 try
                 {
-                    Value = Convert.ToInt32(parameterValueTextBox.Text, 16);
-                    EmitParameterChange();
+                    int convertedIntValue = Convert.ToInt32(parameterValueTextBox.Text, 16);
+                    EmitParameterChange(convertedIntValue);
                     validationPictureBox.ImageLocation = "./images/green_check_mark.png";
                 }
                 catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException)

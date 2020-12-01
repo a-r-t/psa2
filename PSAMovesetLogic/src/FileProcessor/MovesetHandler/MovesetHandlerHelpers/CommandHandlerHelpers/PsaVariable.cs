@@ -19,6 +19,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             Id = id;
         }
 
+        // converts variable back into one singular int value formatted for the moveset file
         public int ToIntValue()
         {
             int value = Id;

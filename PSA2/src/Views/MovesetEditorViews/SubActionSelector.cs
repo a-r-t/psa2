@@ -160,7 +160,6 @@ namespace PSA2.src.Views.MovesetEditorViews
                 if (searchTextBox.SelectionStart == 2 && searchTextBox.SelectionLength == 0) {
                     e.SuppressKeyPress = true;
                 }
-
             }
         }
 

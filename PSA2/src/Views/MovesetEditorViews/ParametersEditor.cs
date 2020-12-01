@@ -37,8 +37,8 @@ namespace PSA2.src.Views.MovesetEditorViews
         private const int Boolean = 3;
         private const int Unknown4 = 4;
         private const int Variable = 5;
-        private const int Requirement = 6;
-        private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Requirement" };
+        private const int Condition = 6;
+        private string[] parameterTypes = new string[] { "Hex", "Scalar", "Pointer", "Boolean", "(4)", "Variable", "Condition" };
 
 
         public ParametersEditor(PsaMovesetHandler psaMovesetHandler, PsaCommandsConfig psaCommandsConfig)
@@ -158,8 +158,8 @@ namespace PSA2.src.Views.MovesetEditorViews
                     return new HexValueParameterEditorForm(value);
                 case Variable:
                     return new VariableValueParameterEditorForm(value);
-                case Requirement:
-                    return new HexValueParameterEditorForm(value);
+                case Condition:
+                    return new ConditionValueParameterEditorForm(value);
                 default:
                     throw new ArgumentException("Unrecognized parameter type");
             }

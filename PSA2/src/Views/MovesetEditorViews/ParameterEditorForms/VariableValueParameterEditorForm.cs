@@ -20,13 +20,13 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         private bool ignoreChanges;
         private PsaVariable psaVariable;
 
-        public VariableValueParameterEditorForm(int value): base(value)
+        public VariableValueParameterEditorForm(int value): base()
         {
             InitializeComponent();
             memoryTypeComboBox.Items.AddRange(memoryTypeOptions);
             dataTypeComboBox.Items.AddRange(dataTypeOptions);
             ignoreChanges = true;
-            psaVariable = ConvertParamValueToVariable(Value);
+            psaVariable = ConvertParamValueToVariable(value);
             memoryTypeComboBox.SelectedIndex = psaVariable.MemoryType;
             dataTypeComboBox.SelectedIndex = psaVariable.DataType;
             idTextBox.Text = psaVariable.Id.ToString();
@@ -57,8 +57,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                 if (psaVariable.MemoryType != memoryTypeComboBox.SelectedIndex)
                 {
                     psaVariable.MemoryType = memoryTypeComboBox.SelectedIndex;
-                    Value = psaVariable.ToIntValue();
-                    EmitParameterChange();
+                    EmitParameterChange(psaVariable.ToIntValue());
                 }
             }
         }
@@ -70,8 +69,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                 if (psaVariable.DataType != dataTypeComboBox.SelectedIndex)
                 {
                     psaVariable.DataType = dataTypeComboBox.SelectedIndex;
-                    Value = psaVariable.ToIntValue();
-                    EmitParameterChange();
+                    EmitParameterChange(psaVariable.ToIntValue());
                 }
             }
         }
@@ -98,8 +96,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                         convertedInt = Math.Abs(convertedInt) + 8388608;
                     }
                     psaVariable.Id = convertedInt;
-                    Value = psaVariable.ToIntValue();
-                    EmitParameterChange();
+                    EmitParameterChange(psaVariable.ToIntValue());
                     validationPictureBox.ImageLocation = "./images/green_check_mark.png";
                 }
                 catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException)

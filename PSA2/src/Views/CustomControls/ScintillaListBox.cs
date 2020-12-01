@@ -32,6 +32,7 @@ namespace PSA2.src.Views.CustomControls
                     SelectIndexChangedEvent(this, new EventArgs());
                     previousSelectedIndex = oldIndex;
                 }
+                StyleDocument();
             }
         }
 
