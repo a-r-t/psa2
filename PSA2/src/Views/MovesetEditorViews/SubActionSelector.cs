@@ -27,7 +27,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 return searchTextBox.FilteredItems[subActionsListScintilla.SelectedIndex];
             }
         }
-        private bool ignoreAnimationChanges; // set to true when code is loading in selected subaction animation details rather than user changing them
+        private bool ignoreAnimationChanges; // set to true when code is loading in selected subaction animation details rather than user changing them in order to prevent autosave code from triggering
 
         public SubActionSelector(PsaMovesetHandler psaMovesetHandler)
         {
