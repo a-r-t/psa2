@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
-using PSA2.src.Views.Utility;
+using PSA2.src.Views.Utility.SearchList;
 using PSA2.src.Configuration;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
