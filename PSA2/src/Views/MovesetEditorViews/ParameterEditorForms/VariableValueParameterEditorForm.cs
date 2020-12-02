@@ -62,6 +62,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             int id = paramValue & 0xFFFFFF;
 
             // if variable is negative value, convert it to an int properly
+            // it is negative if first digit in id (as hex) is an 8
             if ((paramValue & 0xFFFFFF).ToString("X")[0] == '8')
             {
                 // why am I unable to make this a one liner, I'm a fraud
