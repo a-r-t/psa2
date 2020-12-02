@@ -15,7 +15,7 @@ using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.Views.Utility.SearchList;
 
-namespace PSA2.src.Views.MovesetEditorViews
+namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
 {
     public partial class SubActionSelector : ObservableUserControl<ISectionSelectorListener>
     {

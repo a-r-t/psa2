@@ -131,17 +131,17 @@
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ParameterEditorFormBase.Designer.cs">
       <DependentUpon>ParameterEditorFormBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\SubActionOption.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\SubActionSelector.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionOption.cs" />
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\SubActionSelector.Designer.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionSelector.Designer.cs">
       <DependentUpon>SubActionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ActionSelector.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\ActionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ActionSelector.Designer.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\ActionSelector.Designer.cs">
       <DependentUpon>ActionSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.cs">
@@ -186,10 +186,10 @@
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParameterEditorFormListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\ISectionSelectorListener.cs" />
     <Compile Include="src\Views\MovesetEditorViews\Interfaces\IParametersEditorListener.cs" />
-    <Compile Include="src\Views\MovesetEditorViews\SectionSelector.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SectionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\SectionSelector.Designer.cs">
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SectionSelector.Designer.cs">
       <DependentUpon>SectionSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParametersEditor.cs">
@@ -250,10 +250,10 @@
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.resx">
       <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\SubActionSelector.resx">
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionSelector.resx">
       <DependentUpon>SubActionSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\ActionSelector.resx">
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\ActionSelector.resx">
       <DependentUpon>ActionSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForm.resx">
@@ -271,7 +271,7 @@
     <EmbeddedResource Include="src\Views\MovesetEditorViews\EventActions.resx">
       <DependentUpon>EventActions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelector.resx">
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\SectionSelector.resx">
       <DependentUpon>SectionSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\MovesetEditor.resx">

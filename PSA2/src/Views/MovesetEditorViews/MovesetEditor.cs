@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Net;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.Views.CustomControls;
+using PSA2.src.Views.MovesetEditorViews.SectionSelectors;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {

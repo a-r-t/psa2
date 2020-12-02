@@ -1,6 +1,6 @@
 ﻿using PSA2.src.ExtentionMethods;
 using PSA2.src.Views.CustomControls;
-using PSA2.src.Views.MovesetEditorViews;
+using PSA2.src.Views.MovesetEditorViews.SectionSelectors;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace PSA2.src.Views.MovesetEditorViews
+﻿namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
 {
     partial class SectionSelector
     {

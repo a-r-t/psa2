@@ -11,7 +11,7 @@ using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 using PSA2.src.Configuration;
 
-namespace PSA2.src.Views.MovesetEditorViews
+namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
 {
     public partial class ActionSelector : ObservableUserControl<ISectionSelectorListener>
     {
