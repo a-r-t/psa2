@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static PSA2.src.Configuration.ConditionsConfig;
 
-namespace PSA2.src.Views.Utility
+namespace PSA2.src.Views.Utility.SearchList
 {
     public class SubActionSearchList : SearchList<SubActionOption>
     {

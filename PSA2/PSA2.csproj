@@ -219,10 +219,10 @@
     <Compile Include="src\Views\TabControlTest.Designer.cs">
       <DependentUpon>TabControlTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Views\Utility\SubActionSearchList.cs" />
-    <Compile Include="src\Views\Utility\VariableSearchList.cs" />
-    <Compile Include="src\Views\Utility\ConditionSearchList.cs" />
-    <Compile Include="src\Views\Utility\SearchList.cs" />
+    <Compile Include="src\Views\Utility\SearchList\SubActionSearchList.cs" />
+    <Compile Include="src\Views\Utility\SearchList\VariableSearchList.cs" />
+    <Compile Include="src\Views\Utility\SearchList\ConditionSearchList.cs" />
+    <Compile Include="src\Views\Utility\SearchList\SearchList.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -13,7 +13,7 @@ using PSA2MovesetLogic.src.Models.Fighter;
 using PSA2MovesetLogic.src.ExtentionMethods;
 using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
-using PSA2.src.Views.Utility;
+using PSA2.src.Views.Utility.SearchList;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {

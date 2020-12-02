@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSA2.src.Views.Utility
+namespace PSA2.src.Views.Utility.SearchList
 {
     public class SearchList<T>
     {
