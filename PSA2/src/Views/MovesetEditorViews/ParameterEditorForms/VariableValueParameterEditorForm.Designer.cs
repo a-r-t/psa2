@@ -37,6 +37,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.variableNameLabel = new System.Windows.Forms.Label();
+            this.searchTextBox = new CustomControls.SearchTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.validationPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,7 +118,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(2, 122);
+            this.label4.Location = new System.Drawing.Point(2, 135);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(87, 13);
             this.label4.TabIndex = 15;
@@ -125,16 +128,48 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(2, 103);
+            this.label3.Location = new System.Drawing.Point(2, 116);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(93, 13);
             this.label3.TabIndex = 14;
             this.label3.Text = "Max Id: 16777215";
             // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.Location = new System.Drawing.Point(2, 156);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(195, 2);
+            this.label6.TabIndex = 21;
+            // 
+            // variableNameLabel
+            // 
+            this.variableNameLabel.AutoEllipsis = true;
+            this.variableNameLabel.AutoSize = true;
+            this.variableNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.variableNameLabel.Location = new System.Drawing.Point(3, 85);
+            this.variableNameLabel.Name = "variableNameLabel";
+            this.variableNameLabel.Size = new System.Drawing.Size(110, 13);
+            this.variableNameLabel.TabIndex = 22;
+            this.variableNameLabel.Text = "Unknown Variable";
+            // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Location = new System.Drawing.Point(3, 168);
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Size = new System.Drawing.Size(193, 20);
+            this.searchTextBox.TabIndex = 23;
+            this.searchTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            // 
             // VariableValueParameterEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.searchTextBox);
+            this.Controls.Add(this.variableNameLabel);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.validationPictureBox);
             this.Controls.Add(this.idTextBox);
             this.Controls.Add(this.label3);
@@ -145,7 +180,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.memoryTypeComboBox);
             this.Name = "VariableValueParameterEditorForm";
-            this.Size = new System.Drawing.Size(198, 138);
+            this.Size = new System.Drawing.Size(198, 363);
             ((System.ComponentModel.ISupportInitialize)(this.validationPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -162,5 +197,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox dataTypeComboBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label variableNameLabel;
+        private CustomControls.SearchTextBox searchTextBox;
     }
 }

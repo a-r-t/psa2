@@ -11,19 +11,22 @@ using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.ExtentionMethods;
 using PSA2.src.Configuration;
 using static PSA2.src.Configuration.ConditionsConfig;
+using PSA2.src.Views.Utility;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
     public partial class ConditionValueParameterEditorForm : ParameterEditorFormBase
     {
         private bool ignoreTextChanged;
+        private ConditionSearchList conditionSearchList;
 
         public ConditionValueParameterEditorForm(int value): base()
         {
             InitializeComponent();
-            searchTextBox.Items = Config.ConditionsConfig.Conditions;
+            conditionSearchList = new ConditionSearchList(searchTextBox);
+            conditionSearchList.Items = Config.ConditionsConfig.Conditions;
             ignoreTextChanged = true;
-            conditionsScintilla.AddItems(searchTextBox.Items.Select(c => c.Name).ToList());
+            conditionsScintilla.AddItems(conditionSearchList.Items.Select(c => c.Name).ToList());
             conditionValueTextBox.Text = value.ToString("X8");
             conditionsScintilla.SelectedIndex = 0;
             ignoreTextChanged = false;
@@ -77,14 +80,19 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 
         private void ApplyConditionSelection()
         {
-            Condition selectedCondition = searchTextBox.FilteredItems[conditionsScintilla.SelectedIndex];
+            Condition selectedCondition = conditionSearchList.FilteredItems[conditionsScintilla.SelectedIndex];
             conditionValueTextBox.Text = selectedCondition.Index.ToString("X8");
         }
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
             conditionsScintilla.ClearItems();
-            conditionsScintilla.AddItems(searchTextBox.FilteredItems.Select(c => c.Name).ToList());
+            conditionsScintilla.AddItems(conditionSearchList.FilteredItems.Select(c => c.Name).ToList());
+        }
+
+        private void ConditionValueParameterEditorForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

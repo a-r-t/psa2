@@ -13,18 +13,20 @@ using PSA2MovesetLogic.src.Models.Fighter;
 using PSA2MovesetLogic.src.ExtentionMethods;
 using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Views.Utility;
 
 namespace PSA2.src.Views.MovesetEditorViews
 {
     public partial class SubActionSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
+        private SubActionSearchList subActionSearchList;
 
         private SubActionOption SelectedSubActionOption
         {
             get
             {
-                return searchTextBox.FilteredItems[subActionsListScintilla.SelectedIndex];
+                return subActionSearchList.FilteredItems[subActionsListScintilla.SelectedIndex];
             }
         }
         private bool ignoreAnimationChanges; // set to true when code is loading in selected subaction animation details rather than user changing them in order to prevent autosave code from triggering
@@ -34,6 +36,7 @@ namespace PSA2.src.Views.MovesetEditorViews
             this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
             subActionsListScintilla.FontFamily = "Tahoma";
+            subActionSearchList = new SubActionSearchList(searchTextBox);
         }
 
         private void SubActionSelector_Load(object sender, EventArgs e)
@@ -53,7 +56,7 @@ namespace PSA2.src.Views.MovesetEditorViews
                 subActionOptions.Add(new SubActionOption(animationName, i));
             }
 
-            searchTextBox.Items = subActionOptions;
+            subActionSearchList.Items = subActionOptions;
             subActionsListScintilla.AddItems(subActionsNames);
 
             if (subActionsListScintilla.Items.Count > 0)
@@ -113,7 +116,7 @@ namespace PSA2.src.Views.MovesetEditorViews
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
             subActionsListScintilla.ClearItems();
-            subActionsListScintilla.AddItems(searchTextBox.FilteredItems.Select(option => option.ToString()).ToList());
+            subActionsListScintilla.AddItems(subActionSearchList.FilteredItems.Select(option => option.ToString()).ToList());
         }
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)

@@ -7,37 +7,18 @@ using System.Windows.Forms;
 
 namespace PSA2.src.Views.CustomControls
 {
-    public partial class SearchTextBox<T> : TextBox
+    public partial class SearchTextBox : TextBox
     {
-        private List<T> items;
-        public List<T> Items 
-        { 
-            get
+        public class SearchTextChangedEventArgs
+        {
+            public string SearchText { get; }
+
+            public SearchTextChangedEventArgs(string searchText)
             {
-                return items;
-            }
-            set
-            {
-                items = value;
-                FilteredItems = items;
+                SearchText = searchText;
             }
         }
-
-        public List<T> FilteredItems { get; private set; }
-
-        private Predicate<T> filterExpression;
-        public Predicate<T> FilterExpression 
-        { 
-            get
-            {
-                return filterExpression;
-            }
-            set
-            {
-                filterExpression = value;
-                FilterItems();
-            }
-        }
+        public event EventHandler<SearchTextChangedEventArgs> SearchTextChanged;
 
         protected string SearchText
         {
@@ -75,20 +56,8 @@ namespace PSA2.src.Views.CustomControls
 
         protected override void OnTextChanged(EventArgs e)
         {
-            FilterItems();
+            SearchTextChanged?.Invoke(this, new SearchTextChangedEventArgs(SearchText));
             base.OnTextChanged(e);
-        }
-
-        private void FilterItems()
-        {
-            if (SearchText != "")
-            {
-                FilteredItems = Items.FindAll(FilterExpression);
-            }
-            else
-            {
-                FilteredItems = Items;
-            }
         }
     }
 }

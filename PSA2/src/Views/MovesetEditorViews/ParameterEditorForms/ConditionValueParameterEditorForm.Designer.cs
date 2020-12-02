@@ -30,9 +30,10 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionValueParameterEditorForm));
             this.conditionsScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
             this.conditionValueTextBox = new System.Windows.Forms.TextBox();
-            this.searchTextBox = new CustomControls.ConditionsSearchTextBox();
+            this.searchTextBox = new PSA2.src.Views.CustomControls.SearchTextBox();
             this.conditionNameLabel = new System.Windows.Forms.Label();
             this.applyButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -153,6 +154,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             this.Controls.Add(this.conditionsScintilla);
             this.Name = "ConditionValueParameterEditorForm";
             this.Size = new System.Drawing.Size(195, 335);
+            this.Load += new System.EventHandler(this.ConditionValueParameterEditorForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.validationPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -162,7 +164,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         #endregion
         private CustomControls.ScintillaListBox conditionsScintilla;
         private System.Windows.Forms.TextBox conditionValueTextBox;
-        private CustomControls.ConditionsSearchTextBox searchTextBox;
+        private CustomControls.SearchTextBox searchTextBox;
         private System.Windows.Forms.Label conditionNameLabel;
         private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Label label1;
