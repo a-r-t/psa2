@@ -10,28 +10,49 @@ using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2.src.Views.Utility;
+using PSA2.src.Configuration;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
+    // TODO: These values need to be known to the user in someway through the UI
+    // Max Id: 16777215
+    // Min Id: -8388607
     public partial class VariableValueParameterEditorForm : ParameterEditorFormBase
     {
         private string[] memoryTypeOptions = new string[] { "IC", "LA", "RA" };
         private string[] dataTypeOptions = new string[] { "Basic", "Float", "Bit" };
         private bool ignoreChanges;
         private PsaVariable psaVariable;
+        private VariableSearchList variableSearchList;
+        private bool isIdValid;
 
         public VariableValueParameterEditorForm(int value): base()
         {
             InitializeComponent();
+            variableSearchList = new VariableSearchList(searchTextBox);
             memoryTypeComboBox.Items.AddRange(memoryTypeOptions);
             dataTypeComboBox.Items.AddRange(dataTypeOptions);
+
             ignoreChanges = true;
             psaVariable = ConvertParamValueToVariable(value);
             memoryTypeComboBox.SelectedIndex = psaVariable.MemoryType;
             dataTypeComboBox.SelectedIndex = psaVariable.DataType;
             idTextBox.Text = psaVariable.Id.ToString();
             ignoreChanges = false;
+
             validationPictureBox.ImageLocation = "./images/green_check_mark.png";
+            isIdValid = true;
+
+            variableSearchList.Items = Config.VariablesConfig.GetAllVariables()
+                .OrderBy(v => v.MemoryType)
+                .ThenBy(v => v.DataType)
+                .ThenBy(v => v.Id)
+                .ToList();
+
+            dataTypeFilterComboBox.Items.AddRange(dataTypeOptions);
+            dataTypeFilterComboBox.Items.Insert(0, "All");
+            dataTypeFilterComboBox.SelectedIndex = 0;
         }
 
         private PsaVariable ConvertParamValueToVariable(int paramValue)
@@ -60,6 +81,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                     EmitParameterChange(psaVariable.ToIntValue());
                 }
             }
+            SetCurrentSelectedVariableName();
         }
 
         private void dataTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -72,6 +94,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                     EmitParameterChange(psaVariable.ToIntValue());
                 }
             }
+            SetCurrentSelectedVariableName();
         }
 
         private void idTextBox_TextChanged(object sender, EventArgs e)
@@ -98,12 +121,77 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                     psaVariable.Id = convertedInt;
                     EmitParameterChange(psaVariable.ToIntValue());
                     validationPictureBox.ImageLocation = "./images/green_check_mark.png";
+                    isIdValid = true;
                 }
                 catch (Exception ex) when (ex is FormatException || ex is ArgumentOutOfRangeException)
                 {
                     validationPictureBox.ImageLocation = "./images/red_x.png";
+                    isIdValid = false;
                 }
             }
+            SetCurrentSelectedVariableName();
+        }
+
+
+        // sets name of variable that is currently selected as the parma value from config
+        // if no variable in config, sets label to "Unknown Variable"
+        private void SetCurrentSelectedVariableName()
+        {
+            if (!isIdValid)
+            {
+                variableNameLabel.Text = "Variable: Unknown";
+            }
+            else
+            {
+                Variable selectedVariable = Config.VariablesConfig.GetVariable(psaVariable.MemoryType, psaVariable.DataType, psaVariable.Id);
+                if (selectedVariable != null)
+                {
+                    variableNameLabel.Text = selectedVariable.Name;
+                }
+                else
+                {
+                    variableNameLabel.Text = "Variable: Unknown";
+                }
+            }
+        }
+
+        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            variablesScintilla.ClearItems();
+            variablesScintilla.AddItems(variableSearchList.FilteredItems.Select(c => c.Name).ToList());
+        }
+
+        private void dataTypeFilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            variablesScintilla.ClearItems();
+            string selectedItem = dataTypeFilterComboBox.SelectedItem.ToString();
+            if (selectedItem == "All")
+            {
+                variableSearchList.DataType = null;
+            }
+            else
+            {
+                variableSearchList.DataType = selectedItem;
+            }
+            variablesScintilla.AddItems(variableSearchList.FilteredItems.Select(c => c.Name).ToList());
+        }
+
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            ApplyVariableSelection();
+        }
+
+        private void variablesScintilla_DoubleClick(object sender, ScintillaNET.DoubleClickEventArgs e)
+        {
+            ApplyVariableSelection();
+        }
+
+        private void ApplyVariableSelection()
+        {
+            Variable selectedVariable = variableSearchList.FilteredItems[variablesScintilla.SelectedIndex];
+            memoryTypeComboBox.SelectedItem = selectedVariable.MemoryType;
+            dataTypeComboBox.SelectedItem = selectedVariable.DataType;
+            idTextBox.Text = selectedVariable.Id.ToString();
         }
     }
 }

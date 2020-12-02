@@ -11,5 +11,6 @@ namespace PSA2.src.Configuration
     {
         public static ActionAliasesConfig ActionAliasesConfig = Utils.LoadJson<ActionAliasesConfig>("./aliases/Actions.json");
         public static ConditionsConfig ConditionsConfig = Utils.LoadJson<ConditionsConfig>("./config/Conditions.json");
+        public static VariablesConfig VariablesConfig = Utils.LoadJson<VariablesConfig>("./config/Variables.json");
     }
 }

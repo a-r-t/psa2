@@ -11,18 +11,25 @@ namespace PSA2.src.Views.Utility
 {
     public class VariableSearchList : SearchList<Variable>
     {
-        public string MemoryType { get; set; }
-        public string DataType { get; set; }
+        private string dataType;
+        public string DataType { 
+            get
+            {
+                return dataType;
+            }
+            set
+            {
+                dataType = value;
+                FilterItems();
+            }
+        }
 
         public VariableSearchList(SearchTextBox searchTextBox): base(searchTextBox)
         {
+            AlwaysRunFilter = true;
             FilterExpression = variable =>
             {
-                if (MemoryType != "" && variable.MemoryType != MemoryType)
-                {
-                    return false;
-                }
-                if (DataType != "" && variable.DataType != DataType)
+                if (DataType != null && variable.DataType != DataType)
                 {
                     return false;
                 }

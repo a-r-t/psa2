@@ -35,11 +35,13 @@
             this.dataTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.variableNameLabel = new System.Windows.Forms.Label();
-            this.searchTextBox = new CustomControls.SearchTextBox();
+            this.searchTextBox = new PSA2.src.Views.CustomControls.SearchTextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.dataTypeFilterComboBox = new System.Windows.Forms.ComboBox();
+            this.variablesScintilla = new PSA2.src.Views.CustomControls.ScintillaListBox();
+            this.applyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.validationPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -114,32 +116,12 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "ID:";
             // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(2, 135);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Min Id: -8388607";
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(2, 116);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Max Id: 16777215";
-            // 
             // label6
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(2, 156);
+            this.label6.Location = new System.Drawing.Point(2, 110);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(195, 2);
             this.label6.TabIndex = 21;
@@ -157,30 +139,92 @@
             // 
             // searchTextBox
             // 
-            this.searchTextBox.Location = new System.Drawing.Point(3, 168);
+            this.searchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchTextBox.Location = new System.Drawing.Point(3, 123);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(193, 20);
+            this.searchTextBox.Size = new System.Drawing.Size(192, 20);
             this.searchTextBox.TabIndex = 23;
-            this.searchTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.searchTextBox.Text = "🔍";
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 152);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(60, 13);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Data Type:";
+            // 
+            // dataTypeFilterComboBox
+            // 
+            this.dataTypeFilterComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataTypeFilterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dataTypeFilterComboBox.FormattingEnabled = true;
+            this.dataTypeFilterComboBox.Location = new System.Drawing.Point(69, 149);
+            this.dataTypeFilterComboBox.Name = "dataTypeFilterComboBox";
+            this.dataTypeFilterComboBox.Size = new System.Drawing.Size(125, 21);
+            this.dataTypeFilterComboBox.TabIndex = 27;
+            this.dataTypeFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.dataTypeFilterComboBox_SelectedIndexChanged);
+            // 
+            // variablesScintilla
+            // 
+            this.variablesScintilla.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.variablesScintilla.BackgroundColor = System.Drawing.Color.White;
+            this.variablesScintilla.CaretStyle = ScintillaNET.CaretStyle.Invisible;
+            this.variablesScintilla.CurrentCursor = System.Windows.Forms.Cursors.Arrow;
+            this.variablesScintilla.FontFamily = "Consolas";
+            this.variablesScintilla.FontSize = 10F;
+            this.variablesScintilla.FullLineSelect = false;
+            this.variablesScintilla.ItemBackColor = System.Drawing.Color.White;
+            this.variablesScintilla.ItemForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.variablesScintilla.Location = new System.Drawing.Point(3, 175);
+            this.variablesScintilla.Name = "variablesScintilla";
+            this.variablesScintilla.ReadOnly = true;
+            this.variablesScintilla.SelectedIndex = -1;
+            this.variablesScintilla.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(79)))), ((int)(((byte)(120)))));
+            this.variablesScintilla.SelectedItemForeColor = System.Drawing.Color.White;
+            this.variablesScintilla.ShowLineNumbers = false;
+            this.variablesScintilla.Size = new System.Drawing.Size(191, 205);
+            this.variablesScintilla.TabIndex = 28;
+            this.variablesScintilla.DoubleClick += new System.EventHandler<ScintillaNET.DoubleClickEventArgs>(this.variablesScintilla_DoubleClick);
+            // 
+            // applyButton
+            // 
+            this.applyButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.applyButton.Location = new System.Drawing.Point(5, 386);
+            this.applyButton.Name = "applyButton";
+            this.applyButton.Size = new System.Drawing.Size(189, 23);
+            this.applyButton.TabIndex = 29;
+            this.applyButton.Text = "Apply";
+            this.applyButton.UseVisualStyleBackColor = true;
+            this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
             // 
             // VariableValueParameterEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.applyButton);
+            this.Controls.Add(this.variablesScintilla);
+            this.Controls.Add(this.dataTypeFilterComboBox);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.variableNameLabel);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.validationPictureBox);
             this.Controls.Add(this.idTextBox);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dataTypeComboBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.memoryTypeComboBox);
             this.Name = "VariableValueParameterEditorForm";
-            this.Size = new System.Drawing.Size(198, 363);
+            this.Size = new System.Drawing.Size(198, 412);
             ((System.ComponentModel.ISupportInitialize)(this.validationPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -190,8 +234,6 @@
         #endregion
         private System.Windows.Forms.PictureBox validationPictureBox;
         private System.Windows.Forms.TextBox idTextBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox memoryTypeComboBox;
         private System.Windows.Forms.Label label5;
@@ -200,5 +242,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label variableNameLabel;
         private CustomControls.SearchTextBox searchTextBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox dataTypeFilterComboBox;
+        private CustomControls.ScintillaListBox variablesScintilla;
+        private System.Windows.Forms.Button applyButton;
     }
 }

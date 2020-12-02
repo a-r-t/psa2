@@ -20,6 +20,11 @@ namespace PSA2.src.Configuration
             return MemoryTypes.Find(mt => mt.Name == memoryType);
         }
 
+        public MemoryType GetMemoryType(int memoryType)
+        {
+            return MemoryTypes.Find(mt => mt.Index == memoryType);
+        }
+
         public List<Variable> GetAllVariables()
         {
             List<Variable> variables = new List<Variable>();
@@ -37,6 +42,23 @@ namespace PSA2.src.Configuration
         }
 
         public List<Variable> GetVariablesByMemoryType(string memoryType)
+        {
+            List<Variable> variables = new List<Variable>();
+            MemoryType selectedMemoryType = GetMemoryType(memoryType);
+            if (selectedMemoryType != null)
+            {
+                foreach (DataType dataType in selectedMemoryType.DataTypes)
+                {
+                    foreach (Id id in dataType.Ids)
+                    {
+                        variables.Add(new Variable(selectedMemoryType.Name, dataType.Name, id.Index, id.Name, id.Description));
+                    }
+                }
+            }
+            return variables;
+        }
+
+        public List<Variable> GetVariablesByMemoryType(int memoryType)
         {
             List<Variable> variables = new List<Variable>();
             MemoryType selectedMemoryType = GetMemoryType(memoryType);
@@ -72,6 +94,25 @@ namespace PSA2.src.Configuration
             return variables;
         }
 
+        public List<Variable> GetVariablesByMemoryTypeAndDataType(int memoryType, int dataType)
+        {
+            List<Variable> variables = new List<Variable>();
+            MemoryType selectedMemoryType = GetMemoryType(memoryType);
+            if (selectedMemoryType != null)
+            {
+                DataType selectedDataType = selectedMemoryType.GetDataType(dataType);
+                if (selectedDataType != null)
+                {
+                    foreach (Id id in selectedDataType.Ids)
+                    {
+                        variables.Add(new Variable(selectedMemoryType.Name, selectedDataType.Name, id.Index, id.Name, id.Description));
+                    }
+                }
+
+            }
+            return variables;
+        }
+
         public List<Variable> GetVariablesByDataType(string dataType)
         {
             List<Variable> variables = new List<Variable>();
@@ -82,6 +123,23 @@ namespace PSA2.src.Configuration
                 {
                     foreach (Id id in selectedDataType.Ids)
                     { 
+                        variables.Add(new Variable(memoryType.Name, selectedDataType.Name, id.Index, id.Name, id.Description));
+                    }
+                }
+            }
+            return variables;
+        }
+
+        public List<Variable> GetVariablesByDataType(int dataType)
+        {
+            List<Variable> variables = new List<Variable>();
+            foreach (MemoryType memoryType in MemoryTypes)
+            {
+                DataType selectedDataType = memoryType.GetDataType(dataType);
+                if (selectedDataType != null)
+                {
+                    foreach (Id id in selectedDataType.Ids)
+                    {
                         variables.Add(new Variable(memoryType.Name, selectedDataType.Name, id.Index, id.Name, id.Description));
                     }
                 }
@@ -107,14 +165,34 @@ namespace PSA2.src.Configuration
             return null;
         }
 
+        public Variable GetVariable(int memoryType, int dataType, int index)
+        {
+            MemoryType selectedMemoryType = GetMemoryType(memoryType);
+            if (selectedMemoryType != null)
+            {
+                DataType selectedDataType = selectedMemoryType.GetDataType(dataType);
+                if (selectedDataType != null)
+                {
+                    Id selectedId = selectedDataType.GetId(index);
+                    if (selectedId != null)
+                    {
+                        return new Variable(selectedMemoryType.Name, selectedDataType.Name, selectedId.Index, selectedId.Name, selectedId.Description);
+                    }
+                }
+            }
+            return null;
+        }
+
         public class MemoryType
         {
             public string Name { get; set; }
+            public int Index { get; set; }
             public List<DataType> DataTypes { get; set; }
 
-            public MemoryType(string name)
+            public MemoryType(string name, int index)
             {
                 Name = name;
+                Index = index;
                 DataTypes = new List<DataType>();
             }
 
@@ -122,16 +200,23 @@ namespace PSA2.src.Configuration
             {
                 return DataTypes.Find(dt => dt.Name == dataType);
             }
+
+            public DataType GetDataType(int dataType)
+            {
+                return DataTypes.Find(dt => dt.Index == dataType);
+            }
         }
 
         public class DataType
         {
             public string Name { get; set; }
+            public int Index { get; set; }
             public List<Id> Ids { get; set; }
 
-            public DataType(string name)
+            public DataType(string name, int index)
             {
                 Name = name;
+                Index = index;
                 Ids = new List<Id>();
             }
 

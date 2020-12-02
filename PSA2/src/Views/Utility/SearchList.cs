@@ -9,7 +9,8 @@ namespace PSA2.src.Views.Utility
 {
     public class SearchList<T>
     {
-        protected string SearchText { get; set; }
+        protected string SearchText { get; set; } = "";
+        protected bool AlwaysRunFilter { get; set; }
 
         private List<T> items;
         public List<T> Items
@@ -51,9 +52,9 @@ namespace PSA2.src.Views.Utility
             FilterItems();
         }
 
-        private void FilterItems()
+        protected void FilterItems()
         {
-            if (SearchText != "" && Items != null)
+            if (Items != null && (SearchText != "" || (SearchText == "" && AlwaysRunFilter)))
             {
                 FilteredItems = Items.FindAll(FilterExpression);
             }

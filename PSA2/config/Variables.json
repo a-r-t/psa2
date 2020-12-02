@@ -2,169 +2,185 @@
   "memoryTypes": [
     {
       "name": "IC",
+      "index":  0,
       "dataTypes": [
         {
           "name": "Basic",
+          "index": 0,
           "ids": [
             {
               "name": "Get Current Animation Frame",
-              "id": 0,
+              "index": 0,
               "description": "Returns the current animation frame that the current sub action animation is on"
             },
             {
               "name": "Get Current Damage",
-              "id": 2,
+              "index": 2,
               "description": "Returns how much damage the player currently has"
             },
             {
               "name": "Get Current X Position",
-              "id": 3,
+              "index": 3,
               "description": "Returns the player's current x position. Can also be used in articles to get a current article instance's current x position."
             },
             {
               "name": "Get Current Y Position",
-              "id": 4,
+              "index": 4,
               "description": "Returns the player's current y position. Can also be used in articles to get a current article instance's current y position."
             },
             {
               "name": "Get Facing Direction",
-              "id": 8,
+              "index": 8,
               "description": "Returns the direction the player is currently facing -- 1 for right, -1 for left. Can also be used in articles to get an article instance's current facing position."
             },
             {
               "name": "Get Vertical Velocity",
-              "id": 23,
+              "index": 23,
               "description": "Returns player's current vertical velocity"
             },
             {
               "name": "Get Horizontal Velocity",
-              "id": 28,
+              "index": 28,
               "description": "Returns player's current horizontal velocity"
             },
             {
               "name": "Get Velocity Right",
-              "id": 1006,
+              "index": 1006,
               "description": "Returns player's current velocity rightward"
             },
             {
               "name": "Get Velocity Left",
-              "id": 1007,
+              "index": 1007,
               "description": "Returns player's current velocity leftward"
             },
             {
               "name": "Get Velocity Up",
-              "id": 1008,
+              "index": 1008,
               "description": "Returns player's current velocity upward"
             },
             {
               "name": "Get Velocity Down",
-              "id": 1009,
+              "index": 1009,
               "description": "Returns player's current velocity downward"
             },
             {
               "name": "Get Current Sub Action Id",
-              "id": 20000,
+              "index": 20000,
               "description": "Returns the sub action id that is currently executing"
             },
             {
               "name": "Get Current Action Id",
-              "id": 20001,
+              "index": 20001,
               "description": "Returns the action id that is currently executing"
             },
             {
               "name": "Get Current Held Item Id",
-              "id": 20009,
+              "index": 20009,
               "description": "Returns the item id that the player is currently holding"
             },
             {
               "name": "Get Max Jump Count",
-              "id": 23003,
+              "index": 23003,
               "description": "Returns how many midair jumps the player has available"
             }
           ]
+        },
+        {
+          "name": "Float",
+          "index": 1,
+          "ids": []
+        },
+        {
+          "name": "Bit",
+          "index": 2,
+          "ids": []
         }
       ]
     },
     {
       "name": "LA",
+      "index":  1,
       "dataTypes": [
         {
-          "name": "Bit",
-          "ids": [
-            {
-              "name": "Is Player Dead",
-              "id": 0,
-              "description": "If set, player dies immediately"
-            },
-            {
-              "name": "Is Player Unable to Die",
-              "id": 1,
-              "description": "If set, Player cannot die off the boundaries of the stage"
-            },
-            {
-              "name": "Is Tag Invisible",
-              "id": 27,
-              "description": "If set, tag is invisible (the \"name\" that hovers over a player during a match)"
-            },
-            {
-              "name": "Is Unable to Grab the Ledge",
-              "id": 34,
-              "description": "If set, player cannot grab a ledge"
-            },
-            {
-              "name": "Is Unable to Teeter",
-              "id": 36,
-              "description": "If set, player is unable to teeter over a ledge"
-            }
-          ]
-        },
-        {
           "name": "Basic",
+          "index": 0,
           "ids": [
             {
               "name": "Number of Jumps Used",
-              "id": 1,
+              "index": 1,
               "description": "The current number of midair jumps used before touching the ground"
             },
             {
               "name": "Number of Wall Jumps performed",
-              "id": 3,
+              "index": 3,
               "description": "The current number of wall jumps performed before touching the ground"
             },
             {
               "name": "Number of Footstools Performed",
-              "id": 5,
+              "index": 5,
               "description": "The current number of footstools performed before touching the ground"
             },
             {
               "name": "Falling Time",
-              "id": 13,
+              "index": 13,
               "description": "The current length of time the player has been falling for"
             },
             {
               "name": "Swimming Time",
-              "id": 20,
+              "index": 20,
               "description": "The current length of time the player has been swimming for"
             },
             {
               "name": "Attacks Performed",
-              "id": 53,
+              "index": 53,
               "description": "Number of attacks performed in the current match"
             },
             {
               "name": "Costume Id",
-              "id": 54,
+              "index": 54,
               "description": "The player's current costume id. This is commonly used to make costume-specific functionality in movesets."
             }
           ]
         },
         {
           "name": "Float",
+          "index": 1,
           "ids": [
             {
               "name": "Shield Health",
-              "id": 3,
+              "index": 3,
               "description": "How much shield health the player currently has. The max (full health) is 50."
+            }
+          ]
+        },
+        {
+          "name": "Bit",
+          "index": 2,
+          "ids": [
+            {
+              "name": "Is Player Dead",
+              "index": 0,
+              "description": "If set, player dies immediately"
+            },
+            {
+              "name": "Is Player Unable to Die",
+              "index": 1,
+              "description": "If set, Player cannot die off the boundaries of the stage"
+            },
+            {
+              "name": "Is Tag Invisible",
+              "index": 27,
+              "description": "If set, tag is invisible (the \"name\" that hovers over a player during a match)"
+            },
+            {
+              "name": "Is Unable to Grab the Ledge",
+              "index": 34,
+              "description": "If set, player cannot grab a ledge"
+            },
+            {
+              "name": "Is Unable to Teeter",
+              "index": 36,
+              "description": "If set, player is unable to teeter over a ledge"
             }
           ]
         }
@@ -172,23 +188,35 @@
     },
     {
       "name": "RA",
+      "index":  2,
       "dataTypes": [
         {
+          "name": "Basic",
+          "index": 0,
+          "ids": []
+        },
+        {
+          "name": "Float",
+          "index": 1,
+          "ids": []
+        },
+        {
           "name": "Bit",
+          "index": 2,
           "ids": [
             {
               "name": "Float In Place",
-              "id": 0,
+              "index": 0,
               "description": "If set, player floats in place (cannot fall)"
             },
             {
               "name": "Is Allowed to Fast Fall",
-              "id": 2,
+              "index": 2,
               "description": "If set, player is allowd to fast fall"
             },
             {
               "name": "Is Landing Lag Possible",
-              "id": 30,
+              "index": 30,
               "description": "If set, when player touches the ground they will experience landing lag (this is commonly used in aerials subactions such as Nair, Fair, etc.)"
             }
           ]

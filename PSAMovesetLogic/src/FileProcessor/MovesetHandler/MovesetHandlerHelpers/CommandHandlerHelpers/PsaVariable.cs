@@ -58,8 +58,8 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 case 0: return "IC";
                 case 1: return "LA";
-                case 2:
-                default: return "RA";
+                case 2: return "RA";
+                default: throw new ArgumentException("Invalid memory type");
             }
         }
 
