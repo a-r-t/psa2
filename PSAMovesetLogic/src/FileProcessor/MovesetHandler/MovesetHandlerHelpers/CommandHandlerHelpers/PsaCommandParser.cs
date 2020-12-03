@@ -38,7 +38,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         {
             List<PsaCommand> psaCommands = new List<PsaCommand>();
             int commandsStartLocation = psaCodeLocation; // j
-            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize) // TODO: and greater than "stf" whatever that means"
+            if (commandsStartLocation > 0 && commandsStartLocation < PsaFile.DataSectionSize && commandsStartLocation > CodeBlockDataStartLocation) // TODO: double check this
             {
                 int nextCommandLocation = commandsStartLocation;
                 while (PsaFile.DataSection[nextCommandLocation] != 0 && nextCommandLocation < PsaFile.DataSectionSize)

@@ -104,15 +104,22 @@ namespace PSA2.src.Views.MovesetEditorViews
 
         private void parameterNamesScintilla_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
-            if (selectedParameterIndex >= 0)
+            try
             {
-                if (selectedParameterIndex != previousParameterSelected)
+                int selectedParameterIndex = parameterNamesScintilla.SelectedIndex;
+                if (selectedParameterIndex >= 0)
                 {
-                    parameterTypesComboBox.SelectedIndex = -1;
-                    parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
+                    if (selectedParameterIndex != previousParameterSelected)
+                    {
+                        parameterTypesComboBox.SelectedIndex = -1;
+                        parameterTypesComboBox.SelectedIndex = PsaCommand.Parameters[selectedParameterIndex].Type;
+                    }
+                    previousParameterSelected = selectedParameterIndex;
                 }
-                previousParameterSelected = selectedParameterIndex;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+
             }
         }
 

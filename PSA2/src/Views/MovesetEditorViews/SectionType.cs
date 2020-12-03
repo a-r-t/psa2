@@ -8,6 +8,6 @@ namespace PSA2.src.Views.MovesetEditorViews
 {
     public enum SectionType
     {
-        ACTION, SUBACTION
+        ACTION, SUBACTION, SUBROUTINE
     }
 }

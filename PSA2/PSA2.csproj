@@ -131,6 +131,12 @@
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ParameterEditorFormBase.Designer.cs">
       <DependentUpon>ParameterEditorFormBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubroutineSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubroutineSelector.Designer.cs">
+      <DependentUpon>SubroutineSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionOption.cs" />
     <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionSelector.cs">
       <SubType>UserControl</SubType>
@@ -249,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\HexValueParameterEditorForm.resx">
       <DependentUpon>HexValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\SubroutineSelector.resx">
+      <DependentUpon>SubroutineSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\SubActionSelector.resx">
       <DependentUpon>SubActionSelector.cs</DependentUpon>

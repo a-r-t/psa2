@@ -22,7 +22,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
         public ExternalDataHandler ExternalDataHandler { get; private set; }
         public ActionsHandler ActionsHandler { get; private set; }
         public SubActionsHandler SubActionsHandler { get; private set; }
-        public SubRoutinesHandler SubRoutinesHandler { get; private set; }
+        public SubroutinesHandler SubRoutinesHandler { get; private set; }
         public ActionOverridesHandler ActionOverridesHandler { get; private set; }
         public ArticlesHandler ArticlesHandler { get; private set; }
         public CharacterParamsHandler CharacterParamsHandler { get; private set; }
@@ -48,7 +48,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions, psaFileHelperMethods);
             
             SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, animationsHandler, codeBlockDataStartLocation);
-            SubRoutinesHandler = new SubRoutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
+            SubRoutinesHandler = new SubroutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
             ActionOverridesHandler = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsHandler, psaCommandHandler);
             ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);

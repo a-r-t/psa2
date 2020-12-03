@@ -41,8 +41,8 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public int GetCodeBlockCommandLocation(int codeBlockLocation, int commandIndex)
         {
-            int actionCodeBlockCommandsLocation = GetCodeBlockCommandsLocation(codeBlockLocation);
-            return actionCodeBlockCommandsLocation + commandIndex * 2;
+            int codeBlockCommandsLocation = GetCodeBlockCommandsLocation(codeBlockLocation);
+            return codeBlockCommandsLocation + commandIndex * 2;
         }
 
         public List<PsaCommand> GetPsaCommandsForCodeBlock(int codeBlockLocation)

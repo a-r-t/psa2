@@ -33,6 +33,8 @@ namespace PSA2.src.Views.MovesetEditorViews
                     return psaMovesetHandler.ActionsHandler.GetPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
                 case SectionType.SUBACTION:
                     return psaMovesetHandler.SubActionsHandler.GetPsaCommandsInCodeBlock(SectionIndex, CodeBlockIndex);
+                case SectionType.SUBROUTINE:
+                    return psaMovesetHandler.SubRoutinesHandler.GetPsaCommandsForSubroutine(SectionIndex / 4);
                 default:
                     throw new ArgumentException($"Section Type not yet implemented: {SectionType}");
             }
@@ -46,7 +48,9 @@ namespace PSA2.src.Views.MovesetEditorViews
                     return psaMovesetHandler.ActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
                 case SectionType.SUBACTION:
                     return psaMovesetHandler.SubActionsHandler.GetPsaCommandInCodeBlock(SectionIndex, CodeBlockIndex, commandIndex);
-                default:
+                case SectionType.SUBROUTINE:
+                    return psaMovesetHandler.SubRoutinesHandler.GetPsaCommand(SectionIndex / 4, commandIndex);
+;                default:
                     throw new ArgumentException($"Section Type not yet implemented: {SectionType}");
             }
         }
@@ -152,6 +156,9 @@ namespace PSA2.src.Views.MovesetEditorViews
                 case SectionType.SUBACTION:
                     sectionIndexHex = SectionIndex.ToString("X");
                     alias = psaMovesetHandler.SubActionsHandler.GetAnimationName(SectionIndex);
+                    break;
+                case SectionType.SUBROUTINE:
+                    sectionIndexHex = SectionIndex.ToString("X");
                     break;
             }
             return $"{SectionType.ToString().ToTitleCase()} {sectionIndexHex}{FormatAlias(alias)}";

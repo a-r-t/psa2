@@ -1,4 +1,5 @@
 ﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
+using PSA2MovesetLogic.src.Models.Fighter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 {
-    public class SubRoutinesHandler
+    public class SubroutinesHandler
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
@@ -15,7 +16,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public ActionsHandler ActionsParser { get; private set; }
         public SubActionsHandler SubActionsParser { get; private set; }
 
-        public SubRoutinesHandler(PsaFile psaFile, int dataSectionLocation, ActionsHandler actionsParser, SubActionsHandler subActionsParser, PsaCommandHandler psaCommandHandler)
+        public SubroutinesHandler(PsaFile psaFile, int dataSectionLocation, ActionsHandler actionsParser, SubActionsHandler subActionsParser, PsaCommandHandler psaCommandHandler)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
@@ -24,12 +25,17 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             SubActionsParser = subActionsParser;
         }
 
-        public List<PsaCommand> GetPsaCommandsForSubRoutine(int subRoutineLocation)
+        public List<PsaCommand> GetPsaCommandsForSubroutine(int subRoutineLocation)
         {
             return PsaCommandHandler.GetPsaCommands(subRoutineLocation);
         }
 
-        public List<int> GetAllSubRoutines()
+        public PsaCommand GetPsaCommand(int subRoutineLocation, int commandIndex)
+        {
+            return PsaCommandHandler.GetPsaCommand(subRoutineLocation + commandIndex * 2);
+        }
+
+        public List<Subroutine> GetAllSubroutines()
         {
             HashSet<int> subRoutines = new HashSet<int>();
             int numberOfSpecialActions = ActionsParser.GetNumberOfSpecialActions();
@@ -86,12 +92,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             List<int> subRoutinesList = subRoutines.ToList();
             for (int i = 0; i < subRoutinesList.Count; i++)
             {
-                int subRoutineLocation = subRoutinesList[i];
-
-                List<PsaCommand> commands = GetPsaCommandsForSubRoutine(subRoutineLocation);
+                int subRoutineCommandsPointerLocation = subRoutinesList[i];
+                List<PsaCommand> commands = GetPsaCommandsForSubroutine(subRoutineCommandsPointerLocation / 4);
                 if (commands.Count == 0)
                 {
-                    emptySubRoutines.Add(subRoutineLocation);
+                    emptySubRoutines.Add(subRoutineCommandsPointerLocation);
                 }
                 else
                 {
@@ -114,10 +119,38 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
 
-            HashSet<int> subRoutinesNested = new HashSet<int>(subRoutinesList);
-            subRoutinesNested.RemoveWhere(emptySubRoutines.Contains);
-            subRoutinesNested.ToList().OrderBy(x => x.ToString("X8")).ToList().ForEach(s => Console.WriteLine(s.ToString("X8")));
-            return subRoutinesNested.ToList().OrderBy(x => x.ToString("X8")).ToList();
+            HashSet<int> uniqueSubroutines = new HashSet<int>(subRoutinesList);
+            uniqueSubroutines.RemoveWhere(s => emptySubRoutines.Contains(s));
+
+            List<Subroutine> subroutines = new List<Subroutine>();
+            foreach (int subroutineLocation in uniqueSubroutines)
+            {
+                try
+                {
+                    // subroutine are tricky to identify and sometimes not readable
+                    // this code is just attemping to get psa commands from the subroutine (which should not throw an exception if the subroutine is "valid" for what is being looked for)
+                    // it also ensures each psa command is valid (not null or an instruction less than 0).
+                    // as time goes on this will possibly be added to.
+                    // if anything throws an exception, the subroutine won't be added to the list of subroutines returned from this method
+                    List<PsaCommand> psaCommands = GetPsaCommandsForSubroutine(subroutineLocation / 4);
+                    foreach (PsaCommand psaCommand in psaCommands)
+                    {
+                        if (psaCommand == null)
+                        {
+                            throw new NullReferenceException("Invalid psa command");
+                        }
+                        if (psaCommand.Instruction < 0)
+                        {
+                            throw new ArgumentOutOfRangeException("Invalid psa command instruction");
+                        }
+                    }
+                    subroutines.Add(new Subroutine(subroutineLocation));
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return subroutines;
         }
     }
 }

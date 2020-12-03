@@ -16,11 +16,11 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
         ISectionSelectorListener
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        private string[] sections = new string[] { "Actions", "Sub Actions" };
+        private string[] sections = new string[] { "Actions", "Sub Actions", "Subroutines" };
         private ActionSelector actionSelector;
         private SubActionSelector subActionSelector;
+        private SubroutineSelector subroutineSelector;
         private CodeBlockSelection codeBlockSelection;
-        private string sectionText;
 
         public SectionSelector(PsaMovesetHandler psaMovesetHandler)
         {
@@ -39,8 +39,15 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
             subActionSelector.Name = "subActionSelector";
             subActionSelector.AddListener(this);
 
+            subroutineSelector = new SubroutineSelector(psaMovesetHandler);
+            subroutineSelector.Dock = DockStyle.Fill;
+            subroutineSelector.Visible = false;
+            subroutineSelector.Name = "subroutineSelector";
+            subroutineSelector.AddListener(this);
+
             sectionSelectorFormViewer.Controls.Add(actionSelector);
             sectionSelectorFormViewer.Controls.Add(subActionSelector);
+            sectionSelectorFormViewer.Controls.Add(subroutineSelector);
 
         }
 
@@ -59,6 +66,9 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
                     break;
                 case "Sub Actions":
                     ShowSectionSelectorForm("subActionSelector");
+                    break;
+                case "Subroutines":
+                    ShowSectionSelectorForm("subroutineSelector");
                     break;
             }
         }
