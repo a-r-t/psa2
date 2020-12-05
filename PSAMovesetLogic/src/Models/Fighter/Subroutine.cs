@@ -19,5 +19,15 @@ namespace PSA2MovesetLogic.src.Models.Fighter
         {   
             return $"Subroutine Location: {Location}";
         }
+
+        public bool Equals(Subroutine x, Subroutine y)
+        {
+            return x.Location == y.Location;
+        }
+
+        public int GetHashCode(Subroutine obj)
+        {
+            return obj.Location.GetHashCode();
+        }
     }
 }

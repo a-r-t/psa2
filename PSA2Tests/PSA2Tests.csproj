@@ -29,6 +29,7 @@
     <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Animation\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
+    <Folder Include="Tests\SubroutineTests\ComparisonData\" />
   </ItemGroup>
 
   <ItemGroup>

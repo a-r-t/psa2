@@ -17,7 +17,7 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
     public partial class SubroutineSelector : ObservableUserControl<ISectionSelectorListener>
     {
         protected PsaMovesetHandler psaMovesetHandler;
-        private List<Subroutine> subroutines;
+        private List<int> subroutines;
 
         public SubroutineSelector(PsaMovesetHandler psaMovesetHandler)
         {
@@ -28,9 +28,9 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
 
         private void SubroutineSelector_Load(object sender, EventArgs e)
         {
-            subroutines = psaMovesetHandler.SubRoutinesHandler.GetAllSubroutines()
-                .OrderBy(x => x.Location.ToString("X8")).ToList();
-            subroutinesListScintilla.AddItems(subroutines.Select(subroutine => subroutine.Location.ToString("X")).ToList());
+            subroutines = psaMovesetHandler.SubRoutinesHandler.GetAllSubroutineLocations()
+                .OrderBy(x => x.ToString("X8")).ToList();
+            subroutinesListScintilla.AddItems(subroutines.Select(subroutine => subroutine.ToString("X")).ToList());
         }
 
         private void subroutinesListScintilla_SelectedIndexChanged(object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
         {
             CodeBlockSelection codeBlockSelection = new CodeBlockSelection(psaMovesetHandler);
             codeBlockSelection.SectionType = SectionType.SUBROUTINE;
-            codeBlockSelection.SectionIndex = subroutines[subroutinesListScintilla.SelectedIndex].Location;
+            codeBlockSelection.SectionIndex = subroutines[subroutinesListScintilla.SelectedIndex];
 
             foreach (ISectionSelectorListener listener in listeners)
             {
