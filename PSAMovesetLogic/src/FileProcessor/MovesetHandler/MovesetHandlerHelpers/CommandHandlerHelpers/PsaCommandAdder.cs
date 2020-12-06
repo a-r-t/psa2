@@ -20,14 +20,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
-        public PsaFileHelperMethods PsaFileHelperMethods { get; private set; }
 
-        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaFileHelperMethods psaFileHelperMethods)
+        public PsaCommandAdder(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
-            PsaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
 
                 // update psa file headings
-                PsaFileHelperMethods.UpdateMovesetHeaders();
+                PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
             }
             else
             {
@@ -72,7 +70,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         private void SetupCodeBlockForCommands(CodeBlock codeBlock)
         {
             // Get a new location to put commands in that has the required amount of free space
-            int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
+            int newCodeBlockCommandsLocation = PsaFile.HelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
 
             // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
             if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
@@ -81,10 +79,10 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
 
             // add a NOP command to the action code block
-            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation, Constants.NOP);
-            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
-            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
-            PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation, Constants.NOP);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
 
             // set code block to point to new commands location
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
@@ -107,9 +105,9 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 // increase size of data section and then add nop command
                 int futureEndCodeBlockLocation = codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 3;
                 if (futureEndCodeBlockLocation > PsaFile.DataSection.Count)
-                {    
-                    PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation - 1, Constants.FADEF00D);
-                    PsaFileHelperMethods.SetDataSectionValue(futureEndCodeBlockLocation, Constants.FADEF00D);
+                {
+                    PsaFile.HelperMethods.SetDataSectionValue(futureEndCodeBlockLocation - 1, Constants.FADEF00D);
+                    PsaFile.HelperMethods.SetDataSectionValue(futureEndCodeBlockLocation, Constants.FADEF00D);
                 }
             }
 
@@ -146,7 +144,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         {
             // get new location for commands to be moved to that has enough free space
             int commandsParamsSpaceRequired = codeBlock.NumberOfCommands * 2 + 4;
-            int newCodeBlockCommandsLocation = PsaFileHelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, commandsParamsSpaceRequired);
+            int newCodeBlockCommandsLocation = PsaFile.HelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, commandsParamsSpaceRequired);
 
             // if the new location is past the data section limit, expand the data section by the amount of space required
             if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
@@ -176,8 +174,8 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 // replace old command location with free space (FADEF00D)
                 int oldCodeBlockCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
                 int newCodeBlockCommandLocation = newCodeBlockCommandsLocation + (commandIndex * 2);
-                PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandLocation, PsaFile.DataSection[oldCodeBlockCommandLocation]);
-                PsaFileHelperMethods.SetDataSectionValue(newCodeBlockCommandLocation + 1, PsaFile.DataSection[oldCodeBlockCommandLocation + 1]);
+                PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandLocation, PsaFile.DataSection[oldCodeBlockCommandLocation]);
+                PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandLocation + 1, PsaFile.DataSection[oldCodeBlockCommandLocation + 1]);
                 PsaFile.DataSection[oldCodeBlockCommandLocation] = Constants.FADEF00D;
                 PsaFile.DataSection[oldCodeBlockCommandLocation + 1] = Constants.FADEF00D;
             }
@@ -189,10 +187,10 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
             // add nop psa command to end of commands list
             int newCommandLocation = newCodeBlockCommandsLocation + commandPointerSpace;
-            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation, Constants.NOP);
-            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 1, 0);
-            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 2, 0);
-            PsaFileHelperMethods.SetDataSectionValue(newCommandLocation + 3, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCommandLocation, Constants.NOP);
+            PsaFile.HelperMethods.SetDataSectionValue(newCommandLocation + 1, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCommandLocation + 2, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCommandLocation + 3, 0);
 
             // update commands pointer to point to new location 
             int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;

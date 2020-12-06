@@ -44,8 +44,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             CodeBlocksHandler codeBlocksHandler = new CodeBlocksHandler(psaFile, dataSectionLocation, psaCommandHandler);
             ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler);
             
-            PsaFileHelperMethods psaFileHelperMethods = new PsaFileHelperMethods(psaFile, dataSectionLocation);
-            AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions, psaFileHelperMethods);
+            AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions);
             
             SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, animationsHandler, codeBlockDataStartLocation);
             SubRoutinesHandler = new SubroutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);

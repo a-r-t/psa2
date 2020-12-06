@@ -18,12 +18,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         public PsaCommandHandler(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
-            PsaFileHelperMethods psaFileHelperMethods = new PsaFileHelperMethods(psaFile, dataSectionLocation);
             psaCommandParser = new PsaCommandParser(psaFile, codeBlockDataStartLocation);
-            psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaFileHelperMethods);
-            psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaFileHelperMethods);
-            psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaFileHelperMethods);
-            psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation, codeBlockDataStartLocation, psaFileHelperMethods);
+            psaCommandAdder = new PsaCommandAdder(psaFile, dataSectionLocation, codeBlockDataStartLocation);
+            psaCommandModifier = new PsaCommandModifier(psaFile, dataSectionLocation, codeBlockDataStartLocation);
+            psaCommandMover = new PsaCommandMover(psaFile, dataSectionLocation, codeBlockDataStartLocation);
+            psaCommandRemover = new PsaCommandRemover(psaFile, dataSectionLocation, codeBlockDataStartLocation);
         }
 
         public int GetNumberOfPsaCommands(int psaCodeLocation)

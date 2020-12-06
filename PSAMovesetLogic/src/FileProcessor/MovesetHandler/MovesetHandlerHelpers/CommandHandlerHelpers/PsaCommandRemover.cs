@@ -18,14 +18,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
-        public PsaFileHelperMethods PsaFileHelperMethods { get; private set; }
 
-        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaFileHelperMethods psaFileHelperMethods)
+        public PsaCommandRemover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
-            PsaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
                 // remove any existing pointer references to the cdoe block
                 int pointerToCodeBlockLocation = codeBlock.Location * 4;
-                PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(pointerToCodeBlockLocation);
+                PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(pointerToCodeBlockLocation);
             }
 
             // look through the rest of the PSA commands for something that points to a removed command or any of its params and remove that pointer
@@ -84,7 +82,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
 
-            PsaFileHelperMethods.UpdateMovesetHeaders();
+            PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
         }
 
         /// <summary>
@@ -99,7 +97,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 // remove any pointers to the parameters location (since it won't exist anymore)
                 int commandParametersPointerLocation = commandLocation * 4 + 4;
-                PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
+                PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParametersPointerLocation);
 
                 // iterates through each param the command had
                 for (int i = 0; i < removedPsaCommand.NumberOfParams * 2; i += 2)
@@ -116,7 +114,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
 
                         // Attempt to remove the above offset from the offset interlock tracker
-                        bool wasOffsetRemoved = PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
+                        bool wasOffsetRemoved = PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParamPointerValueLocation);
 
                         // If offset was not successfully removed, it means it either doesn't exist or is an external subroutine
                         // The below method call UpdateExternalPointerLogic will do some necessary work if the offset turns out to be an external subroutine call
@@ -257,7 +255,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                             // remove any offset pointer to the command's param value location (since all params were removed when changing to NOP)
                             int commandParamValuePointerLocation = commandParamValueLocation * 4;
 
-                            PsaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
+                            PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(commandParamValuePointerLocation);
                         }
                     }
                 }

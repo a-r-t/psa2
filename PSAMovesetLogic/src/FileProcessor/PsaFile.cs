@@ -16,6 +16,7 @@ namespace PSA2MovesetLogic.src.FileProcessor
         public List<int> OffsetSection { get; private set; } // asc
         public List<int> DataTableSections { get; private set; } // rnext
         public List<int> EffectData { get; private set; }
+        public PsaFileHelperMethods HelperMethods { get; private set; }
 
         /// <summary>
         /// Gets total size of Moveset File (bits)
@@ -167,6 +168,7 @@ namespace PSA2MovesetLogic.src.FileProcessor
 
         public PsaFile(int[] fileHeader, int[] fileContent, int fileSize)
         {
+            HelperMethods = new PsaFileHelperMethods(this);
             HeaderSection = fileHeader;
             DataSection = new List<int>();
             FileSize = fileSize;

@@ -18,14 +18,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public int CodeBlockDataStartLocation { get; private set; }
-        public PsaFileHelperMethods PsaFileHelperMethods { get; private set; }
 
-        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, PsaFileHelperMethods psaFileHelperMethods)
+        public PsaCommandMover(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
-            PsaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>

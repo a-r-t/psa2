@@ -19,16 +19,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public int CodeBlockDataStartLocation { get; private set; }
         private int numberOfSpecialActions;
         private int numberOfSubActions;
-        private PsaFileHelperMethods psaFileHelperMethods;
 
-        public AnimationsHandler(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, int numberOfSpecialActions, int numberOfSubActions, PsaFileHelperMethods psaFileHelperMethods)
+        public AnimationsHandler(PsaFile psaFile, int dataSectionLocation, int codeBlockDataStartLocation, int numberOfSpecialActions, int numberOfSubActions)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             CodeBlockDataStartLocation = codeBlockDataStartLocation;
             this.numberOfSpecialActions = numberOfSpecialActions;
             this.numberOfSubActions = numberOfSubActions;
-            this.psaFileHelperMethods = psaFileHelperMethods;
         }
 
         /// <summary>
@@ -186,7 +184,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 InsertAnimationNameIntoFreeSpace(animationLocation, animationNameDoubleWords);
             }
 
-            psaFileHelperMethods.UpdateMovesetHeaders();
+            PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
         }
 
         /// <summary>
@@ -206,7 +204,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 PsaFile.DataSection[animationLocation] = 0;
                 PsaFile.DataSection[animationLocation + 1] = 0;
-                psaFileHelperMethods.RemoveOffsetFromOffsetInterlockTracker(animationLocation * 4 + 4);
+                PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(animationLocation * 4 + 4);
 
                 bool isStillInUse = IsAnimationNameInUse(animationNamePointerLocation);
 
@@ -226,7 +224,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 }
             }
 
-            psaFileHelperMethods.UpdateMovesetHeaders();
+            PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
         }
 
         /// <summary>
