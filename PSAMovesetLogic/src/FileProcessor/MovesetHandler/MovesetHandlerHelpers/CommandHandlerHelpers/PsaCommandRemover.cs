@@ -66,7 +66,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 // code block location is set to 0 since a code block with no commands is pointless anyway
                 PsaFile.DataSection[codeBlock.Location] = 0;
 
-                // remove any existing pointer references to the cdoe block
+                // remove any existing pointer references to the code block
                 int pointerToCodeBlockLocation = codeBlock.Location * 4;
                 PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(pointerToCodeBlockLocation);
             }

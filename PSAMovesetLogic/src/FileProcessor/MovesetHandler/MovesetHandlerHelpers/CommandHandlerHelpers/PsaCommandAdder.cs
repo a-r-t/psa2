@@ -37,21 +37,10 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         /// <param name="codeBlock">The codeblock to add the command to</param>
         public void AddCommand(CodeBlock codeBlock)
         {
-            if (codeBlock.CommandsPointerLocation == 0 || codeBlock.CommandsPointerLocation >= CodeBlockDataStartLocation * 4 && codeBlock.CommandsPointerLocation < PsaFile.DataSectionSize)
+            if (codeBlock.CommandsPointerLocation != 0 && codeBlock.CommandsPointerLocation >= CodeBlockDataStartLocation * 4 && codeBlock.CommandsPointerLocation < PsaFile.DataSectionSize)
             {
-                // if there are currently no existing commands (pointer to commands is 0, meaning it is not pointing to anything)
-                if (codeBlock.CommandsPointerLocation == 0)
-                {
-                    // setup codeblock to have commands, and then adds a nop command
-                    SetupCodeBlockForCommands(codeBlock);
-                }
-
-                // if there are already existing commands in code block
-                else
-                {
-                    // add nop command to end of code block commands
-                    AddCommandToCodeBlock(codeBlock);
-                }
+                // add nop command to end of code block commands
+                AddCommandToCodeBlock(codeBlock);
 
                 // update psa file headings
                 PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
@@ -60,36 +49,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             {
                 throw new DataMisalignedException("Code block location is not valid");
             }
-        }
-
-        /// <summary>
-        /// Sets up a code block to have commands, and then adds a "nop" command to the code block
-        /// <para>This "setup" is needed when a code block does not have any commands currently</para>
-        /// </summary>
-        /// <param name="codeBlock">The codeblock to add the command to</param>
-        private void SetupCodeBlockForCommands(CodeBlock codeBlock)
-        {
-            // Get a new location to put commands in that has the required amount of free space
-            int newCodeBlockCommandsLocation = PsaFile.HelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
-
-            // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
-            if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
-            {
-                newCodeBlockCommandsLocation = PsaFile.DataSection.Count;
-            }
-
-            // add a NOP command to the action code block
-            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation, Constants.NOP);
-            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
-            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
-            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
-
-            // set code block to point to new commands location
-            int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
-            PsaFile.DataSection[codeBlock.Location] = newCodeBlockCommandsPointerLocation;
-
-            // update offset tracker to include code block commands pointer (since it now has commands again)
-            PsaFile.OffsetSection.Add(codeBlock.Location * 4);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.Models.Fighter;
+using PSA2MovesetLogic.src.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
+        public int CodeBlockDataStartLocation { get; private set; }
 
-        public CodeBlocksHandler(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler)
+        public CodeBlocksHandler(PsaFile psaFile, int dataSectionLocation, PsaCommandHandler psaCommandHandler, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;
             PsaCommandHandler = psaCommandHandler;
+            CodeBlockDataStartLocation = codeBlockDataStartLocation;
         }
 
         public CodeBlock GetCodeBlock(int codeBlockLocation)
@@ -66,7 +69,41 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public void AddCommand(int codeBlockLocation)
         {
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
-            PsaCommandHandler.AddCommand(codeBlock);
+            if (codeBlock.CommandsPointerLocation == 0)
+            {
+                SetupCodeBlockForCommands(codeBlock);
+            }
+            else
+            {
+                PsaCommandHandler.AddCommand(codeBlock);
+            }
+        }
+
+        private void SetupCodeBlockForCommands(CodeBlock codeBlock)
+        {
+            // Get a new location to put commands in that has the required amount of free space
+            int newCodeBlockCommandsLocation = PsaFile.HelperMethods.FindLocationWithAmountOfFreeSpace(CodeBlockDataStartLocation, 4);
+
+            // if there is no free space found, increase size of data section by the required amount of space needed and use that as the new code block commands location
+            if (newCodeBlockCommandsLocation >= PsaFile.DataSection.Count)
+            {
+                newCodeBlockCommandsLocation = PsaFile.DataSection.Count;
+            }
+
+            // add a NOP command to the action code block
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation, Constants.NOP);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 1, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 2, 0);
+            PsaFile.HelperMethods.SetDataSectionValue(newCodeBlockCommandsLocation + 3, 0);
+
+            // set code block to point to new commands location
+            int newCodeBlockCommandsPointerLocation = newCodeBlockCommandsLocation * 4;
+            PsaFile.DataSection[codeBlock.Location] = newCodeBlockCommandsPointerLocation;
+
+            // update offset tracker to include code block commands pointer (since it now has commands again)
+            PsaFile.OffsetSection.Add(codeBlock.Location * 4);
+
+            PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
         }
 
         public void ModifyCommand(int codeBlockLocation, int commandIndex, PsaCommand newPsaCommand)
