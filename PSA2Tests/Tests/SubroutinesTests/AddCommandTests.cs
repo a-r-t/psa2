@@ -11,12 +11,13 @@ namespace PSA2Tests.Tests.SubroutineTests
     {
         [Test]
         [Description("Add command which will relocate subroutine")]
-        [TestCase(99824, "FitMarioOneCommandAdded.pac")]
-        //[TestCase(6, "FitMarioOneCommandAdded2.pac")]
-        public void AddCommandToSubroutine(int subroutineLocation, string comparisonFileName)
+        [TestCase(99824, 125540, "FitMarioOneCommandAdded.pac")]
+        [TestCase(103064, 125540, "FitMarioOneCommandAdded2.pac")]
+        public void AddCommandToSubroutine(int subroutineLocation, int relocatedCommandsPointerLocation, string comparisonFileName)
         {
             PsaMovesetHandler psaMovesetParser = WriteTestsHelper.GetPsaMovesetParser("./Tests/Data/FitMario.pac");
-            psaMovesetParser.SubRoutinesHandler.AddCommand(subroutineLocation);
+            int commandsPointerLocation = psaMovesetParser.SubRoutinesHandler.AddCommand(subroutineLocation);
+            Assert.IsTrue(commandsPointerLocation == relocatedCommandsPointerLocation);
             psaMovesetParser.PsaFile.SaveFile($"./Tests/SubroutinesTests/Out/Add/{comparisonFileName}");
             Assert.IsTrue(WriteTestsHelper.AreFilesIdentical($"./Tests/SubroutinesTests/ComparisonData/Add/{comparisonFileName}", $"./Tests/SubroutinesTests/Out/Add/{comparisonFileName}"));
         }

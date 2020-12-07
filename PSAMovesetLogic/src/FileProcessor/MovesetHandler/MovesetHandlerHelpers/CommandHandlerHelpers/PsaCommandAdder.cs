@@ -35,15 +35,17 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         /// <para>If code block has no current allocation for commands, it will be setup to have it</para>
         /// </summary>
         /// <param name="codeBlock">The codeblock to add the command to</param>
-        public void AddCommand(CodeBlock codeBlock)
+        /// <returns>current location of commands</returns>
+        public int AddCommand(CodeBlock codeBlock)
         {
             if (codeBlock.CommandsPointerLocation != 0 && codeBlock.CommandsPointerLocation >= CodeBlockDataStartLocation * 4 && codeBlock.CommandsPointerLocation < PsaFile.DataSectionSize)
             {
                 // add nop command to end of code block commands
-                AddCommandToCodeBlock(codeBlock);
+                int commandsPointerLocation = AddCommandToCodeBlock(codeBlock);
 
                 // update psa file headings
                 PsaFile.HelperMethods.UpdateMovesetHeaders(DataSectionLocation);
+                return commandsPointerLocation;
             }
             else
             {
@@ -56,7 +58,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         /// <para>If there is no room for another command to be added, the entire commands section gets relocated to a place with more room</para>
         /// </summary>
         /// <param name="codeBlock">The codeblock to add the command to</param>
-        private void AddCommandToCodeBlock(CodeBlock codeBlock)
+        private int AddCommandToCodeBlock(CodeBlock codeBlock)
         {
             // if commands list is at the edge of the data section and adding a new command would send it over the data section's limit, expand the data section to add the new command
             if (codeBlock.CommandsLocation + codeBlock.NumberOfCommands * 2 + 5 > PsaFile.DataSection.Count)
@@ -81,15 +83,18 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 // signifies the end of the action
                 PsaFile.DataSection[codeBlockEndLocation + 2] = 0;
                 PsaFile.DataSection[codeBlockEndLocation + 3] = 0;
+
+                return codeBlock.CommandsPointerLocation;
             }
             // if code block commands list has no free space at the end of it, code block commands will need to be relocated to a new place with adequate space
             else
             {
                 // relocates code block commands to a new place with more room and adds nop command to the end
-                int newCodeBlockCommandsLocation = RelocateCodeBlockCommands(codeBlock);
+                int newCodeBlockCommandsPointerLocation = RelocateCodeBlockCommands(codeBlock);
 
                 // updates pointers in other commands to point to the new location where the code block commands were moved to
-                UpdateCommandPointers(codeBlock, newCodeBlockCommandsLocation);
+                UpdateCommandPointers(codeBlock, newCodeBlockCommandsPointerLocation);
+                return newCodeBlockCommandsPointerLocation;
             }
         }
 

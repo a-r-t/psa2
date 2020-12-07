@@ -40,9 +40,9 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return psaCommandParser.GetPsaCommand(commandLocation);
         }
 
-        public void AddCommand(CodeBlock codeBlock)
+        public int AddCommand(CodeBlock codeBlock)
         {
-            psaCommandAdder.AddCommand(codeBlock);
+            return psaCommandAdder.AddCommand(codeBlock);
         }
 
         public void ModifyCommand(int commandLocation, PsaCommand oldPsaCommand, PsaCommand newPsaCommand)

@@ -187,11 +187,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             return subroutines;
         }
 
-        public void AddCommand(int subroutineLocation)
+        public int AddCommand(int subroutineLocation)
         {
             List<PsaCommand> psaCommands = GetPsaCommandsForSubroutine(subroutineLocation / 4);
             CodeBlock codeBlock = new CodeBlock(0, subroutineLocation, subroutineLocation / 4, psaCommands);
-            PsaCommandHandler.AddCommand(codeBlock);
+            return PsaCommandHandler.AddCommand(codeBlock);
         }
     }
 }

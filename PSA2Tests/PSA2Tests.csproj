@@ -282,6 +282,9 @@
     <None Update="Tests\SubroutinesTests\ComparisonData\Add\FitMarioOneCommandAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\SubroutinesTests\ComparisonData\Add\FitMarioOneCommandAdded2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
