@@ -62,19 +62,12 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 int codeBlockCommandsEnd = codeBlock.GetCommandsEndLocation();
                 PsaFile.DataSection[codeBlockCommandsEnd] = Constants.FADEF00D;
                 PsaFile.DataSection[codeBlockCommandsEnd + 1] = Constants.FADEF00D;
-
-                // code block location is set to 0 since a code block with no commands is pointless anyway
-                PsaFile.DataSection[codeBlock.Location] = 0;
-
-                // remove any existing pointer references to the code block
-                int pointerToCodeBlockLocation = codeBlock.Location * 4;
-                PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(pointerToCodeBlockLocation);
             }
 
             // look through the rest of the PSA commands for something that points to a removed command or any of its params and remove that pointer
             int codeBlockCommandsEndLocation = codeBlock.CommandsPointerLocation + codeBlock.NumberOfCommands * 8;
             int codeBlockCommandsStartLocation = codeBlockCommandsEndLocation - 8;
-            for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSectionSizeBytes; i++)
+            for (int i = CodeBlockDataStartLocation; i < PsaFile.DataSection.Count; i++)
             {
                 if (PsaFile.DataSection[i] >= codeBlockCommandsStartLocation && PsaFile.DataSection[i] <= codeBlockCommandsEndLocation)
                 {
@@ -187,7 +180,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         }
 
         /// <summary>
-        /// Deletes offset interlock tracker pointers that pointed to the removed command
+        /// Deletes pointers that pointed to the removed command
         /// <para>DelILData method in PSA-C</para>
         /// </summary>
         /// <param name="fileContentIndex">the index of the pointer in the PSA File's File Content</param>
@@ -264,7 +257,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
 
         /// <summary>
         /// This method is called when attempting to remove a param value that once pointed to another location (Pointer type) that MIGHT be an external subroutine call
-        /// <para>If it is determined to be a call to an external subroutine, the external subroutine data table is updated to no longer pointer to it</para>
+        /// <para>If it is determined to be a call to an external subroutine, the external subroutine data table is updated to no longer point to it</para>
         /// </summary>
         /// <param name="removedPsaCommand">The psa command being removed</param>
         /// <param name="commandParamPointerValueLocation">The pointer to the param's value location</param>

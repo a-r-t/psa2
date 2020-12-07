@@ -69,6 +69,9 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public void AddCommand(int codeBlockLocation)
         {
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
+
+            // if commands pointer location is 0, code block needs to be set up
+            // it will be 0 if it currently has zero commands
             if (codeBlock.CommandsPointerLocation == 0)
             {
                 SetupCodeBlockForCommands(codeBlock);
@@ -79,6 +82,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             }
         }
 
+        /// <summary>
+        /// Sets up a code block to have commands, and then adds a "nop" command to the code block
+        /// <para>This "setup" is needed when a code block does not have any commands currently</para>
+        /// </summary>
+        /// <param name="codeBlock">The codeblock to setup</param>
         private void SetupCodeBlockForCommands(CodeBlock codeBlock)
         {
             // Get a new location to put commands in that has the required amount of free space
@@ -119,7 +127,28 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             CodeBlock codeBlock = GetCodeBlock(codeBlockLocation);
             int codeBlockCommandLocation = codeBlock.GetPsaCommandLocation(commandIndex);
             PsaCommandHandler.RemoveCommand(codeBlock, codeBlockCommandLocation, removedPsaCommand);
+
+            codeBlock = GetCodeBlock(codeBlockLocation);
+            if (codeBlock.PsaCommands.Count == 0)
+            {
+                TearDownCodeBlock(codeBlock);
+            }
         }
+
+        /// <summary>
+        /// "Tear down" codeblock aka it no longer holds any psa commands/data
+        /// <para>This is called when last command in a codeblock is removed in order to save on space</para>
+        /// </summary>
+        /// <param name="codeBlock"></param>
+        private void TearDownCodeBlock(CodeBlock codeBlock)
+        {
+            // code block location is set to 0 since a code block with no commands is pointless anyway
+            PsaFile.DataSection[codeBlock.Location] = 0;
+
+            // remove any existing pointer references to the code block
+            int pointerToCodeBlockLocation = codeBlock.Location * 4;
+            PsaFile.HelperMethods.RemoveOffsetFromOffsetInterlockTracker(pointerToCodeBlockLocation);
+        } 
 
         public void MoveCommandUp(int codeBlockLocation, int commandIndex)
         {
