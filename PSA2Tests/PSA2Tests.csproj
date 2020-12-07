@@ -29,7 +29,6 @@
     <Folder Include="Tests\SubActionsTests\ComparisonData\Insert\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Animation\" />
     <Folder Include="Tests\SubActionsTests\ComparisonData\Remove\" />
-    <Folder Include="Tests\SubroutineTests\ComparisonData\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -278,6 +277,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Tests\SubActionsTests\ComparisonData\Remove\FitMarioRemoveOneCommandInSubAction2.pac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Tests\SubroutinesTests\ComparisonData\Add\FitMarioOneCommandAdded.pac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

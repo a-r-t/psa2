@@ -8,7 +8,7 @@ using System.Text;
 namespace PSA2Tests.Tests.SubroutineTests
 {
     [TestFixture]
-    public class ReadSubroutineTests
+    public class ReadSubroutineLocationsTests
     {
         [Test]
         [Description("Gets all valid subroutines found in moveset")]
