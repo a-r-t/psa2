@@ -14,7 +14,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
     {
         public PsaFile PsaFile { get; private set; }
         public int DataSectionLocation { get; private set; }
-        public CodeBlocksHandler CodeBlocksHandler { get; private set; }
+        public CommandHandler CodeBlocksHandler { get; private set; }
         public PsaCommandHandler PsaCommandHandler { get; private set; }
         public AnimationsHandler AnimationsHandler { get; private set; }
         public const int MAIN_CODE_BLOCK = 0;
@@ -23,7 +23,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
         public const int OTHER_CODE_BLOCK = 3;
         public int CodeBlockDataStartLocation { get; private set; }
 
-        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CodeBlocksHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler, AnimationsHandler animationsHandler, int codeBlockDataStartLocation)
+        public SubActionsHandler(PsaFile psaFile, int dataSectionLocation, CommandHandler codeBlocksHandler, PsaCommandHandler psaCommandHandler, AnimationsHandler animationsHandler, int codeBlockDataStartLocation)
         {
             PsaFile = psaFile;
             DataSectionLocation = dataSectionLocation;

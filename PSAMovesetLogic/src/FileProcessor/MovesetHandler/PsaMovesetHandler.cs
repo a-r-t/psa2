@@ -11,6 +11,7 @@ using PSA2MovesetLogic.src.Utility;
 using PSA2MovesetLogic.src.Models.Fighter.Misc;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
+using static PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandLocationTracker;
 
 namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
 {
@@ -27,6 +28,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
         public ArticlesHandler ArticlesHandler { get; private set; }
         public CharacterParamsHandler CharacterParamsHandler { get; private set; }
         public MiscHandler MiscHandler { get; private set; }
+        public CommandLocationTracker CommandLocationTracker { get; private set; }
 
         public PsaMovesetHandler(PsaFile psaFile)
         {
@@ -41,7 +43,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             int numberOfSubActions = (PsaFile.DataSection[dataSectionLocation + 13] - PsaFile.DataSection[dataSectionLocation + 12]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
-            CodeBlocksHandler codeBlocksHandler = new CodeBlocksHandler(psaFile, dataSectionLocation, psaCommandHandler, codeBlockDataStartLocation);
+            CommandHandler codeBlocksHandler = new CommandHandler(psaFile, dataSectionLocation, psaCommandHandler, codeBlockDataStartLocation);
             ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler);
             
             AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions);
@@ -52,6 +54,31 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
+
+            CommandLocationTracker = new CommandLocationTracker();
+            for (int i = 0; i < numberOfSpecialActions; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int codeBlockCommandsPointerLocation = ActionsHandler.GetCodeBlockCommandsPointerLocation(i, j);
+                    int numberOfPsaCommands = ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(i, j);
+                    for (int k = 0; k < numberOfPsaCommands; k++)
+                    {
+                        int commandPointerLocation = codeBlockCommandsPointerLocation + (k * 8);
+                        (SectionType, int, int, int) codeBlock = (SectionType.ACTION, i, j, k);
+                        CommandLocationTracker.Locations.AddEntry(commandPointerLocation, codeBlock);
+                    }
+                }
+            }
+            List<(SectionType, int, int, int)> codeBlockTest = CommandLocationTracker.Locations.GetAllForward(103384);
+            if (codeBlockTest != null)
+            {
+                codeBlockTest.ForEach(c => Console.WriteLine(c));
+            } 
+            else
+            {
+                Console.WriteLine("IS NULL");
+            }
         }
 
         public bool IsMovesetParsable()
