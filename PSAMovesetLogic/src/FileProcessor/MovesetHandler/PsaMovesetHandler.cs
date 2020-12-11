@@ -70,14 +70,14 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
                     }
                 }
             }
-            List<(SectionType, int, int, int)> codeBlockTest = CommandLocationTracker.Locations.GetAllForward(103384);
-            if (codeBlockTest != null)
+            try
             {
-                codeBlockTest.ForEach(c => Console.WriteLine(c));
-            } 
-            else
+                (SectionType, int, int, int) codeBlockTest = CommandLocationTracker.Locations.GetForward(102592);
+                Console.WriteLine(codeBlockTest);
+            }
+            catch
             {
-                Console.WriteLine("IS NULL");
+                Console.WriteLine("DOES NOT EXIST");
             }
         }
 

@@ -6,68 +6,36 @@ namespace PSA2MovesetLogic.src.Utility
 {
     public class BidirectionalDictionary<TOne, TTwo>
     {
-        private Dictionary<TOne, List<TTwo>> forward;
-        private Dictionary<TTwo, List<TOne>> backward;
+        private Dictionary<TOne, TTwo> forward;
+        private Dictionary<TTwo, TOne> backward;
 
         public BidirectionalDictionary()
         {
-            forward = new Dictionary<TOne, List<TTwo>>();
-            backward = new Dictionary<TTwo, List<TOne>>();
+            forward = new Dictionary<TOne, TTwo>();
+            backward = new Dictionary<TTwo, TOne>();
         }
 
-        /*
-        public TTwo GetFirstForward(TOne key)
+        public TTwo GetForward(TOne key)
         {
             if (forward.ContainsKey(key))
             {
-                List<TTwo> value = forward[key];
-                return value[0];
+                return forward[key];
             }
             else
             {
-                return default;
-            }
-        }
-        */
-
-        public List<TTwo> GetAllForward(TOne key)
-        {
-            if (forward.ContainsKey(key))
-            {
-                List<TTwo> value = forward[key];
-                return value;
-            }
-            else
-            {
-                return default;
+                throw new KeyNotFoundException();
             }
         }
 
-        /*
-        public TOne GetFirstBackward(TTwo key)
+        public TOne GetAllBackward(TTwo key)
         {
             if (backward.ContainsKey(key))
             {
-                List<TOne> value = backward[key];
-                return value[0];
+                return backward[key];
             }
             else
             {
-                return default;
-            }
-        }
-        */
-
-        public List<TOne> GetAllBackward(TTwo key)
-        {
-            if (backward.ContainsKey(key))
-            {
-                List<TOne> value = backward[key];
-                return value;
-            }
-            else
-            {
-                return default;
+                throw new KeyNotFoundException();
             }
         }
 
@@ -75,24 +43,20 @@ namespace PSA2MovesetLogic.src.Utility
         {
             if (forward.ContainsKey(key))
             {
-                forward[key].Add(value);
+                forward[key] = value;
             }
             else
             {
-                List<TTwo> values = new List<TTwo>();
-                values.Add(value);
-                forward.Add(key, values);
+                forward.Add(key, value);
             }
 
             if (backward.ContainsKey(value))
             {
-                backward[value].Add(key);
+                backward[value] = key;
             }
             else
             {
-                List<TOne> keys = new List<TOne>();
-                keys.Add(key);
-                backward.Add(value, keys);
+                backward.Add(value, key);
             }
         }
 
@@ -100,24 +64,20 @@ namespace PSA2MovesetLogic.src.Utility
         {
             if (backward.ContainsKey(key))
             {
-                backward[key].Add(value);
+                backward[key] = value;
             }
             else
             {
-                List<TOne> values = new List<TOne>();
-                values.Add(value);
-                backward.Add(key, values);
+                backward.Add(key, value);
             }
 
             if (forward.ContainsKey(value))
             {
-                forward[value].Add(key);
+                forward[value] = key;
             }
             else
             {
-                List<TTwo> keys = new List<TTwo>();
-                keys.Add(key);
-                forward.Add(value, keys);
+                forward.Add(value, key);
             }
         }
 
@@ -125,19 +85,11 @@ namespace PSA2MovesetLogic.src.Utility
         {
             if (forward.ContainsKey(key))
             {
-                List<TTwo> tTwoValues = forward[key];
+                TTwo value = forward[key];
                 forward.Remove(key);
-                foreach (TTwo tTwoValue in tTwoValues) 
+                if (backward.ContainsKey(value))
                 {
-                    if (backward.ContainsKey(tTwoValue))
-                    {
-                        List<TOne> tOneValues = backward[tTwoValue];
-                        tOneValues.Remove(key);
-                        if (tOneValues.Count == 0)
-                        {
-                            backward.Remove(tTwoValue);
-                        }
-                    }
+                    backward.Remove(value);
                 }
             }
         }
@@ -146,19 +98,11 @@ namespace PSA2MovesetLogic.src.Utility
         {
             if (backward.ContainsKey(key))
             {
-                List<TOne> tOneValues = backward[key];
+                TOne value = backward[key];
                 backward.Remove(key);
-                foreach (TOne tOneValue in tOneValues)
+                if (forward.ContainsKey(value))
                 {
-                    if (forward.ContainsKey(tOneValue))
-                    {
-                        List<TTwo> tTwoValues = forward[tOneValue];
-                        tTwoValues.Remove(key);
-                        if (tTwoValues.Count == 0)
-                        {
-                            forward.Remove(tOneValue);
-                        }
-                    }
+                    forward.Remove(value);
                 }
             }
         }
