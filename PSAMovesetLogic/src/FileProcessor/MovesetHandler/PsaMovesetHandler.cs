@@ -55,31 +55,9 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
 
-            CommandLocationTracker = new CommandLocationTracker();
-            for (int i = 0; i < numberOfSpecialActions; i++)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    int codeBlockCommandsPointerLocation = ActionsHandler.GetCodeBlockCommandsPointerLocation(i, j);
-                    int numberOfPsaCommands = ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(i, j);
-                    for (int k = 0; k < numberOfPsaCommands; k++)
-                    {
-                        int commandPointerLocation = codeBlockCommandsPointerLocation + (k * 8);
-                        (SectionType, int, int, int) codeBlock = (SectionType.ACTION, i, j, k);
-                        CommandLocationTracker.Locations.AddEntry(commandPointerLocation, codeBlock);
-                    }
-                }
-            }
-            try
-            {
-                (SectionType, int, int, int) codeBlockTest = CommandLocationTracker.Locations.GetForward(102592);
-                Console.WriteLine(codeBlockTest);
-            }
-            catch
-            {
-                Console.WriteLine("DOES NOT EXIST");
-            }
+            CommandLocationTracker = new CommandLocationTracker(this);
         }
+
 
         public bool IsMovesetParsable()
         {
