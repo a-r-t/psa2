@@ -12,6 +12,7 @@ using PSA2.src.ExtentionMethods;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2.src.Views.Utility.SearchList;
 using PSA2.src.Configuration;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
@@ -27,7 +28,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         private VariableSearchList variableSearchList;
         private bool isIdValid;
 
-        public VariableValueParameterEditorForm(int value): base()
+        public VariableValueParameterEditorForm(PsaMovesetHandler psaMovesetHandler, int value): base(psaMovesetHandler)
         {
             InitializeComponent();
             variableSearchList = new VariableSearchList(searchTextBox);

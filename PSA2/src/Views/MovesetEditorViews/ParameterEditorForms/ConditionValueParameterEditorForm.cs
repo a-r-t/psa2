@@ -12,6 +12,7 @@ using PSA2.src.ExtentionMethods;
 using PSA2.src.Configuration;
 using static PSA2.src.Configuration.ConditionsConfig;
 using PSA2.src.Views.Utility.SearchList;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
@@ -20,7 +21,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         private bool ignoreTextChanged;
         private ConditionSearchList conditionSearchList;
 
-        public ConditionValueParameterEditorForm(int value): base()
+        public ConditionValueParameterEditorForm(PsaMovesetHandler psaMovesetHandler, int value): base(psaMovesetHandler)
         {
             InitializeComponent();
             conditionSearchList = new ConditionSearchList(searchTextBox);

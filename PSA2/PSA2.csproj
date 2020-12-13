@@ -107,6 +107,12 @@
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\ConditionValueParameterEditorForm.Designer.cs">
       <DependentUpon>ConditionValueParameterEditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\PointerValueParameterEditorForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\PointerValueParameterEditorForm.Designer.cs">
+      <DependentUpon>PointerValueParameterEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -149,12 +155,6 @@
     </Compile>
     <Compile Include="src\Views\MovesetEditorViews\SectionSelectors\ActionSelector.Designer.cs">
       <DependentUpon>ActionSelector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="src\Views\MovesetEditorViews\ParameterEditorForm.Designer.cs">
-      <DependentUpon>ParameterEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Views\CustomControls\ScintillaCodeBlock.cs">
       <SubType>Component</SubType>
@@ -247,6 +247,9 @@
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\ConditionValueParameterEditorForm.resx">
       <DependentUpon>ConditionValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\PointerValueParameterEditorForm.resx">
+      <DependentUpon>PointerValueParameterEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForms\VariableValueParameterEditorForm.resx">
       <DependentUpon>VariableValueParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,9 +267,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MovesetEditorViews\SectionSelectors\ActionSelector.resx">
       <DependentUpon>ActionSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Views\MovesetEditorViews\ParameterEditorForm.resx">
-      <DependentUpon>ParameterEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

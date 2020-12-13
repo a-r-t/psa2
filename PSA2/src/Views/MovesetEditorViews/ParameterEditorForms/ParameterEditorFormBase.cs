@@ -8,13 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
     public partial class ParameterEditorFormBase : ObservableUserControl<IParameterEditorFormListener>
     {
-        public ParameterEditorFormBase()
+        protected PsaMovesetHandler psaMovesetHandler;
+
+        public ParameterEditorFormBase(PsaMovesetHandler psaMovesetHandler)
         {
+            this.psaMovesetHandler = psaMovesetHandler;
             InitializeComponent();
         }
 

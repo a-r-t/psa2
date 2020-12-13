@@ -154,19 +154,19 @@ namespace PSA2.src.Views.MovesetEditorViews
             switch (parameterType)
             {
                 case Hex:
-                    return new HexValueParameterEditorForm(value);
+                    return new HexValueParameterEditorForm(psaMovesetHandler, value);
                 case Scalar:
-                    return new ScalarValueParameterEditorForm(value);
+                    return new ScalarValueParameterEditorForm(psaMovesetHandler, value);
                 case Pointer:
-                    return new HexValueParameterEditorForm(value);
+                    return new PointerValueParameterEditorForm(psaMovesetHandler, value);
                 case Boolean:
-                    return new BooleanValueParameterEditorForm(value);
+                    return new BooleanValueParameterEditorForm(psaMovesetHandler, value);
                 case Unknown4:
-                    return new HexValueParameterEditorForm(value);
+                    return new HexValueParameterEditorForm(psaMovesetHandler, value);
                 case Variable:
-                    return new VariableValueParameterEditorForm(value);
+                    return new VariableValueParameterEditorForm(psaMovesetHandler, value);
                 case Condition:
-                    return new ConditionValueParameterEditorForm(value);
+                    return new ConditionValueParameterEditorForm(psaMovesetHandler, value);
                 default:
                     throw new ArgumentException("Unrecognized parameter type");
             }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSA2.src.Views.MovesetEditorViews.Interfaces;
 using PSA2.src.ExtentionMethods;
+using PSA2MovesetLogic.src.FileProcessor.MovesetHandler;
 
 namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 {
@@ -16,7 +17,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
     {
         private bool ignoreTextChanged;
 
-        public HexValueParameterEditorForm(int value): base()
+        public HexValueParameterEditorForm(PsaMovesetHandler psaMovesetHandler, int value): base(psaMovesetHandler)
         {
             InitializeComponent();
             ignoreTextChanged = true;
