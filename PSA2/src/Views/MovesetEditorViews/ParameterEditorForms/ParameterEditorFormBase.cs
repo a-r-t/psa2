@@ -16,6 +16,12 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
     {
         protected PsaMovesetHandler psaMovesetHandler;
 
+        // this constructor is for the designer so it stops throwing a hissy fit
+        public ParameterEditorFormBase()
+        {
+            InitializeComponent();
+        }
+
         public ParameterEditorFormBase(PsaMovesetHandler psaMovesetHandler)
         {
             this.psaMovesetHandler = psaMovesetHandler;
