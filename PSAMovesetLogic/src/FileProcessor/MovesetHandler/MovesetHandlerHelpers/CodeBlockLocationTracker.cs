@@ -5,13 +5,13 @@ using System.Text;
 
 namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers
 {
-    public class CommandLocationTracker
+    public class CodeBlockLocationTracker
     {
         public BidirectionalDictionary<int, (SectionType, int, int)> CodeBlockLocations { get; private set; }
         public BidirectionalDictionary<int, (SectionType, int, int, int)> CommandLocations { get; private set; }
         private PsaMovesetHandler psaMovesetHandler;
 
-        public CommandLocationTracker(PsaMovesetHandler psaMovesetHandler)
+        public CodeBlockLocationTracker(PsaMovesetHandler psaMovesetHandler)
         {
             CodeBlockLocations = new BidirectionalDictionary<int, (SectionType, int, int)>();
             CommandLocations = new BidirectionalDictionary<int, (SectionType, int, int, int)>();
@@ -28,7 +28,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 for (int j = 0; j < 2; j++)
                 {
                     int codeBlockCommandsPointerLocation = actionsHandler.GetCodeBlockCommandsPointerLocation(i, j);
-                    CodeBlockLocations.AddEntryForward(codeBlockCommandsPointerLocation, (SectionType.ACTION, i, j));
+                    if (codeBlockCommandsPointerLocation != 0)
+                    {
+                        CodeBlockLocations.AddEntryForward(codeBlockCommandsPointerLocation, (SectionType.ACTION, i, j));
+                    }
+
                     int numberOfPsaCommands = actionsHandler.GetNumberOfPsaCommandsInCodeBlock(i, j);
                     for (int k = 0; k < numberOfPsaCommands; k++)
                     {
@@ -48,7 +52,11 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                 for (int j = 0; j < 4; j++)
                 {
                     int codeBlockCommandsPointerLocation = subActionsHandler.GetCodeBlockCommandsPointerLocation(i, j);
-                    CodeBlockLocations.AddEntryForward(codeBlockCommandsPointerLocation, (SectionType.SUBACTION, i, j));
+                    if (codeBlockCommandsPointerLocation != 0)
+                    {
+                        CodeBlockLocations.AddEntryForward(codeBlockCommandsPointerLocation, (SectionType.SUBACTION, i, j));
+                    }
+
                     int numberOfPsaCommands = subActionsHandler.GetNumberOfPsaCommandsInCodeBlock(i, j);
                     for (int k = 0; k < numberOfPsaCommands; k++)
                     {

@@ -11,7 +11,7 @@ using PSA2MovesetLogic.src.Utility;
 using PSA2MovesetLogic.src.Models.Fighter.Misc;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandHandlerHelpers;
 using PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers;
-using static PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CommandLocationTracker;
+using static PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelpers.CodeBlockLocationTracker;
 
 namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
 {
@@ -28,7 +28,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
         public ArticlesHandler ArticlesHandler { get; private set; }
         public CharacterParamsHandler CharacterParamsHandler { get; private set; }
         public MiscHandler MiscHandler { get; private set; }
-        public CommandLocationTracker CommandLocationTracker { get; private set; }
+        public CodeBlockLocationTracker CommandLocationTracker { get; private set; }
 
         public PsaMovesetHandler(PsaFile psaFile)
         {
@@ -55,7 +55,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
 
-            CommandLocationTracker = new CommandLocationTracker(this);
+            CommandLocationTracker = new CodeBlockLocationTracker(this);
         }
 
 
