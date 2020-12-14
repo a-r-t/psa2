@@ -18,11 +18,6 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
             PopulateSubActionsInTracker();
         }
 
-        public enum SectionType
-        {
-            ACTION, SUBACTION, SUBROUTINE
-        }
-
         private void PopulateActionsInTracker()
         {
             ActionsHandler actionsHandler = psaMovesetHandler.ActionsHandler;
@@ -36,7 +31,7 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                     {
                         int commandPointerLocation = codeBlockCommandsPointerLocation + (k * 8); // each command is 8 double words away from one another
                         (SectionType, int, int, int) codeBlock = (SectionType.ACTION, i, j, k);
-                        Locations.AddEntry(commandPointerLocation, codeBlock);
+                        Locations.AddEntryForward(commandPointerLocation, codeBlock);
                     }
                 }
             }
@@ -55,9 +50,32 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler.MovesetHandlerHelper
                     {
                         int commandPointerLocation = codeBlockCommandsPointerLocation + (k * 8); // each command is 8 double words away from one another
                         (SectionType, int, int, int) codeBlock = (SectionType.SUBACTION, i, j, k);
-                        Locations.AddEntry(commandPointerLocation, codeBlock);
+                        Locations.AddEntryForward(commandPointerLocation, codeBlock);
                     }
                 }
+            }
+        }
+    }
+
+    public enum SectionType
+    {
+        ACTION, SUBACTION, SUBROUTINE
+    }
+
+    public static class SectionTypeExtensions
+    {
+        public static string AsString(this SectionType st)
+        {
+            switch (st)
+            {
+                case SectionType.ACTION:
+                    return "Action";
+                case SectionType.SUBACTION:
+                    return "Sub Action";
+                case SectionType.SUBROUTINE:
+                    return "Subroutine";
+                default:
+                    return "";
             }
         }
     }

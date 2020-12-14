@@ -27,7 +27,7 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public TOne GetAllBackward(TTwo key)
+        public TOne GetBackward(TTwo key)
         {
             if (backward.ContainsKey(key))
             {
@@ -39,7 +39,7 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public void AddEntry(TOne key, TTwo value)
+        public void AddEntryForward(TOne key, TTwo value)
         {
             if (forward.ContainsKey(key))
             {
@@ -60,7 +60,7 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public void AddEntry(TTwo key, TOne value)
+        public void AddEntryBackward(TTwo key, TOne value)
         {
             if (backward.ContainsKey(key))
             {
@@ -81,7 +81,7 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public void DeleteEntry(TOne key)
+        public void DeleteEntryForward(TOne key)
         {
             if (forward.ContainsKey(key))
             {
@@ -94,7 +94,7 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public void DeleteEntry(TTwo key)
+        public void DeleteEntryBackward(TTwo key)
         {
             if (backward.ContainsKey(key))
             {
@@ -107,12 +107,12 @@ namespace PSA2MovesetLogic.src.Utility
             }
         }
 
-        public bool ContainsKey(TOne key)
+        public bool ContainsKeyForward(TOne key)
         {
             return forward.ContainsKey(key);
         }
 
-        public bool ContainsKey(TTwo key)
+        public bool ContainsKeyBackward(TTwo key)
         {
             return backward.ContainsKey(key);
         }
