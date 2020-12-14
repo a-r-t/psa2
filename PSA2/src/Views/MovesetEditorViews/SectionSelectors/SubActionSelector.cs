@@ -119,6 +119,7 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
             subActionsListScintilla.AddItems(subActionSearchList.FilteredItems.Select(option => option.ToString()).ToList());
         }
 
+        // TODO: I think this can be deleted since the SearchTextBox control handles this
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete))
@@ -133,6 +134,7 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
             }
         }
 
+        // TODO: This needs to emit an event
         private void animationNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (!ignoreAnimationChanges)
@@ -147,7 +149,7 @@ namespace PSA2.src.Views.MovesetEditorViews.SectionSelectors
                     psaMovesetHandler.SubActionsHandler.RemoveAnimationData(SelectedSubActionOption.Index);
                 }
                 SelectedSubActionOption.Name = animationNameTextBox.Text;
-                subActionsListScintilla.ModifyItem(SelectedSubActionOption.Index, SelectedSubActionOption.ToString());
+                subActionsListScintilla.ModifyItem(subActionsListScintilla.SelectedIndex, SelectedSubActionOption.ToString());
             }
         }
 

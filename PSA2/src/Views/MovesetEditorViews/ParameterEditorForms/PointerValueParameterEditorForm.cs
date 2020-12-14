@@ -21,6 +21,7 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
     {
         private bool ignoreTextChanged;
         bool isPointerValid;
+        bool isPointerSelectorValid;
         private string[] eventTypeOptions = new string[] { "Actions", "Sub Actions", "Subroutines" };
         private string[] actionCodeBlockOptions = new string[] { "Entry", "Exit" };
         private string[] subActionCodeBlockOptions = new string[] { "Main", "GFX", "SFX", "Other" };
@@ -28,11 +29,11 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
         public PointerValueParameterEditorForm(PsaMovesetHandler psaMovesetHandler, int value): base(psaMovesetHandler)
         {
             InitializeComponent();
+            isPointerValid = true;
             ignoreTextChanged = true;
             parameterValueTextBox.Text = value.ToString("X8");
             ignoreTextChanged = false;
             validationPictureBox.ImageLocation = "./images/green_check_mark.png";
-            isPointerValid = true;
             eventTypeComboBox.Items.AddRange(eventTypeOptions);
             eventTypeComboBox.SelectedIndex = 0;
         }
@@ -70,11 +71,22 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
             else
             {
                 int pointerValue = Convert.ToInt32(parameterValueTextBox.Text, 16);
-                if (psaMovesetHandler.CommandLocationTracker.Locations.ContainsKeyForward(pointerValue))
+                if (psaMovesetHandler.CommandLocationTracker.CommandLocations.ContainsKeyForward(pointerValue))
                 {
-                    (SectionTypeCLT, int, int, int) sectionInfo = psaMovesetHandler.CommandLocationTracker.Locations.GetForward(pointerValue);
+                    (SectionTypeCLT, int, int, int) sectionInfo = psaMovesetHandler.CommandLocationTracker.CommandLocations.GetForward(pointerValue);
                     string sectionType = sectionInfo.Item1.AsString();
-                    sectionNameLabel.Text = $"{sectionType} - {(sectionInfo.Item2 + 274).ToString("X")}";
+
+                    int sectionId;
+                    switch (sectionInfo.Item1) 
+                    {
+                        case SectionTypeCLT.ACTION:
+                            sectionId = sectionInfo.Item2 + 274;
+                            break;
+                        default:
+                            sectionId = sectionInfo.Item2;
+                            break;
+                    }
+                    sectionNameLabel.Text = $"{sectionType} - {sectionId.ToString("X")}";
                     
                     switch (sectionInfo.Item1)
                     {
@@ -88,16 +100,39 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
 
                     codeBlockNameLabel.Visible = true;
 
-                    if (sectionInfo.Item4 >= 0)
-                    {
-                        commandIndexLabel.Text = $"Command Index: {sectionInfo.Item4}";
-                        commandIndexLabel.Visible = true;
-                    }
-                    else
-                    {
-                        commandIndexLabel.Visible = false;
-                    }
+                    commandIndexLabel.Text = $"Command Index: {(sectionInfo.Item4 + 1)}";
                     commandIndexLabel.Visible = true;
+                }
+                else if (psaMovesetHandler.CommandLocationTracker.CodeBlockLocations.ContainsKeyForward(pointerValue))
+                {
+                    (SectionTypeCLT, int, int) sectionInfo = psaMovesetHandler.CommandLocationTracker.CodeBlockLocations.GetForward(pointerValue);
+                    string sectionType = sectionInfo.Item1.AsString();
+
+                    int sectionId;
+                    switch (sectionInfo.Item1)
+                    {
+                        case SectionTypeCLT.ACTION:
+                            sectionId = sectionInfo.Item2 + 274;
+                            break;
+                        default:
+                            sectionId = sectionInfo.Item2;
+                            break;
+                    }
+                    sectionNameLabel.Text = $"{sectionType} - {sectionId.ToString("X")}";
+
+                    switch (sectionInfo.Item1)
+                    {
+                        case SectionTypeCLT.ACTION:
+                            codeBlockNameLabel.Text = actionCodeBlockOptions[sectionInfo.Item3];
+                            break;
+                        case SectionTypeCLT.SUBACTION:
+                            codeBlockNameLabel.Text = subActionCodeBlockOptions[sectionInfo.Item3];
+                            break;
+                    }
+
+                    codeBlockNameLabel.Visible = true;
+
+                    commandIndexLabel.Visible = false;
                 }
                 else
                 {
@@ -213,11 +248,54 @@ namespace PSA2.src.Views.MovesetEditorViews.ParameterEditorForms
                     commandIndexComboBox.SelectedIndex = 0;
                 }
                 applyButton.Enabled = true;
+                isPointerSelectorValid = true;
             }
             else
             {
                 commandIndexComboBox.Enabled = false;
                 applyButton.Enabled = false;
+                isPointerSelectorValid = false;
+            }
+        }
+
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            if (isPointerSelectorValid)
+            {
+                int sectionId = sectionComboBox.SelectedIndex;
+                int codeBlockId = codeBlockComboBox.SelectedIndex;
+                bool hasCommands = false;
+
+                SectionTypeCLT sectionType = SectionTypeCLT.ACTION;
+                switch(eventTypeComboBox.SelectedIndex)
+                {
+                    case 0: // actions
+                        sectionType = SectionTypeCLT.ACTION;
+                        hasCommands = psaMovesetHandler.ActionsHandler.GetNumberOfPsaCommandsInCodeBlock(sectionId, codeBlockId) > 0;
+                        break;
+                    case 1: // sub actions
+                        sectionType = SectionTypeCLT.SUBACTION;
+                        hasCommands = psaMovesetHandler.SubActionsHandler.GetNumberOfPsaCommandsInCodeBlock(sectionId, codeBlockId) > 0;
+                        break;
+                    case 2: // subroutines
+                        sectionType = SectionTypeCLT.SUBROUTINE;
+                        break;
+                }
+
+                int location;
+                if (hasCommands)
+                {
+                    int commandIndex = commandIndexComboBox.SelectedIndex;
+                    (SectionTypeCLT, int, int, int) sectionInfo = (sectionType, sectionId, codeBlockId, commandIndex);
+                    location = psaMovesetHandler.CommandLocationTracker.CommandLocations.GetBackward(sectionInfo);
+                }
+                else
+                {
+                    (SectionTypeCLT, int, int) sectionInfo = (sectionType, sectionId, codeBlockId);
+                    location = psaMovesetHandler.CommandLocationTracker.CodeBlockLocations.GetBackward(sectionInfo);
+                }
+                
+                parameterValueTextBox.Text = location.ToString("X8");
             }
         }
     }
