@@ -43,19 +43,22 @@ namespace PSA2MovesetLogic.src.FileProcessor.MovesetHandler
             int numberOfSubActions = (PsaFile.DataSection[dataSectionLocation + 13] - PsaFile.DataSection[dataSectionLocation + 12]) / 4;
             int codeBlockDataStartLocation = 2014 + numberOfSpecialActions * 2;
             PsaCommandHandler psaCommandHandler = new PsaCommandHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation);
-            CommandHandler codeBlocksHandler = new CommandHandler(psaFile, dataSectionLocation, psaCommandHandler, codeBlockDataStartLocation);
-            ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler);
+            CodeBlockHandler codeBlocksHandler = new CodeBlockHandler(psaFile, dataSectionLocation, psaCommandHandler, codeBlockDataStartLocation);
+
+            ActionsHandler = new ActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, CommandLocationTracker);
             
             AnimationsHandler animationsHandler = new AnimationsHandler(psaFile, dataSectionLocation, codeBlockDataStartLocation, numberOfSpecialActions, numberOfSubActions);
             
             SubActionsHandler = new SubActionsHandler(PsaFile, dataSectionLocation, codeBlocksHandler, psaCommandHandler, animationsHandler, codeBlockDataStartLocation);
+
+            CommandLocationTracker = new CodeBlockLocationTracker(this);
+
             SubRoutinesHandler = new SubroutinesHandler(PsaFile, dataSectionLocation, ActionsHandler, SubActionsHandler, psaCommandHandler);
             ActionOverridesHandler = new ActionOverridesHandler(PsaFile, dataSectionLocation, ActionsHandler, psaCommandHandler);
             ArticlesHandler = new ArticlesHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             CharacterParamsHandler = new CharacterParamsHandler(PsaFile, dataSectionLocation, movesetBaseName, psaCommandHandler);
             MiscHandler = new MiscHandler(PsaFile, dataSectionLocation, movesetBaseName, numberOfSpecialActions);
 
-            CommandLocationTracker = new CodeBlockLocationTracker(this);
         }
 
 
